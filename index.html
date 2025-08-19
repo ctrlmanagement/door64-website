@@ -322,18 +322,78 @@
         }
 
         .slide:nth-child(1) {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23111" width="1200" height="800"/><circle cx="600" cy="400" r="100" fill="%23444"/><text x="600" y="410" text-anchor="middle" font-family="Georgia" font-size="24" fill="%23fff">SLIDE 1 - INTIMATE DINING</text></svg>');
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide:nth-child(1)::before {
+            content: "SLIDE 1: INTIMATE DINING";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 3px solid #fff;
         }
 
         .slide:nth-child(2) {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23222" width="1200" height="800"/><rect x="500" y="300" width="200" height="200" fill="%23555"/><text x="600" y="410" text-anchor="middle" font-family="Georgia" font-size="24" fill="%23fff">SLIDE 2 - CRAFT COCKTAILS</text></svg>');
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide:nth-child(2)::before {
+            content: "SLIDE 2: CRAFT COCKTAILS";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 3px solid #fff;
         }
 
         .slide:nth-child(3) {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23333" width="1200" height="800"/><polygon points="600,300 700,500 500,500" fill="%23666"/><text x="600" y="410" text-anchor="middle" font-family="Georgia" font-size="24" fill="%23fff">SLIDE 3 - CULINARY ART</text></svg>');
+            background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide:nth-child(3)::before {
+            content: "SLIDE 3: CULINARY ART";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 3px solid #fff;
         }
 
         .landing-content {
@@ -1071,7 +1131,15 @@
             }
         }
 
+        /* Mobile responsive slide text */
         @media (max-width: 768px) {
+            .slide:nth-child(1)::before,
+            .slide:nth-child(2)::before,
+            .slide:nth-child(3)::before {
+                font-size: 1.8em;
+                padding: 15px 25px;
+            }
+
             .swiper-container {
                 height: 250px; /* Smaller on mobile for better performance */
             }
@@ -1090,6 +1158,15 @@
             .swiper-button-next:after,
             .swiper-button-prev:after {
                 font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide:nth-child(1)::before,
+            .slide:nth-child(2)::before,
+            .slide:nth-child(3)::before {
+                font-size: 1.4em;
+                padding: 12px 20px;
             }
         }
     </style>
@@ -1789,6 +1866,7 @@
 
                 // Show what's happening
                 const prevSlide = currentSlide;
+                const slideNames = ['INTIMATE DINING', 'CRAFT COCKTAILS', 'CULINARY ART'];
                 
                 // Remove active from current slide
                 slides[currentSlide].classList.remove('active');
@@ -1803,11 +1881,14 @@
                 // Add active to next slide
                 slides[currentSlide].classList.add('active');
                 
-                console.log(`🎬 Slide ${prevSlide + 1} → ${currentSlide + 1}/${slides.length}`);
+                const prevName = slideNames[prevSlide] || `Slide ${prevSlide + 1}`;
+                const currentName = slideNames[currentSlide] || `Slide ${currentSlide + 1}`;
+                
+                console.log(`🎬 ${prevName} → ${currentName} (${currentSlide + 1}/${slides.length})`);
                 
                 // Verify the loop worked
                 if (prevSlide === slides.length - 1 && currentSlide === 0) {
-                    console.log('✅ LOOP CONFIRMED: Last slide → First slide');
+                    console.log('✅ LOOP CONFIRMED: CULINARY ART → INTIMATE DINING (Perfect Loop!)');
                 }
             }
 
