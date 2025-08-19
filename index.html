@@ -208,8 +208,9 @@
         }
 
         .audio-toggle.playing {
-            background: rgba(255, 107, 53, 0.8);
-            border-color: rgba(255, 107, 53, 1);
+            background: rgba(255, 107, 53, 0.8) !important;
+            border-color: rgba(255, 107, 53, 1) !important;
+            color: #fff !important;
             animation: pulse 2s infinite;
         }
 
@@ -250,8 +251,9 @@
         }
 
         .splash-audio-toggle.playing {
-            background: rgba(95, 179, 211, 0.9);
-            border-color: rgba(95, 179, 211, 1);
+            background: rgba(255, 107, 53, 0.9) !important;
+            border-color: rgba(255, 107, 53, 1) !important;
+            color: #fff !important;
             animation: pulse 2s infinite;
         }
 
@@ -1685,11 +1687,22 @@
                 console.log('✅ Audio can play - file loaded successfully');
                 audioLoaded = true;
                 updateAllAudioButtons();
+                // Try to start immediately when ready
+                if (!audioPlaying) {
+                    console.log('🚀 Audio ready - attempting immediate auto-start');
+                    startAudioAutomatically();
+                }
             });
             
             backgroundAudio.addEventListener('loadeddata', () => {
                 console.log('📊 Audio data loaded');
                 audioLoaded = true;
+                // Another attempt when data is loaded
+                if (!audioPlaying) {
+                    setTimeout(() => {
+                        startAudioAutomatically();
+                    }, 100);
+                }
             });
             
             backgroundAudio.addEventListener('error', (e) => {
@@ -1707,43 +1720,66 @@
             backgroundAudio.load();
             updateAllAudioButtons();
             
-            // More aggressive auto-start like original
+            // Immediate auto-start attempt
+            setTimeout(() => {
+                if (!audioPlaying) {
+                    console.log('🎵 First auto-start attempt (immediate)');
+                    startAudioAutomatically();
+                }
+            }, 100);
+            
+            // More aggressive auto-start attempts
             setTimeout(() => {
                 if (audioLoaded && !audioPlaying) {
+                    console.log('🎵 Second auto-start attempt');
                     startAudioAutomatically();
                 }
-            }, 500); // Shorter delay
+            }, 500);
             
-            // Additional attempt for auto-start
             setTimeout(() => {
                 if (!audioPlaying && audioLoaded) {
-                    console.log('🎵 Second auto-start attempt...');
+                    console.log('🎵 Third auto-start attempt');
                     startAudioAutomatically();
                 }
-            }, 2000);
+            }, 1500);
+            
+            // Final attempt
+            setTimeout(() => {
+                if (!audioPlaying && audioLoaded) {
+                    console.log('🎵 Final auto-start attempt');
+                    startAudioAutomatically();
+                }
+            }, 3000);
         }
 
         function startAudioAutomatically() {
-            if (!backgroundAudio || !audioLoaded) return;
+            if (!backgroundAudio || !audioLoaded) {
+                console.log('⚠️ Audio not ready for auto-start');
+                return;
+            }
             
             // Check if mobile device (audio autoplay often blocked)
             const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             
-            backgroundAudio.volume = isMobile ? 0.2 : 0.25; // Lower volume on mobile
+            backgroundAudio.volume = isMobile ? 0.3 : 0.4; // Slightly higher volume
+            console.log('🎵 Attempting auto-start...');
+            
             backgroundAudio.play().then(() => {
                 audioPlaying = true;
                 console.log('✅ Audio started automatically');
                 updateAllAudioButtons();
             }).catch((error) => {
-                console.log('ℹ️ Auto-play blocked by browser (normal on mobile)');
+                console.log('ℹ️ Auto-play blocked by browser:', error.name);
                 // Show visual indicator that audio is available
-                if (isMobile && splashAudioButton) {
+                if (splashAudioButton) {
                     splashAudioButton.style.animation = 'pulse 2s infinite';
+                    splashAudioButton.style.background = 'rgba(255, 107, 53, 0.7)';
                     setTimeout(() => {
-                        if (splashAudioButton) {
+                        if (splashAudioButton && !audioPlaying) {
                             splashAudioButton.style.animation = '';
+                            splashAudioButton.style.background = '';
                         }
-                    }, 6000);
+                    }, 8000);
                 }
             });
         }
@@ -1756,10 +1792,12 @@
                     button.innerText = '⏸';
                     button.classList.add('playing');
                     button.title = 'Pause QUIETSTORM';
+                    console.log('🔵 Audio button set to PLAYING (orange)');
                 } else {
                     button.innerText = '♪';
                     button.classList.remove('playing');
                     button.title = 'Play QUIETSTORM';
+                    console.log('⚪ Audio button set to PAUSED (white)');
                 }
             });
         }
@@ -1913,6 +1951,11 @@
             currentSlide = 0;
 
             console.log(`🎬 Starting slides with ${slides.length} slides`);
+            console.log(`🟦 Initial slide: BLUE gradient (INTIMATE DINING)`);
+
+            // Verify first slide is active
+            const activeSlides = document.querySelectorAll('.slide.active');
+            console.log(`📊 Initial active slides: ${activeSlides.length}`);
 
             // Create the looping function with enhanced logging
             function nextSlide() {
@@ -1925,10 +1968,11 @@
 
                 // Show what's happening
                 const prevSlide = currentSlide;
-                const slideNames = ['INTIMATE DINING', 'CRAFT COCKTAILS', 'CULINARY ART'];
+                const slideNames = ['BLUE: INTIMATE DINING', 'PINK: CRAFT COCKTAILS', 'GREEN: CULINARY ART'];
                 
                 // Remove active from current slide
                 slides[currentSlide].classList.remove('active');
+                console.log(`🔄 Hiding slide ${currentSlide + 1}: ${slideNames[currentSlide]}`);
                 
                 // Move to next slide with explicit looping
                 currentSlide = currentSlide + 1;
@@ -1939,6 +1983,11 @@
                 
                 // Add active to next slide
                 slides[currentSlide].classList.add('active');
+                console.log(`✨ Showing slide ${currentSlide + 1}: ${slideNames[currentSlide]}`);
+                
+                // Verify the slide is actually active
+                const activeSlides = document.querySelectorAll('.slide.active');
+                console.log(`📊 Active slides count: ${activeSlides.length}`);
                 
                 const prevName = slideNames[prevSlide] || `Slide ${prevSlide + 1}`;
                 const currentName = slideNames[currentSlide] || `Slide ${currentSlide + 1}`;
@@ -1947,7 +1996,7 @@
                 
                 // Verify the loop worked
                 if (prevSlide === slides.length - 1 && currentSlide === 0) {
-                    console.log('✅ LOOP CONFIRMED: CULINARY ART → INTIMATE DINING (Perfect Loop!)');
+                    console.log('✅ LOOP CONFIRMED: GREEN → BLUE (Perfect Loop!)');
                 }
             }
 
@@ -2086,6 +2135,18 @@
         document.getElementById('splashPage').addEventListener('click', function(event) {
             // Don't trigger if clicking audio button
             if (event.target.closest('.splash-audio-toggle')) return;
+            
+            // Try to start audio on user interaction
+            if (!audioPlaying && audioLoaded) {
+                console.log('🎵 Starting audio via splash click');
+                backgroundAudio.volume = 0.4;
+                backgroundAudio.play().then(() => {
+                    audioPlaying = true;
+                    updateAllAudioButtons();
+                    console.log('✅ Audio started via user interaction');
+                }).catch(console.error);
+            }
+            
             enterMainSite();
         });
 
@@ -2094,6 +2155,18 @@
             // Don't trigger if touching audio button
             if (event.target.closest('.splash-audio-toggle')) return;
             event.preventDefault(); // Prevent double-tap zoom on iOS
+            
+            // Try to start audio on touch interaction
+            if (!audioPlaying && audioLoaded) {
+                console.log('🎵 Starting audio via touch');
+                backgroundAudio.volume = 0.4;
+                backgroundAudio.play().then(() => {
+                    audioPlaying = true;
+                    updateAllAudioButtons();
+                    console.log('✅ Audio started via touch interaction');
+                }).catch(console.error);
+            }
+            
             enterMainSite();
         });
 
@@ -2101,8 +2174,40 @@
         document.addEventListener('keydown', function(event) {
             if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
                 event.preventDefault();
+                
+                // Try to start audio on keyboard interaction
+                if (!audioPlaying && audioLoaded) {
+                    console.log('🎵 Starting audio via keyboard');
+                    backgroundAudio.volume = 0.4;
+                    backgroundAudio.play().then(() => {
+                        audioPlaying = true;
+                        updateAllAudioButtons();
+                        console.log('✅ Audio started via keyboard interaction');
+                    }).catch(console.error);
+                }
+                
                 enterMainSite();
             }
+        });
+
+        // Even more aggressive auto-start on DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM ready - attempting super early audio start');
+            setTimeout(() => {
+                const audio = document.getElementById('backgroundAudio');
+                if (audio) {
+                    audio.volume = 0.4;
+                    audio.play().then(() => {
+                        audioPlaying = true;
+                        console.log('✅ Super early audio start successful!');
+                        if (splashAudioButton) {
+                            updateAllAudioButtons();
+                        }
+                    }).catch(() => {
+                        console.log('⚠️ Super early audio blocked (expected)');
+                    });
+                }
+            }, 50);
         });
 
         // Initialize when page loads
