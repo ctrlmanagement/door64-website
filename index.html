@@ -1364,8 +1364,8 @@
             slides[currentSlide].classList.add('active');
         }
         
-        // Change slide every 4 seconds
-        setInterval(nextSlide, 4000);
+        // Change slide every 3.4 seconds (synced to 70 BPM - every 4 beats)
+        setInterval(nextSlide, 3400);
 
         function showSection(sectionId) {
             // Hide all sections
@@ -1436,7 +1436,15 @@
     
     <!-- Initialize Swiper -->
     <script>
-        // Initialize Landing Page Swiper
+        /* 
+         * Gallery Timing Synced to QUIETSTORM Music (70 BPM)
+         * - Background slides: Every 4 beats (3400ms)
+         * - Landing swiper: Continuous flow (2400ms speed)
+         * - Events gallery: Every 6 beats (5100ms)
+         * - Food gallery: Every 5 beats (4300ms) 
+         * - BTS gallery: Every 7 beats (6000ms)
+         */
+        // Initialize Landing Page Swiper (continuous flow synced to beat)
         var landingSwiper = new Swiper('#landing-swiper', {
             slidesPerView: 'auto',
             spaceBetween: 0,
@@ -1446,19 +1454,19 @@
                 disableOnInteraction: false,
                 reverseDirection: false,
             },
-            speed: 3000,
+            speed: 2400, // Faster, more rhythmic
             allowTouchMove: false,
             freeMode: true,
             freeModeMomentum: false,
         });
 
-        // Initialize Events Swiper
+        // Initialize Events Swiper (synced to 70 BPM - every 6 beats)
         var eventsSwiper = new Swiper('#events-swiper', {
             slidesPerView: 1,
             spaceBetween: 20,
             loop: true,
             autoplay: {
-                delay: 4000,
+                delay: 5100, // 6 beats at 70 BPM
                 disableOnInteraction: false,
             },
             pagination: {
@@ -1485,13 +1493,13 @@
             },
         });
 
-        // Initialize Food Swiper
+        // Initialize Food Swiper (synced to 70 BPM - every 5 beats)  
         var foodSwiper = new Swiper('#food-swiper', {
             slidesPerView: 1,
             spaceBetween: 20,
             loop: true,
             autoplay: {
-                delay: 5000,
+                delay: 4300, // 5 beats at 70 BPM
                 disableOnInteraction: false,
             },
             pagination: {
@@ -1518,13 +1526,13 @@
             },
         });
 
-        // Initialize Behind the Scenes Swiper
+        // Initialize Behind the Scenes Swiper (synced to 70 BPM - every 7 beats)
         var btsSwiper = new Swiper('#bts-swiper', {
             slidesPerView: 1,
             spaceBetween: 20,
             loop: true,
             autoplay: {
-                delay: 6000,
+                delay: 6000, // 7 beats at 70 BPM
                 disableOnInteraction: false,
             },
             pagination: {
