@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Door 64</title>
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
@@ -27,6 +27,8 @@
             color: #2c2c2c;
             background-color: #0a0a0a;
             overflow-x: hidden;
+            -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjustment */
+            -ms-text-size-adjust: 100%;
         }
 
         .container {
@@ -735,15 +737,15 @@
             .splash-audio-toggle {
                 top: 20px;
                 right: 20px;
-                width: 45px;
-                height: 45px;
-                font-size: 16px;
+                width: 50px; /* Larger touch target */
+                height: 50px;
+                font-size: 18px;
             }
 
             .splash-hint {
                 bottom: 20px;
-                font-size: 0.9em;
-                padding: 8px 16px;
+                font-size: 1em; /* Slightly larger for readability */
+                padding: 12px 20px;
             }
 
             .nav {
@@ -751,8 +753,9 @@
                 transform: translateY(-100%);
             }
             
-            .nav:hover,
-            body:hover .nav {
+            /* Always show nav on mobile for easier access */
+            .nav {
+                opacity: 1;
                 transform: translateY(0);
             }
 
@@ -774,6 +777,15 @@
 
             .mobile-menu {
                 display: flex;
+            }
+
+            /* Larger touch targets for mobile menu */
+            .mobile-menu {
+                width: 44px;
+                height: 44px;
+                padding: 10px;
+                justify-content: center;
+                align-items: center;
             }
 
             .landing-content h1 {
@@ -813,22 +825,83 @@
                 margin: 0 10px;
                 padding: 30px 20px;
             }
+
+            /* Better mobile form inputs */
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 15px; /* Larger touch target */
+            }
+
+            .submit-btn {
+                padding: 18px; /* Larger button */
+                font-size: 18px;
+            }
         }
 
         @media (max-width: 480px) {
             .splash-hint {
-                font-size: 0.8em;
-                padding: 6px 12px;
+                font-size: 0.9em;
+                padding: 10px 16px;
+            }
+            
+            .landing-content h1 {
+                font-size: 2.5em;
+                letter-spacing: 2px;
+            }
+            
+            .section-title {
+                font-size: 1.8em;
+            }
+            
+            .space-item,
+            .menu-item {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Mobile-specific styles */
+        .mobile-device .splash-page:hover {
+            transform: none; /* Disable hover effects on mobile */
+        }
+        
+        .mobile-device .door-sign:hover,
+        .mobile-device .space-item:hover,
+        .mobile-device .menu-item:hover {
+            transform: none;
+        }
+        
+        /* Better mobile scroll behavior */
+        @media (max-width: 768px) {
+            body {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .section {
+                padding: 60px 0; /* Less padding on mobile */
             }
         }
 
         @media (max-width: 768px) {
             .swiper-container {
-                height: 300px;
+                height: 250px; /* Smaller on mobile for better performance */
             }
             
             .gallery-placeholder {
-                font-size: 1em;
+                font-size: 0.9em;
+            }
+            
+            /* Better touch targets for swiper navigation */
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 16px;
             }
         }
     </style>
@@ -1340,14 +1413,25 @@
         function startAudioAutomatically() {
             if (!backgroundAudio || !audioLoaded) return;
             
-            backgroundAudio.volume = 0.25; // Start quietly
+            // Check if mobile device (audio autoplay often blocked)
+            const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            backgroundAudio.volume = isMobile ? 0.2 : 0.25; // Lower volume on mobile
             backgroundAudio.play().then(() => {
                 audioPlaying = true;
                 console.log('✅ Audio started automatically');
                 updateAllAudioButtons();
             }).catch((error) => {
-                console.log('ℹ️ Auto-play blocked by browser (normal)');
-                // This is expected - browsers block autoplay until user interaction
+                console.log('ℹ️ Auto-play blocked by browser (normal on mobile)');
+                // Show visual indicator that audio is available
+                if (isMobile && splashAudioButton) {
+                    splashAudioButton.style.animation = 'pulse 2s infinite';
+                    setTimeout(() => {
+                        if (splashAudioButton) {
+                            splashAudioButton.style.animation = '';
+                        }
+                    }, 6000);
+                }
             });
         }
 
@@ -1511,6 +1595,14 @@
             enterMainSite();
         });
 
+        // Add touch support for splash page
+        document.getElementById('splashPage').addEventListener('touchend', function(event) {
+            // Don't trigger if touching audio button
+            if (event.target.closest('.splash-audio-toggle')) return;
+            event.preventDefault(); // Prevent double-tap zoom on iOS
+            enterMainSite();
+        });
+
         // Keyboard support for splash page
         document.addEventListener('keydown', function(event) {
             if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
@@ -1523,6 +1615,38 @@
         window.addEventListener('load', function() {
             console.log('📄 Page loaded, initializing...');
             initializeAudio();
+            
+            // Mobile-specific optimizations
+            if (window.innerWidth <= 768) {
+                console.log('📱 Mobile device detected');
+                
+                // Disable hover effects on mobile
+                document.body.classList.add('mobile-device');
+                
+                // Prevent zoom on form focus for iOS
+                const inputs = document.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('focus', function() {
+                        // Ensure font-size is 16px or larger to prevent zoom
+                        if (parseInt(window.getComputedStyle(this).fontSize) < 16) {
+                            this.style.fontSize = '16px';
+                        }
+                    });
+                });
+                
+                // Enhanced touch feedback
+                const touchElements = document.querySelectorAll('.landing-link, .space-item, .menu-item, .event-item');
+                touchElements.forEach(element => {
+                    element.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    element.addEventListener('touchend', function() {
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    });
+                });
+            }
         });
 
         // Initialize Swiper galleries
@@ -1538,7 +1662,7 @@
                     reverseDirection: false,
                 },
                 speed: 2400, // Faster, more rhythmic
-                allowTouchMove: false,
+                allowTouchMove: true, // Enable touch on mobile
                 freeMode: true,
                 freeModeMomentum: false,
             });
@@ -1560,7 +1684,12 @@
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
+                // Mobile optimized breakpoints
                 breakpoints: {
+                    480: {
+                        slidesPerView: 1,
+                        spaceBetween: 15,
+                    },
                     640: {
                         slidesPerView: 2,
                         spaceBetween: 20,
@@ -1593,7 +1722,12 @@
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
+                // Mobile optimized breakpoints
                 breakpoints: {
+                    480: {
+                        slidesPerView: 1,
+                        spaceBetween: 15,
+                    },
                     640: {
                         slidesPerView: 2,
                         spaceBetween: 20,
@@ -1626,7 +1760,12 @@
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
+                // Mobile optimized breakpoints
                 breakpoints: {
+                    480: {
+                        slidesPerView: 1,
+                        spaceBetween: 15,
+                    },
                     640: {
                         slidesPerView: 2,
                         spaceBetween: 20,
