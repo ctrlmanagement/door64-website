@@ -21,24 +21,14 @@
             box-sizing: border-box;
         }
 
-        /* CSS Custom Properties for dynamic height calculations */
-        :root {
-            --vh: 1vh;
-            --nav-height: 80px;
-            --mobile-nav-height: 64px;
-        }
-
         body {
             font-family: 'Georgia', serif;
             line-height: 1.6;
             color: #2c2c2c;
             background-color: #0a0a0a;
             overflow-x: hidden;
-            -webkit-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjustment */
             -ms-text-size-adjust: 100%;
-            /* Better mobile handling */
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: none;
         }
 
         .container {
@@ -51,7 +41,6 @@
         .splash-page {
             width: 100%;
             height: 100vh;
-            height: calc(var(--vh, 1vh) * 100);
             position: fixed;
             top: 0;
             left: 0;
@@ -82,13 +71,14 @@
         }
 
         .splash-content {
-            display: none;
+            display: none; /* Hide any content overlay */
         }
+
+
 
         .splash-hint {
             position: fixed;
             bottom: 30px;
-            bottom: max(30px, env(safe-area-inset-bottom, 30px));
             left: 50%;
             transform: translateX(-50%);
             color: rgba(255, 255, 255, 0.8);
@@ -101,9 +91,6 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             z-index: 10;
-            white-space: nowrap;
-            max-width: 90vw;
-            text-align: center;
         }
 
         @keyframes fadeInOut {
@@ -115,15 +102,13 @@
         .main-site {
             opacity: 0;
             transition: opacity 1s ease 0.5s;
-            min-height: 100vh;
-            min-height: calc(var(--vh, 1vh) * 100);
         }
 
         .main-site.active {
             opacity: 1;
         }
 
-        /* Navigation - Fixed sizing */
+        /* Navigation */
         .nav {
             position: fixed;
             top: 0;
@@ -133,9 +118,8 @@
             z-index: 1000;
             padding: 20px 0;
             border-bottom: 1px solid #333;
-            height: var(--nav-height);
-            display: flex;
-            align-items: center;
+            opacity: 1; /* Always visible by default */
+            transform: translateY(0);
             transition: all 0.3s ease;
         }
 
@@ -161,7 +145,6 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
-            width: 100%;
         }
 
         .nav-left {
@@ -219,13 +202,11 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
         }
 
-        /* Splash Audio Button */
+        /* Splash Audio Button - positioned differently */
         .splash-audio-toggle {
             position: fixed;
             top: 30px;
-            top: max(30px, env(safe-area-inset-top, 30px));
             right: 30px;
-            right: max(30px, env(safe-area-inset-right, 30px));
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
@@ -303,25 +284,16 @@
             background: #fff;
         }
 
-        /* =============== LANDING PAGE - FIXED SIZING =============== */
+        /* Landing Page */
         .landing-page {
-            /* Fixed height calculations */
             height: 100vh;
-            height: calc(var(--vh, 1vh) * 100);
-            min-height: 100vh;
-            min-height: calc(var(--vh, 1vh) * 100);
-            width: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             color: white;
             position: relative;
             overflow: hidden;
-            /* Ensure full viewport coverage */
-            top: 0;
-            left: 0;
         }
 
         .gallery-slider {
@@ -330,7 +302,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Back to -1 but ensure slides are working */
+            z-index: -1;
         }
 
         .slide {
@@ -425,46 +397,31 @@
         }
 
         .landing-content {
-            z-index: 10; /* Increased to ensure it stays above background slides */
+            z-index: 10;
             position: relative;
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            /* Ensure content doesn't overflow */
-            box-sizing: border-box;
         }
 
         .landing-content h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-size: 5em;
             margin-bottom: 40px;
             text-transform: uppercase;
-            letter-spacing: clamp(2px, 2vw, 8px);
+            letter-spacing: 8px;
             font-weight: 300;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             color: #fff;
-            line-height: 1.2;
         }
 
         .landing-links {
             display: flex;
             justify-content: center;
-            gap: clamp(20px, 8vw, 60px);
-            margin: 40px 0;
-            flex-wrap: wrap;
-            width: 100%;
+            gap: 60px;
+            margin-top: 60px;
         }
 
         .landing-link {
             text-align: center;
             cursor: pointer;
             transition: transform 0.3s ease;
-            flex: 1;
-            min-width: 200px;
-            max-width: 300px;
         }
 
         .landing-link:hover {
@@ -472,10 +429,10 @@
         }
 
         .landing-link h3 {
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-size: 1.8em;
             margin-bottom: 20px;
             text-transform: lowercase;
-            letter-spacing: clamp(1px, 1vw, 3px);
+            letter-spacing: 3px;
             color: #000;
         }
 
@@ -488,26 +445,14 @@
         .sub-links a {
             color: #ccc;
             text-decoration: none;
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            font-size: 1.1em;
             letter-spacing: 1px;
             transition: color 0.3s ease;
             text-transform: lowercase;
-            padding: 5px 0;
         }
 
         .sub-links a:hover {
             color: #fff;
-        }
-
-        /* Landing Swiper - Made more visible */
-        .landing-swiper {
-            width: 100%;
-            max-width: 100%;
-            height: 350px;
-            margin: 30px 0 0 0;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         /* Section Styles */
@@ -515,7 +460,6 @@
             padding: 100px 0;
             background: #fff;
             display: none;
-            min-height: calc(100vh - var(--nav-height));
         }
 
         .section.active {
@@ -852,45 +796,38 @@
             background: #333;
         }
 
-        /* =============== MOBILE RESPONSIVE - FIXED =============== */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            :root {
-                --nav-height: var(--mobile-nav-height);
-            }
-
             .splash-audio-toggle {
-                top: max(20px, calc(env(safe-area-inset-top, 0px) + 10px));
-                right: max(20px, env(safe-area-inset-right, 0px));
-                width: 50px;
+                top: 20px;
+                right: 20px;
+                width: 50px; /* Larger touch target */
                 height: 50px;
                 font-size: 18px;
             }
 
             .splash-hint {
-                bottom: max(30px, calc(env(safe-area-inset-bottom, 0px) + 20px));
-                font-size: 0.9em;
+                bottom: 30px; /* More space from bottom */
+                font-size: 1em;
                 padding: 12px 20px;
-                max-width: 90%;
+                max-width: 90%; /* Prevent text cutoff */
                 margin: 0 auto;
             }
 
             .nav {
-                padding: 12px 0;
-                height: var(--mobile-nav-height);
+                padding: 12px 0; /* Slightly less padding for more screen space */
                 opacity: 1;
                 transform: translateY(0);
                 position: fixed;
                 top: 0;
-                /* Account for iPhone notch */
-                padding-top: max(12px, env(safe-area-inset-top, 0px));
             }
 
             .nav-container {
-                padding: 0 15px;
+                padding: 0 15px; /* Adjust padding for mobile */
             }
 
             .logo {
-                font-size: 1.6em;
+                font-size: 1.6em; /* Smaller logo on mobile */
                 letter-spacing: 2px;
             }
 
@@ -919,7 +856,7 @@
             }
 
             .nav-links a {
-                font-size: 16px;
+                font-size: 16px; /* Larger for easier tapping */
                 padding: 12px 0;
                 border-bottom: 1px solid rgba(255,255,255,0.1);
                 text-align: center;
@@ -949,141 +886,6 @@
                 transform-origin: center;
             }
 
-            /* FIXED LANDING PAGE MOBILE */
-            .landing-page {
-                /* Better mobile height calculation */
-                height: 100vh;
-                height: calc(var(--vh, 1vh) * 100);
-                min-height: -webkit-fill-available;
-                min-height: 100vh;
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 15px max(40px, env(safe-area-inset-bottom, 0px));
-                /* Better flexbox for mobile */
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                box-sizing: border-box;
-            }
-
-            .landing-content {
-                width: 100%;
-                max-width: none;
-                padding: 0;
-                /* Better spacing for mobile */
-                gap: 20px;
-            }
-
-            .landing-content h1 {
-                font-size: clamp(2.2rem, 10vw, 3.5rem);
-                letter-spacing: clamp(1px, 2vw, 4px);
-                margin-bottom: 20px;
-                line-height: 1.1;
-            }
-
-            .landing-links {
-                flex-direction: column;
-                gap: 25px;
-                margin: 20px 0;
-                width: 100%;
-                padding: 0;
-            }
-
-            .landing-link {
-                min-width: auto;
-                max-width: none;
-                width: 100%;
-            }
-
-            .landing-link h3 {
-                font-size: clamp(1.2rem, 5vw, 1.6rem);
-                letter-spacing: clamp(1px, 2vw, 3px);
-                margin-bottom: 15px;
-            }
-
-            .sub-links a {
-                font-size: clamp(0.9rem, 4vw, 1.1rem);
-                padding: 8px 0;
-            }
-
-            /* Fixed Swiper on mobile */
-            .landing-swiper {
-                height: 250px;
-                margin: 25px 0 0 0;
-                width: 100%;
-                border-radius: 8px;
-            }
-
-            .section-title {
-                font-size: clamp(1.8rem, 8vw, 2.5rem);
-                margin-bottom: 40px;
-            }
-
-            .menu-grid,
-            .space-grid,
-            .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-
-            .space-item,
-            .menu-item {
-                padding: 25px 20px;
-                margin: 0 10px;
-            }
-
-            .section {
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, env(safe-area-inset-bottom, 0px));
-                min-height: calc(100vh - var(--mobile-nav-height));
-            }
-
-            .reservation-form,
-            .contact-card {
-                margin: 0 15px;
-                padding: 25px 20px;
-            }
-
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                font-size: 16px;
-                padding: 15px;
-                border-radius: 8px;
-            }
-
-            .submit-btn {
-                padding: 18px;
-                font-size: 16px;
-                border-radius: 8px;
-            }
-
-            /* Better mobile slide text */
-            .slide:nth-child(1)::before,
-            .slide:nth-child(2)::before,
-            .slide:nth-child(3)::before {
-                font-size: clamp(1.4rem, 6vw, 2rem);
-                padding: 15px 25px;
-                border-radius: 15px;
-            }
-
-            .swiper-container {
-                height: 250px;
-            }
-            
-            .gallery-placeholder {
-                font-size: 0.9em;
-            }
-            
-            .swiper-button-next,
-            .swiper-button-prev {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .swiper-button-next:after,
-            .swiper-button-prev:after {
-                font-size: 16px;
-            }
-
             /* Active mobile menu state */
             .nav-links.active {
                 display: flex;
@@ -1101,38 +903,103 @@
                 }
             }
 
-            /* Better mobile touch feedback */
-            .space-item:active,
-            .menu-item:active,
-            .landing-link:active {
-                transform: scale(0.98);
-                transition: transform 0.1s ease;
+            /* When mobile menu is open, prevent body scroll */
+            body.menu-open {
+                overflow: hidden;
             }
 
-            .nav-links a:active {
-                background: rgba(255,255,255,0.1);
-                color: #fff;
+            .landing-content h1 {
+                font-size: 2.8em; /* Adjusted for mobile screens */
+                letter-spacing: 3px;
+                margin-bottom: 30px;
+            }
+
+            .landing-links {
+                flex-direction: column;
+                gap: 35px;
+                margin-top: 35px;
+                padding: 0 20px;
+            }
+
+            .landing-link h3 {
+                font-size: 1.4em;
+                letter-spacing: 2px;
+                margin-bottom: 15px;
+            }
+
+            .sub-links a {
+                font-size: 1em;
+                padding: 8px 0;
+            }
+
+            .section-title {
+                font-size: 2.2em;
+                margin-bottom: 40px;
+            }
+
+            .menu-grid,
+            .space-grid,
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .space-item,
+            .menu-item {
+                padding: 25px 20px;
+                margin: 0 10px;
+            }
+
+            .landing-page {
+                min-height: 100vh;
+                height: auto;
+                padding: 90px 15px 40px; /* Account for fixed nav */
+            }
+
+            .section {
+                padding: 80px 0 60px; /* Account for fixed nav */
+            }
+
+            .reservation-form,
+            .contact-card {
+                margin: 0 15px;
+                padding: 25px 20px;
+            }
+
+            /* Better mobile form inputs */
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .submit-btn {
+                padding: 18px;
+                font-size: 16px;
+                border-radius: 8px;
             }
         }
 
         /* iPhone-specific optimizations */
         @media (max-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
             .splash-hint {
-                bottom: max(40px, calc(env(safe-area-inset-bottom, 0px) + 30px));
-                font-size: 0.85em;
+                bottom: 40px; /* More space for iPhone home indicator */
+                font-size: 0.9em;
             }
 
             .landing-content h1 {
-                font-size: clamp(2rem, 12vw, 3rem);
-                letter-spacing: clamp(1px, 3vw, 3px);
+                font-size: 2.4em;
+                letter-spacing: 2px;
             }
 
             .section-title {
-                font-size: clamp(1.6rem, 10vw, 2.2rem);
+                font-size: 1.9em;
             }
 
             .nav {
-                padding: 8px 0;
+                padding: 10px 0;
             }
 
             .logo {
@@ -1152,48 +1019,154 @@
                 margin: 0 10px;
                 padding: 20px 15px;
             }
-
-            .landing-swiper {
-                height: 180px;
-            }
         }
 
-        /* Large mobile screens */
+        /* iPhone-specific additional styles */
+        .iphone-device .splash-page {
+            /* Better handling of iPhone notch and home indicator */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .iphone-device .nav {
+            /* Ensure nav doesn't conflict with notch */
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* iPhone Pro Max and larger screens */
         @media (min-width: 431px) and (max-width: 768px) {
             .landing-content h1 {
-                font-size: clamp(2.5rem, 8vw, 3.5rem);
-                letter-spacing: clamp(2px, 2vw, 5px);
+                font-size: 3.2em;
+                letter-spacing: 4px;
             }
 
             .section-title {
-                font-size: clamp(2rem, 6vw, 2.8rem);
-            }
-
-            .landing-swiper {
-                height: 280px;
+                font-size: 2.4em;
             }
         }
 
-        /* Improve mobile scrolling */
+        /* Prevent iOS bounce scroll on main containers */
         @media (max-width: 768px) {
-            body {
-                -webkit-overflow-scrolling: touch;
-                overscroll-behavior: none;
-            }
-            
             .landing-page,
             .section {
                 overscroll-behavior: none;
             }
         }
 
-        /* Disable hover effects on mobile */
-        @media (hover: none) and (pointer: coarse) {
-            .space-item:hover,
-            .menu-item:hover,
-            .landing-link:hover,
-            .gallery-item:hover {
-                transform: none;
+        @media (max-width: 480px) {
+            .splash-hint {
+                font-size: 0.9em;
+                padding: 10px 16px;
+            }
+            
+            .landing-content h1 {
+                font-size: 2.5em;
+                letter-spacing: 2px;
+            }
+            
+            .section-title {
+                font-size: 1.8em;
+            }
+            
+            .space-item,
+            .menu-item {
+                padding: 25px 20px;
+            }
+        }
+
+        /* Better mobile scroll behavior and iPhone optimizations */
+        @media (max-width: 768px) {
+            body {
+                -webkit-overflow-scrolling: touch;
+                /* iPhone safe area support */
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .section {
+                padding: 60px 0; /* Less padding on mobile */
+            }
+
+            .nav {
+                /* Account for iPhone notch */
+                padding-top: max(12px, env(safe-area-inset-top));
+            }
+
+            .splash-audio-toggle {
+                /* Account for iPhone notch */
+                top: max(20px, calc(env(safe-area-inset-top) + 10px));
+                right: max(20px, env(safe-area-inset-right));
+            }
+
+            .splash-hint {
+                /* Account for iPhone home indicator */
+                bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
+            }
+        }
+
+        /* Mobile-specific styles */
+        .mobile-device .splash-page:hover {
+            transform: none; /* Disable hover effects on mobile */
+        }
+        
+        .mobile-device .space-item:hover,
+        .mobile-device .menu-item:hover,
+        .mobile-device .landing-link:hover {
+            transform: none;
+        }
+
+        /* Improve mobile touch feedback */
+        @media (max-width: 768px) {
+            .space-item:active,
+            .menu-item:active,
+            .landing-link:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
+            }
+
+            .nav-links a:active {
+                background: rgba(255,255,255,0.1);
+                color: #fff;
+            }
+        }
+
+        /* Mobile responsive slide text */
+        @media (max-width: 768px) {
+            .slide:nth-child(1)::before,
+            .slide:nth-child(2)::before,
+            .slide:nth-child(3)::before {
+                font-size: 1.8em;
+                padding: 15px 25px;
+            }
+
+            .swiper-container {
+                height: 250px; /* Smaller on mobile for better performance */
+            }
+            
+            .gallery-placeholder {
+                font-size: 0.9em;
+            }
+            
+            /* Better touch targets for swiper navigation */
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide:nth-child(1)::before,
+            .slide:nth-child(2)::before,
+            .slide:nth-child(3)::before {
+                font-size: 1.4em;
+                padding: 12px 20px;
             }
         }
     </style>
@@ -1644,19 +1617,6 @@
     </div>
 
     <script>
-        // Dynamic viewport height calculation for mobile
-        function setVH() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-
-        // Set on load and resize
-        setVH();
-        window.addEventListener('resize', setVH);
-        window.addEventListener('orientationchange', () => {
-            setTimeout(setVH, 100);
-        });
-
         // Audio Control System
         let audioPlaying = false;
         let audioLoaded = false;
@@ -1707,20 +1667,12 @@
             backgroundAudio.load();
             updateAllAudioButtons();
             
-            // More aggressive auto-start like original
+            // Auto-start audio after short delay (if browser allows)
             setTimeout(() => {
                 if (audioLoaded && !audioPlaying) {
                     startAudioAutomatically();
                 }
-            }, 500); // Shorter delay
-            
-            // Additional attempt for auto-start
-            setTimeout(() => {
-                if (!audioPlaying && audioLoaded) {
-                    console.log('🎵 Second auto-start attempt...');
-                    startAudioAutomatically();
-                }
-            }, 2000);
+            }, 1000);
         }
 
         function startAudioAutomatically() {
@@ -1829,15 +1781,7 @@
                 setTimeout(() => {
                     console.log('🏠 Setting initial landing page');
                     showSection('landing');
-                }, 300);
-                
-                // Force auto-start of background slides
-                setTimeout(() => {
-                    console.log('🎬 Force-starting background slides...');
-                    if (isOnMainSite) {
-                        startBackgroundSlides();
-                    }
-                }, 600);
+                }, 300); // Give time for initialization
             }, 1200);
             
             // Door creak sound effect
@@ -1868,9 +1812,7 @@
             const currentSection = document.querySelector('.section.active');
             const isOnLanding = currentSection?.id === 'landing';
             
-            console.log('🔍 ensureSlidesRunning: isOnLanding =', isOnLanding, 'isOnMainSite =', isOnMainSite);
-            
-            if (!isOnLanding || !isOnMainSite) {
+            if (!isOnLanding) {
                 stopBackgroundSlides();
                 return;
             }
@@ -1888,7 +1830,6 @@
             }
 
             // Start fresh
-            console.log('🚀 Starting background slides...');
             startBackgroundSlides();
         }
 
@@ -1913,11 +1854,6 @@
             currentSlide = 0;
 
             console.log(`🎬 Starting slides with ${slides.length} slides`);
-            console.log(`🟦 Initial slide: BLUE gradient (INTIMATE DINING)`);
-
-            // Verify first slide is active
-            const activeSlides = document.querySelectorAll('.slide.active');
-            console.log(`📊 Initial active slides: ${activeSlides.length}`);
 
             // Create the looping function with enhanced logging
             function nextSlide() {
@@ -1930,11 +1866,10 @@
 
                 // Show what's happening
                 const prevSlide = currentSlide;
-                const slideNames = ['BLUE: INTIMATE DINING', 'PINK: CRAFT COCKTAILS', 'GREEN: CULINARY ART'];
+                const slideNames = ['INTIMATE DINING', 'CRAFT COCKTAILS', 'CULINARY ART'];
                 
                 // Remove active from current slide
                 slides[currentSlide].classList.remove('active');
-                console.log(`🔄 Hiding slide ${currentSlide + 1}: ${slideNames[currentSlide]}`);
                 
                 // Move to next slide with explicit looping
                 currentSlide = currentSlide + 1;
@@ -1945,11 +1880,6 @@
                 
                 // Add active to next slide
                 slides[currentSlide].classList.add('active');
-                console.log(`✨ Showing slide ${currentSlide + 1}: ${slideNames[currentSlide]}`);
-                
-                // Verify the slide is actually active
-                const activeSlides = document.querySelectorAll('.slide.active');
-                console.log(`📊 Active slides count: ${activeSlides.length}`);
                 
                 const prevName = slideNames[prevSlide] || `Slide ${prevSlide + 1}`;
                 const currentName = slideNames[currentSlide] || `Slide ${currentSlide + 1}`;
@@ -1958,7 +1888,7 @@
                 
                 // Verify the loop worked
                 if (prevSlide === slides.length - 1 && currentSlide === 0) {
-                    console.log('✅ LOOP CONFIRMED: GREEN → BLUE (Perfect Loop!)');
+                    console.log('✅ LOOP CONFIRMED: CULINARY ART → INTIMATE DINING (Perfect Loop!)');
                 }
             }
 
@@ -2000,17 +1930,6 @@
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
-            }
-            
-            // Handle background slides - ensure they start on landing page
-            if (sectionId === 'landing') {
-                console.log('🏠 Showing landing page - starting slides');
-                // Wait for section to be visible, then start slides
-                setTimeout(() => {
-                    ensureSlidesRunning();
-                }, 200);
-            } else {
-                stopBackgroundSlides();
             }
             
             // Close mobile menu if open
@@ -2137,10 +2056,14 @@
                     console.log('📱 iPhone detected');
                 }
                 
+                // Disable hover effects on mobile
+                document.body.classList.add('mobile-device');
+                
                 // Prevent zoom on form focus for iOS
                 const inputs = document.querySelectorAll('input, select, textarea');
                 inputs.forEach(input => {
                     input.addEventListener('focus', function() {
+                        // Ensure font-size is 16px or larger to prevent zoom
                         if (parseInt(window.getComputedStyle(this).fontSize) < 16) {
                             this.style.fontSize = '16px';
                         }
@@ -2163,6 +2086,7 @@
                 // Improve mobile nav functionality
                 const nav = document.querySelector('.nav');
                 if (nav) {
+                    // Always keep nav visible on mobile
                     nav.style.opacity = '1';
                     nav.style.transform = 'translateY(0)';
                 }
@@ -2182,6 +2106,7 @@
                     const deltaX = touchEndX - touchStartX;
                     const deltaY = touchEndY - touchStartY;
                     
+                    // Horizontal swipe gesture to close mobile menu
                     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
                         const navLinks = document.getElementById('navLinks');
                         if (navLinks && navLinks.classList.contains('active')) {
@@ -2227,6 +2152,7 @@
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
+                // Mobile optimized breakpoints
                 breakpoints: {
                     480: {
                         slidesPerView: 1,
@@ -2264,6 +2190,7 @@
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
+                // Mobile optimized breakpoints
                 breakpoints: {
                     480: {
                         slidesPerView: 1,
@@ -2301,6 +2228,7 @@
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
+                // Mobile optimized breakpoints
                 breakpoints: {
                     480: {
                         slidesPerView: 1,
