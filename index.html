@@ -13,12 +13,9 @@
         Your browser does not support the audio element.
     </audio>
     
-    <!-- Audio Toggle Button - Global (always visible) -->
-    <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="Toggle Background Music">♪</button>
-    
     <!-- Auto-play notification -->
     <div id="autoplayNotification" class="autoplay-notification">
-        <strong>🎵 Click to start music</strong><br>
+        <strong>🎵 Click ♪ to start music</strong><br>
         <small>QUIETSTORM background</small>
     </div>
     
@@ -717,7 +714,10 @@
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
-            <div class="logo" onclick="showSection('landing')">Door 64</div>
+            <div class="nav-left">
+                <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="Toggle Background Music">♪</button>
+                <div class="logo" onclick="showSection('landing')">Door 64</div>
+            </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" onclick="showSection('landing')">64</a></li>
                 <li><a href="#" onclick="showSection('space')">space</a></li>
