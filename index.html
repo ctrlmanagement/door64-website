@@ -499,13 +499,15 @@
             color: #fff;
         }
 
-        /* Landing Swiper - Fixed sizing */
+        /* Landing Swiper - Made more visible */
         .landing-swiper {
             width: 100%;
             max-width: 100%;
-            height: 300px;
-            margin: 20px 0 0 0;
+            height: 350px;
+            margin: 30px 0 0 0;
             overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         /* Section Styles */
@@ -1005,9 +1007,10 @@
 
             /* Fixed Swiper on mobile */
             .landing-swiper {
-                height: 200px;
-                margin: 20px 0 0 0;
+                height: 250px;
+                margin: 25px 0 0 0;
                 width: 100%;
+                border-radius: 8px;
             }
 
             .section-title {
@@ -1151,7 +1154,7 @@
             }
 
             .landing-swiper {
-                height: 160px;
+                height: 180px;
             }
         }
 
@@ -1167,7 +1170,7 @@
             }
 
             .landing-swiper {
-                height: 220px;
+                height: 280px;
             }
         }
 
@@ -1704,12 +1707,20 @@
             backgroundAudio.load();
             updateAllAudioButtons();
             
-            // Auto-start audio after short delay (if browser allows)
+            // More aggressive auto-start like original
             setTimeout(() => {
                 if (audioLoaded && !audioPlaying) {
                     startAudioAutomatically();
                 }
-            }, 1000);
+            }, 500); // Shorter delay
+            
+            // Additional attempt for auto-start
+            setTimeout(() => {
+                if (!audioPlaying && audioLoaded) {
+                    console.log('🎵 Second auto-start attempt...');
+                    startAudioAutomatically();
+                }
+            }, 2000);
         }
 
         function startAudioAutomatically() {
@@ -1818,6 +1829,8 @@
                 setTimeout(() => {
                     console.log('🏠 Setting initial landing page');
                     showSection('landing');
+                    // Force slides to start immediately
+                    startBackgroundSlides();
                 }, 300); // Give time for initialization
             }, 1200);
             
@@ -1969,10 +1982,11 @@
                 targetSection.classList.add('active');
             }
             
-            // Handle background slides
+            // Handle background slides - more aggressive starting
             if (sectionId === 'landing') {
+                console.log('🏠 Showing landing page - starting slides');
                 setTimeout(() => {
-                    ensureSlidesRunning();
+                    startBackgroundSlides(); // Direct call instead of ensureSlidesRunning
                 }, 100);
             } else {
                 stopBackgroundSlides();
@@ -2085,6 +2099,14 @@
         window.addEventListener('load', function() {
             console.log('📄 Page loaded, initializing...');
             initializeAudio();
+            
+            // Start background slides immediately if on splash
+            setTimeout(() => {
+                if (!isOnMainSite) {
+                    console.log('🎬 Starting splash slides...');
+                    // No slides on splash, but prepare for main site
+                }
+            }, 1000);
             
             // Mobile-specific optimizations
             const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
