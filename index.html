@@ -6,6 +6,13 @@
     <title>Door 64</title>
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="none" style="display: none;">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
     <style>
         * {
             margin: 0;
@@ -814,6 +821,9 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Audio Toggle Button -->
+        <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="background music">♪</button>
     </section>
 
     <!-- Space Section -->
@@ -1190,6 +1200,50 @@
     
     <!-- Initialize Swiper -->
     <script>
+        // Audio Control
+        let audioPlaying = false;
+        let backgroundAudio = document.getElementById('backgroundAudio');
+        let audioToggle = document.getElementById('audioToggle');
+
+        function toggleAudio() {
+            if (audioPlaying) {
+                backgroundAudio.pause();
+                audioToggle.innerText = '♪';
+                audioToggle.classList.remove('playing');
+                audioPlaying = false;
+            } else {
+                backgroundAudio.volume = 0.3; // Set volume to 30%
+                backgroundAudio.play().then(() => {
+                    audioToggle.innerText = '⏸';
+                    audioToggle.classList.add('playing');
+                    audioPlaying = true;
+                }).catch((error) => {
+                    console.log('Audio play failed:', error);
+                    alert('Audio could not be played. Please check if the file is uploaded correctly.');
+                });
+            }
+        }
+
+        // Pause audio when navigating away from landing page
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Pause audio if leaving landing page
+            if (sectionId !== 'landing' && audioPlaying) {
+                toggleAudio();
+            }
+            
+            // Close mobile menu if open
+            document.getElementById('navLinks').classList.remove('active');
+        }
+
         // Initialize Landing Page Swiper
         var landingSwiper = new Swiper('#landing-swiper', {
             slidesPerView: 'auto',
