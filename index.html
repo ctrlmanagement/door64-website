@@ -14,11 +14,7 @@
         Your browser does not support the audio element.
     </audio>
     
-    <!-- Auto-play notification -->
-    <div id="autoplayNotification" class="autoplay-notification">
-        <strong>🎵 Click ♪ for music</strong><br>
-        <small>QUIETSTORM background</small>
-    </div>
+
     
     <style>
         * {
@@ -165,28 +161,7 @@
             animation: pulse 2s infinite;
         }
 
-        /* Autoplay notification */
-        .autoplay-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 107, 53, 0.95);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            border: 2px solid #fff;
-            text-align: center;
-            z-index: 1002;
-            font-family: 'Georgia', serif;
-            display: none;
-            backdrop-filter: blur(10px);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
 
-        .autoplay-notification:hover {
-            transform: scale(1.05);
-        }
 
         .nav-links {
             display: flex;
@@ -942,11 +917,7 @@
     <!-- Global Audio Controls -->
     <button class="global-audio-toggle" onclick="toggleAudio()" title="background music">♪</button>
     
-    <!-- Auto-play notification -->
-    <div id="autoplayNotification" class="autoplay-notification" onclick="toggleAudio()">
-        <strong>🎵 Click for music</strong><br>
-        <small>enhance your door 64 experience</small>
-    </div>
+
 
     <!-- Space Section -->
     <section id="space" class="section">
@@ -1273,7 +1244,6 @@
         let audioLoaded = false;
         let backgroundAudio;
         let audioButtons;
-        let autoplayNotification;
 
         // Initialize audio system
         function initializeAudio() {
@@ -1281,7 +1251,6 @@
             
             backgroundAudio = document.getElementById('backgroundAudio');
             audioButtons = document.querySelectorAll('.audio-toggle, .global-audio-toggle');
-            autoplayNotification = document.getElementById('autoplayNotification');
             
             if (!backgroundAudio) {
                 console.error('❌ Background audio element not found!');
@@ -1294,7 +1263,6 @@
             backgroundAudio.addEventListener('canplay', () => {
                 console.log('✅ Audio can play - file loaded successfully');
                 audioLoaded = true;
-                hideAutoplayNotification();
             });
             
             backgroundAudio.addEventListener('loadeddata', () => {
@@ -1305,7 +1273,6 @@
             backgroundAudio.addEventListener('error', (e) => {
                 console.error('❌ Audio error:', e);
                 console.error('Error details:', backgroundAudio.error);
-                showErrorMessage();
             });
             
             backgroundAudio.addEventListener('ended', () => {
@@ -1317,44 +1284,6 @@
             // Test audio loading
             backgroundAudio.load();
             updateAudioButtons();
-            
-            // Show play prompt after short delay
-            setTimeout(() => {
-                if (!audioPlaying && audioLoaded) {
-                    showPlayPrompt();
-                } else if (!audioLoaded) {
-                    console.log('⏳ Audio still loading...');
-                    // Check again after more time
-                    setTimeout(() => {
-                        if (!audioLoaded) {
-                            showErrorMessage();
-                        } else if (!audioPlaying) {
-                            showPlayPrompt();
-                        }
-                    }, 3000);
-                }
-            }, 1500);
-        }
-
-        function showErrorMessage() {
-            if (!autoplayNotification) return;
-            autoplayNotification.innerHTML = '<strong>❌ Audio file not found</strong><br><small>Upload QUIETSTORM.mp3 to assets/audio/</small>';
-            autoplayNotification.style.display = 'block';
-            autoplayNotification.style.borderColor = 'red';
-            autoplayNotification.style.background = 'rgba(255, 0, 0, 0.9)';
-        }
-
-        function showPlayPrompt() {
-            if (!autoplayNotification) return;
-            autoplayNotification.innerHTML = '<strong>🎵 Click for music</strong><br><small>enhance your door 64 experience</small>';
-            autoplayNotification.style.display = 'block';
-            autoplayNotification.style.borderColor = '#fff';
-            autoplayNotification.style.background = 'rgba(255, 107, 53, 0.95)';
-        }
-
-        function hideAutoplayNotification() {
-            if (!autoplayNotification) return;
-            autoplayNotification.style.display = 'none';
         }
 
         function updateAudioButtons() {
@@ -1375,7 +1304,6 @@
 
         function toggleAudio() {
             console.log('🎵 Audio button clicked!');
-            hideAutoplayNotification();
             
             if (!backgroundAudio) {
                 console.error('❌ No audio element available');
