@@ -821,15 +821,15 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Audio Toggle Button -->
-        <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="background music">♪</button>
-        
-        <!-- Auto-play notification -->
-        <div id="autoplayNotification" class="autoplay-notification">
-            click ♪ to start background music
-        </div>
     </section>
+
+    <!-- Global Audio Controls (appear on all pages) -->
+    <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="background music">♪</button>
+    
+    <!-- Auto-play notification (global) -->
+    <div id="autoplayNotification" class="autoplay-notification">
+        click ♪ to start background music
+    </div>
 
     <!-- Space Section -->
     <section id="space" class="section">
@@ -1207,12 +1207,15 @@
     <script>
         // Audio Control
         let audioPlaying = false;
+        let audioInitialized = false; // Track if audio has been started
         let backgroundAudio = document.getElementById('backgroundAudio');
         let audioToggle = document.getElementById('audioToggle');
         let autoplayNotification = document.getElementById('autoplayNotification');
 
-        // Auto-play attempt on page load
+        // Auto-play attempt on page load (only once)
         function attemptAutoPlay() {
+            if (audioInitialized) return; // Don't restart if already initialized
+            
             console.log('Attempting auto-play...');
             backgroundAudio.volume = 0.3;
             
@@ -1221,6 +1224,7 @@
                 audioToggle.innerText = '⏸';
                 audioToggle.classList.add('playing');
                 audioPlaying = true;
+                audioInitialized = true; // Mark as initialized
                 hideAutoplayNotification();
             }).catch((error) => {
                 console.log('Auto-play blocked:', error.message);
@@ -1229,6 +1233,8 @@
         }
 
         function showAutoplayNotification() {
+            if (audioInitialized) return; // Don't show if audio already started
+            
             autoplayNotification.style.display = 'block';
             audioToggle.classList.add('blocked');
             
@@ -1245,7 +1251,7 @@
 
         function toggleAudio() {
             console.log('Audio button clicked!');
-            hideAutoplayNotification(); // Hide notification when user interacts
+            hideAutoplayNotification();
             
             if (audioPlaying) {
                 backgroundAudio.pause();
@@ -1261,6 +1267,7 @@
                     audioToggle.innerText = '⏸';
                     audioToggle.classList.add('playing');
                     audioPlaying = true;
+                    audioInitialized = true; // Mark as initialized
                     console.log('Audio started playing');
                 }).catch((error) => {
                     console.error('Audio play failed:', error);
@@ -1276,22 +1283,22 @@
             }
         }
 
-        // Try auto-play when page loads
+        // Try auto-play when page loads (only once)
         window.addEventListener('load', function() {
             console.log('Page loaded, attempting auto-play...');
-            setTimeout(attemptAutoPlay, 1000); // Wait 1 second for everything to load
+            setTimeout(attemptAutoPlay, 1000);
         });
 
-        // Also try on first user interaction if auto-play failed
+        // Also try on first user interaction if auto-play failed (only once)
         document.addEventListener('click', function firstClick() {
-            if (!audioPlaying) {
+            if (!audioInitialized) {
                 console.log('First click detected, trying auto-play...');
                 attemptAutoPlay();
             }
-            document.removeEventListener('click', firstClick); // Remove listener after first attempt
+            document.removeEventListener('click', firstClick);
         }, { once: true });
 
-        // Pause audio when navigating away from landing page
+        // Navigation between sections
         function showSection(sectionId) {
             // Hide all sections
             const sections = document.querySelectorAll('.section');
@@ -1302,10 +1309,7 @@
             // Show selected section
             document.getElementById(sectionId).classList.add('active');
             
-            // Pause audio if leaving landing page
-            if (sectionId !== 'landing' && audioPlaying) {
-                toggleAudio();
-            }
+            // Audio continues playing across all pages - no pause needed
             
             // Close mobile menu if open
             document.getElementById('navLinks').classList.remove('active');
