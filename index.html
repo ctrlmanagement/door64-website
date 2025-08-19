@@ -1,45 +1,4 @@
-// ULTIMATE SPLASH PAGE AUDIO START
-        setTimeout(() => {
-            console.log('🎯 ULTIMATE SPLASH AUDIO ATTEMPT');
-            const audio = document.getElementById('backgroundAudio');
-            const splash = document.getElementById('splashPage');
-            
-            if (audio && splash && !audioPlaying) {
-                // Try one more aggressive approach
-                audio.volume = 0.7; // Even higher volume
-                audio.currentTime = 0;
-                audio.loop = true;
-                
-                const ultimatePromise = audio.play();
-                if (ultimatePromise !== undefined) {
-                    ultimatePromise.then(() => {
-                        audioPlaying = true;
-                        console.log('🎉 ULTIMATE SUCCESS! Music playing on splash page!');
-                        
-                        // Update button immediately
-                        const btn = document.getElementById('splashAudioToggle');
-                        if (btn) {
-                            btn.innerText = '⏸';
-                            btn.classList.add('playing');
-                            btn.style.background = 'rgba(95, 179, 211, 0.9)';
-                            btn.style.borderColor = 'rgba(95, 179, 211, 1)';
-                        }
-                        
-                    }).catch(() => {
-                        console.log('🔵 Audio ready - will start on ANY user interaction');
-                        
-                        // Make the button more obvious
-                        const btn = document.getElementById('splashAudioToggle');
-                        if (btn) {
-                            btn.style.animation = 'pulseBlue 1s infinite';
-                            btn.style.background = 'rgba(95, 179, 211, 0.6)';
-                            btn.style.borderColor = 'rgba(95, 179, 211, 0.8)';
-                            btn.title = '🎵 QUIETSTORM ready - click or move mouse to start!';
-                        }
-                    });
-                }
-            }
-        }, 200); // Small delay to ensure elements exist<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -75,7 +34,7 @@
             color: #2c2c2c;
             background-color: #0a0a0a;
             overflow-x: hidden;
-            -webkit-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjustment */
             -ms-text-size-adjust: 100%;
             /* Better mobile handling */
             -webkit-overflow-scrolling: touch;
@@ -97,8 +56,10 @@
             top: 0;
             left: 0;
             z-index: 9999;
-            background: url('assets/audio/splash.png') center/cover no-repeat;
+            background: url('assets/audio/splash.png') center/contain no-repeat;
             background-color: #000;
+            background-size: contain;
+            background-position: center center;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -123,7 +84,7 @@
         }
 
         .splash-content {
-            display: none;
+            display: none; /* Hide any content overlay */
         }
 
         .splash-hint {
@@ -268,7 +229,7 @@
             100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
         }
 
-        /* Splash Audio Button */
+        /* Splash Audio Button - positioned differently */
         .splash-audio-toggle {
             position: fixed;
             top: 30px;
@@ -1818,6 +1779,11 @@
             
             console.log('✅ Audio elements found');
             
+            // More aggressive loading
+            backgroundAudio.preload = "auto";
+            backgroundAudio.load();
+            updateAllAudioButtons();
+            
             // Set up audio event listeners
             backgroundAudio.addEventListener('canplay', () => {
                 console.log('✅ Audio can play - file loaded successfully');
@@ -1849,11 +1815,6 @@
                 backgroundAudio.currentTime = 0;
                 backgroundAudio.play();
             });
-            
-            // More aggressive loading
-            backgroundAudio.preload = "auto";
-            backgroundAudio.load();
-            updateAllAudioButtons();
             
             // IMMEDIATE first attempt (don't wait)
             setTimeout(() => {
@@ -2011,6 +1972,108 @@
             updateAllAudioButtons();
         }
 
+        // SPLASH PAGE IMMEDIATE AUDIO TRIGGERS
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM ready - SPLASH PAGE AUDIO TRIGGERS ACTIVE');
+            
+            const splashPage = document.getElementById('splashPage');
+            const audio = document.getElementById('backgroundAudio');
+            
+            if (splashPage && audio && !audioPlaying) {
+                
+                // 1. Mouse enter splash page
+                splashPage.addEventListener('mouseenter', function() {
+                    if (!audioPlaying) {
+                        console.log('🎵 Mouse entered splash - starting audio');
+                        audio.volume = 0.6;
+                        audio.play().then(() => {
+                            audioPlaying = true;
+                            console.log('✅ Audio started on mouse enter');
+                            updateAllAudioButtons();
+                        }).catch(() => {});
+                    }
+                }, { once: true });
+                
+                // 2. Any mouse movement on splash
+                splashPage.addEventListener('mousemove', function() {
+                    if (!audioPlaying) {
+                        console.log('🎵 Mouse moved on splash - starting audio');
+                        audio.volume = 0.6;
+                        audio.play().then(() => {
+                            audioPlaying = true;
+                            console.log('✅ Audio started on mouse move');
+                            updateAllAudioButtons();
+                        }).catch(() => {});
+                    }
+                }, { once: true });
+                
+                // 3. Page scroll (even tiny movements)
+                window.addEventListener('scroll', function() {
+                    if (!audioPlaying) {
+                        console.log('🎵 Page scrolled - starting audio');
+                        audio.volume = 0.6;
+                        audio.play().then(() => {
+                            audioPlaying = true;
+                            console.log('✅ Audio started on scroll');
+                            updateAllAudioButtons();
+                        }).catch(() => {});
+                    }
+                }, { once: true });
+                
+                // 4. Any key press
+                document.addEventListener('keydown', function() {
+                    if (!audioPlaying) {
+                        console.log('🎵 Key pressed - starting audio');
+                        audio.volume = 0.6;
+                        audio.play().then(() => {
+                            audioPlaying = true;
+                            console.log('✅ Audio started on keypress');
+                            updateAllAudioButtons();
+                        }).catch(() => {});
+                    }
+                }, { once: true });
+                
+                // 5. Touch events for mobile
+                splashPage.addEventListener('touchstart', function() {
+                    if (!audioPlaying) {
+                        console.log('🎵 Touch detected - starting audio');
+                        audio.volume = 0.6;
+                        audio.play().then(() => {
+                            audioPlaying = true;
+                            console.log('✅ Audio started on touch');
+                            updateAllAudioButtons();
+                        }).catch(() => {});
+                    }
+                }, { once: true });
+                
+                // 6. Page visibility change
+                document.addEventListener('visibilitychange', function() {
+                    if (!document.hidden && !audioPlaying) {
+                        console.log('🎵 Page became visible - starting audio');
+                        audio.volume = 0.6;
+                        audio.play().then(() => {
+                            audioPlaying = true;
+                            console.log('✅ Audio started on visibility change');
+                            updateAllAudioButtons();
+                        }).catch(() => {});
+                    }
+                });
+                
+                // 7. Window focus
+                window.addEventListener('focus', function() {
+                    if (!audioPlaying) {
+                        console.log('🎵 Window focused - starting audio');
+                        audio.volume = 0.6;
+                        audio.play().then(() => {
+                            audioPlaying = true;
+                            console.log('✅ Audio started on focus');
+                            updateAllAudioButtons();
+                        }).catch(() => {});
+                    }
+                });
+            }
+        });
+
         // Enter main site function
         function enterMainSite() {
             const splashPage = document.getElementById('splashPage');
@@ -2061,7 +2124,7 @@
             console.log('✅ Main site initialized');
         }
 
-        // Background gallery slider functionality - FIXED LOOPING
+        // Background gallery slider functionality - ENHANCED LOOPING
         let slideInterval = null;
         let currentSlide = 0;
         let slidesInitialized = false;
@@ -2177,18 +2240,6 @@
                 clearInterval(slideInterval);
                 slideInterval = null;
                 console.log('⏸ Background slides stopped');
-            }
-        }
-
-        // Force continuous looping - this ensures slides NEVER stop looping
-        function forceSlideLoop() {
-            const currentSection = document.querySelector('.section.active');
-            if (currentSection?.id === 'landing' && isOnMainSite) {
-                const slides = document.querySelectorAll('.slide');
-                if (slides.length > 0 && !slideInterval) {
-                    console.log('🔄 Force restarting slide loop...');
-                    startBackgroundSlides();
-                }
             }
         }
 
@@ -2358,108 +2409,6 @@
                 }
                 
                 enterMainSite();
-            }
-        });
-
-        // SPLASH PAGE IMMEDIATE AUDIO TRIGGERS
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 DOM ready - SPLASH PAGE AUDIO TRIGGERS ACTIVE');
-            
-            const splashPage = document.getElementById('splashPage');
-            const audio = document.getElementById('backgroundAudio');
-            
-            if (splashPage && audio && !audioPlaying) {
-                
-                // 1. Mouse enter splash page
-                splashPage.addEventListener('mouseenter', function() {
-                    if (!audioPlaying) {
-                        console.log('🎵 Mouse entered splash - starting audio');
-                        audio.volume = 0.6;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            console.log('✅ Audio started on mouse enter');
-                            updateAllAudioButtons();
-                        }).catch(() => {});
-                    }
-                }, { once: true });
-                
-                // 2. Any mouse movement on splash
-                splashPage.addEventListener('mousemove', function() {
-                    if (!audioPlaying) {
-                        console.log('🎵 Mouse moved on splash - starting audio');
-                        audio.volume = 0.6;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            console.log('✅ Audio started on mouse move');
-                            updateAllAudioButtons();
-                        }).catch(() => {});
-                    }
-                }, { once: true });
-                
-                // 3. Page scroll (even tiny movements)
-                window.addEventListener('scroll', function() {
-                    if (!audioPlaying) {
-                        console.log('🎵 Page scrolled - starting audio');
-                        audio.volume = 0.6;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            console.log('✅ Audio started on scroll');
-                            updateAllAudioButtons();
-                        }).catch(() => {});
-                    }
-                }, { once: true });
-                
-                // 4. Any key press
-                document.addEventListener('keydown', function() {
-                    if (!audioPlaying) {
-                        console.log('🎵 Key pressed - starting audio');
-                        audio.volume = 0.6;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            console.log('✅ Audio started on keypress');
-                            updateAllAudioButtons();
-                        }).catch(() => {});
-                    }
-                }, { once: true });
-                
-                // 5. Touch events for mobile
-                splashPage.addEventListener('touchstart', function() {
-                    if (!audioPlaying) {
-                        console.log('🎵 Touch detected - starting audio');
-                        audio.volume = 0.6;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            console.log('✅ Audio started on touch');
-                            updateAllAudioButtons();
-                        }).catch(() => {});
-                    }
-                }, { once: true });
-                
-                // 6. Page visibility change
-                document.addEventListener('visibilitychange', function() {
-                    if (!document.hidden && !audioPlaying) {
-                        console.log('🎵 Page became visible - starting audio');
-                        audio.volume = 0.6;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            console.log('✅ Audio started on visibility change');
-                            updateAllAudioButtons();
-                        }).catch(() => {});
-                    }
-                });
-                
-                // 7. Window focus
-                window.addEventListener('focus', function() {
-                    if (!audioPlaying) {
-                        console.log('🎵 Window focused - starting audio');
-                        audio.volume = 0.6;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            console.log('✅ Audio started on focus');
-                            updateAllAudioButtons();
-                        }).catch(() => {});
-                    }
-                });
             }
         });
 
