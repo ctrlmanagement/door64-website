@@ -1700,10 +1700,11 @@
                 // Initialize main site features
                 initializeMainSite();
                 
-                // Ensure we start on landing page with slides running
+                // Start on landing page with slides
                 setTimeout(() => {
+                    console.log('🏠 Setting initial landing page');
                     showSection('landing');
-                }, 200);
+                }, 300); // Give time for initialization
             }, 1200);
             
             // Door creak sound effect
@@ -1715,21 +1716,28 @@
         }
 
         function initializeMainSite() {
+            console.log('🚀 Initializing main site...');
+            
             // Initialize Swiper galleries
             initializeSwiper();
             
-            // Start background slides
-            startBackgroundSlides();
+            // Don't start slides here - let showSection handle it
+            console.log('✅ Main site initialized');
         }
 
-        // Background gallery slider functionality
+        // Background gallery slider functionality - SIMPLIFIED
         let slideInterval = null;
         let currentSlide = 0;
+        let slidesInitialized = false;
 
-        function startBackgroundSlides() {
-            // Clear any existing interval
-            if (slideInterval) {
-                clearInterval(slideInterval);
+        function ensureSlidesRunning() {
+            // Only run slides on landing page
+            const currentSection = document.querySelector('.section.active');
+            const isOnLanding = currentSection?.id === 'landing';
+            
+            if (!isOnLanding) {
+                stopBackgroundSlides();
+                return;
             }
 
             const slides = document.querySelectorAll('.slide');
@@ -1738,28 +1746,67 @@
                 return;
             }
 
-            console.log(`🎬 Starting background slides (${slides.length} slides found)`);
+            // If already running and we're on landing, keep running
+            if (slideInterval) {
+                console.log('✅ Slides already running');
+                return;
+            }
 
-            function nextSlide() {
+            // Start fresh
+            startBackgroundSlides();
+        }
+
+        function startBackgroundSlides() {
+            // Clear any existing interval first
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+
+            const slides = document.querySelectorAll('.slide');
+            if (slides.length === 0) {
+                console.warn('⚠️ No slides found to start');
+                return;
+            }
+
+            // Ensure first slide is active
+            slides.forEach((slide, index) => {
+                if (index === 0) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            currentSlide = 0;
+
+            // Start the interval
+            slideInterval = setInterval(() => {
                 try {
-                    const slides = document.querySelectorAll('.slide'); // Re-query in case DOM changed
-                    if (slides.length === 0) return;
-                    
+                    const slides = document.querySelectorAll('.slide');
+                    if (slides.length === 0) {
+                        console.warn('⚠️ Slides disappeared, stopping interval');
+                        stopBackgroundSlides();
+                        return;
+                    }
+
+                    // Remove active from current
                     slides[currentSlide].classList.remove('active');
+                    
+                    // Move to next slide
                     currentSlide = (currentSlide + 1) % slides.length;
+                    
+                    // Add active to new current
                     slides[currentSlide].classList.add('active');
                     
-                    console.log(`🎬 Slide changed to: ${currentSlide + 1}/${slides.length}`);
+                    console.log(`🎬 Slide ${currentSlide + 1}/${slides.length}`);
                 } catch (error) {
-                    console.error('❌ Error in slide transition:', error);
-                    // Try to restart slides if there's an error
+                    console.error('❌ Slide error:', error);
                     stopBackgroundSlides();
-                    setTimeout(startBackgroundSlides, 1000);
                 }
-            }
-            
-            // Change slide every 3.4 seconds (synced to 70 BPM - every 4 beats)
-            slideInterval = setInterval(nextSlide, 3400);
+            }, 3400); // 3.4 seconds for 70 BPM sync
+
+            slidesInitialized = true;
+            console.log(`🎬 Background slides started (${slides.length} slides)`);
         }
 
         function stopBackgroundSlides() {
@@ -1768,35 +1815,6 @@
                 slideInterval = null;
                 console.log('⏸ Background slides stopped');
             }
-        }
-
-        function restartBackgroundSlides() {
-            console.log('🔄 Restarting background slides...');
-            
-            // Ensure we have the current slide set correctly
-            const slides = document.querySelectorAll('.slide');
-            if (slides.length > 0) {
-                // Find currently active slide or reset to first
-                let activeFound = false;
-                slides.forEach((slide, index) => {
-                    if (slide.classList.contains('active')) {
-                        currentSlide = index;
-                        activeFound = true;
-                    }
-                });
-                
-                // If no active slide found, reset to first
-                if (!activeFound) {
-                    console.log('🔧 No active slide found, resetting to first slide');
-                    slides.forEach(slide => slide.classList.remove('active'));
-                    slides[0].classList.add('active');
-                    currentSlide = 0;
-                }
-                
-                console.log(`🎬 Restarting from slide ${currentSlide + 1}/${slides.length}`);
-            }
-            
-            startBackgroundSlides();
         }
 
         function showSection(sectionId) {
