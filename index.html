@@ -1206,80 +1206,32 @@
     
     <!-- Initialize Swiper -->
     <script>
-        // Audio Control - Enhanced Auto-play
+        // Audio Control - Simplified and Fixed
         let audioPlaying = false;
-        let audioInitialized = false;
-        let autoplayAttempts = 0;
         let backgroundAudio = document.getElementById('backgroundAudio');
         let audioToggle = document.getElementById('audioToggle');
         let autoplayNotification = document.getElementById('autoplayNotification');
 
-        // Enhanced auto-play attempt
+        // Simple auto-play attempt
         function attemptAutoPlay() {
-            if (audioInitialized || autoplayAttempts > 3) return;
-            autoplayAttempts++;
-            
-            console.log(`Auto-play attempt ${autoplayAttempts}...`);
-            
-            // Start with very low volume and fade in
-            backgroundAudio.volume = 0.01;
-            backgroundAudio.muted = false;
+            console.log('Attempting auto-play...');
+            backgroundAudio.volume = 0.3;
             
             backgroundAudio.play().then(() => {
                 console.log('Auto-play successful!');
                 audioPlaying = true;
-                audioInitialized = true;
-                
-                // Fade in the volume gradually
-                fadeInAudio();
-                updateAudioButton();
+                audioToggle.innerText = '⏸';
+                audioToggle.classList.add('playing');
                 hideAutoplayNotification();
-                
             }).catch((error) => {
-                console.log(`Auto-play attempt ${autoplayAttempts} failed:`, error.message);
-                
-                if (autoplayAttempts <= 3) {
-                    // Try again in a moment
-                    setTimeout(attemptAutoPlay, 500);
-                } else {
-                    showAutoplayNotification();
-                }
+                console.log('Auto-play blocked:', error.message);
+                showAutoplayNotification();
             });
         }
 
-        // Fade in audio volume
-        function fadeInAudio() {
-            let targetVolume = 0.3;
-            let currentVolume = 0.01;
-            let fadeInterval = setInterval(() => {
-                if (currentVolume < targetVolume) {
-                    currentVolume += 0.02;
-                    backgroundAudio.volume = Math.min(currentVolume, targetVolume);
-                } else {
-                    clearInterval(fadeInterval);
-                }
-            }, 100);
-        }
-
-        // Update button appearance
-        function updateAudioButton() {
-            if (audioPlaying) {
-                audioToggle.innerText = '⏸';
-                audioToggle.classList.add('playing');
-            } else {
-                audioToggle.innerText = '♪';
-                audioToggle.classList.remove('playing');
-            }
-        }
-
         function showAutoplayNotification() {
-            if (audioInitialized) return;
-            
             autoplayNotification.style.display = 'block';
             audioToggle.classList.add('blocked');
-            
-            // Make button pulse to draw attention
-            audioToggle.style.animation = 'bounce 2s infinite';
             
             // Hide notification after 8 seconds
             setTimeout(() => {
@@ -1290,7 +1242,6 @@
         function hideAutoplayNotification() {
             autoplayNotification.style.display = 'none';
             audioToggle.classList.remove('blocked');
-            audioToggle.style.animation = '';
         }
 
         function toggleAudio() {
@@ -1300,51 +1251,38 @@
             if (audioPlaying) {
                 backgroundAudio.pause();
                 audioPlaying = false;
+                audioToggle.innerText = '♪';
+                audioToggle.classList.remove('playing');
                 console.log('Audio paused');
             } else {
                 backgroundAudio.volume = 0.3;
-                console.log('Starting audio manually...');
+                console.log('Starting audio...');
                 
                 backgroundAudio.play().then(() => {
                     audioPlaying = true;
-                    audioInitialized = true;
+                    audioToggle.innerText = '⏸';
+                    audioToggle.classList.add('playing');
                     console.log('Audio started playing');
                 }).catch((error) => {
                     console.error('Audio play failed:', error);
-                    alert('Audio could not be played. Please check your browser settings.');
+                    alert('Audio could not be played: ' + error.message);
                 });
             }
-            updateAudioButton();
         }
 
-        // Multiple auto-play triggers
+        // Try auto-play when page loads
         window.addEventListener('load', function() {
-            console.log('Page loaded, attempting auto-play...');
-            setTimeout(attemptAutoPlay, 500);
+            console.log('Page loaded, attempting auto-play in 1 second...');
+            setTimeout(attemptAutoPlay, 1000);
         });
 
-        // Try on any user interaction
-        ['click', 'touchstart', 'keydown', 'mousemove'].forEach(event => {
-            document.addEventListener(event, function() {
-                if (!audioInitialized) {
-                    attemptAutoPlay();
-                }
-            }, { once: true });
-        });
-
-        // Try when page becomes visible (tab focus)
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden && !audioInitialized) {
-                setTimeout(attemptAutoPlay, 100);
-            }
-        });
-
-        // Try after a delay (some browsers allow after user has been on site)
-        setTimeout(() => {
-            if (!audioInitialized) {
+        // Try on first user click if auto-play failed
+        document.addEventListener('click', function firstClick() {
+            if (!audioPlaying) {
+                console.log('First click detected, trying auto-play...');
                 attemptAutoPlay();
             }
-        }, 2000);
+        }, { once: true });
 
         // Navigation between sections
         function showSection(sectionId) {
