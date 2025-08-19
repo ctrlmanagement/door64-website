@@ -66,6 +66,12 @@
             color: #fff;
             text-transform: uppercase;
             letter-spacing: 3px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: #ccc;
         }
 
         .nav-links {
@@ -84,7 +90,7 @@
         }
 
         .nav-links a:hover {
-            color: #ff6b35;
+            color: #000;
         }
 
         .mobile-menu {
@@ -213,7 +219,7 @@
             margin-bottom: 20px;
             text-transform: lowercase;
             letter-spacing: 3px;
-            color: #ff6b35;
+            color: #000;
         }
 
         .sub-links {
@@ -235,60 +241,12 @@
             color: #fff;
         }
 
-        /* Bottom Left Carousel Gallery */
-        .carousel-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 400px;
-            height: 80px;
-            z-index: 999;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
-        .carousel-track {
-            display: flex;
-            animation: scroll-left 120s linear infinite;
-            height: 100%;
-        }
-
-        .carousel-item {
-            min-width: 80px;
-            height: 80px;
-            margin-right: 5px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        @keyframes scroll-left {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-
-        .carousel-track:hover {
-            animation-play-state: paused;
-        }
-
         /* Enter Button */
         .enter-btn {
             position: fixed;
             bottom: 50px;
             right: 50px;
-            background: #ff6b35;
+            background: #000;
             color: white;
             padding: 15px 30px;
             border: none;
@@ -303,7 +261,7 @@
         }
 
         .enter-btn:hover {
-            background: #e55a2b;
+            background: #333;
             transform: scale(1.05);
         }
 
@@ -371,7 +329,7 @@
             background: #f8f8f8;
             padding: 30px;
             border-radius: 10px;
-            border-left: 4px solid #ff6b35;
+            border-left: 4px solid #000;
         }
 
         .menu-item h3 {
@@ -387,7 +345,7 @@
         }
 
         .menu-item .price {
-            color: #ff6b35;
+            color: #000;
             font-weight: bold;
             font-size: 1.1em;
             margin-top: 10px;
@@ -404,11 +362,11 @@
             padding: 40px;
             margin-bottom: 30px;
             border-radius: 10px;
-            border-left: 4px solid #ff6b35;
+            border-left: 4px solid #000;
         }
 
         .event-date {
-            color: #ff6b35;
+            color: #000;
             font-weight: bold;
             text-transform: lowercase;
             letter-spacing: 1px;
@@ -471,7 +429,7 @@
             margin-bottom: 20px;
             text-transform: lowercase;
             letter-spacing: 2px;
-            color: #ff6b35;
+            color: #000;
         }
 
         .contact-card p {
@@ -488,7 +446,7 @@
         }
 
         .social-links a {
-            color: #ff6b35;
+            color: #000;
             font-size: 1.2em;
             text-decoration: none;
             text-transform: lowercase;
@@ -497,7 +455,7 @@
         }
 
         .social-links a:hover {
-            color: #000;
+            color: #666;
         }
 
         /* Reservation Form */
@@ -537,14 +495,14 @@
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
-            border-color: #ff6b35;
+            border-color: #000;
             outline: none;
         }
 
         .submit-btn {
             width: 100%;
             padding: 15px;
-            background: #ff6b35;
+            background: #000;
             color: white;
             border: none;
             border-radius: 5px;
@@ -558,11 +516,21 @@
         }
 
         .submit-btn:hover {
-            background: #e55a2b;
+            background: #333;
         }
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .nav {
+                padding: 15px 0;
+                transform: translateY(-100%);
+            }
+            
+            .nav:hover,
+            body:hover .nav {
+                transform: translateY(0);
+            }
+
             .nav-links {
                 display: none;
                 position: absolute;
@@ -585,11 +553,18 @@
 
             .landing-content h1 {
                 font-size: 3em;
+                letter-spacing: 4px;
             }
 
             .landing-links {
                 flex-direction: column;
                 gap: 40px;
+                margin-top: 40px;
+            }
+
+            .landing-link h3 {
+                font-size: 1.5em;
+                letter-spacing: 2px;
             }
 
             .section-title {
@@ -609,17 +584,16 @@
                 font-size: 14px;
             }
 
-            .carousel-container {
-                width: 300px;
-                height: 60px;
-                bottom: 10px;
-                left: 10px;
+            .landing-page {
+                min-height: 100vh;
+                height: auto;
+                padding: 80px 20px 40px;
             }
 
-            .carousel-item {
-                min-width: 60px;
-                height: 60px;
-                font-size: 8px;
+            .reservation-form,
+            .contact-card {
+                margin: 0 10px;
+                padding: 30px 20px;
             }
         }
     </style>
@@ -628,7 +602,7 @@
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
-            <div class="logo">Door 64</div>
+            <div class="logo" onclick="showSection('landing')">Door 64</div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" onclick="showSection('landing')">64</a></li>
                 <li><a href="#" onclick="showSection('space')">space</a></li>
@@ -683,62 +657,6 @@
                         <a href="#" onclick="showSection('social')">check on us</a>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Bottom Left Carousel Gallery -->
-        <div class="carousel-container">
-            <div class="carousel-track">
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 1</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 1</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 1</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 1</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 1</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 2</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 2</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 2</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 2</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 2</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 3</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 3</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 3</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 3</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 3</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 4</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 4</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 4</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 4</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 4</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 5</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 5</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 5</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 5</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 5</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 6</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 6</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 6</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 6</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 6</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 7</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 7</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 7</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 7</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 7</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 8</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 8</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 8</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 8</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 8</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 9</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 9</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 9</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 9</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 9</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 10</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 10</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 10</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 10</div>
-                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 10</div>
             </div>
         </div>
     </section>
@@ -978,7 +896,7 @@
                     <p>be the first to know about special events, new menu items, and exclusive offers.</p>
                     <div style="margin-top: 20px;">
                         <input type="email" placeholder="enter your email" style="padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 5px; font-family: Georgia, serif; color: #000;">
-                        <button style="padding: 12px 20px; background: #ff6b35; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif; text-transform: lowercase;">subscribe</button>
+                        <button style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif; text-transform: lowercase;">subscribe</button>
                     </div>
                     <p style="margin-top: 10px; font-size: 12px; color: #666;">questions? email us at inquiry@door64atl.com</p>
                 </div>
