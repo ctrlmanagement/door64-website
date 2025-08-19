@@ -8,13 +8,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     
     <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto" style="display: none;">
+    <audio id="backgroundAudio" loop preload="auto">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
         <source src="QUIETSTORM.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
-    
-
     
     <style>
         * {
@@ -35,6 +33,132 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+        }
+
+        /* =============== SPLASH PAGE STYLES =============== */
+        .splash-page {
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            background: url('assets/audio/splash.png') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 1.2s ease;
+        }
+
+        .splash-page.hidden {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        .splash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.1) 0%,
+                rgba(0,0,0,0.3) 50%,
+                rgba(0,0,0,0.4) 100%
+            );
+            pointer-events: none;
+        }
+
+        .splash-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .door-sign {
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #5fb3d3;
+            padding: 20px 35px;
+            border-radius: 6px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            max-width: 320px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .door-sign::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #5fb3d3, #4a9bc1, #5fb3d3);
+            border-radius: 6px;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        .door-sign:hover {
+            background: rgba(0, 0, 0, 0.98);
+            border-color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+        }
+
+        .enter-text {
+            font-size: 1.1em;
+            color: #5fb3d3;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .door-text {
+            font-size: 2.2em;
+            color: white;
+            letter-spacing: 2px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .splash-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1em;
+            letter-spacing: 2px;
+            text-transform: lowercase;
+            animation: fadeInOut 3s infinite;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* =============== MAIN SITE STYLES =============== */
+        .main-site {
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+
+        .main-site.active {
+            opacity: 1;
         }
 
         /* Navigation */
@@ -92,7 +216,7 @@
             color: #ccc;
         }
 
-        /* Audio Toggle Button - Fixed positioning */
+        /* Audio Toggle Button */
         .audio-toggle {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.3);
@@ -127,9 +251,39 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
         }
 
+        /* Splash Audio Button - positioned differently */
+        .splash-audio-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            font-family: 'Georgia', serif;
+        }
 
+        .splash-audio-toggle:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
 
-
+        .splash-audio-toggle.playing {
+            background: rgba(95, 179, 211, 0.9);
+            border-color: rgba(95, 179, 211, 1);
+            animation: pulse 2s infinite;
+        }
 
         .nav-links {
             display: flex;
@@ -165,14 +319,6 @@
         }
 
         /* Global Text Styling */
-        body {
-            font-family: 'Georgia', serif;
-            line-height: 1.6;
-            color: #000;
-            background-color: #0a0a0a;
-            overflow-x: hidden;
-        }
-
         h1, h2, h3, h4, h5, h6 {
             text-transform: lowercase;
             color: #000;
@@ -296,30 +442,6 @@
 
         .sub-links a:hover {
             color: #fff;
-        }
-
-        /* Enter Button */
-        .enter-btn {
-            position: fixed;
-            bottom: 50px;
-            left: 50px;
-            background: #000;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1001;
-            font-family: 'Georgia', serif;
-        }
-
-        .enter-btn:hover {
-            background: #333;
-            transform: scale(1.05);
         }
 
         /* Section Styles */
@@ -553,16 +675,6 @@
             text-align: center;
         }
 
-        @media (max-width: 768px) {
-            .swiper-container {
-                height: 300px;
-            }
-            
-            .gallery-placeholder {
-                font-size: 1em;
-            }
-        }
-
         /* Contact Info */
         .contact-info {
             display: grid;
@@ -675,6 +787,36 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .splash-audio-toggle {
+                top: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+
+            .splash-hint {
+                bottom: 20px;
+                font-size: 0.9em;
+                padding: 8px 16px;
+            }
+
+            .door-sign {
+                padding: 20px 30px;
+                margin: 0 20px;
+                max-width: 350px;
+            }
+            
+            .enter-text {
+                font-size: 1.2em;
+                letter-spacing: 1px;
+            }
+            
+            .door-text {
+                font-size: 2.2em;
+                letter-spacing: 2px;
+            }
+
             .nav {
                 padding: 15px 0;
                 transform: translateY(-100%);
@@ -731,13 +873,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .enter-btn {
-                bottom: 20px;
-                left: 20px;
-                padding: 12px 24px;
-                font-size: 14px;
-            }
-
             .landing-page {
                 min-height: 100vh;
                 height: auto;
@@ -750,469 +885,514 @@
                 padding: 30px 20px;
             }
         }
+
+        @media (max-width: 480px) {
+            .door-sign {
+                padding: 15px 25px;
+                margin: 0 15px;
+            }
+            
+            .enter-text {
+                font-size: 1em;
+            }
+            
+            .door-text {
+                font-size: 1.8em;
+                letter-spacing: 1px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .swiper-container {
+                height: 300px;
+            }
+            
+            .gallery-placeholder {
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-container">
-            <div class="nav-left">
-                <div class="logo" onclick="showSection('landing')">Door 64</div>
-                <button class="audio-toggle" onclick="toggleAudio()" title="Toggle Background Music">♪</button>
+    <!-- SPLASH PAGE -->
+    <div class="splash-page" id="splashPage">
+        <div class="splash-overlay"></div>
+        
+        <div class="splash-content">
+            <div class="door-sign">
+                <div class="enter-text">&gt;click to enter&lt;</div>
+                <div class="door-text">Door 64</div>
             </div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#" onclick="showSection('landing')">64</a></li>
-                <li><a href="#" onclick="showSection('space')">space</a></li>
-                <li><a href="#" onclick="showSection('kitchen')">in the kitchen</a></li>
-                <li><a href="#" onclick="showSection('bar')">at the bar</a></li>
-                <li><a href="#" onclick="showSection('gallery')">who was here</a></li>
-                <li><a href="#" onclick="showSection('events')">what to do</a></li>
-                <li><a href="#" onclick="showSection('social')">check on us</a></li>
-                <li><a href="#" onclick="showSection('reservations')">come see us</a></li>
-                <li><a href="#" onclick="showSection('contact')">hit us</a></li>
-            </ul>
-            <div class="mobile-menu" onclick="toggleMobileMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Landing Page -->
-    <section id="landing" class="landing-page section active">
-        <div class="gallery-slider">
-            <div class="slide active"></div>
-            <div class="slide"></div>
-            <div class="slide"></div>
         </div>
         
-        <div class="landing-content">
-            <h1>Door 64</h1>
+        <div class="splash-hint">click anywhere • space • enter</div>
+        
+        <!-- Splash Audio Controls -->
+        <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
+    </div>
+
+    <!-- MAIN SITE -->
+    <div class="main-site" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-left">
+                    <div class="logo" onclick="showSection('landing')">Door 64</div>
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#" onclick="showSection('landing')">64</a></li>
+                    <li><a href="#" onclick="showSection('space')">space</a></li>
+                    <li><a href="#" onclick="showSection('kitchen')">in the kitchen</a></li>
+                    <li><a href="#" onclick="showSection('bar')">at the bar</a></li>
+                    <li><a href="#" onclick="showSection('gallery')">who was here</a></li>
+                    <li><a href="#" onclick="showSection('events')">what to do</a></li>
+                    <li><a href="#" onclick="showSection('social')">check on us</a></li>
+                    <li><a href="#" onclick="showSection('reservations')">come see us</a></li>
+                    <li><a href="#" onclick="showSection('contact')">hit us</a></li>
+                </ul>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Landing Page -->
+        <section id="landing" class="landing-page section active">
+            <div class="gallery-slider">
+                <div class="slide active"></div>
+                <div class="slide"></div>
+                <div class="slide"></div>
+            </div>
             
-            <div class="landing-links">
-                <div class="landing-link">
-                    <h3>what to do</h3>
-                    <div class="sub-links">
-                        <a href="#" onclick="showSection('reservations')">make reservation</a>
-                        <a href="#" onclick="showSection('events')">upcoming events</a>
+            <div class="landing-content">
+                <h1>Door 64</h1>
+                
+                <div class="landing-links">
+                    <div class="landing-link">
+                        <h3>what to do</h3>
+                        <div class="sub-links">
+                            <a href="#" onclick="showSection('reservations')">make reservation</a>
+                            <a href="#" onclick="showSection('events')">upcoming events</a>
+                        </div>
+                    </div>
+                    
+                    <div class="landing-link">
+                        <h3>space</h3>
+                        <div class="sub-links">
+                            <a href="#" onclick="showSection('kitchen')">in the kitchen</a>
+                            <a href="#" onclick="showSection('bar')">at the bar</a>
+                        </div>
+                    </div>
+                    
+                    <div class="landing-link">
+                        <h3>gallery</h3>
+                        <div class="sub-links">
+                            <a href="#" onclick="showSection('gallery')">who was here</a>
+                            <a href="#" onclick="showSection('social')">check on us</a>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="landing-link">
-                    <h3>space</h3>
-                    <div class="sub-links">
-                        <a href="#" onclick="showSection('kitchen')">in the kitchen</a>
-                        <a href="#" onclick="showSection('bar')">at the bar</a>
+                <!-- Landing Gallery Swiper -->
+                <div class="swiper-container landing-swiper" id="landing-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>intimate dining experience</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>craft cocktails</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>culinary artistry</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>wine selection</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>elegant atmosphere</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>chef's expertise</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>fresh ingredients</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>private events</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>seasonal menu</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>kitchen artistry</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Space Section -->
+        <section id="space" class="section">
+            <div class="container">
+                <h2 class="section-title">space</h2>
+                <div class="space-grid">
+                    <div class="space-item">
+                        <h3>main dining</h3>
+                        <p>intimate setting for 24 guests with an open kitchen view. experience the energy and artistry of our culinary team in action.</p>
+                    </div>
+                    <div class="space-item">
+                        <h3>private room</h3>
+                        <p>exclusive space for up to 12 guests. perfect for special occasions, business dinners, or intimate celebrations.</p>
+                    </div>
+                    <div class="space-item">
+                        <h3>chef's counter</h3>
+                        <p>six seats directly at the kitchen counter. the ultimate interactive dining experience with direct chef interaction.</p>
+                    </div>
+                    <div class="space-item">
+                        <h3>wine cellar</h3>
+                        <p>temperature-controlled environment housing over 200 carefully curated bottles from around the world.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kitchen Section -->
+        <section id="kitchen" class="section">
+            <div class="container">
+                <h2 class="section-title">in the kitchen</h2>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <h3>seasonal tasting menu</h3>
+                        <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
+                        <div class="price">$125 per person</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>chef's selection</h3>
+                        <p>let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
+                        <div class="price">$95 per person</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>vegetarian experience</h3>
+                        <p>plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
+                        <div class="price">$85 per person</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>wine pairings</h3>
+                        <p>carefully selected wines to complement each course, curated by our sommelier.</p>
+                        <div class="price">$65 per person</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bar Section -->
+        <section id="bar" class="section">
+            <div class="container">
+                <h2 class="section-title">at the bar</h2>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <h3>signature cocktails</h3>
+                        <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
+                        <div class="price">$16 - $22</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>classic collection</h3>
+                        <p>timeless cocktails executed with precision using the finest spirits and traditional methods.</p>
+                        <div class="price">$14 - $18</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>rare spirits</h3>
+                        <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
+                        <div class="price">$25 - $150</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>zero-proof options</h3>
+                        <p>sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
+                        <div class="price">$12 - $16</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="section">
+            <div class="container">
+                <h2 class="section-title">who was here</h2>
                 
-                <div class="landing-link">
-                    <h3>gallery</h3>
-                    <div class="sub-links">
-                        <a href="#" onclick="showSection('gallery')">who was here</a>
-                        <a href="#" onclick="showSection('social')">check on us</a>
+                <!-- Featured Events Gallery -->
+                <div class="gallery-section">
+                    <h3>featured events</h3>
+                    <div class="swiper-container" id="events-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">opening night celebration</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">chef collaboration dinner</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">wine pairing evening</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">anniversary celebration</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">private party</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">food critics visit</div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+
+                <!-- Food & Cocktails Gallery -->
+                <div class="gallery-section">
+                    <h3>culinary artistry</h3>
+                    <div class="swiper-container" id="food-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">seasonal tasting menu</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">signature cocktail</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">chef's special creation</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">artisanal dessert</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">craft cocktail preparation</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">fresh ingredients</div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+
+                <!-- Behind the Scenes Gallery -->
+                <div class="gallery-section">
+                    <h3>behind the scenes</h3>
+                    <div class="swiper-container" id="bts-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">kitchen in action</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">team collaboration</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">ingredient preparation</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">plating perfection</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">daily setup</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">creative process</div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Landing Gallery Swiper -->
-            <div class="swiper-container landing-swiper" id="landing-swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>intimate dining experience</span>
-                        </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="section">
+            <div class="container">
+                <h2 class="section-title">what to do</h2>
+                <div class="events-list">
+                    <div class="event-item">
+                        <div class="event-date">every tuesday</div>
+                        <h3>wine & dine</h3>
+                        <p>join us for an intimate evening featuring wine pairings with a special 5-course menu. limited to 16 guests.</p>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>craft cocktails</span>
-                        </div>
+                    <div class="event-item">
+                        <div class="event-date">first friday</div>
+                        <h3>chef's table experience</h3>
+                        <p>exclusive 6-seat experience at the chef's counter with personalized menu and wine selections.</p>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>culinary artistry</span>
-                        </div>
+                    <div class="event-item">
+                        <div class="event-date">saturday afternoons</div>
+                        <h3>cooking classes</h3>
+                        <p>learn the techniques behind our signature dishes in hands-on cooking workshops.</p>
                     </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>wine selection</span>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>elegant atmosphere</span>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>chef's expertise</span>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>fresh ingredients</span>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>private events</span>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>seasonal menu</span>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=280&fit=crop'); background-size: cover;">
-                            <span>kitchen artistry</span>
-                        </div>
+                    <div class="event-item">
+                        <div class="event-date">monthly</div>
+                        <h3>private events</h3>
+                        <p>book the entire restaurant for your special occasion. customized menus and service available.</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-
-    
-
-
-    <!-- Space Section -->
-    <section id="space" class="section">
-        <div class="container">
-            <h2 class="section-title">space</h2>
-            <div class="space-grid">
-                <div class="space-item">
-                    <h3>main dining</h3>
-                    <p>intimate setting for 24 guests with an open kitchen view. experience the energy and artistry of our culinary team in action.</p>
-                </div>
-                <div class="space-item">
-                    <h3>private room</h3>
-                    <p>exclusive space for up to 12 guests. perfect for special occasions, business dinners, or intimate celebrations.</p>
-                </div>
-                <div class="space-item">
-                    <h3>chef's counter</h3>
-                    <p>six seats directly at the kitchen counter. the ultimate interactive dining experience with direct chef interaction.</p>
-                </div>
-                <div class="space-item">
-                    <h3>wine cellar</h3>
-                    <p>temperature-controlled environment housing over 200 carefully curated bottles from around the world.</p>
+        <!-- Reservations Section -->
+        <section id="reservations" class="section">
+            <div class="container">
+                <h2 class="section-title">come see us</h2>
+                <div class="reservation-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">phone</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">preferred date</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">preferred time</label>
+                            <select id="time" name="time" required>
+                                <option value="">select time</option>
+                                <option value="6:00 PM">6:00 PM</option>
+                                <option value="6:30 PM">6:30 PM</option>
+                                <option value="8:00 PM">8:00 PM</option>
+                                <option value="8:30 PM">8:30 PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guests">number of guests</label>
+                            <select id="guests" name="guests" required>
+                                <option value="">select</option>
+                                <option value="1">1 guest</option>
+                                <option value="2">2 guests</option>
+                                <option value="3">3 guests</option>
+                                <option value="4">4 guests</option>
+                                <option value="5">5 guests</option>
+                                <option value="6">6 guests</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="special">special requests</label>
+                            <textarea id="special" name="special" rows="4" placeholder="dietary restrictions, allergies, special occasions..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">request reservation</button>
+                    </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Kitchen Section -->
-    <section id="kitchen" class="section">
-        <div class="container">
-            <h2 class="section-title">in the kitchen</h2>
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <h3>seasonal tasting menu</h3>
-                    <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
-                    <div class="price">$125 per person</div>
-                </div>
-                <div class="menu-item">
-                    <h3>chef's selection</h3>
-                    <p>let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
-                    <div class="price">$95 per person</div>
-                </div>
-                <div class="menu-item">
-                    <h3>vegetarian experience</h3>
-                    <p>plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
-                    <div class="price">$85 per person</div>
-                </div>
-                <div class="menu-item">
-                    <h3>wine pairings</h3>
-                    <p>carefully selected wines to complement each course, curated by our sommelier.</p>
-                    <div class="price">$65 per person</div>
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 class="section-title">hit us</h2>
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <h3>location</h3>
+                        <p>64 Third St NW</p>
+                        <p>Atlanta, GA 30308</p>
+                    </div>
+                    <div class="contact-card">
+                        <h3>phone</h3>
+                        <p>(404) 555-DOOR</p>
+                        <p>(404) 555-3667</p>
+                    </div>
+                    <div class="contact-card">
+                        <h3>hours</h3>
+                        <p>thursday - saturday: 5:00 PM - 3:00 AM</p>
+                        <p>sunday: 5:00 PM - 12:00 AM</p>
+                        <p>monday - wednesday: closed</p>
+                    </div>
+                    <div class="contact-card">
+                        <h3>email</h3>
+                        <p>inquiry@door64atl.com</p>
+                        <p>events@door64atl.com</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Bar Section -->
-    <section id="bar" class="section">
-        <div class="container">
-            <h2 class="section-title">at the bar</h2>
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <h3>signature cocktails</h3>
-                    <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
-                    <div class="price">$16 - $22</div>
-                </div>
-                <div class="menu-item">
-                    <h3>classic collection</h3>
-                    <p>timeless cocktails executed with precision using the finest spirits and traditional methods.</p>
-                    <div class="price">$14 - $18</div>
-                </div>
-                <div class="menu-item">
-                    <h3>rare spirits</h3>
-                    <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
-                    <div class="price">$25 - $150</div>
-                </div>
-                <div class="menu-item">
-                    <h3>zero-proof options</h3>
-                    <p>sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
-                    <div class="price">$12 - $16</div>
+        <!-- Social Section -->
+        <section id="social" class="section">
+            <div class="container">
+                <h2 class="section-title">check on us</h2>
+                <div class="contact-card" style="max-width: 600px; margin: 0 auto;">
+                    <h3>follow our journey</h3>
+                    <p>stay connected with door 64 for the latest updates, behind-the-scenes content, and special announcements.</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/door64atl/">instagram</a>
+                        <a href="#">facebook</a>
+                        <a href="#">twitter</a>
+                        <a href="#">tiktok</a>
+                    </div>
+                    <div style="margin-top: 40px;">
+                        <p><strong>newsletter signup</strong></p>
+                        <p>be the first to know about special events, new menu items, and exclusive offers.</p>
+                        <div style="margin-top: 20px;">
+                            <input type="email" placeholder="enter your email" style="padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 5px; font-family: Georgia, serif; color: #000;">
+                            <button style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif; text-transform: lowercase;">subscribe</button>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">questions? email us at inquiry@door64atl.com</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery" class="section">
-        <div class="container">
-            <h2 class="section-title">who was here</h2>
-            
-            <!-- Featured Events Gallery -->
-            <div class="gallery-section">
-                <h3>featured events</h3>
-                <div class="swiper-container" id="events-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">opening night celebration</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">chef collaboration dinner</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">wine pairing evening</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">anniversary celebration</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">private party</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">food critics visit</div>
-                        </div>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-            </div>
-
-            <!-- Food & Cocktails Gallery -->
-            <div class="gallery-section">
-                <h3>culinary artistry</h3>
-                <div class="swiper-container" id="food-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">seasonal tasting menu</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">signature cocktail</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">chef's special creation</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">artisanal dessert</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">craft cocktail preparation</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">fresh ingredients</div>
-                        </div>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-            </div>
-
-            <!-- Behind the Scenes Gallery -->
-            <div class="gallery-section">
-                <h3>behind the scenes</h3>
-                <div class="swiper-container" id="bts-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">kitchen in action</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">team collaboration</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">ingredient preparation</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">plating perfection</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">daily setup</div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder">creative process</div>
-                        </div>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Events Section -->
-    <section id="events" class="section">
-        <div class="container">
-            <h2 class="section-title">what to do</h2>
-            <div class="events-list">
-                <div class="event-item">
-                    <div class="event-date">every tuesday</div>
-                    <h3>wine & dine</h3>
-                    <p>join us for an intimate evening featuring wine pairings with a special 5-course menu. limited to 16 guests.</p>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">first friday</div>
-                    <h3>chef's table experience</h3>
-                    <p>exclusive 6-seat experience at the chef's counter with personalized menu and wine selections.</p>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">saturday afternoons</div>
-                    <h3>cooking classes</h3>
-                    <p>learn the techniques behind our signature dishes in hands-on cooking workshops.</p>
-                </div>
-                <div class="event-item">
-                    <div class="event-date">monthly</div>
-                    <h3>private events</h3>
-                    <p>book the entire restaurant for your special occasion. customized menus and service available.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Reservations Section -->
-    <section id="reservations" class="section">
-        <div class="container">
-            <h2 class="section-title">come see us</h2>
-            <div class="reservation-form">
-                <form>
-                    <div class="form-group">
-                        <label for="name">name</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">phone</label>
-                        <input type="tel" id="phone" name="phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">preferred date</label>
-                        <input type="date" id="date" name="date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="time">preferred time</label>
-                        <select id="time" name="time" required>
-                            <option value="">select time</option>
-                            <option value="6:00 PM">6:00 PM</option>
-                            <option value="6:30 PM">6:30 PM</option>
-                            <option value="8:00 PM">8:00 PM</option>
-                            <option value="8:30 PM">8:30 PM</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="guests">number of guests</label>
-                        <select id="guests" name="guests" required>
-                            <option value="">select</option>
-                            <option value="1">1 guest</option>
-                            <option value="2">2 guests</option>
-                            <option value="3">3 guests</option>
-                            <option value="4">4 guests</option>
-                            <option value="5">5 guests</option>
-                            <option value="6">6 guests</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="special">special requests</label>
-                        <textarea id="special" name="special" rows="4" placeholder="dietary restrictions, allergies, special occasions..."></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">request reservation</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title">hit us</h2>
-            <div class="contact-info">
-                <div class="contact-card">
-                    <h3>location</h3>
-                    <p>64 Third St NW</p>
-                    <p>Atlanta, GA 30308</p>
-                </div>
-                <div class="contact-card">
-                    <h3>phone</h3>
-                    <p>(404) 555-DOOR</p>
-                    <p>(404) 555-3667</p>
-                </div>
-                <div class="contact-card">
-                    <h3>hours</h3>
-                    <p>thursday - saturday: 5:00 PM - 3:00 AM</p>
-                    <p>sunday: 5:00 PM - 12:00 AM</p>
-                    <p>monday - wednesday: closed</p>
-                </div>
-                <div class="contact-card">
-                    <h3>email</h3>
-                    <p>inquiry@door64atl.com</p>
-                    <p>events@door64atl.com</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Social Section -->
-    <section id="social" class="section">
-        <div class="container">
-            <h2 class="section-title">check on us</h2>
-            <div class="contact-card" style="max-width: 600px; margin: 0 auto;">
-                <h3>follow our journey</h3>
-                <p>stay connected with door 64 for the latest updates, behind-the-scenes content, and special announcements.</p>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/door64atl/">instagram</a>
-                    <a href="#">facebook</a>
-                    <a href="#">twitter</a>
-                    <a href="#">tiktok</a>
-                </div>
-                <div style="margin-top: 40px;">
-                    <p><strong>newsletter signup</strong></p>
-                    <p>be the first to know about special events, new menu items, and exclusive offers.</p>
-                    <div style="margin-top: 20px;">
-                        <input type="email" placeholder="enter your email" style="padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 5px; font-family: Georgia, serif; color: #000;">
-                        <button style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif; text-transform: lowercase;">subscribe</button>
-                    </div>
-                    <p style="margin-top: 10px; font-size: 12px; color: #666;">questions? email us at inquiry@door64atl.com</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <script>
-        // Audio Control - Improved and Simplified
+        // Audio Control System
         let audioPlaying = false;
         let audioLoaded = false;
         let backgroundAudio;
-        let audioButtons;
+        let splashAudioButton;
+        let navAudioButton;
+        let isOnMainSite = false;
 
         // Initialize audio system
         function initializeAudio() {
             console.log('🚀 Initializing audio system...');
             
             backgroundAudio = document.getElementById('backgroundAudio');
-            audioButtons = document.querySelectorAll('.audio-toggle');
+            splashAudioButton = document.getElementById('splashAudioToggle');
+            navAudioButton = document.querySelector('.audio-toggle');
             
             if (!backgroundAudio) {
-                console.error('❌ Background audio element not found!');
+                console.error('❌ Audio elements not found!');
                 return;
             }
             
@@ -1222,6 +1402,7 @@
             backgroundAudio.addEventListener('canplay', () => {
                 console.log('✅ Audio can play - file loaded successfully');
                 audioLoaded = true;
+                updateAllAudioButtons();
             });
             
             backgroundAudio.addEventListener('loadeddata', () => {
@@ -1240,15 +1421,36 @@
                 backgroundAudio.play();
             });
             
-            // Test audio loading
+            // Load audio
             backgroundAudio.load();
-            updateAudioButtons();
+            updateAllAudioButtons();
+            
+            // Auto-start audio after short delay (if browser allows)
+            setTimeout(() => {
+                if (audioLoaded && !audioPlaying) {
+                    startAudioAutomatically();
+                }
+            }, 1000);
         }
 
-        function updateAudioButtons() {
-            if (!audioButtons) return;
+        function startAudioAutomatically() {
+            if (!backgroundAudio || !audioLoaded) return;
             
-            audioButtons.forEach(button => {
+            backgroundAudio.volume = 0.25; // Start quietly
+            backgroundAudio.play().then(() => {
+                audioPlaying = true;
+                console.log('✅ Audio started automatically');
+                updateAllAudioButtons();
+            }).catch((error) => {
+                console.log('ℹ️ Auto-play blocked by browser (normal)');
+                // This is expected - browsers block autoplay until user interaction
+            });
+        }
+
+        function updateAllAudioButtons() {
+            const buttons = [splashAudioButton, navAudioButton].filter(btn => btn);
+            
+            buttons.forEach(button => {
                 if (audioPlaying) {
                     button.innerText = '⏸';
                     button.classList.add('playing');
@@ -1261,27 +1463,21 @@
             });
         }
 
-        function toggleAudio() {
+        function toggleAudio(event) {
+            event.stopPropagation(); // Don't trigger other click events
             console.log('🎵 Audio button clicked!');
             
             if (!backgroundAudio) {
                 console.error('❌ No audio element available');
-                alert('Audio system not initialized');
                 return;
             }
             
             if (!audioLoaded) {
                 console.warn('⚠️ Audio not loaded yet');
-                
-                // Try to force load
                 backgroundAudio.load();
-                
-                // Wait a moment and try again
                 setTimeout(() => {
                     if (audioLoaded) {
-                        toggleAudio();
-                    } else {
-                        alert('Audio is still loading. Please check that QUIETSTORM.mp3 is uploaded to assets/audio/ folder.');
+                        toggleAudio(event);
                     }
                 }, 1000);
                 return;
@@ -1302,29 +1498,59 @@
                     console.error('❌ Audio play failed:', error);
                     
                     if (error.name === 'NotAllowedError') {
-                        alert('🚫 Browser blocked audio playback. Please try clicking the button again or refresh the page.');
-                    } else if (error.name === 'AbortError' || error.name === 'NotSupportedError') {
-                        alert('❌ Audio file format not supported or file not found.\n\nPlease ensure QUIETSTORM.mp3 is uploaded to the assets/audio/ folder.');
+                        alert('🚫 Browser blocked audio playback. Please try clicking the button again.');
                     } else {
                         alert(`❌ Audio error: ${error.message}`);
                     }
                 });
             }
-            updateAudioButtons();
+            updateAllAudioButtons();
         }
 
-        // Background gallery slider functionality
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        
-        function nextSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
+        // Enter main site function
+        function enterMainSite() {
+            const splashPage = document.getElementById('splashPage');
+            const mainSite = document.getElementById('mainSite');
+            
+            // Hide splash page
+            splashPage.classList.add('hidden');
+            
+            // Show main site after short delay
+            setTimeout(() => {
+                splashPage.style.display = 'none';
+                mainSite.classList.add('active');
+                isOnMainSite = true;
+                
+                // Initialize main site features
+                initializeMainSite();
+            }, 1200);
+            
+            // Door creak sound effect
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmYZBkCU1/LX');
+                audio.volume = 0.2;
+                audio.play().catch(() => {}); // Ignore if audio fails
+            } catch(e) {}
         }
-        
-        // Change slide every 3.4 seconds (synced to 70 BPM - every 4 beats)
-        setInterval(nextSlide, 3400);
+
+        function initializeMainSite() {
+            // Background gallery slider functionality
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide');
+            
+            function nextSlide() {
+                if (slides.length === 0) return;
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Change slide every 3.4 seconds (synced to 70 BPM - every 4 beats)
+            setInterval(nextSlide, 3400);
+
+            // Initialize Swiper galleries
+            initializeSwiper();
+        }
 
         function showSection(sectionId) {
             // Hide all sections
@@ -1334,7 +1560,10 @@
             });
             
             // Show selected section
-            document.getElementById(sectionId).classList.add('active');
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
             
             // Close mobile menu if open
             const navLinks = document.getElementById('navLinks');
@@ -1371,152 +1600,147 @@
             }
         });
 
-        // Initialize everything when page loads
+        // Splash page click handlers
+        document.getElementById('splashPage').addEventListener('click', function(event) {
+            // Don't trigger if clicking audio button
+            if (event.target.closest('.splash-audio-toggle')) return;
+            enterMainSite();
+        });
+
+        // Keyboard support for splash page
+        document.addEventListener('keydown', function(event) {
+            if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
+                event.preventDefault();
+                enterMainSite();
+            }
+        });
+
+        // Initialize when page loads
         window.addEventListener('load', function() {
-            console.log('📄 Page loaded, initializing audio...');
+            console.log('📄 Page loaded, initializing...');
             initializeAudio();
         });
 
-        // Debug functions for console
-        window.debugAudio = function() {
-            console.log('=== AUDIO DEBUG INFO ===');
-            console.log('Audio element:', backgroundAudio);
-            console.log('Audio source:', backgroundAudio?.src);
-            console.log('Audio ready state:', backgroundAudio?.readyState);
-            console.log('Audio duration:', backgroundAudio?.duration);
-            console.log('Audio loaded:', audioLoaded);
-            console.log('Audio playing:', audioPlaying);
-            console.log('Buttons found:', audioButtons?.length || 0);
-        };
+        // Initialize Swiper galleries
+        function initializeSwiper() {
+            // Initialize Landing Page Swiper (continuous flow synced to beat)
+            var landingSwiper = new Swiper('#landing-swiper', {
+                slidesPerView: 'auto',
+                spaceBetween: 0,
+                loop: true,
+                autoplay: {
+                    delay: 0,
+                    disableOnInteraction: false,
+                    reverseDirection: false,
+                },
+                speed: 2400, // Faster, more rhythmic
+                allowTouchMove: false,
+                freeMode: true,
+                freeModeMomentum: false,
+            });
+
+            // Initialize Events Swiper (synced to 70 BPM - every 6 beats)
+            var eventsSwiper = new Swiper('#events-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 5100, // 6 beats at 70 BPM
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+
+            // Initialize Food Swiper (synced to 70 BPM - every 5 beats)  
+            var foodSwiper = new Swiper('#food-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 4300, // 5 beats at 70 BPM
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+
+            // Initialize Behind the Scenes Swiper (synced to 70 BPM - every 7 beats)
+            var btsSwiper = new Swiper('#bts-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 6000, // 7 beats at 70 BPM
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+        }
     </script>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    
-    <!-- Initialize Swiper -->
-    <script>
-        /* 
-         * Gallery Timing Synced to QUIETSTORM Music (70 BPM)
-         * - Background slides: Every 4 beats (3400ms)
-         * - Landing swiper: Continuous flow (2400ms speed)
-         * - Events gallery: Every 6 beats (5100ms)
-         * - Food gallery: Every 5 beats (4300ms) 
-         * - BTS gallery: Every 7 beats (6000ms)
-         */
-        // Initialize Landing Page Swiper (continuous flow synced to beat)
-        var landingSwiper = new Swiper('#landing-swiper', {
-            slidesPerView: 'auto',
-            spaceBetween: 0,
-            loop: true,
-            autoplay: {
-                delay: 0,
-                disableOnInteraction: false,
-                reverseDirection: false,
-            },
-            speed: 2400, // Faster, more rhythmic
-            allowTouchMove: false,
-            freeMode: true,
-            freeModeMomentum: false,
-        });
-
-        // Initialize Events Swiper (synced to 70 BPM - every 6 beats)
-        var eventsSwiper = new Swiper('#events-swiper', {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 5100, // 6 beats at 70 BPM
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                },
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 30,
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                },
-            },
-        });
-
-        // Initialize Food Swiper (synced to 70 BPM - every 5 beats)  
-        var foodSwiper = new Swiper('#food-swiper', {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 4300, // 5 beats at 70 BPM
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                },
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 30,
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                },
-            },
-        });
-
-        // Initialize Behind the Scenes Swiper (synced to 70 BPM - every 7 beats)
-        var btsSwiper = new Swiper('#bts-swiper', {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 6000, // 7 beats at 70 BPM
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                },
-                768: {
-                    slidesPerView: 2,
-                    spaceBetween: 30,
-                },
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                },
-            },
-        });
-    </script>
 </body>
 </html>
