@@ -5,17 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
     <title>Door 64</title>
+    
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    
-    <!-- Background Audio with multiple sources for compatibility -->
-    <audio id="backgroundAudio" loop preload="auto" playsinline webkit-playsinline autoplay muted>
-        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
-        <source src="QUIETSTORM.mp3" type="audio/mpeg">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
     
     <style>
         * {
@@ -65,7 +60,8 @@
             top: 0;
             left: 0;
             z-index: 9999;
-            background: url('assets/audio/splash.png') center/contain no-repeat, #000;
+            background: url('assets/audio/splash.png') center/contain no-repeat;
+            background-color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -79,7 +75,8 @@
 
         @media (max-width: 768px) {
             .splash-page {
-                background: url('assets/audio/splash.png') center/cover no-repeat, #000;
+                background-size: cover;
+                background-position: center center;
             }
         }
 
@@ -114,7 +111,7 @@
             50% { opacity: 1; }
         }
 
-        /* Audio Toggle Button */
+        /* Audio Toggle Buttons */
         .splash-audio-toggle {
             position: fixed;
             top: max(30px, calc(var(--safe-area-top) + 20px));
@@ -136,8 +133,7 @@
             font-family: 'Georgia', serif;
         }
 
-        .splash-audio-toggle:hover,
-        .splash-audio-toggle:active {
+        .splash-audio-toggle:hover {
             background: rgba(0, 0, 0, 0.9);
             border-color: rgba(255, 255, 255, 0.6);
             transform: scale(1.1);
@@ -277,11 +273,6 @@
             display: none;
             flex-direction: column;
             cursor: pointer;
-            width: 44px;
-            height: 44px;
-            padding: 10px;
-            justify-content: center;
-            align-items: center;
         }
 
         .mobile-menu span {
@@ -290,6 +281,21 @@
             background: #fff;
             margin: 3px 0;
             transition: 0.3s;
+        }
+
+        /* Global Text Styling */
+        h1, h2, h3, h4, h5, h6 {
+            text-transform: lowercase;
+            color: #000;
+        }
+
+        p, .sub-links a, .menu-item p {
+            color: #666;
+            text-transform: lowercase;
+        }
+
+        .section {
+            background: #fff;
         }
 
         /* =============== LANDING PAGE =============== */
@@ -326,7 +332,10 @@
             transition: opacity 1.5s ease-in-out;
             background-size: cover;
             background-position: center;
-            will-change: opacity;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .slide.active {
@@ -335,9 +344,6 @@
 
         .slide:nth-child(1) {
             background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .slide:nth-child(1)::before {
@@ -347,7 +353,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-size: clamp(1.5rem, 6vw, 3rem);
+            font-size: 3em;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             text-align: center;
@@ -359,9 +365,6 @@
 
         .slide:nth-child(2) {
             background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .slide:nth-child(2)::before {
@@ -371,7 +374,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-size: clamp(1.5rem, 6vw, 3rem);
+            font-size: 3em;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             text-align: center;
@@ -383,9 +386,6 @@
 
         .slide:nth-child(3) {
             background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .slide:nth-child(3)::before {
@@ -395,7 +395,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            font-size: clamp(1.5rem, 6vw, 3rem);
+            font-size: 3em;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             text-align: center;
@@ -510,41 +510,130 @@
             color: #000;
         }
 
-        /* Content sections - simplified for brevity */
-        .space-grid,
-        .menu-grid,
-        .gallery-grid {
+        /* Space Section */
+        .space-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-bottom: 60px;
         }
 
-        .space-item,
-        .menu-item,
-        .event-item {
+        .space-item {
             background: #f8f8f8;
             padding: 40px;
             border-radius: 10px;
+            text-align: center;
             transition: transform 0.3s ease;
         }
 
-        .space-item:hover,
-        .menu-item:hover {
+        .space-item:hover {
             transform: translateY(-5px);
         }
 
-        h1, h2, h3, h4, h5, h6 {
+        .space-item h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            color: #000;
+        }
+
+        .space-item p {
+            color: #666;
+        }
+
+        /* Menu Items */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .menu-item {
+            background: #f8f8f8;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #000;
+        }
+
+        .menu-item h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .menu-item p {
+            color: #666;
+        }
+
+        .menu-item .price {
+            color: #000;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        /* Events */
+        .events-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .event-item {
+            background: #f8f8f8;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #000;
+        }
+
+        .event-date {
+            color: #000;
+            font-weight: bold;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .event-item h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
             text-transform: lowercase;
             color: #000;
         }
 
-        p, .sub-links a, .menu-item p {
+        .event-item p {
             color: #666;
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            transition: transform 0.3s ease;
             text-transform: lowercase;
         }
 
-        /* Swiper container */
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* Swiper Gallery Styles */
         .swiper-container {
             width: 100%;
             height: 500px;
@@ -575,7 +664,139 @@
             letter-spacing: 1px;
         }
 
-        /* Mobile Responsive */
+        .gallery-placeholder:nth-child(2n) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .gallery-placeholder:nth-child(3n) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .gallery-section {
+            margin-bottom: 60px;
+        }
+
+        .gallery-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            color: #000;
+            text-align: center;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .contact-card {
+            background: #f8f8f8;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .contact-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            color: #000;
+        }
+
+        .contact-card p {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .social-links a {
+            color: #000;
+            font-size: 1.2em;
+            text-decoration: none;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #666;
+        }
+
+        /* Reservation Form */
+        .reservation-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f8f8f8;
+            padding: 40px;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            color: #000;
+            -webkit-appearance: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #000;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        .submit-btn:hover {
+            background: #333;
+        }
+
+        /* =============== MOBILE RESPONSIVE =============== */
         @media (max-width: 768px) {
             :root {
                 --nav-height: var(--mobile-nav-height);
@@ -588,11 +809,21 @@
                 height: 50px;
             }
 
+            .splash-hint {
+                bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
+                font-size: 0.9em;
+            }
+
             .nav {
                 padding: 12px 0;
                 height: var(--mobile-nav-height);
                 opacity: 1;
                 transform: translateY(0);
+                padding-top: max(12px, calc(var(--safe-area-top) + 5px));
+            }
+
+            .nav-container {
+                padding: 0 15px;
             }
 
             .logo {
@@ -615,6 +846,7 @@
                 padding: 25px 20px;
                 gap: 25px;
                 border-top: 1px solid #333;
+                padding-bottom: max(25px, calc(var(--safe-area-bottom) + 15px));
             }
 
             .nav-links.active {
@@ -633,8 +865,25 @@
                 }
             }
 
+            .nav-links a {
+                font-size: 16px;
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                text-align: center;
+            }
+
             .mobile-menu {
                 display: flex;
+                width: 44px;
+                height: 44px;
+                padding: 10px;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .mobile-menu span {
+                width: 20px;
+                margin: 2px 0;
             }
 
             .landing-page {
@@ -650,14 +899,25 @@
                 height: 250px;
             }
 
+            .section-title {
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
+            }
+
+            .menu-grid,
+            .space-grid,
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
             .section {
                 padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, calc(var(--safe-area-bottom) + 30px));
             }
 
-            .space-grid,
-            .menu-grid,
-            .gallery-grid {
-                grid-template-columns: 1fr;
+            .slide:nth-child(1)::before,
+            .slide:nth-child(2)::before,
+            .slide:nth-child(3)::before {
+                font-size: clamp(1.4rem, 6vw, 2rem);
+                padding: 15px 25px;
             }
 
             .swiper-container {
@@ -667,10 +927,17 @@
     </style>
 </head>
 <body>
+    <!-- Background Audio with Auto-Play Setup -->
+    <audio id="backgroundAudio" loop preload="auto" playsinline webkit-playsinline muted>
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
         <div class="splash-hint">click anywhere to enter door 64</div>
-        <button class="splash-audio-toggle" id="splashAudioToggle">♪</button>
+        <button class="splash-audio-toggle" onclick="toggleAudio(event)" id="splashAudioToggle">♪</button>
     </div>
 
     <!-- MAIN SITE -->
@@ -680,12 +947,18 @@
             <div class="nav-container">
                 <div class="nav-left">
                     <div class="logo" onclick="showSection('landing')">Door 64</div>
-                    <button class="audio-toggle" id="navAudioToggle">♪</button>
+                    <button class="audio-toggle" onclick="toggleAudio(event)">♪</button>
                 </div>
                 <ul class="nav-links" id="navLinks">
                     <li><a href="#" onclick="showSection('landing')">64</a></li>
                     <li><a href="#" onclick="showSection('space')">space</a></li>
-                    <li><a href="#" onclick="showSection('contact')">contact</a></li>
+                    <li><a href="#" onclick="showSection('kitchen')">in the kitchen</a></li>
+                    <li><a href="#" onclick="showSection('bar')">at the bar</a></li>
+                    <li><a href="#" onclick="showSection('gallery')">who was here</a></li>
+                    <li><a href="#" onclick="showSection('events')">what to do</a></li>
+                    <li><a href="#" onclick="showSection('social')">check on us</a></li>
+                    <li><a href="#" onclick="showSection('reservations')">come see us</a></li>
+                    <li><a href="#" onclick="showSection('contact')">hit us</a></li>
                 </ul>
                 <div class="mobile-menu" onclick="toggleMobileMenu()">
                     <span></span>
@@ -710,24 +983,24 @@
                     <div class="landing-link">
                         <h3>what to do</h3>
                         <div class="sub-links">
-                            <a href="#" onclick="showSection('space')">make reservation</a>
-                            <a href="#" onclick="showSection('contact')">upcoming events</a>
+                            <a href="#" onclick="showSection('reservations')">make reservation</a>
+                            <a href="#" onclick="showSection('events')">upcoming events</a>
                         </div>
                     </div>
                     
                     <div class="landing-link">
                         <h3>space</h3>
                         <div class="sub-links">
-                            <a href="#" onclick="showSection('space')">in the kitchen</a>
-                            <a href="#" onclick="showSection('space')">at the bar</a>
+                            <a href="#" onclick="showSection('kitchen')">in the kitchen</a>
+                            <a href="#" onclick="showSection('bar')">at the bar</a>
                         </div>
                     </div>
                     
                     <div class="landing-link">
                         <h3>gallery</h3>
                         <div class="sub-links">
-                            <a href="#" onclick="showSection('contact')">who was here</a>
-                            <a href="#" onclick="showSection('contact')">check on us</a>
+                            <a href="#" onclick="showSection('gallery')">who was here</a>
+                            <a href="#" onclick="showSection('social')">check on us</a>
                         </div>
                     </div>
                 </div>
@@ -735,11 +1008,36 @@
                 <!-- Landing Gallery Swiper -->
                 <div class="swiper-container landing-swiper" id="landing-swiper">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide"><div class="gallery-placeholder">intimate dining</div></div>
-                        <div class="swiper-slide"><div class="gallery-placeholder">craft cocktails</div></div>
-                        <div class="swiper-slide"><div class="gallery-placeholder">culinary artistry</div></div>
-                        <div class="swiper-slide"><div class="gallery-placeholder">wine selection</div></div>
-                        <div class="swiper-slide"><div class="gallery-placeholder">elegant atmosphere</div></div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">intimate dining experience</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">craft cocktails</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">culinary artistry</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">wine selection</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">elegant atmosphere</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">chef's expertise</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">fresh ingredients</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">private events</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">seasonal menu</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">kitchen artistry</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -752,16 +1050,249 @@
                 <div class="space-grid">
                     <div class="space-item">
                         <h3>venue</h3>
-                        <p>intimate setting for 24 guests with an open kitchen view.</p>
+                        <p>intimate setting for 24 guests with an open kitchen view. experience the energy and artistry of our culinary team in action.</p>
                     </div>
                     <div class="space-item">
                         <h3>cocktails cellar</h3>
-                        <p>exclusive space for up to 12 guests.</p>
+                        <p>exclusive space for up to 12 guests. perfect for special occasions, business dinners, or intimate celebrations.</p>
                     </div>
                     <div class="space-item">
                         <h3>chef's delights</h3>
-                        <p>six seats directly at the kitchen counter.</p>
+                        <p>six seats directly at the kitchen counter. the ultimate interactive dining experience with direct chef interaction.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kitchen Section -->
+        <section id="kitchen" class="section">
+            <div class="container">
+                <h2 class="section-title">in the kitchen</h2>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <h3>seasonal tasting menu</h3>
+                        <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
+                        <div class="price">$125 per person</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>chef's selection</h3>
+                        <p>let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
+                        <div class="price">$95 per person</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>vegetarian experience</h3>
+                        <p>plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
+                        <div class="price">$85 per person</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bar Section -->
+        <section id="bar" class="section">
+            <div class="container">
+                <h2 class="section-title">at the bar</h2>
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <h3>signature cocktails</h3>
+                        <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
+                        <div class="price">$16 - $22</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>classic collection</h3>
+                        <p>timeless cocktails executed with precision using the finest spirits and traditional methods.</p>
+                        <div class="price">$14 - $18</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>rare spirits</h3>
+                        <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
+                        <div class="price">$25 - $150</div>
+                    </div>
+                    <div class="menu-item">
+                        <h3>zero-proof options</h3>
+                        <p>sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
+                        <div class="price">$12 - $16</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="section">
+            <div class="container">
+                <h2 class="section-title">who was here</h2>
+                
+                <!-- Featured Events Gallery -->
+                <div class="gallery-section">
+                    <h3>featured events</h3>
+                    <div class="swiper-container" id="events-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">opening night celebration</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">chef collaboration dinner</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">wine pairing evening</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">anniversary celebration</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">private party</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">food critics visit</div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+
+                <!-- Food & Cocktails Gallery -->
+                <div class="gallery-section">
+                    <h3>culinary artistry</h3>
+                    <div class="swiper-container" id="food-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">seasonal tasting menu</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">signature cocktail</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">chef's special creation</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">artisanal dessert</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">craft cocktail preparation</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">fresh ingredients</div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+
+                <!-- Behind the Scenes Gallery -->
+                <div class="gallery-section">
+                    <h3>behind the scenes</h3>
+                    <div class="swiper-container" id="bts-swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">kitchen in action</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">team collaboration</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">ingredient preparation</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">plating perfection</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">daily setup</div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="gallery-placeholder">creative process</div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="section">
+            <div class="container">
+                <h2 class="section-title">what to do</h2>
+                <div class="events-list">
+                    <div class="event-item">
+                        <div class="event-date">every tuesday</div>
+                        <h3>wine & dine</h3>
+                        <p>join us for an intimate evening featuring wine pairings with a special 5-course menu. limited to 16 guests.</p>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">first friday</div>
+                        <h3>chef's table experience</h3>
+                        <p>exclusive 6-seat experience at the chef's counter with personalized menu and wine selections.</p>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">saturday afternoons</div>
+                        <h3>cooking classes</h3>
+                        <p>learn the techniques behind our signature dishes in hands-on cooking workshops.</p>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">monthly</div>
+                        <h3>private events</h3>
+                        <p>book the entire restaurant for your special occasion. customized menus and service available.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reservations Section -->
+        <section id="reservations" class="section">
+            <div class="container">
+                <h2 class="section-title">come see us</h2>
+                <div class="reservation-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">phone</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">preferred date</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">preferred time</label>
+                            <select id="time" name="time" required>
+                                <option value="">select time</option>
+                                <option value="6:00 PM">6:00 PM</option>
+                                <option value="6:30 PM">6:30 PM</option>
+                                <option value="8:00 PM">8:00 PM</option>
+                                <option value="8:30 PM">8:30 PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guests">number of guests</label>
+                            <select id="guests" name="guests" required>
+                                <option value="">select</option>
+                                <option value="1">1 guest</option>
+                                <option value="2">2 guests</option>
+                                <option value="3">3 guests</option>
+                                <option value="4">4 guests</option>
+                                <option value="5">5 guests</option>
+                                <option value="6">6 guests</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="special">special requests</label>
+                            <textarea id="special" name="special" rows="4" placeholder="dietary restrictions, allergies, special occasions..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">request reservation</button>
+                    </form>
                 </div>
             </div>
         </section>
@@ -769,19 +1300,45 @@
         <!-- Contact Section -->
         <section id="contact" class="section">
             <div class="container">
-                <h2 class="section-title">contact</h2>
-                <div class="space-grid">
-                    <div class="space-item">
+                <h2 class="section-title">hit us</h2>
+                <div class="contact-info">
+                    <div class="contact-card">
                         <h3>location</h3>
-                        <p>64 Third St NW<br>Atlanta, GA 30308</p>
+                        <p>64 Third St NW</p>
+                        <p>Atlanta, GA 30308</p>
                     </div>
-                    <div class="space-item">
+                    <div class="contact-card">
                         <h3>phone</h3>
-                        <p>(404) 555-DOOR<br>(404) 555-3667</p>
+                        <p>(404) 555-DOOR</p>
+                        <p>(404) 555-3667</p>
                     </div>
-                    <div class="space-item">
+                    <div class="contact-card">
                         <h3>hours</h3>
-                        <p>thursday - saturday: 5pm - 3am<br>sunday: 5pm - 12am</p>
+                        <p>thursday - saturday: 5:00 PM - 3:00 AM</p>
+                        <p>sunday: 5:00 PM - 12:00 AM</p>
+                        <p>monday - wednesday: closed</p>
+                    </div>
+                    <div class="contact-card">
+                        <h3>email</h3>
+                        <p>inquiry@door64atl.com</p>
+                        <p>events@door64atl.com</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Section -->
+        <section id="social" class="section">
+            <div class="container">
+                <h2 class="section-title">check on us</h2>
+                <div class="contact-card" style="max-width: 600px; margin: 0 auto;">
+                    <h3>follow our journey</h3>
+                    <p>stay connected with door 64 for the latest updates, behind-the-scenes content, and special announcements.</p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/door64atl/">instagram</a>
+                        <a href="#">facebook</a>
+                        <a href="#">twitter</a>
+                        <a href="#">tiktok</a>
                     </div>
                 </div>
             </div>
@@ -789,132 +1346,127 @@
     </div>
 
     <script>
-        // ============= IMMEDIATE AUTO-PLAY SYSTEM =============
+        // ============ ULTRA AGGRESSIVE AUTO-PLAY SYSTEM ============
         (function() {
             'use strict';
             
-            // Global state
             let audioPlaying = false;
-            let audioInitialized = false;
             let slideInterval = null;
             let currentSlide = 0;
-            let isMainSiteActive = false;
+            let backgroundAudio;
             
-            // Dynamic viewport height
+            // Set viewport height for mobile
             function setVH() {
-                const vh = window.innerHeight * 0.01;
+                let vh = window.innerHeight * 0.01;
                 document.documentElement.style.setProperty('--vh', `${vh}px`);
             }
             setVH();
             window.addEventListener('resize', setVH);
             
-            // ============= AGGRESSIVE AUDIO AUTO-PLAY =============
-            function initAudioSystem() {
-                const audio = document.getElementById('backgroundAudio');
-                if (!audio) return;
+            // ============ AUDIO AUTO-PLAY (MAXIMUM AGGRESSION) ============
+            function initAudio() {
+                backgroundAudio = document.getElementById('backgroundAudio');
+                if (!backgroundAudio) return;
                 
                 // Configure for aggressive auto-play
-                audio.volume = 0.3;
-                audio.loop = true;
-                audio.muted = true; // Start muted for iOS
-                audio.autoplay = true;
-                audio.setAttribute('playsinline', 'true');
-                audio.setAttribute('webkit-playsinline', 'true');
+                backgroundAudio.volume = 0.5;
+                backgroundAudio.loop = true;
+                backgroundAudio.muted = true; // Start muted for iOS
                 
-                // Attempt immediate play
-                const attemptPlay = () => {
-                    audio.play().then(() => {
-                        console.log('🎵 Audio started (muted)');
+                // Create audio context for iOS
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                let audioContext;
+                
+                function createContext() {
+                    if (!audioContext) {
+                        audioContext = new AudioContext();
+                    }
+                    if (audioContext.state === 'suspended') {
+                        audioContext.resume();
+                    }
+                }
+                
+                // Aggressive play function
+                function attemptPlay() {
+                    createContext();
+                    backgroundAudio.play().then(() => {
+                        console.log('Audio started (muted)');
                         // Unmute after successful play
                         setTimeout(() => {
-                            audio.muted = false;
+                            backgroundAudio.muted = false;
                             audioPlaying = true;
                             updateAudioButtons();
-                            console.log('🔊 Audio unmuted');
+                            console.log('Audio unmuted');
                         }, 100);
-                    }).catch((err) => {
-                        console.log('⏳ Waiting for user interaction...', err.message);
+                    }).catch(() => {
+                        // Silent fail, will retry
                     });
-                };
+                }
                 
                 // Multiple immediate attempts
                 attemptPlay();
-                setTimeout(attemptPlay, 0);
-                setTimeout(attemptPlay, 10);
-                setTimeout(attemptPlay, 50);
-                setTimeout(attemptPlay, 100);
+                [0, 1, 10, 50, 100, 200, 500, 1000].forEach(delay => {
+                    setTimeout(attemptPlay, delay);
+                });
                 
-                // iOS specific: try on any interaction
+                // Start on any interaction
                 const startOnInteraction = () => {
-                    if (!audioPlaying) {
-                        audio.muted = false;
-                        audio.play().then(() => {
-                            audioPlaying = true;
-                            updateAudioButtons();
-                        }).catch(() => {});
-                    }
+                    createContext();
+                    backgroundAudio.muted = false;
+                    backgroundAudio.play().then(() => {
+                        audioPlaying = true;
+                        updateAudioButtons();
+                    }).catch(() => {});
                 };
                 
-                // Add multiple event listeners for iOS
-                ['touchstart', 'touchend', 'click', 'scroll'].forEach(event => {
+                ['touchstart', 'touchend', 'mousedown', 'click', 'scroll'].forEach(event => {
                     document.addEventListener(event, startOnInteraction, { once: true, passive: true });
                 });
                 
                 // Audio state listeners
-                audio.addEventListener('play', () => {
+                backgroundAudio.addEventListener('play', () => {
                     audioPlaying = true;
                     updateAudioButtons();
                 });
                 
-                audio.addEventListener('pause', () => {
+                backgroundAudio.addEventListener('pause', () => {
                     audioPlaying = false;
                     updateAudioButtons();
                 });
-                
-                audioInitialized = true;
             }
             
-            // Update audio button states
             function updateAudioButtons() {
-                const buttons = [
-                    document.getElementById('splashAudioToggle'),
-                    document.getElementById('navAudioToggle')
-                ];
-                
+                const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
                 buttons.forEach(btn => {
-                    if (btn) {
-                        if (audioPlaying) {
-                            btn.innerText = '⏸';
-                            btn.classList.add('playing');
-                        } else {
-                            btn.innerText = '♪';
-                            btn.classList.remove('playing');
-                        }
+                    if (audioPlaying) {
+                        btn.innerText = '⏸';
+                        btn.classList.add('playing');
+                    } else {
+                        btn.innerText = '♪';
+                        btn.classList.remove('playing');
                     }
                 });
             }
             
-            // Toggle audio
             window.toggleAudio = function(event) {
                 if (event) event.stopPropagation();
                 
-                const audio = document.getElementById('backgroundAudio');
-                if (!audio) return;
+                if (!backgroundAudio) return;
                 
                 if (audioPlaying) {
-                    audio.pause();
+                    backgroundAudio.pause();
                 } else {
-                    audio.muted = false;
-                    audio.play().catch(() => {});
+                    backgroundAudio.muted = false;
+                    backgroundAudio.play().catch(() => {});
                 }
             };
             
-            // ============= SLIDESHOW SYSTEM =============
+            // ============ SLIDESHOW SYSTEM (IMMEDIATE START) ============
             function startSlideshow() {
-                if (slideInterval) clearInterval(slideInterval);
-                
                 const slides = document.querySelectorAll('.gallery-slider .slide');
                 if (slides.length === 0) return;
+                
+                if (slideInterval) clearInterval(slideInterval);
                 
                 currentSlide = 0;
                 slides.forEach((slide, index) => {
@@ -922,12 +1474,12 @@
                 });
                 
                 slideInterval = setInterval(() => {
-                    if (!isMainSiteActive) return;
-                    
                     slides[currentSlide].classList.remove('active');
                     currentSlide = (currentSlide + 1) % slides.length;
                     slides[currentSlide].classList.add('active');
                 }, 3500);
+                
+                console.log('Slideshow started');
             }
             
             function stopSlideshow() {
@@ -937,7 +1489,7 @@
                 }
             }
             
-            // ============= NAVIGATION =============
+            // ============ NAVIGATION ============
             window.showSection = function(sectionId) {
                 document.querySelectorAll('.section').forEach(section => {
                     section.classList.remove('active');
@@ -948,16 +1500,16 @@
                     targetSection.classList.add('active');
                 }
                 
-                // Handle slideshow
-                if (sectionId === 'landing' && isMainSiteActive) {
+                if (sectionId === 'landing') {
                     setTimeout(startSlideshow, 100);
                 } else {
                     stopSlideshow();
                 }
                 
-                // Close mobile menu
                 const navLinks = document.getElementById('navLinks');
-                if (navLinks) navLinks.classList.remove('active');
+                if (navLinks) {
+                    navLinks.classList.remove('active');
+                }
             };
             
             window.toggleMobileMenu = function() {
@@ -967,46 +1519,126 @@
                 }
             };
             
-            // ============= ENTER MAIN SITE =============
+            // ============ ENTER MAIN SITE ============
             function enterMainSite() {
                 const splashPage = document.getElementById('splashPage');
                 const mainSite = document.getElementById('mainSite');
+                
+                // Ensure audio starts
+                if (!audioPlaying && backgroundAudio) {
+                    backgroundAudio.muted = false;
+                    backgroundAudio.play().catch(() => {});
+                }
                 
                 splashPage.classList.add('hidden');
                 
                 setTimeout(() => {
                     splashPage.style.display = 'none';
                     mainSite.classList.add('active');
-                    isMainSiteActive = true;
                     
-                    // Initialize Swiper
-                    if (typeof Swiper !== 'undefined') {
-                        new Swiper('#landing-swiper', {
-                            slidesPerView: 'auto',
-                            spaceBetween: 20,
-                            loop: true,
-                            autoplay: {
-                                delay: 0,
-                                disableOnInteraction: false,
-                            },
-                            speed: 3000,
-                            freeMode: true,
-                            freeModeMomentum: false,
-                        });
-                    }
+                    // Initialize Swipers
+                    initializeSwipers();
                     
+                    // Start slideshow immediately
                     startSlideshow();
                 }, 1200);
             }
             
-            // ============= INITIALIZATION =============
+            function initializeSwipers() {
+                if (typeof Swiper === 'undefined') return;
+                
+                // Landing Page Swiper
+                new Swiper('#landing-swiper', {
+                    slidesPerView: 'auto',
+                    spaceBetween: 0,
+                    loop: true,
+                    autoplay: {
+                        delay: 0,
+                        disableOnInteraction: false,
+                    },
+                    speed: 2400,
+                    freeMode: true,
+                    freeModeMomentum: false,
+                });
+
+                // Events Swiper
+                new Swiper('#events-swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    loop: true,
+                    autoplay: {
+                        delay: 5100,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    },
+                });
+
+                // Food Swiper
+                new Swiper('#food-swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    loop: true,
+                    autoplay: {
+                        delay: 4300,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    },
+                });
+
+                // Behind the Scenes Swiper
+                new Swiper('#bts-swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    loop: true,
+                    autoplay: {
+                        delay: 6000,
+                        disableOnInteraction: false,
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    breakpoints: {
+                        640: { slidesPerView: 2 },
+                        1024: { slidesPerView: 3 },
+                    },
+                });
+            }
+            
+            // ============ INITIALIZATION ============
             function init() {
-                console.log('🚀 Door 64 Initializing...');
+                console.log('Initializing Door 64...');
                 
                 // Initialize audio immediately
-                initAudioSystem();
+                initAudio();
                 
-                // Setup splash page interactions
+                // Splash page interactions
                 const splashPage = document.getElementById('splashPage');
                 if (splashPage) {
                     splashPage.addEventListener('click', function(e) {
@@ -1023,34 +1655,29 @@
                     });
                 }
                 
-                // Audio toggle buttons
-                document.getElementById('splashAudioToggle')?.addEventListener('click', toggleAudio);
-                document.getElementById('navAudioToggle')?.addEventListener('click', toggleAudio);
-                
-                // Keyboard support
-                document.addEventListener('keydown', function(e) {
-                    if (!isMainSiteActive && (e.code === 'Space' || e.code === 'Enter')) {
+                // Form submission
+                const form = document.querySelector('.reservation-form form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
                         e.preventDefault();
-                        enterMainSite();
-                    }
-                });
+                        alert('Thank you for your reservation request! We will contact you within 24 hours to confirm.');
+                    });
+                }
                 
-                // Page visibility handling
+                // Page visibility
                 document.addEventListener('visibilitychange', function() {
                     if (document.hidden) {
                         stopSlideshow();
-                    } else if (isMainSiteActive && document.getElementById('landing').classList.contains('active')) {
+                    } else if (document.getElementById('landing')?.classList.contains('active')) {
                         startSlideshow();
                     }
                 });
-                
-                console.log('✅ Door 64 Ready');
             }
             
             // Start immediately
             init();
             
-            // Multiple initialization attempts for iOS
+            // Multiple init attempts for iOS
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             }
