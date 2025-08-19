@@ -44,6 +44,7 @@
             left: 0;
             z-index: 9999;
             background: url('assets/audio/splash.png') center/cover no-repeat;
+            background-color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -63,71 +64,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(0,0,0,0.1) 0%,
-                rgba(0,0,0,0.3) 50%,
-                rgba(0,0,0,0.4) 100%
-            );
+            background: transparent;
             pointer-events: none;
         }
 
         .splash-content {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            margin-top: 50px;
+            display: none; /* Hide any content overlay */
         }
 
-        .door-sign {
-            background: rgba(0, 0, 0, 0.95);
-            border: 3px solid #5fb3d3;
-            padding: 20px 35px;
-            border-radius: 6px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.7);
-            max-width: 320px;
-            margin: 0 auto;
-            position: relative;
-        }
 
-        .door-sign::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(45deg, #5fb3d3, #4a9bc1, #5fb3d3);
-            border-radius: 6px;
-            z-index: -1;
-            opacity: 0.8;
-        }
-
-        .door-sign:hover {
-            background: rgba(0, 0, 0, 0.98);
-            border-color: #ffffff;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-        }
-
-        .enter-text {
-            font-size: 1.1em;
-            color: #5fb3d3;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        .door-text {
-            font-size: 2.2em;
-            color: white;
-            letter-spacing: 2px;
-            font-weight: 300;
-            text-transform: uppercase;
-        }
 
         .splash-hint {
             position: fixed;
@@ -801,22 +746,6 @@
                 padding: 8px 16px;
             }
 
-            .door-sign {
-                padding: 20px 30px;
-                margin: 0 20px;
-                max-width: 350px;
-            }
-            
-            .enter-text {
-                font-size: 1.2em;
-                letter-spacing: 1px;
-            }
-            
-            .door-text {
-                font-size: 2.2em;
-                letter-spacing: 2px;
-            }
-
             .nav {
                 padding: 15px 0;
                 transform: translateY(-100%);
@@ -887,18 +816,9 @@
         }
 
         @media (max-width: 480px) {
-            .door-sign {
-                padding: 15px 25px;
-                margin: 0 15px;
-            }
-            
-            .enter-text {
-                font-size: 1em;
-            }
-            
-            .door-text {
-                font-size: 1.8em;
-                letter-spacing: 1px;
+            .splash-hint {
+                font-size: 0.8em;
+                padding: 6px 12px;
             }
         }
 
@@ -918,14 +838,7 @@
     <div class="splash-page" id="splashPage">
         <div class="splash-overlay"></div>
         
-        <div class="splash-content">
-            <div class="door-sign">
-                <div class="enter-text">&gt;click to enter&lt;</div>
-                <div class="door-text">Door 64</div>
-            </div>
-        </div>
-        
-        <div class="splash-hint">click anywhere • space • enter</div>
+        <div class="splash-hint">click anywhere to enter door 64</div>
         
         <!-- Splash Audio Controls -->
         <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
