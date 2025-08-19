@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Door 64</title>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <style>
         * {
             margin: 0;
@@ -409,6 +411,103 @@
             transform: scale(1.05);
         }
 
+        /* Swiper Gallery Styles */
+        .swiper-container {
+            width: 100%;
+            height: 500px;
+            margin: 40px 0;
+        }
+
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .gallery-placeholder:nth-child(2n) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .gallery-placeholder:nth-child(3n) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .gallery-placeholder:nth-child(4n) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .gallery-placeholder:nth-child(5n) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        /* Swiper navigation customization */
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: #000;
+        }
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 20px;
+        }
+
+        .swiper-pagination-bullet {
+            background: #000;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #000;
+        }
+
+        /* Multiple galleries */
+        .gallery-section {
+            margin-bottom: 60px;
+        }
+
+        .gallery-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            color: #000;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .swiper-container {
+                height: 300px;
+            }
+            
+            .gallery-placeholder {
+                font-size: 1em;
+            }
+        }
+
         /* Contact Info */
         .contact-info {
             display: grid;
@@ -748,19 +847,95 @@
     <section id="gallery" class="section">
         <div class="container">
             <h2 class="section-title">who was here</h2>
-            <div class="gallery-grid">
-                <div class="gallery-item">opening night</div>
-                <div class="gallery-item">chef collaboration</div>
-                <div class="gallery-item">wine dinner</div>
-                <div class="gallery-item">anniversary celebration</div>
-                <div class="gallery-item">food critics visit</div>
-                <div class="gallery-item">local food festival</div>
-                <div class="gallery-item">private event</div>
-                <div class="gallery-item">cooking class</div>
-                <div class="gallery-item">holiday menu</div>
-                <div class="gallery-item">team building</div>
-                <div class="gallery-item">media event</div>
-                <div class="gallery-item">community dinner</div>
+            
+            <!-- Featured Events Gallery -->
+            <div class="gallery-section">
+                <h3>featured events</h3>
+                <div class="swiper-container" id="events-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">opening night celebration</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">chef collaboration dinner</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">wine pairing evening</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">anniversary celebration</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">private party</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">food critics visit</div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+
+            <!-- Food & Cocktails Gallery -->
+            <div class="gallery-section">
+                <h3>culinary artistry</h3>
+                <div class="swiper-container" id="food-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">seasonal tasting menu</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">signature cocktail</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">chef's special creation</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">artisanal dessert</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">craft cocktail preparation</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">fresh ingredients</div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+
+            <!-- Behind the Scenes Gallery -->
+            <div class="gallery-section">
+                <h3>behind the scenes</h3>
+                <div class="swiper-container" id="bts-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">kitchen in action</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">team collaboration</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">ingredient preparation</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">plating perfection</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">daily setup</div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder">creative process</div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -951,6 +1126,111 @@
         document.querySelector('.reservation-form form').addEventListener('submit', function(e) {
             e.preventDefault();
             alert('thank you for your reservation request! we will contact you within 24 hours to confirm.');
+        });
+    </script>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <!-- Initialize Swiper -->
+    <script>
+        // Initialize Events Swiper
+        var eventsSwiper = new Swiper('#events-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 30,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                },
+            },
+        });
+
+        // Initialize Food Swiper
+        var foodSwiper = new Swiper('#food-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 30,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                },
+            },
+        });
+
+        // Initialize Behind the Scenes Swiper
+        var btsSwiper = new Swiper('#bts-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 6000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 30,
+                },
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                },
+            },
         });
     </script>
 </body>
