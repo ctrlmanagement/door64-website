@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     
     <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto" muted="false" style="display: none;">
+    <audio id="backgroundAudio" loop preload="auto" style="display: none;">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
     
     <!-- Auto-play notification -->
     <div id="autoplayNotification" class="autoplay-notification">
-        <strong>🎵 Click ♪ to start music</strong><br>
+        <strong>🎵 Click ♪ for music</strong><br>
         <small>QUIETSTORM background</small>
     </div>
     
@@ -715,8 +716,8 @@
     <nav class="nav">
         <div class="nav-container">
             <div class="nav-left">
-                <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="Toggle Background Music">♪</button>
                 <div class="logo" onclick="showSection('landing')">Door 64</div>
+                <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="Toggle Background Music">♪</button>
             </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" onclick="showSection('landing')">64</a></li>
@@ -1286,7 +1287,7 @@
 
         function showErrorMessage() {
             if (!autoplayNotification) return;
-            autoplayNotification.innerHTML = '<strong>❌ Audio file not found</strong><br><small>Check QUIETSTORM.mp3 in assets/audio/</small>';
+            autoplayNotification.innerHTML = '<strong>❌ Audio file missing</strong><br><small>Upload QUIETSTORM.mp3 to GitHub</small>';
             autoplayNotification.style.display = 'block';
             autoplayNotification.style.borderColor = 'red';
             autoplayNotification.style.background = 'rgba(255, 0, 0, 0.9)';
@@ -1294,7 +1295,7 @@
 
         function showPlayPrompt() {
             if (!autoplayNotification) return;
-            autoplayNotification.innerHTML = '<strong>🎵 Click ♪ to start music</strong><br><small>QUIETSTORM by Door 64</small>';
+            autoplayNotification.innerHTML = '<strong>🎵 Click ♪ for music</strong><br><small>QUIETSTORM background</small>';
             autoplayNotification.style.display = 'block';
             autoplayNotification.style.borderColor = '#fff';
             autoplayNotification.style.background = 'rgba(255, 107, 53, 0.95)';
@@ -1365,7 +1366,7 @@
                     console.error('Error message:', error.message);
                     
                     if (error.name === 'NotFoundError' || error.name === 'AbortError') {
-                        alert('❌ Audio file not found.\n\nCheck:\n1. QUIETSTORM.mp3 exists in assets/audio/ folder\n2. File uploaded to GitHub\n3. Cloudflare has rebuilt the site');
+                        alert('❌ Audio file not found.\n\nCheck:\n1. QUIETSTORM.mp3 exists in GitHub repo\n2. Try both: assets/audio/ and root folder\n3. File uploaded correctly\n4. Cloudflare site rebuilt');
                     } else if (error.name === 'NotAllowedError') {
                         alert('🚫 Browser blocked audio.\n\nTry:\n1. Click the button again\n2. Refresh the page\n3. Check browser audio settings');
                     } else {
@@ -1385,15 +1386,18 @@
                 return;
             }
             
+            // Force audio loading
+            backgroundAudio.load();
+            
             testAudioFile();
             updateAudioButton();
             
             // Show play prompt after delay
             setTimeout(() => {
-                if (!audioPlaying && audioLoaded) {
+                if (!audioPlaying) {
                     showPlayPrompt();
                 }
-            }, 3000);
+            }, 1000); // Reduced delay
         }
 
         // Start when page loads
@@ -1429,16 +1433,25 @@
             }
         };
 
-        window.forceShowButton = function() {
-            if (audioToggle) {
-                audioToggle.style.background = 'red !important';
-                audioToggle.style.zIndex = '999999';
-                audioToggle.style.display = 'flex';
-                audioToggle.style.position = 'fixed';
-                audioToggle.style.top = '10px';
-                audioToggle.style.left = '10px';
-                console.log('🔴 Button forced to be visible (red)');
-            }
+        window.testFileLocations = function() {
+            console.log('🔍 Testing audio file locations...');
+            
+            const locations = [
+                'assets/audio/QUIETSTORM.mp3',
+                'QUIETSTORM.mp3',
+                './assets/audio/QUIETSTORM.mp3',
+                './QUIETSTORM.mp3'
+            ];
+            
+            locations.forEach(location => {
+                fetch(location)
+                    .then(response => {
+                        console.log(`${location}: ${response.ok ? '✅ Found' : '❌ Not found'}`);
+                    })
+                    .catch(error => {
+                        console.log(`${location}: ❌ Error - ${error.message}`);
+                    });
+            });
         };
 
         // Navigation between sections
