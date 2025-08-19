@@ -243,6 +243,88 @@
             color: #fff;
         }
 
+        /* Landing Page Gallery */
+        .landing-gallery-section {
+            margin-top: 80px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #landing-swiper {
+            width: 100%;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .landing-gallery-placeholder {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide-overlay {
+            background: rgba(0,0,0,0.4);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            font-size: 1.5em;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Landing swiper navigation - minimal style */
+        #landing-swiper .swiper-button-next,
+        #landing-swiper .swiper-button-prev {
+            color: rgba(255,255,255,0.8);
+            background: rgba(0,0,0,0.3);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+        }
+
+        #landing-swiper .swiper-button-next:after,
+        #landing-swiper .swiper-button-prev:after {
+            font-size: 18px;
+        }
+
+        #landing-swiper .swiper-pagination-bullet {
+            background: rgba(255,255,255,0.6);
+            opacity: 1;
+        }
+
+        #landing-swiper .swiper-pagination-bullet-active {
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .landing-gallery-section {
+                margin-top: 60px;
+                margin: 60px 10px 0;
+            }
+
+            #landing-swiper {
+                height: 250px;
+            }
+
+            .slide-overlay {
+                font-size: 1.2em;
+                padding: 15px 25px;
+                letter-spacing: 1px;
+            }
+        }
+
         /* Enter Button */
         .enter-btn {
             position: fixed;
@@ -757,6 +839,54 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Landing Page Gallery -->
+            <div class="landing-gallery-section">
+                <div class="swiper-container" id="landing-swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">intimate dining</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">craft cocktails</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">culinary artistry</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1544148103-0773bf10d330?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">chef's table</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">wine selection</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">private events</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">seasonal menu</div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="landing-gallery-placeholder" style="background-image: url('https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=800&h=600&fit=crop');">
+                                <div class="slide-overlay">atmosphere</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1134,6 +1264,29 @@
     
     <!-- Initialize Swiper -->
     <script>
+        // Initialize Landing Page Swiper
+        var landingSwiper = new Swiper('#landing-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            loop: true,
+            autoplay: {
+                delay: 3500, // Medium speed - 3.5 seconds
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+        });
+
         // Initialize Events Swiper
         var eventsSwiper = new Swiper('#events-swiper', {
             slidesPerView: 1,
