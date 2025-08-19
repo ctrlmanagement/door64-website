@@ -57,7 +57,7 @@
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 30px;
+            gap: 25px;
         }
 
         .nav-links a {
@@ -87,50 +87,209 @@
             transition: 0.3s;
         }
 
-        /* Hero Section */
-        .hero {
+        /* Landing Page */
+        .landing-page {
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23111" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" font-family="Arial" font-size="48" fill="%23333">DOOR 64 ATMOSPHERE</text></svg>');
-            background-size: cover;
-            background-position: center;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             color: white;
+            position: relative;
+            overflow: hidden;
         }
 
-        .hero-content h1 {
-            font-size: 4em;
+        .gallery-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide:nth-child(1) {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23111" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" font-family="Georgia" font-size="36" fill="%23444">INTIMATE DINING</text></svg>');
+        }
+
+        .slide:nth-child(2) {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23222" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" font-family="Georgia" font-size="36" fill="%23555">CRAFT COCKTAILS</text></svg>');
+        }
+
+        .slide:nth-child(3) {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23333" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" font-family="Georgia" font-size="36" fill="%23666">CULINARY ART</text></svg>');
+        }
+
+        .landing-content {
+            z-index: 10;
+            position: relative;
+        }
+
+        .landing-content h1 {
+            font-size: 5em;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .landing-links {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 60px;
+        }
+
+        .landing-link {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .landing-link:hover {
+            transform: translateY(-5px);
+        }
+
+        .landing-link h3 {
+            font-size: 1.8em;
             margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 5px;
+            letter-spacing: 3px;
+            color: #ff6b35;
+        }
+
+        .sub-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sub-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            text-transform: lowercase;
+        }
+
+        .sub-links a:hover {
+            color: #fff;
+        }
+
+        /* Landing Gallery Slider */
+        .landing-gallery-container {
+            margin-top: 80px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .landing-gallery {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .gallery-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .gallery-slide.gallery-active {
+            opacity: 1;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .placeholder-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
             font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        .hero-content p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            max-width: 600px;
+        .gallery-dots {
+            text-align: center;
+            margin-top: 30px;
         }
 
-        .cta-button {
+        .dot {
+            height: 12px;
+            width: 12px;
+            margin: 0 8px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 50%;
             display: inline-block;
-            padding: 15px 30px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .dot.dot-active,
+        .dot:hover {
+            background-color: #ff6b35;
+        }
+
+        /* Enter Button */
+        .enter-btn {
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
             background: #ff6b35;
             color: white;
-            text-decoration: none;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-weight: bold;
+            cursor: pointer;
             transition: all 0.3s ease;
-            border: 2px solid #ff6b35;
+            z-index: 1001;
+            font-family: 'Georgia', serif;
         }
 
-        .cta-button:hover {
-            background: transparent;
-            color: #ff6b35;
+        .enter-btn:hover {
+            background: #e55a2b;
+            transform: scale(1.05);
         }
 
         /* Section Styles */
@@ -361,6 +520,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s ease;
+            font-family: 'Georgia', serif;
         }
 
         .submit-btn:hover {
@@ -389,8 +549,13 @@
                 display: flex;
             }
 
-            .hero-content h1 {
-                font-size: 2.5em;
+            .landing-content h1 {
+                font-size: 3em;
+            }
+
+            .landing-links {
+                flex-direction: column;
+                gap: 40px;
             }
 
             .section-title {
@@ -402,6 +567,27 @@
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
+
+            .enter-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+
+            .landing-gallery {
+                height: 250px;
+                margin: 0 10px;
+            }
+
+            .landing-gallery-container {
+                margin-top: 60px;
+            }
+
+            .placeholder-image {
+                font-size: 1.2em;
+                letter-spacing: 2px;
+            }
         }
     </style>
 </head>
@@ -411,15 +597,15 @@
         <div class="nav-container">
             <div class="logo">Door 64</div>
             <ul class="nav-links" id="navLinks">
-                <li><a href="#" onclick="showSection('hero')">home</a></li>
+                <li><a href="#" onclick="showSection('landing')">64</a></li>
                 <li><a href="#" onclick="showSection('space')">space</a></li>
                 <li><a href="#" onclick="showSection('kitchen')">in the kitchen</a></li>
                 <li><a href="#" onclick="showSection('bar')">at the bar</a></li>
                 <li><a href="#" onclick="showSection('gallery')">who was here</a></li>
                 <li><a href="#" onclick="showSection('events')">what to do</a></li>
+                <li><a href="#" onclick="showSection('social')">check on us</a></li>
                 <li><a href="#" onclick="showSection('reservations')">come see us</a></li>
                 <li><a href="#" onclick="showSection('contact')">hit us</a></li>
-                <li><a href="#" onclick="showSection('social')">check on us</a></li>
             </ul>
             <div class="mobile-menu" onclick="toggleMobileMenu()">
                 <span></span>
@@ -429,12 +615,92 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero section active">
-        <div class="hero-content">
+    <!-- Landing Page -->
+    <section id="landing" class="landing-page section active">
+        <div class="gallery-slider">
+            <div class="slide active"></div>
+            <div class="slide"></div>
+            <div class="slide"></div>
+        </div>
+        
+        <div class="landing-content">
             <h1>Door 64</h1>
-            <p>An intimate culinary experience where every detail matters and every moment is crafted to perfection.</p>
-            <a href="#" class="cta-button" onclick="showSection('reservations')">Come See Us</a>
+            
+            <div class="landing-links">
+                <div class="landing-link">
+                    <h3>What to Do</h3>
+                    <div class="sub-links">
+                        <a href="#" onclick="showSection('reservations')">make reservation</a>
+                        <a href="#" onclick="showSection('events')">upcoming events</a>
+                    </div>
+                </div>
+                
+                <div class="landing-link">
+                    <h3>Space</h3>
+                    <div class="sub-links">
+                        <a href="#" onclick="showSection('kitchen')">in the kitchen</a>
+                        <a href="#" onclick="showSection('bar')">at the bar</a>
+                    </div>
+                </div>
+                
+                <div class="landing-link">
+                    <h3>Gallery</h3>
+                    <div class="sub-links">
+                        <a href="#" onclick="showSection('gallery')">who was here</a>
+                        <a href="#" onclick="showSection('social')">check on us</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Landing Gallery Slider -->
+            <div class="landing-gallery-container">
+                <div class="landing-gallery">
+                    <div class="gallery-slide gallery-active">
+                        <div class="gallery-image">
+                            <div class="placeholder-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <span>Signature Dishes</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-slide">
+                        <div class="gallery-image">
+                            <div class="placeholder-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <span>Craft Cocktails</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-slide">
+                        <div class="gallery-image">
+                            <div class="placeholder-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                <span>Intimate Atmosphere</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-slide">
+                        <div class="gallery-image">
+                            <div class="placeholder-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                <span>Chef's Table</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gallery-slide">
+                        <div class="gallery-image">
+                            <div class="placeholder-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                                <span>Private Events</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gallery Navigation Dots -->
+                <div class="gallery-dots">
+                    <span class="dot dot-active" onclick="currentGallerySlide(1)"></span>
+                    <span class="dot" onclick="currentGallerySlide(2)"></span>
+                    <span class="dot" onclick="currentGallerySlide(3)"></span>
+                    <span class="dot" onclick="currentGallerySlide(4)"></span>
+                    <span class="dot" onclick="currentGallerySlide(5)"></span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -682,6 +948,48 @@
     </section>
 
     <script>
+        // Gallery slider functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        // Change slide every 4 seconds
+        setInterval(nextSlide, 4000);
+
+        // Landing Gallery Slider functionality
+        let currentGalleryIndex = 0;
+        const gallerySlides = document.querySelectorAll('.gallery-slide');
+        const dots = document.querySelectorAll('.dot');
+        
+        function showGallerySlide(index) {
+            // Hide all slides
+            gallerySlides.forEach(slide => slide.classList.remove('gallery-active'));
+            dots.forEach(dot => dot.classList.remove('dot-active'));
+            
+            // Show selected slide
+            gallerySlides[index].classList.add('gallery-active');
+            dots[index].classList.add('dot-active');
+            
+            currentGalleryIndex = index;
+        }
+        
+        function currentGallerySlide(n) {
+            showGallerySlide(n - 1);
+        }
+        
+        function nextGallerySlide() {
+            currentGalleryIndex = (currentGalleryIndex + 1) % gallerySlides.length;
+            showGallerySlide(currentGalleryIndex);
+        }
+        
+        // Auto-advance gallery every 5 seconds
+        setInterval(nextGallerySlide, 5000);
+
         function showSection(sectionId) {
             // Hide all sections
             const sections = document.querySelectorAll('.section');
