@@ -355,11 +355,11 @@
             background: #fff;
         }
 
-        /* =============== LANDING PAGE - FULL WIDTH OPTIMIZATION =============== */
+        /* =============== LANDING PAGE =============== */
         .landing-page {
             height: 100vh;
             height: calc(var(--vh, 1vh) * 100);
-            width: 100vw;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -368,35 +368,31 @@
             color: white;
             position: relative;
             overflow: hidden;
-            margin: 0;
-            padding: 0;
         }
 
-        /* FULL WIDTH BACKGROUND SLIDER */
         .gallery-slider {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            overflow: hidden;
         }
 
         .slide {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             opacity: 0;
-            transition: opacity 2s ease-in-out;
+            transition: opacity 1.5s ease-in-out;
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
         .slide.active {
@@ -404,104 +400,68 @@
         }
 
         .slide:nth-child(1) {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 10s ease infinite;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .slide:nth-child(1)::before {
+            content: "SLIDE 1: INTIMATE DINING";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 3px solid #fff;
         }
 
         .slide:nth-child(2) {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 12s ease infinite reverse;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .slide:nth-child(2)::before {
+            content: "SLIDE 2: CRAFT COCKTAILS";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+            background: rgba(0,0,0,0.5);
+            padding: 20px 40px;
+            border-radius: 20px;
+            border: 3px solid #fff;
         }
 
         .slide:nth-child(3) {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 50%, #667eea 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 8s ease infinite;
+            background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .slide::before {
-            content: '';
+        .slide:nth-child(3)::before {
+            content: "SLIDE 3: CULINARY ART";
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1;
-        }
-
-        .slide:nth-child(1)::after {
-            content: "INTIMATE DINING EXPERIENCE";
-            position: absolute;
-            top: 30%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             color: white;
-            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-size: 3em;
             font-weight: bold;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             text-align: center;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.5);
             padding: 20px 40px;
-            border-radius: 15px;
-            border: 2px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
-            z-index: 2;
-            letter-spacing: 2px;
-            max-width: 90vw;
+            border-radius: 20px;
+            border: 3px solid #fff;
         }
 
-        .slide:nth-child(2)::after {
-            content: "CRAFT COCKTAILS & ARTISTRY";
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: clamp(1.5rem, 4vw, 3rem);
-            font-weight: bold;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-            text-align: center;
-            background: rgba(0,0,0,0.4);
-            padding: 20px 40px;
-            border-radius: 15px;
-            border: 2px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
-            z-index: 2;
-            letter-spacing: 2px;
-            max-width: 90vw;
-        }
-
-        .slide:nth-child(3)::after {
-            content: "CULINARY EXCELLENCE";
-            position: absolute;
-            top: 30%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: clamp(1.5rem, 4vw, 3rem);
-            font-weight: bold;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-            text-align: center;
-            background: rgba(0,0,0,0.4);
-            padding: 20px 40px;
-            border-radius: 15px;
-            border: 2px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
-            z-index: 2;
-            letter-spacing: 2px;
-            max-width: 90vw;
-        }
-
-        /* CENTERED LANDING CONTENT */
         .landing-content {
             z-index: 10;
             position: relative;
@@ -512,113 +472,85 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 0 auto;
         }
 
         .landing-content h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-size: clamp(2.5rem, 8vw, 5rem);
             margin-bottom: 40px;
             text-transform: uppercase;
-            letter-spacing: clamp(3px, 3vw, 12px);
+            letter-spacing: clamp(2px, 2vw, 8px);
             font-weight: 300;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             color: #fff;
-            line-height: 1.1;
-            background: rgba(0,0,0,0.3);
-            padding: 20px 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
+            line-height: 1.2;
         }
 
         .landing-links {
             display: flex;
             justify-content: center;
-            gap: clamp(30px, 8vw, 80px);
-            margin: 50px 0;
+            gap: clamp(20px, 8vw, 60px);
+            margin: 40px 0;
             flex-wrap: wrap;
             width: 100%;
-            max-width: 1000px;
         }
 
         .landing-link {
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
             flex: 1;
-            min-width: 250px;
-            max-width: 320px;
-            background: rgba(0,0,0,0.4);
-            padding: 30px 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            min-width: 200px;
+            max-width: 300px;
         }
 
         .landing-link:hover {
-            transform: translateY(-8px) scale(1.02);
-            background: rgba(0,0,0,0.6);
-            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-5px);
         }
 
         .landing-link h3 {
-            font-size: clamp(1.4rem, 4vw, 2rem);
-            margin-bottom: 25px;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            margin-bottom: 20px;
             text-transform: lowercase;
-            letter-spacing: clamp(1px, 1vw, 4px);
+            letter-spacing: clamp(1px, 1vw, 3px);
             color: #fff;
-            font-weight: 400;
         }
 
         .sub-links {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .sub-links a {
-            color: rgba(255,255,255,0.8);
+            color: #ccc;
             text-decoration: none;
-            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
             letter-spacing: 1px;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease;
             text-transform: lowercase;
-            padding: 8px 0;
-            border-bottom: 1px solid transparent;
+            padding: 5px 0;
         }
 
         .sub-links a:hover {
             color: #fff;
-            border-bottom-color: rgba(255,255,255,0.5);
-            transform: translateX(5px);
         }
 
-        /* FULL WIDTH LANDING SWIPER */
         .landing-swiper {
-            width: 100vw;
-            height: 400px;
-            margin: 40px 0 0 0;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            margin: 30px 0 0 0;
             overflow: hidden;
-            border-radius: 0;
-            box-shadow: none;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* Section Styles - FULL WIDTH CENTERED */
+        /* Section Styles */
         .section {
             padding: 100px 0;
             background: #fff;
             display: none;
             min-height: calc(100vh - var(--nav-height));
-            width: 100vw;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
         }
 
         .section.active {
@@ -626,7 +558,7 @@
         }
 
         .section-title {
-            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-size: 3em;
             text-align: center;
             margin-bottom: 60px;
             font-weight: 300;
@@ -641,23 +573,18 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
             margin-bottom: 60px;
-            max-width: 1200px;
-            margin: 0 auto 60px auto;
-            padding: 0 20px;
         }
 
         .space-item {
             background: #f8f8f8;
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 10px;
             text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid #eee;
+            transition: transform 0.3s ease;
         }
 
         .space-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
         }
 
         .space-item h3 {
@@ -670,7 +597,6 @@
 
         .space-item p {
             color: #666;
-            line-height: 1.7;
         }
 
         /* Menu Items */
@@ -678,22 +604,13 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
 
         .menu-item {
             background: #f8f8f8;
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 10px;
             border-left: 4px solid #000;
-            transition: all 0.3s ease;
-        }
-
-        .menu-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
         .menu-item h3 {
@@ -706,7 +623,6 @@
 
         .menu-item p {
             color: #666;
-            line-height: 1.6;
         }
 
         .menu-item .price {
@@ -720,21 +636,14 @@
         .events-list {
             max-width: 800px;
             margin: 0 auto;
-            padding: 0 20px;
         }
 
         .event-item {
             background: #f8f8f8;
             padding: 40px;
             margin-bottom: 30px;
-            border-radius: 15px;
+            border-radius: 10px;
             border-left: 4px solid #000;
-            transition: all 0.3s ease;
-        }
-
-        .event-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
         .event-date {
@@ -754,7 +663,6 @@
 
         .event-item p {
             color: #666;
-            line-height: 1.6;
         }
 
         /* Gallery */
@@ -762,15 +670,12 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
         }
 
         .gallery-item {
             aspect-ratio: 1;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -785,16 +690,11 @@
             transform: scale(1.05);
         }
 
-        /* Swiper Gallery Styles - FULL WIDTH */
+        /* Swiper Gallery Styles */
         .swiper-container {
-            width: 100vw;
+            width: 100%;
             height: 500px;
             margin: 40px 0;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
         }
 
         .swiper-slide {
@@ -804,7 +704,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 0;
+            border-radius: 10px;
             overflow: hidden;
         }
 
@@ -819,8 +719,6 @@
             font-size: 1.2em;
             text-transform: lowercase;
             letter-spacing: 1px;
-            padding: 20px;
-            text-align: center;
         }
 
         .gallery-placeholder:nth-child(2n) {
@@ -833,9 +731,6 @@
 
         .gallery-section {
             margin-bottom: 60px;
-            max-width: 1200px;
-            margin: 0 auto 60px auto;
-            padding: 0 20px;
         }
 
         .gallery-section h3 {
@@ -853,22 +748,13 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
             margin-bottom: 60px;
-            max-width: 1200px;
-            margin: 0 auto 60px auto;
-            padding: 0 20px;
         }
 
         .contact-card {
             background: #f8f8f8;
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 10px;
             text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .contact-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
         .contact-card h3 {
@@ -890,7 +776,6 @@
             justify-content: center;
             gap: 30px;
             margin-top: 30px;
-            flex-wrap: wrap;
         }
 
         .social-links a {
@@ -912,7 +797,7 @@
             margin: 0 auto;
             background: #f8f8f8;
             padding: 40px;
-            border-radius: 15px;
+            border-radius: 10px;
         }
 
         .form-group {
@@ -934,12 +819,11 @@
             width: 100%;
             padding: 12px;
             border: 2px solid #ddd;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 16px;
             font-family: 'Georgia', serif;
             color: #000;
             -webkit-appearance: none;
-            transition: border-color 0.3s ease;
         }
 
         .form-group input:focus,
@@ -955,19 +839,18 @@
             background: #000;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 16px;
             text-transform: lowercase;
             letter-spacing: 2px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease;
             font-family: 'Georgia', serif;
         }
 
         .submit-btn:hover {
             background: #333;
-            transform: translateY(-2px);
         }
 
         /* =============== MOBILE RESPONSIVE OPTIMIZATION =============== */
@@ -1092,8 +975,7 @@
             }
 
             .section-title {
-                font-size: clamp(2rem, 8vw, 3rem);
-                margin-bottom: 40px;
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
             }
 
             .menu-grid,
@@ -1101,29 +983,21 @@
             .gallery-grid,
             .contact-info {
                 grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 0 15px;
             }
 
             .section {
                 padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, calc(var(--safe-area-bottom) + 30px));
             }
 
+            .slide:nth-child(1)::before,
+            .slide:nth-child(2)::before,
+            .slide:nth-child(3)::before {
+                font-size: clamp(1.4rem, 6vw, 2rem);
+                padding: 15px 25px;
+            }
+
             .swiper-container {
-                height: 300px;
-            }
-
-            .gallery-section {
-                padding: 0 15px;
-            }
-
-            .reservation-form {
-                margin: 0 15px;
-                padding: 30px 20px;
-            }
-
-            .events-list {
-                padding: 0 15px;
+                height: 250px;
             }
         }
 
@@ -1762,13 +1636,16 @@
                     updateAudioButtons();
                 });
                 
-                // MULTIPLE AUTO-PLAY TRIGGERS
+                // MULTIPLE AUTO-PLAY TRIGGERS ON SPLASH LOAD
                 const autoPlayTriggers = [
                     () => attemptAudioPlay(), // Immediate
+                    () => setTimeout(() => attemptAudioPlay(), 1),
+                    () => setTimeout(() => attemptAudioPlay(), 10),
+                    () => setTimeout(() => attemptAudioPlay(), 50),
                     () => setTimeout(() => attemptAudioPlay(), 100),
+                    () => setTimeout(() => attemptAudioPlay(), 200),
                     () => setTimeout(() => attemptAudioPlay(), 500),
-                    () => setTimeout(() => attemptAudioPlay(), 1000),
-                    () => setTimeout(() => attemptAudioPlay(), 2000)
+                    () => setTimeout(() => attemptAudioPlay(), 1000)
                 ];
                 
                 // Execute all triggers
@@ -1845,7 +1722,7 @@
                     slides[currentSlide].classList.remove('active');
                     currentSlide = (currentSlide + 1) % slides.length;
                     slides[currentSlide].classList.add('active');
-                }, 4000); // Slightly longer for better visual impact
+                }, 3500); // Original timing
                 
                 console.log('🎬 Slideshow started');
             }
@@ -1920,7 +1797,7 @@
                 }
                 
                 try {
-                    // Landing Page Swiper - Continuous scroll
+                    // Landing Page Swiper
                     new Swiper('#landing-swiper', {
                         slidesPerView: 'auto',
                         spaceBetween: 0,
@@ -1929,7 +1806,7 @@
                             delay: 0,
                             disableOnInteraction: false,
                         },
-                        speed: 3000,
+                        speed: 2400,
                         freeMode: true,
                         freeModeMomentum: false,
                     });
@@ -1940,7 +1817,7 @@
                         spaceBetween: 20,
                         loop: true,
                         autoplay: {
-                            delay: 5000,
+                            delay: 5100,
                             disableOnInteraction: false,
                         },
                         pagination: {
@@ -1963,7 +1840,7 @@
                         spaceBetween: 20,
                         loop: true,
                         autoplay: {
-                            delay: 4500,
+                            delay: 4300,
                             disableOnInteraction: false,
                         },
                         pagination: {
