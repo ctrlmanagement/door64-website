@@ -112,13 +112,13 @@
             50% { opacity: 1; }
         }
 
-        /* BLUE Audio Toggle for Splash Page */
+        /* TURQUOISE Audio Toggle for Splash Page (Door Color) */
         .splash-audio-toggle {
             position: fixed;
             top: max(30px, calc(var(--safe-area-top) + 20px));
             right: max(30px, calc(var(--safe-area-right) + 20px));
-            background: rgba(33, 150, 243, 0.8);
-            border: 2px solid rgba(33, 150, 243, 0.6);
+            background: rgba(72, 201, 176, 0.9);
+            border: 2px solid rgba(72, 201, 176, 0.8);
             border-radius: 50%;
             width: 55px;
             height: 55px;
@@ -132,39 +132,39 @@
             backdrop-filter: blur(10px);
             z-index: 10000;
             font-family: 'Georgia', serif;
-            box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3);
+            box-shadow: 0 4px 20px rgba(72, 201, 176, 0.3);
         }
 
         .splash-audio-toggle:hover {
-            background: rgba(33, 150, 243, 1);
-            border-color: rgba(33, 150, 243, 1);
+            background: rgba(72, 201, 176, 1);
+            border-color: rgba(72, 201, 176, 1);
             transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(33, 150, 243, 0.5);
+            box-shadow: 0 6px 25px rgba(72, 201, 176, 0.5);
         }
 
         .splash-audio-toggle.playing {
-            background: rgba(33, 150, 243, 1) !important;
-            border-color: rgba(33, 150, 243, 1) !important;
+            background: rgba(72, 201, 176, 1) !important;
+            border-color: rgba(72, 201, 176, 1) !important;
             color: #fff !important;
-            animation: pulseBlue 2s infinite;
+            animation: pulseTurquoise 2s infinite;
         }
 
         .splash-audio-toggle.loading {
-            background: rgba(33, 150, 243, 0.9) !important;
-            border-color: rgba(33, 150, 243, 1) !important;
+            background: rgba(72, 201, 176, 0.9) !important;
+            border-color: rgba(72, 201, 176, 1) !important;
             animation: spin 1s linear infinite;
         }
 
-        @keyframes pulseBlue {
-            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(33, 150, 243, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        @keyframes pulseTurquoise {
+            0% { box-shadow: 0 0 0 0 rgba(72, 201, 176, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(72, 201, 176, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(72, 201, 176, 0); }
         }
 
         /* ORANGE Audio Toggle for Main Site */
         .audio-toggle {
-            background: rgba(255, 152, 0, 0.8);
-            border: 2px solid rgba(255, 152, 0, 0.6);
+            background: rgba(255, 111, 97, 0.9);
+            border: 2px solid rgba(255, 111, 97, 0.8);
             border-radius: 50%;
             width: 45px;
             height: 45px;
@@ -176,33 +176,33 @@
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            box-shadow: 0 3px 15px rgba(255, 152, 0, 0.3);
+            box-shadow: 0 3px 15px rgba(255, 111, 97, 0.3);
         }
 
         .audio-toggle:hover {
-            background: rgba(255, 152, 0, 1);
-            border-color: rgba(255, 152, 0, 1);
+            background: rgba(255, 111, 97, 1);
+            border-color: rgba(255, 111, 97, 1);
             transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.5);
+            box-shadow: 0 5px 20px rgba(255, 111, 97, 0.5);
         }
 
         .audio-toggle.playing {
-            background: rgba(255, 152, 0, 1) !important;
-            border-color: rgba(255, 152, 0, 1) !important;
+            background: rgba(255, 111, 97, 1) !important;
+            border-color: rgba(255, 111, 97, 1) !important;
             color: #fff !important;
             animation: pulseOrange 2s infinite;
         }
 
         .audio-toggle.loading {
-            background: rgba(255, 152, 0, 0.9) !important;
-            border-color: rgba(255, 152, 0, 1) !important;
+            background: rgba(255, 111, 97, 0.9) !important;
+            border-color: rgba(255, 111, 97, 1) !important;
             animation: spin 1s linear infinite;
         }
 
         @keyframes pulseOrange {
-            0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 152, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(255, 111, 97, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 111, 97, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 111, 97, 0); }
         }
 
         @keyframes spin {
@@ -210,25 +210,9 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Audio Status Indicator */
+        /* Audio Status Indicator - HIDDEN */
         .audio-status {
-            position: fixed;
-            top: max(90px, calc(var(--safe-area-top) + 70px));
-            right: max(30px, calc(var(--safe-area-right) + 20px));
-            background: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .audio-status.show {
-            opacity: 1;
+            display: none;
         }
 
         /* =============== MAIN SITE STYLES =============== */
@@ -581,6 +565,7 @@
             border-radius: 10px;
             text-align: center;
             transition: transform 0.3s ease;
+            border-left: 4px solid #000;
         }
 
         .space-item:hover {
@@ -711,22 +696,150 @@
         .gallery-placeholder {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: cover;
+            background-position: center;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
             color: white;
             font-size: 1.2em;
             text-transform: lowercase;
             letter-spacing: 1px;
+            position: relative;
         }
 
-        .gallery-placeholder:nth-child(2n) {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        /* Add overlay for text readability */
+        .gallery-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(transparent 60%, rgba(0,0,0,0.7));
+            z-index: 1;
         }
 
-        .gallery-placeholder:nth-child(3n) {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        .gallery-placeholder::after {
+            content: attr(data-title);
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.6);
+            border-radius: 8px;
+            margin: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Landing Gallery Images */
+        .gallery-placeholder[data-title="intimate dining experience"] {
+            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="craft cocktails"] {
+            background-image: url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="culinary artistry"] {
+            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="wine selection"] {
+            background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="elegant atmosphere"] {
+            background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="chef's expertise"] {
+            background-image: url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="fresh ingredients"] {
+            background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="private events"] {
+            background-image: url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="seasonal menu"] {
+            background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="kitchen artistry"] {
+            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop');
+        }
+
+        /* Gallery Section Images */
+        .gallery-placeholder[data-title="opening night celebration"] {
+            background-image: url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="chef collaboration dinner"] {
+            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="wine pairing evening"] {
+            background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="anniversary celebration"] {
+            background-image: url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="private party"] {
+            background-image: url('https://images.unsplash.com/photo-1529543730-eec3cf6a3f22?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="food critics visit"] {
+            background-image: url('https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="seasonal tasting menu"] {
+            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="signature cocktail"] {
+            background-image: url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="chef's special creation"] {
+            background-image: url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="artisanal dessert"] {
+            background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="craft cocktail preparation"] {
+            background-image: url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="kitchen in action"] {
+            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="team collaboration"] {
+            background-image: url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="ingredient preparation"] {
+            background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="plating perfection"] {
+            background-image: url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="daily setup"] {
+            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop');
+        }
+
+        .gallery-placeholder[data-title="creative process"] {
+            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop');
         }
 
         .gallery-section {
@@ -1045,7 +1158,6 @@
     <div class="splash-page" id="splashPage">
         <div class="splash-hint">click anywhere to enter door 64</div>
         <button class="splash-audio-toggle" onclick="toggleAudio(event)" id="splashAudioToggle">♪</button>
-        <div class="audio-status" id="audioStatus">initializing audio...</div>
     </div>
 
     <!-- MAIN SITE -->
@@ -1117,34 +1229,34 @@
                 <div class="swiper-container landing-swiper" id="landing-swiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">intimate dining experience</div>
+                            <div class="gallery-placeholder" data-title="intimate dining experience"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">craft cocktails</div>
+                            <div class="gallery-placeholder" data-title="craft cocktails"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">culinary artistry</div>
+                            <div class="gallery-placeholder" data-title="culinary artistry"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">wine selection</div>
+                            <div class="gallery-placeholder" data-title="wine selection"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">elegant atmosphere</div>
+                            <div class="gallery-placeholder" data-title="elegant atmosphere"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">chef's expertise</div>
+                            <div class="gallery-placeholder" data-title="chef's expertise"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">fresh ingredients</div>
+                            <div class="gallery-placeholder" data-title="fresh ingredients"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">private events</div>
+                            <div class="gallery-placeholder" data-title="private events"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">seasonal menu</div>
+                            <div class="gallery-placeholder" data-title="seasonal menu"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder">kitchen artistry</div>
+                            <div class="gallery-placeholder" data-title="kitchen artistry"></div>
                         </div>
                     </div>
                 </div>
@@ -1236,22 +1348,22 @@
                     <div class="swiper-container" id="events-swiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">opening night celebration</div>
+                                <div class="gallery-placeholder" data-title="opening night celebration"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">chef collaboration dinner</div>
+                                <div class="gallery-placeholder" data-title="chef collaboration dinner"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">wine pairing evening</div>
+                                <div class="gallery-placeholder" data-title="wine pairing evening"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">anniversary celebration</div>
+                                <div class="gallery-placeholder" data-title="anniversary celebration"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">private party</div>
+                                <div class="gallery-placeholder" data-title="private party"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">food critics visit</div>
+                                <div class="gallery-placeholder" data-title="food critics visit"></div>
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -1266,22 +1378,22 @@
                     <div class="swiper-container" id="food-swiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">seasonal tasting menu</div>
+                                <div class="gallery-placeholder" data-title="seasonal tasting menu"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">signature cocktail</div>
+                                <div class="gallery-placeholder" data-title="signature cocktail"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">chef's special creation</div>
+                                <div class="gallery-placeholder" data-title="chef's special creation"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">artisanal dessert</div>
+                                <div class="gallery-placeholder" data-title="artisanal dessert"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">craft cocktail preparation</div>
+                                <div class="gallery-placeholder" data-title="craft cocktail preparation"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">fresh ingredients</div>
+                                <div class="gallery-placeholder" data-title="fresh ingredients"></div>
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -1296,22 +1408,22 @@
                     <div class="swiper-container" id="bts-swiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">kitchen in action</div>
+                                <div class="gallery-placeholder" data-title="kitchen in action"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">team collaboration</div>
+                                <div class="gallery-placeholder" data-title="team collaboration"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">ingredient preparation</div>
+                                <div class="gallery-placeholder" data-title="ingredient preparation"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">plating perfection</div>
+                                <div class="gallery-placeholder" data-title="plating perfection"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">daily setup</div>
+                                <div class="gallery-placeholder" data-title="daily setup"></div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder">creative process</div>
+                                <div class="gallery-placeholder" data-title="creative process"></div>
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -1478,14 +1590,9 @@
                 setTimeout(setVH, 100);
             });
             
-            // ============ AUDIO STATUS SYSTEM ============
+            // ============ AUDIO STATUS SYSTEM - SILENT MODE ============
             function showAudioStatus(message) {
-                const status = document.getElementById('audioStatus');
-                if (status) {
-                    status.textContent = message;
-                    status.classList.add('show');
-                    setTimeout(() => status.classList.remove('show'), 3000);
-                }
+                // Silent mode - no status messages
                 console.log('🎵 Audio Status:', message);
             }
             
@@ -1537,7 +1644,6 @@
                 
                 try {
                     setLoadingState();
-                    showAudioStatus('attempting to play audio...');
                     
                     // Create audio context for iOS
                     await createAudioContext();
@@ -1568,7 +1674,6 @@
                     
                 } catch (error) {
                     console.log('Auto-play failed:', error.message);
-                    showAudioStatus('tap audio button to enable');
                     updateAudioButtons();
                     return false;
                 }
