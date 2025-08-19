@@ -147,10 +147,43 @@
             animation: pulseBlue 2s infinite;
         }
 
+        .splash-audio-toggle.loading,
+        .audio-toggle.loading {
+            background: rgba(255, 165, 0, 0.9) !important;
+            border-color: rgba(255, 165, 0, 1) !important;
+            animation: spin 1s linear infinite;
+        }
+
         @keyframes pulseBlue {
             0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
             100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Audio Status Indicator */
+        .audio-status {
+            position: fixed;
+            top: max(90px, calc(var(--safe-area-top) + 70px));
+            right: max(30px, calc(var(--safe-area-right) + 20px));
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .audio-status.show {
+            opacity: 1;
         }
 
         /* =============== MAIN SITE STYLES =============== */
@@ -927,17 +960,23 @@
     </style>
 </head>
 <body>
-    <!-- Background Audio with Auto-Play Setup -->
-    <audio id="backgroundAudio" loop preload="auto" playsinline webkit-playsinline muted>
+    <!-- Background Audio with Enhanced Error Handling -->
+    <audio id="backgroundAudio" loop preload="metadata" playsinline webkit-playsinline>
+        <!-- Primary audio source (your local file) -->
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <!-- Fallback local source -->
         <source src="QUIETSTORM.mp3" type="audio/mpeg">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- Reliable online fallback - public domain music -->
+        <source src="https://file-examples.com/storage/fe68c1c1d44996cd7f18db6/2017/11/file_example_MP3_700KB.mp3" type="audio/mpeg">
+        <!-- Additional fallback -->
+        <source src="https://www.kozco.com/tech/LRMonoPhase4.mp3" type="audio/mpeg">
     </audio>
 
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
         <div class="splash-hint">click anywhere to enter door 64</div>
         <button class="splash-audio-toggle" onclick="toggleAudio(event)" id="splashAudioToggle">♪</button>
+        <div class="audio-status" id="audioStatus">initializing audio...</div>
     </div>
 
     <!-- MAIN SITE -->
@@ -1346,14 +1385,17 @@
     </div>
 
     <script>
-        // ============ ULTRA AGGRESSIVE AUTO-PLAY SYSTEM ============
+        // ============ ENHANCED AUDIO AUTO-PLAY SYSTEM ============
         (function() {
             'use strict';
             
             let audioPlaying = false;
-            let slideInterval = null;
-            let currentSlide = 0;
+            let audioLoaded = false;
+            let audioEnabled = false;
             let backgroundAudio;
+            let audioContext;
+            let currentSlide = 0;
+            let slideInterval = null;
             
             // Set viewport height for mobile
             function setVH() {
@@ -1363,105 +1405,198 @@
             setVH();
             window.addEventListener('resize', setVH);
             
-            // ============ AUDIO AUTO-PLAY (MAXIMUM AGGRESSION) ============
-            function initAudio() {
-                backgroundAudio = document.getElementById('backgroundAudio');
-                if (!backgroundAudio) return;
-                
-                // Configure for aggressive auto-play
-                backgroundAudio.volume = 0.5;
-                backgroundAudio.loop = true;
-                backgroundAudio.muted = true; // Start muted for iOS
-                
-                // Create audio context for iOS
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                let audioContext;
-                
-                function createContext() {
-                    if (!audioContext) {
-                        audioContext = new AudioContext();
-                    }
-                    if (audioContext.state === 'suspended') {
-                        audioContext.resume();
-                    }
+            // ============ ENHANCED AUDIO SYSTEM ============
+            function showAudioStatus(message) {
+                const status = document.getElementById('audioStatus');
+                if (status) {
+                    status.textContent = message;
+                    status.classList.add('show');
+                    setTimeout(() => status.classList.remove('show'), 3000);
                 }
-                
-                // Aggressive play function
-                function attemptPlay() {
-                    createContext();
-                    backgroundAudio.play().then(() => {
-                        console.log('Audio started (muted)');
-                        // Unmute after successful play
-                        setTimeout(() => {
-                            backgroundAudio.muted = false;
-                            audioPlaying = true;
-                            updateAudioButtons();
-                            console.log('Audio unmuted');
-                        }, 100);
-                    }).catch(() => {
-                        // Silent fail, will retry
-                    });
-                }
-                
-                // Multiple immediate attempts
-                attemptPlay();
-                [0, 1, 10, 50, 100, 200, 500, 1000].forEach(delay => {
-                    setTimeout(attemptPlay, delay);
-                });
-                
-                // Start on any interaction
-                const startOnInteraction = () => {
-                    createContext();
-                    backgroundAudio.muted = false;
-                    backgroundAudio.play().then(() => {
-                        audioPlaying = true;
-                        updateAudioButtons();
-                    }).catch(() => {});
-                };
-                
-                ['touchstart', 'touchend', 'mousedown', 'click', 'scroll'].forEach(event => {
-                    document.addEventListener(event, startOnInteraction, { once: true, passive: true });
-                });
-                
-                // Audio state listeners
-                backgroundAudio.addEventListener('play', () => {
-                    audioPlaying = true;
-                    updateAudioButtons();
-                });
-                
-                backgroundAudio.addEventListener('pause', () => {
-                    audioPlaying = false;
-                    updateAudioButtons();
-                });
+                console.log('Audio Status:', message);
             }
             
             function updateAudioButtons() {
                 const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
                 buttons.forEach(btn => {
+                    btn.classList.remove('loading');
                     if (audioPlaying) {
-                        btn.innerText = '⏸';
+                        btn.textContent = '⏸';
                         btn.classList.add('playing');
                     } else {
-                        btn.innerText = '♪';
+                        btn.textContent = '♪';
                         btn.classList.remove('playing');
                     }
                 });
             }
             
-            window.toggleAudio = function(event) {
+            function setLoadingState() {
+                const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
+                buttons.forEach(btn => {
+                    btn.textContent = '⟳';
+                    btn.classList.add('loading');
+                    btn.classList.remove('playing');
+                });
+            }
+            
+            async function createAudioContext() {
+                if (!audioContext) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (AudioContext) {
+                        audioContext = new AudioContext();
+                        showAudioStatus('audio context created');
+                    }
+                }
+                
+                if (audioContext && audioContext.state === 'suspended') {
+                    try {
+                        await audioContext.resume();
+                        showAudioStatus('audio context resumed');
+                    } catch (e) {
+                        showAudioStatus('failed to resume audio context');
+                    }
+                }
+            }
+            
+            async function attemptAudioPlay() {
+                if (!backgroundAudio) return false;
+                
+                try {
+                    setLoadingState();
+                    
+                    // Create audio context
+                    await createAudioContext();
+                    
+                    // Try to play
+                    backgroundAudio.volume = 0;
+                    backgroundAudio.muted = false;
+                    
+                    await backgroundAudio.play();
+                    
+                    // Gradually increase volume
+                    const fadeInInterval = setInterval(() => {
+                        if (backgroundAudio.volume < 0.5) {
+                            backgroundAudio.volume = Math.min(0.5, backgroundAudio.volume + 0.05);
+                        } else {
+                            clearInterval(fadeInInterval);
+                        }
+                    }, 100);
+                    
+                    audioPlaying = true;
+                    audioEnabled = true;
+                    updateAudioButtons();
+                    showAudioStatus('audio playing');
+                    return true;
+                    
+                } catch (error) {
+                    console.log('Auto-play failed:', error.message);
+                    showAudioStatus('click to enable audio');
+                    updateAudioButtons();
+                    return false;
+                }
+            }
+            
+            function initAudio() {
+                backgroundAudio = document.getElementById('backgroundAudio');
+                if (!backgroundAudio) {
+                    showAudioStatus('audio element not found');
+                    return;
+                }
+                
+                // Audio event listeners
+                backgroundAudio.addEventListener('loadstart', () => {
+                    showAudioStatus('loading audio...');
+                });
+                
+                backgroundAudio.addEventListener('canplaythrough', () => {
+                    audioLoaded = true;
+                    showAudioStatus('audio ready');
+                    
+                    // Try auto-play after load
+                    if (!audioEnabled) {
+                        attemptAudioPlay();
+                    }
+                });
+                
+                backgroundAudio.addEventListener('play', () => {
+                    audioPlaying = true;
+                    updateAudioButtons();
+                    showAudioStatus('audio started');
+                });
+                
+                backgroundAudio.addEventListener('pause', () => {
+                    audioPlaying = false;
+                    updateAudioButtons();
+                    showAudioStatus('audio paused');
+                });
+                
+                backgroundAudio.addEventListener('error', (e) => {
+                    console.error('Audio error:', e);
+                    showAudioStatus('audio error - check sources');
+                    updateAudioButtons();
+                });
+                
+                backgroundAudio.addEventListener('stalled', () => {
+                    showAudioStatus('audio loading stalled');
+                });
+                
+                // Set initial properties
+                backgroundAudio.volume = 0;
+                backgroundAudio.loop = true;
+                
+                // Load the audio
+                backgroundAudio.load();
+                
+                // Set up interaction handlers for mobile/autoplay restrictions
+                const enableAudioOnInteraction = async () => {
+                    if (!audioEnabled) {
+                        await createAudioContext();
+                        if (audioLoaded) {
+                            await attemptAudioPlay();
+                        }
+                    }
+                };
+                
+                // Add multiple interaction listeners
+                ['touchstart', 'touchend', 'mousedown', 'click', 'keydown'].forEach(event => {
+                    document.addEventListener(event, enableAudioOnInteraction, { once: true, passive: true });
+                });
+                
+                // Try immediate auto-play (will likely fail due to browser policies)
+                setTimeout(() => {
+                    if (!audioEnabled && audioLoaded) {
+                        attemptAudioPlay();
+                    }
+                }, 1000);
+            }
+            
+            window.toggleAudio = async function(event) {
                 if (event) event.stopPropagation();
                 
-                if (!backgroundAudio) return;
+                if (!backgroundAudio) {
+                    showAudioStatus('audio not available');
+                    return;
+                }
                 
-                if (audioPlaying) {
-                    backgroundAudio.pause();
-                } else {
-                    backgroundAudio.muted = false;
-                    backgroundAudio.play().catch(() => {});
+                if (!audioLoaded) {
+                    showAudioStatus('audio still loading...');
+                    return;
+                }
+                
+                try {
+                    if (audioPlaying) {
+                        backgroundAudio.pause();
+                        audioEnabled = false;
+                    } else {
+                        await attemptAudioPlay();
+                    }
+                } catch (error) {
+                    showAudioStatus('audio toggle failed');
+                    console.error('Toggle audio error:', error);
                 }
             };
             
-            // ============ SLIDESHOW SYSTEM (IMMEDIATE START) ============
+            // ============ SLIDESHOW SYSTEM ============
             function startSlideshow() {
                 const slides = document.querySelectorAll('.gallery-slider .slide');
                 if (slides.length === 0) return;
@@ -1478,8 +1613,6 @@
                     currentSlide = (currentSlide + 1) % slides.length;
                     slides[currentSlide].classList.add('active');
                 }, 3500);
-                
-                console.log('Slideshow started');
             }
             
             function stopSlideshow() {
@@ -1524,10 +1657,9 @@
                 const splashPage = document.getElementById('splashPage');
                 const mainSite = document.getElementById('mainSite');
                 
-                // Ensure audio starts
-                if (!audioPlaying && backgroundAudio) {
-                    backgroundAudio.muted = false;
-                    backgroundAudio.play().catch(() => {});
+                // Enable audio on user interaction
+                if (!audioEnabled && backgroundAudio && audioLoaded) {
+                    attemptAudioPlay();
                 }
                 
                 splashPage.classList.add('hidden');
@@ -1635,7 +1767,7 @@
             function init() {
                 console.log('Initializing Door 64...');
                 
-                // Initialize audio immediately
+                // Initialize audio system
                 initAudio();
                 
                 // Splash page interactions
@@ -1664,7 +1796,7 @@
                     });
                 }
                 
-                // Page visibility
+                // Page visibility handling
                 document.addEventListener('visibilitychange', function() {
                     if (document.hidden) {
                         stopSlideshow();
@@ -1674,16 +1806,12 @@
                 });
             }
             
-            // Start immediately
-            init();
-            
-            // Multiple init attempts for iOS
+            // Initialize when ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
             }
-            window.addEventListener('load', init);
-            requestAnimationFrame(init);
-            setTimeout(init, 0);
             
         })();
     </script>
