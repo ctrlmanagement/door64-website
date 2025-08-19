@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     
     <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto" style="display: none;">
+    <audio id="backgroundAudio" loop preload="auto" muted="false" style="display: none;">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -828,7 +828,8 @@
     
     <!-- Auto-play notification (global) -->
     <div id="autoplayNotification" class="autoplay-notification">
-        click ♪ to start background music
+        <strong>click ♪ for background music</strong><br>
+        <small>enhance your door 64 experience</small>
     </div>
 
     <!-- Space Section -->
@@ -1205,48 +1206,91 @@
     
     <!-- Initialize Swiper -->
     <script>
-        // Audio Control
+        // Audio Control - Enhanced Auto-play
         let audioPlaying = false;
-        let audioInitialized = false; // Track if audio has been started
+        let audioInitialized = false;
+        let autoplayAttempts = 0;
         let backgroundAudio = document.getElementById('backgroundAudio');
         let audioToggle = document.getElementById('audioToggle');
         let autoplayNotification = document.getElementById('autoplayNotification');
 
-        // Auto-play attempt on page load (only once)
+        // Enhanced auto-play attempt
         function attemptAutoPlay() {
-            if (audioInitialized) return; // Don't restart if already initialized
+            if (audioInitialized || autoplayAttempts > 3) return;
+            autoplayAttempts++;
             
-            console.log('Attempting auto-play...');
-            backgroundAudio.volume = 0.3;
+            console.log(`Auto-play attempt ${autoplayAttempts}...`);
+            
+            // Start with very low volume and fade in
+            backgroundAudio.volume = 0.01;
+            backgroundAudio.muted = false;
             
             backgroundAudio.play().then(() => {
                 console.log('Auto-play successful!');
-                audioToggle.innerText = '⏸';
-                audioToggle.classList.add('playing');
                 audioPlaying = true;
-                audioInitialized = true; // Mark as initialized
+                audioInitialized = true;
+                
+                // Fade in the volume gradually
+                fadeInAudio();
+                updateAudioButton();
                 hideAutoplayNotification();
+                
             }).catch((error) => {
-                console.log('Auto-play blocked:', error.message);
-                showAutoplayNotification();
+                console.log(`Auto-play attempt ${autoplayAttempts} failed:`, error.message);
+                
+                if (autoplayAttempts <= 3) {
+                    // Try again in a moment
+                    setTimeout(attemptAutoPlay, 500);
+                } else {
+                    showAutoplayNotification();
+                }
             });
         }
 
+        // Fade in audio volume
+        function fadeInAudio() {
+            let targetVolume = 0.3;
+            let currentVolume = 0.01;
+            let fadeInterval = setInterval(() => {
+                if (currentVolume < targetVolume) {
+                    currentVolume += 0.02;
+                    backgroundAudio.volume = Math.min(currentVolume, targetVolume);
+                } else {
+                    clearInterval(fadeInterval);
+                }
+            }, 100);
+        }
+
+        // Update button appearance
+        function updateAudioButton() {
+            if (audioPlaying) {
+                audioToggle.innerText = '⏸';
+                audioToggle.classList.add('playing');
+            } else {
+                audioToggle.innerText = '♪';
+                audioToggle.classList.remove('playing');
+            }
+        }
+
         function showAutoplayNotification() {
-            if (audioInitialized) return; // Don't show if audio already started
+            if (audioInitialized) return;
             
             autoplayNotification.style.display = 'block';
             audioToggle.classList.add('blocked');
             
-            // Hide notification after 5 seconds
+            // Make button pulse to draw attention
+            audioToggle.style.animation = 'bounce 2s infinite';
+            
+            // Hide notification after 8 seconds
             setTimeout(() => {
                 hideAutoplayNotification();
-            }, 5000);
+            }, 8000);
         }
 
         function hideAutoplayNotification() {
             autoplayNotification.style.display = 'none';
             audioToggle.classList.remove('blocked');
+            audioToggle.style.animation = '';
         }
 
         function toggleAudio() {
@@ -1255,48 +1299,52 @@
             
             if (audioPlaying) {
                 backgroundAudio.pause();
-                audioToggle.innerText = '♪';
-                audioToggle.classList.remove('playing');
                 audioPlaying = false;
                 console.log('Audio paused');
             } else {
                 backgroundAudio.volume = 0.3;
-                console.log('Attempting to play audio...');
+                console.log('Starting audio manually...');
                 
                 backgroundAudio.play().then(() => {
-                    audioToggle.innerText = '⏸';
-                    audioToggle.classList.add('playing');
                     audioPlaying = true;
-                    audioInitialized = true; // Mark as initialized
+                    audioInitialized = true;
                     console.log('Audio started playing');
                 }).catch((error) => {
                     console.error('Audio play failed:', error);
-                    
-                    if (error.name === 'NotFoundError') {
-                        alert('Audio file not found. Please check if QUIETSTORM.mp3 is uploaded to assets/audio/ folder.');
-                    } else if (error.name === 'NotAllowedError') {
-                        alert('Audio blocked by browser. Please interact with the page first.');
-                    } else {
-                        alert(`Audio error: ${error.message}`);
-                    }
+                    alert('Audio could not be played. Please check your browser settings.');
                 });
             }
+            updateAudioButton();
         }
 
-        // Try auto-play when page loads (only once)
+        // Multiple auto-play triggers
         window.addEventListener('load', function() {
             console.log('Page loaded, attempting auto-play...');
-            setTimeout(attemptAutoPlay, 1000);
+            setTimeout(attemptAutoPlay, 500);
         });
 
-        // Also try on first user interaction if auto-play failed (only once)
-        document.addEventListener('click', function firstClick() {
+        // Try on any user interaction
+        ['click', 'touchstart', 'keydown', 'mousemove'].forEach(event => {
+            document.addEventListener(event, function() {
+                if (!audioInitialized) {
+                    attemptAutoPlay();
+                }
+            }, { once: true });
+        });
+
+        // Try when page becomes visible (tab focus)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && !audioInitialized) {
+                setTimeout(attemptAutoPlay, 100);
+            }
+        });
+
+        // Try after a delay (some browsers allow after user has been on site)
+        setTimeout(() => {
             if (!audioInitialized) {
-                console.log('First click detected, trying auto-play...');
                 attemptAutoPlay();
             }
-            document.removeEventListener('click', firstClick);
-        }, { once: true });
+        }, 2000);
 
         // Navigation between sections
         function showSection(sectionId) {
