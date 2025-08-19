@@ -35,6 +35,20 @@
             z-index: 1000;
             padding: 20px 0;
             border-bottom: 1px solid #333;
+            opacity: 0;
+            transform: translateY(-100%);
+            transition: all 0.3s ease;
+        }
+
+        .nav:hover,
+        .nav.show-nav {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body:hover .nav {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .nav-container {
@@ -85,6 +99,29 @@
             background: #fff;
             margin: 3px 0;
             transition: 0.3s;
+        }
+
+        /* Global Text Styling */
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #000;
+            background-color: #0a0a0a;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            text-transform: lowercase;
+            color: #000;
+        }
+
+        p, .sub-links a, .menu-item p {
+            color: #666;
+            text-transform: lowercase;
+        }
+
+        .section {
+            background: #fff;
         }
 
         /* Landing Page */
@@ -151,6 +188,7 @@
             letter-spacing: 8px;
             font-weight: 300;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            color: #fff;
         }
 
         .landing-links {
@@ -173,7 +211,7 @@
         .landing-link h3 {
             font-size: 1.8em;
             margin-bottom: 20px;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 3px;
             color: #ff6b35;
         }
@@ -197,75 +235,52 @@
             color: #fff;
         }
 
-        /* Landing Gallery Slider */
-        .landing-gallery-container {
-            margin-top: 80px;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .landing-gallery {
-            position: relative;
-            height: 400px;
+        /* Bottom Left Carousel Gallery */
+        .carousel-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 400px;
+            height: 80px;
+            z-index: 999;
             overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
 
-        .gallery-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+        .carousel-track {
+            display: flex;
+            animation: scroll-left 120s linear infinite;
             height: 100%;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
         }
 
-        .gallery-slide.gallery-active {
-            opacity: 1;
-        }
-
-        .gallery-image {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .placeholder-image {
-            width: 100%;
-            height: 100%;
+        .carousel-item {
+            min-width: 80px;
+            height: 80px;
+            margin-right: 5px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2em;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .gallery-dots {
+            font-size: 10px;
             text-align: center;
-            margin-top: 30px;
+            flex-shrink: 0;
         }
 
-        .dot {
-            height: 12px;
-            width: 12px;
-            margin: 0 8px;
-            background-color: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
-        .dot.dot-active,
-        .dot:hover {
-            background-color: #ff6b35;
+        .carousel-track:hover {
+            animation-play-state: paused;
         }
 
         /* Enter Button */
@@ -308,9 +323,9 @@
             text-align: center;
             margin-bottom: 60px;
             font-weight: 300;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 3px;
-            color: #2c2c2c;
+            color: #000;
         }
 
         /* Space Section */
@@ -336,8 +351,13 @@
         .space-item h3 {
             font-size: 1.5em;
             margin-bottom: 20px;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 2px;
+            color: #000;
+        }
+
+        .space-item p {
+            color: #666;
         }
 
         /* Menu Items */
@@ -357,8 +377,13 @@
         .menu-item h3 {
             font-size: 1.3em;
             margin-bottom: 15px;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 1px;
+            color: #000;
+        }
+
+        .menu-item p {
+            color: #666;
         }
 
         .menu-item .price {
@@ -366,6 +391,39 @@
             font-weight: bold;
             font-size: 1.1em;
             margin-top: 10px;
+        }
+
+        /* Events */
+        .events-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .event-item {
+            background: #f8f8f8;
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b35;
+        }
+
+        .event-date {
+            color: #ff6b35;
+            font-weight: bold;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .event-item h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-transform: lowercase;
+            color: #000;
+        }
+
+        .event-item p {
+            color: #666;
         }
 
         /* Gallery */
@@ -386,38 +444,11 @@
             font-size: 14px;
             text-align: center;
             transition: transform 0.3s ease;
+            text-transform: lowercase;
         }
 
         .gallery-item:hover {
             transform: scale(1.05);
-        }
-
-        /* Events */
-        .events-list {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .event-item {
-            background: #f8f8f8;
-            padding: 40px;
-            margin-bottom: 30px;
-            border-radius: 10px;
-            border-left: 4px solid #ff6b35;
-        }
-
-        .event-date {
-            color: #ff6b35;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .event-item h3 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            text-transform: uppercase;
         }
 
         /* Contact Info */
@@ -438,7 +469,7 @@
         .contact-card h3 {
             font-size: 1.3em;
             margin-bottom: 20px;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 2px;
             color: #ff6b35;
         }
@@ -446,6 +477,7 @@
         .contact-card p {
             margin-bottom: 10px;
             font-size: 1.1em;
+            color: #666;
         }
 
         .social-links {
@@ -459,13 +491,13 @@
             color: #ff6b35;
             font-size: 1.2em;
             text-decoration: none;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 1px;
             transition: color 0.3s ease;
         }
 
         .social-links a:hover {
-            color: #2c2c2c;
+            color: #000;
         }
 
         /* Reservation Form */
@@ -485,8 +517,9 @@
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 1px;
+            color: #000;
         }
 
         .form-group input,
@@ -498,6 +531,7 @@
             border-radius: 5px;
             font-size: 16px;
             font-family: 'Georgia', serif;
+            color: #000;
         }
 
         .form-group input:focus,
@@ -515,7 +549,7 @@
             border: none;
             border-radius: 5px;
             font-size: 16px;
-            text-transform: uppercase;
+            text-transform: lowercase;
             letter-spacing: 2px;
             font-weight: bold;
             cursor: pointer;
@@ -575,18 +609,17 @@
                 font-size: 14px;
             }
 
-            .landing-gallery {
-                height: 250px;
-                margin: 0 10px;
+            .carousel-container {
+                width: 300px;
+                height: 60px;
+                bottom: 10px;
+                left: 10px;
             }
 
-            .landing-gallery-container {
-                margin-top: 60px;
-            }
-
-            .placeholder-image {
-                font-size: 1.2em;
-                letter-spacing: 2px;
+            .carousel-item {
+                min-width: 60px;
+                height: 60px;
+                font-size: 8px;
             }
         }
     </style>
@@ -628,7 +661,7 @@
             
             <div class="landing-links">
                 <div class="landing-link">
-                    <h3>What to Do</h3>
+                    <h3>what to do</h3>
                     <div class="sub-links">
                         <a href="#" onclick="showSection('reservations')">make reservation</a>
                         <a href="#" onclick="showSection('events')">upcoming events</a>
@@ -636,7 +669,7 @@
                 </div>
                 
                 <div class="landing-link">
-                    <h3>Space</h3>
+                    <h3>space</h3>
                     <div class="sub-links">
                         <a href="#" onclick="showSection('kitchen')">in the kitchen</a>
                         <a href="#" onclick="showSection('bar')">at the bar</a>
@@ -644,62 +677,68 @@
                 </div>
                 
                 <div class="landing-link">
-                    <h3>Gallery</h3>
+                    <h3>gallery</h3>
                     <div class="sub-links">
                         <a href="#" onclick="showSection('gallery')">who was here</a>
                         <a href="#" onclick="showSection('social')">check on us</a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Landing Gallery Slider -->
-            <div class="landing-gallery-container">
-                <div class="landing-gallery">
-                    <div class="gallery-slide gallery-active">
-                        <div class="gallery-image">
-                            <div class="placeholder-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                <span>Signature Dishes</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-slide">
-                        <div class="gallery-image">
-                            <div class="placeholder-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                                <span>Craft Cocktails</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-slide">
-                        <div class="gallery-image">
-                            <div class="placeholder-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                                <span>Intimate Atmosphere</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-slide">
-                        <div class="gallery-image">
-                            <div class="placeholder-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                                <span>Chef's Table</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="gallery-slide">
-                        <div class="gallery-image">
-                            <div class="placeholder-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                                <span>Private Events</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Gallery Navigation Dots -->
-                <div class="gallery-dots">
-                    <span class="dot dot-active" onclick="currentGallerySlide(1)"></span>
-                    <span class="dot" onclick="currentGallerySlide(2)"></span>
-                    <span class="dot" onclick="currentGallerySlide(3)"></span>
-                    <span class="dot" onclick="currentGallerySlide(4)"></span>
-                    <span class="dot" onclick="currentGallerySlide(5)"></span>
-                </div>
+        </div>
+
+        <!-- Bottom Left Carousel Gallery -->
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 1</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 1</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 1</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 1</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 1</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 2</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 2</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 2</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 2</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 2</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 3</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 3</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 3</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 3</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 3</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 4</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 4</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 4</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 4</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 4</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 5</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 5</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 5</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 5</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 5</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 6</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 6</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 6</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 6</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 6</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 7</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 7</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 7</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 7</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 7</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 8</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 8</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 8</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 8</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 8</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 9</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 9</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 9</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 9</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 9</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #667eea, #764ba2);">dish 10</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #f093fb, #f5576c);">cocktail 10</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">space 10</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #43e97b, #38f9d7);">event 10</div>
+                <div class="carousel-item" style="background: linear-gradient(45deg, #fa709a, #fee140);">guest 10</div>
             </div>
         </div>
     </section>
@@ -707,23 +746,23 @@
     <!-- Space Section -->
     <section id="space" class="section">
         <div class="container">
-            <h2 class="section-title">Space</h2>
+            <h2 class="section-title">space</h2>
             <div class="space-grid">
                 <div class="space-item">
-                    <h3>Main Dining</h3>
-                    <p>Intimate setting for 24 guests with an open kitchen view. Experience the energy and artistry of our culinary team in action.</p>
+                    <h3>main dining</h3>
+                    <p>intimate setting for 24 guests with an open kitchen view. experience the energy and artistry of our culinary team in action.</p>
                 </div>
                 <div class="space-item">
-                    <h3>Private Room</h3>
-                    <p>Exclusive space for up to 12 guests. Perfect for special occasions, business dinners, or intimate celebrations.</p>
+                    <h3>private room</h3>
+                    <p>exclusive space for up to 12 guests. perfect for special occasions, business dinners, or intimate celebrations.</p>
                 </div>
                 <div class="space-item">
-                    <h3>Chef's Counter</h3>
-                    <p>Six seats directly at the kitchen counter. The ultimate interactive dining experience with direct chef interaction.</p>
+                    <h3>chef's counter</h3>
+                    <p>six seats directly at the kitchen counter. the ultimate interactive dining experience with direct chef interaction.</p>
                 </div>
                 <div class="space-item">
-                    <h3>Wine Cellar</h3>
-                    <p>Temperature-controlled environment housing over 200 carefully curated bottles from around the world.</p>
+                    <h3>wine cellar</h3>
+                    <p>temperature-controlled environment housing over 200 carefully curated bottles from around the world.</p>
                 </div>
             </div>
         </div>
@@ -732,26 +771,26 @@
     <!-- Kitchen Section -->
     <section id="kitchen" class="section">
         <div class="container">
-            <h2 class="section-title">In the Kitchen</h2>
+            <h2 class="section-title">in the kitchen</h2>
             <div class="menu-grid">
                 <div class="menu-item">
-                    <h3>Seasonal Tasting Menu</h3>
-                    <p>A journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
+                    <h3>seasonal tasting menu</h3>
+                    <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
                     <div class="price">$125 per person</div>
                 </div>
                 <div class="menu-item">
-                    <h3>Chef's Selection</h3>
-                    <p>Let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
+                    <h3>chef's selection</h3>
+                    <p>let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
                     <div class="price">$95 per person</div>
                 </div>
                 <div class="menu-item">
-                    <h3>Vegetarian Experience</h3>
-                    <p>Plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
+                    <h3>vegetarian experience</h3>
+                    <p>plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
                     <div class="price">$85 per person</div>
                 </div>
                 <div class="menu-item">
-                    <h3>Wine Pairings</h3>
-                    <p>Carefully selected wines to complement each course, curated by our sommelier.</p>
+                    <h3>wine pairings</h3>
+                    <p>carefully selected wines to complement each course, curated by our sommelier.</p>
                     <div class="price">$65 per person</div>
                 </div>
             </div>
@@ -761,26 +800,26 @@
     <!-- Bar Section -->
     <section id="bar" class="section">
         <div class="container">
-            <h2 class="section-title">At the Bar</h2>
+            <h2 class="section-title">at the bar</h2>
             <div class="menu-grid">
                 <div class="menu-item">
-                    <h3>Signature Cocktails</h3>
-                    <p>House-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
+                    <h3>signature cocktails</h3>
+                    <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
                     <div class="price">$16 - $22</div>
                 </div>
                 <div class="menu-item">
-                    <h3>Classic Collection</h3>
-                    <p>Timeless cocktails executed with precision using the finest spirits and traditional methods.</p>
+                    <h3>classic collection</h3>
+                    <p>timeless cocktails executed with precision using the finest spirits and traditional methods.</p>
                     <div class="price">$14 - $18</div>
                 </div>
                 <div class="menu-item">
-                    <h3>Rare Spirits</h3>
-                    <p>An exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
+                    <h3>rare spirits</h3>
+                    <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
                     <div class="price">$25 - $150</div>
                 </div>
                 <div class="menu-item">
-                    <h3>Zero-Proof Options</h3>
-                    <p>Sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
+                    <h3>zero-proof options</h3>
+                    <p>sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
                     <div class="price">$12 - $16</div>
                 </div>
             </div>
@@ -790,20 +829,20 @@
     <!-- Gallery Section -->
     <section id="gallery" class="section">
         <div class="container">
-            <h2 class="section-title">Who Was Here</h2>
+            <h2 class="section-title">who was here</h2>
             <div class="gallery-grid">
-                <div class="gallery-item">Opening Night</div>
-                <div class="gallery-item">Chef Collaboration</div>
-                <div class="gallery-item">Wine Dinner</div>
-                <div class="gallery-item">Anniversary Celebration</div>
-                <div class="gallery-item">Food Critics Visit</div>
-                <div class="gallery-item">Local Food Festival</div>
-                <div class="gallery-item">Private Event</div>
-                <div class="gallery-item">Cooking Class</div>
-                <div class="gallery-item">Holiday Menu</div>
-                <div class="gallery-item">Team Building</div>
-                <div class="gallery-item">Media Event</div>
-                <div class="gallery-item">Community Dinner</div>
+                <div class="gallery-item">opening night</div>
+                <div class="gallery-item">chef collaboration</div>
+                <div class="gallery-item">wine dinner</div>
+                <div class="gallery-item">anniversary celebration</div>
+                <div class="gallery-item">food critics visit</div>
+                <div class="gallery-item">local food festival</div>
+                <div class="gallery-item">private event</div>
+                <div class="gallery-item">cooking class</div>
+                <div class="gallery-item">holiday menu</div>
+                <div class="gallery-item">team building</div>
+                <div class="gallery-item">media event</div>
+                <div class="gallery-item">community dinner</div>
             </div>
         </div>
     </section>
@@ -811,27 +850,27 @@
     <!-- Events Section -->
     <section id="events" class="section">
         <div class="container">
-            <h2 class="section-title">What to Do</h2>
+            <h2 class="section-title">what to do</h2>
             <div class="events-list">
                 <div class="event-item">
-                    <div class="event-date">Every Tuesday</div>
-                    <h3>Wine & Dine</h3>
-                    <p>Join us for an intimate evening featuring wine pairings with a special 5-course menu. Limited to 16 guests.</p>
+                    <div class="event-date">every tuesday</div>
+                    <h3>wine & dine</h3>
+                    <p>join us for an intimate evening featuring wine pairings with a special 5-course menu. limited to 16 guests.</p>
                 </div>
                 <div class="event-item">
-                    <div class="event-date">First Friday</div>
-                    <h3>Chef's Table Experience</h3>
-                    <p>Exclusive 6-seat experience at the chef's counter with personalized menu and wine selections.</p>
+                    <div class="event-date">first friday</div>
+                    <h3>chef's table experience</h3>
+                    <p>exclusive 6-seat experience at the chef's counter with personalized menu and wine selections.</p>
                 </div>
                 <div class="event-item">
-                    <div class="event-date">Saturday Afternoons</div>
-                    <h3>Cooking Classes</h3>
-                    <p>Learn the techniques behind our signature dishes in hands-on cooking workshops.</p>
+                    <div class="event-date">saturday afternoons</div>
+                    <h3>cooking classes</h3>
+                    <p>learn the techniques behind our signature dishes in hands-on cooking workshops.</p>
                 </div>
                 <div class="event-item">
-                    <div class="event-date">Monthly</div>
-                    <h3>Private Events</h3>
-                    <p>Book the entire restaurant for your special occasion. Customized menus and service available.</p>
+                    <div class="event-date">monthly</div>
+                    <h3>private events</h3>
+                    <p>book the entire restaurant for your special occasion. customized menus and service available.</p>
                 </div>
             </div>
         </div>
@@ -840,29 +879,29 @@
     <!-- Reservations Section -->
     <section id="reservations" class="section">
         <div class="container">
-            <h2 class="section-title">Come See Us</h2>
+            <h2 class="section-title">come see us</h2>
             <div class="reservation-form">
                 <form>
                     <div class="form-group">
-                        <label for="name">Name</label>
+                        <label for="name">name</label>
                         <input type="text" id="name" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
+                        <label for="email">email</label>
                         <input type="email" id="email" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="phone">Phone</label>
+                        <label for="phone">phone</label>
                         <input type="tel" id="phone" name="phone" required>
                     </div>
                     <div class="form-group">
-                        <label for="date">Preferred Date</label>
+                        <label for="date">preferred date</label>
                         <input type="date" id="date" name="date" required>
                     </div>
                     <div class="form-group">
-                        <label for="time">Preferred Time</label>
+                        <label for="time">preferred time</label>
                         <select id="time" name="time" required>
-                            <option value="">Select Time</option>
+                            <option value="">select time</option>
                             <option value="6:00 PM">6:00 PM</option>
                             <option value="6:30 PM">6:30 PM</option>
                             <option value="8:00 PM">8:00 PM</option>
@@ -870,22 +909,22 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="guests">Number of Guests</label>
+                        <label for="guests">number of guests</label>
                         <select id="guests" name="guests" required>
-                            <option value="">Select</option>
-                            <option value="1">1 Guest</option>
-                            <option value="2">2 Guests</option>
-                            <option value="3">3 Guests</option>
-                            <option value="4">4 Guests</option>
-                            <option value="5">5 Guests</option>
-                            <option value="6">6 Guests</option>
+                            <option value="">select</option>
+                            <option value="1">1 guest</option>
+                            <option value="2">2 guests</option>
+                            <option value="3">3 guests</option>
+                            <option value="4">4 guests</option>
+                            <option value="5">5 guests</option>
+                            <option value="6">6 guests</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="special">Special Requests</label>
-                        <textarea id="special" name="special" rows="4" placeholder="Dietary restrictions, allergies, special occasions..."></textarea>
+                        <label for="special">special requests</label>
+                        <textarea id="special" name="special" rows="4" placeholder="dietary restrictions, allergies, special occasions..."></textarea>
                     </div>
-                    <button type="submit" class="submit-btn">Request Reservation</button>
+                    <button type="submit" class="submit-btn">request reservation</button>
                 </form>
             </div>
         </div>
@@ -894,26 +933,26 @@
     <!-- Contact Section -->
     <section id="contact" class="section">
         <div class="container">
-            <h2 class="section-title">Hit Us</h2>
+            <h2 class="section-title">hit us</h2>
             <div class="contact-info">
                 <div class="contact-card">
-                    <h3>Location</h3>
+                    <h3>location</h3>
                     <p>64 Third St NW</p>
                     <p>Atlanta, GA 30308</p>
                 </div>
                 <div class="contact-card">
-                    <h3>Phone</h3>
+                    <h3>phone</h3>
                     <p>(404) 555-DOOR</p>
                     <p>(404) 555-3667</p>
                 </div>
                 <div class="contact-card">
-                    <h3>Hours</h3>
-                    <p>Thursday - Saturday: 5:00 PM - 3:00 AM</p>
-                    <p>Sunday: 5:00 PM - 12:00 AM</p>
-                    <p>Monday - Wednesday: Closed</p>
+                    <h3>hours</h3>
+                    <p>thursday - saturday: 5:00 PM - 3:00 AM</p>
+                    <p>sunday: 5:00 PM - 12:00 AM</p>
+                    <p>monday - wednesday: closed</p>
                 </div>
                 <div class="contact-card">
-                    <h3>Email</h3>
+                    <h3>email</h3>
                     <p>inquiry@door64atl.com</p>
                     <p>events@door64atl.com</p>
                 </div>
@@ -924,31 +963,31 @@
     <!-- Social Section -->
     <section id="social" class="section">
         <div class="container">
-            <h2 class="section-title">Check on Us</h2>
+            <h2 class="section-title">check on us</h2>
             <div class="contact-card" style="max-width: 600px; margin: 0 auto;">
-                <h3>Follow Our Journey</h3>
-                <p>Stay connected with Door 64 for the latest updates, behind-the-scenes content, and special announcements.</p>
+                <h3>follow our journey</h3>
+                <p>stay connected with door 64 for the latest updates, behind-the-scenes content, and special announcements.</p>
                 <div class="social-links">
-                    <a href="https://www.instagram.com/door64atl/">Instagram</a>
-                    <a href="#">Facebook</a>
-                    <a href="#">Twitter</a>
-                    <a href="#">TikTok</a>
+                    <a href="https://www.instagram.com/door64atl/">instagram</a>
+                    <a href="#">facebook</a>
+                    <a href="#">twitter</a>
+                    <a href="#">tiktok</a>
                 </div>
                 <div style="margin-top: 40px;">
-                    <p><strong>Newsletter Signup</strong></p>
-                    <p>Be the first to know about special events, new menu items, and exclusive offers.</p>
+                    <p><strong>newsletter signup</strong></p>
+                    <p>be the first to know about special events, new menu items, and exclusive offers.</p>
                     <div style="margin-top: 20px;">
-                        <input type="email" placeholder="Enter your email" style="padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 5px; font-family: Georgia, serif;">
-                        <button style="padding: 12px 20px; background: #ff6b35; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif;">Subscribe</button>
+                        <input type="email" placeholder="enter your email" style="padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 5px; font-family: Georgia, serif; color: #000;">
+                        <button style="padding: 12px 20px; background: #ff6b35; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif; text-transform: lowercase;">subscribe</button>
                     </div>
-                    <p style="margin-top: 10px; font-size: 12px; color: #666;">Questions? Email us at inquiry@door64atl.com</p>
+                    <p style="margin-top: 10px; font-size: 12px; color: #666;">questions? email us at inquiry@door64atl.com</p>
                 </div>
             </div>
         </div>
     </section>
 
     <script>
-        // Gallery slider functionality
+        // Background gallery slider functionality
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         
@@ -960,35 +999,6 @@
         
         // Change slide every 4 seconds
         setInterval(nextSlide, 4000);
-
-        // Landing Gallery Slider functionality
-        let currentGalleryIndex = 0;
-        const gallerySlides = document.querySelectorAll('.gallery-slide');
-        const dots = document.querySelectorAll('.dot');
-        
-        function showGallerySlide(index) {
-            // Hide all slides
-            gallerySlides.forEach(slide => slide.classList.remove('gallery-active'));
-            dots.forEach(dot => dot.classList.remove('dot-active'));
-            
-            // Show selected slide
-            gallerySlides[index].classList.add('gallery-active');
-            dots[index].classList.add('dot-active');
-            
-            currentGalleryIndex = index;
-        }
-        
-        function currentGallerySlide(n) {
-            showGallerySlide(n - 1);
-        }
-        
-        function nextGallerySlide() {
-            currentGalleryIndex = (currentGalleryIndex + 1) % gallerySlides.length;
-            showGallerySlide(currentGalleryIndex);
-        }
-        
-        // Auto-advance gallery every 5 seconds
-        setInterval(nextGallerySlide, 5000);
 
         function showSection(sectionId) {
             // Hide all sections
@@ -1022,7 +1032,7 @@
         // Handle form submission
         document.querySelector('.reservation-form form').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Thank you for your reservation request! We will contact you within 24 hours to confirm.');
+            alert('thank you for your reservation request! we will contact you within 24 hours to confirm.');
         });
     </script>
 </body>
