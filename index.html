@@ -1829,8 +1829,7 @@
                 setTimeout(() => {
                     console.log('🏠 Setting initial landing page');
                     showSection('landing');
-                    // Force slides to start immediately
-                    startBackgroundSlides();
+                    // slides will auto-start via showSection
                 }, 300); // Give time for initialization
             }, 1200);
             
@@ -2099,14 +2098,6 @@
         window.addEventListener('load', function() {
             console.log('📄 Page loaded, initializing...');
             initializeAudio();
-            
-            // Start background slides immediately if on splash
-            setTimeout(() => {
-                if (!isOnMainSite) {
-                    console.log('🎬 Starting splash slides...');
-                    // No slides on splash, but prepare for main site
-                }
-            }, 1000);
             
             // Mobile-specific optimizations
             const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
