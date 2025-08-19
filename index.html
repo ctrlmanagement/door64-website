@@ -322,18 +322,18 @@
         }
 
         .slide:nth-child(1) {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23111" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" font-family="Georgia" font-size="36" fill="%23444">INTIMATE DINING</text></svg>');
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23111" width="1200" height="800"/><circle cx="600" cy="400" r="100" fill="%23444"/><text x="600" y="410" text-anchor="middle" font-family="Georgia" font-size="24" fill="%23fff">SLIDE 1 - INTIMATE DINING</text></svg>');
         }
 
         .slide:nth-child(2) {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23222" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" font-family="Georgia" font-size="36" fill="%23555">CRAFT COCKTAILS</text></svg>');
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23222" width="1200" height="800"/><rect x="500" y="300" width="200" height="200" fill="%23555"/><text x="600" y="410" text-anchor="middle" font-family="Georgia" font-size="24" fill="%23fff">SLIDE 2 - CRAFT COCKTAILS</text></svg>');
         }
 
         .slide:nth-child(3) {
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23333" width="1200" height="800"/><text x="600" y="400" text-anchor="middle" font-family="Georgia" font-size="36" fill="%23666">CULINARY ART</text></svg>');
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23333" width="1200" height="800"/><polygon points="600,300 700,500 500,500" fill="%23666"/><text x="600" y="410" text-anchor="middle" font-family="Georgia" font-size="24" fill="%23fff">SLIDE 3 - CULINARY ART</text></svg>');
         }
 
         .landing-content {
@@ -1725,7 +1725,7 @@
             console.log('✅ Main site initialized');
         }
 
-        // Background gallery slider functionality - SIMPLIFIED
+        // Background gallery slider functionality - FIXED LOOPING
         let slideInterval = null;
         let currentSlide = 0;
         let slidesInitialized = false;
@@ -1769,44 +1769,53 @@
                 return;
             }
 
-            // Ensure first slide is active
+            // Reset to first slide
             slides.forEach((slide, index) => {
-                if (index === 0) {
-                    slide.classList.add('active');
-                } else {
-                    slide.classList.remove('active');
-                }
+                slide.classList.remove('active');
             });
+            slides[0].classList.add('active');
             currentSlide = 0;
 
-            // Start the interval
-            slideInterval = setInterval(() => {
-                try {
-                    const slides = document.querySelectorAll('.slide');
-                    if (slides.length === 0) {
-                        console.warn('⚠️ Slides disappeared, stopping interval');
-                        stopBackgroundSlides();
-                        return;
-                    }
+            console.log(`🎬 Starting slides with ${slides.length} slides`);
 
-                    // Remove active from current
-                    slides[currentSlide].classList.remove('active');
-                    
-                    // Move to next slide
-                    currentSlide = (currentSlide + 1) % slides.length;
-                    
-                    // Add active to new current
-                    slides[currentSlide].classList.add('active');
-                    
-                    console.log(`🎬 Slide ${currentSlide + 1}/${slides.length}`);
-                } catch (error) {
-                    console.error('❌ Slide error:', error);
+            // Create the looping function with enhanced logging
+            function nextSlide() {
+                const slides = document.querySelectorAll('.slide');
+                if (slides.length === 0) {
+                    console.warn('⚠️ No slides found during transition');
                     stopBackgroundSlides();
+                    return;
                 }
-            }, 3400); // 3.4 seconds for 70 BPM sync
+
+                // Show what's happening
+                const prevSlide = currentSlide;
+                
+                // Remove active from current slide
+                slides[currentSlide].classList.remove('active');
+                
+                // Move to next slide with explicit looping
+                currentSlide = currentSlide + 1;
+                if (currentSlide >= slides.length) {
+                    currentSlide = 0; // Explicit loop back to start
+                    console.log('🔄 LOOPING BACK TO FIRST SLIDE!');
+                }
+                
+                // Add active to next slide
+                slides[currentSlide].classList.add('active');
+                
+                console.log(`🎬 Slide ${prevSlide + 1} → ${currentSlide + 1}/${slides.length}`);
+                
+                // Verify the loop worked
+                if (prevSlide === slides.length - 1 && currentSlide === 0) {
+                    console.log('✅ LOOP CONFIRMED: Last slide → First slide');
+                }
+            }
+
+            // Start the continuous loop
+            slideInterval = setInterval(nextSlide, 3400); // 3.4 seconds for 70 BPM sync
 
             slidesInitialized = true;
-            console.log(`🎬 Background slides started (${slides.length} slides)`);
+            console.log('🔄 Infinite slide loop started');
         }
 
         function stopBackgroundSlides() {
@@ -1814,6 +1823,18 @@
                 clearInterval(slideInterval);
                 slideInterval = null;
                 console.log('⏸ Background slides stopped');
+            }
+        }
+
+        // Force continuous looping - this ensures slides NEVER stop looping
+        function forceSlideLoop() {
+            const currentSection = document.querySelector('.section.active');
+            if (currentSection?.id === 'landing' && isOnMainSite) {
+                const slides = document.querySelectorAll('.slide');
+                if (slides.length > 0 && !slideInterval) {
+                    console.log('🔄 Force restarting slide loop...');
+                    startBackgroundSlides();
+                }
             }
         }
 
