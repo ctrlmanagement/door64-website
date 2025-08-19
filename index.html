@@ -118,20 +118,24 @@
             z-index: 1000;
             padding: 20px 0;
             border-bottom: 1px solid #333;
-            opacity: 0;
-            transform: translateY(-100%);
+            opacity: 1; /* Always visible by default */
+            transform: translateY(0);
             transition: all 0.3s ease;
         }
 
-        .nav:hover,
-        .nav.show-nav {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* Desktop hover behavior */
+        @media (min-width: 769px) {
+            .nav {
+                opacity: 0;
+                transform: translateY(-100%);
+            }
 
-        body:hover .nav {
-            opacity: 1;
-            transform: translateY(0);
+            .nav:hover,
+            .nav.show-nav,
+            body:hover .nav {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .nav-container {
@@ -743,20 +747,34 @@
             }
 
             .splash-hint {
-                bottom: 20px;
-                font-size: 1em; /* Slightly larger for readability */
+                bottom: 30px; /* More space from bottom */
+                font-size: 1em;
                 padding: 12px 20px;
+                max-width: 90%; /* Prevent text cutoff */
+                margin: 0 auto;
             }
 
             .nav {
-                padding: 15px 0;
-                transform: translateY(-100%);
-            }
-            
-            /* Always show nav on mobile for easier access */
-            .nav {
+                padding: 12px 0; /* Slightly less padding for more screen space */
                 opacity: 1;
                 transform: translateY(0);
+                position: fixed;
+                top: 0;
+            }
+
+            .nav-container {
+                padding: 0 15px; /* Adjust padding for mobile */
+            }
+
+            .logo {
+                font-size: 1.6em; /* Smaller logo on mobile */
+                letter-spacing: 2px;
+            }
+
+            .audio-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
             }
 
             .nav-links {
@@ -765,65 +783,127 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: rgba(10, 10, 10, 0.95);
+                background: rgba(10, 10, 10, 0.98);
                 flex-direction: column;
-                padding: 20px;
-                gap: 20px;
+                padding: 25px 20px;
+                gap: 25px;
+                border-top: 1px solid #333;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             }
 
             .nav-links.active {
                 display: flex;
             }
 
-            .mobile-menu {
-                display: flex;
+            .nav-links a {
+                font-size: 16px; /* Larger for easier tapping */
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                text-align: center;
             }
 
-            /* Larger touch targets for mobile menu */
             .mobile-menu {
+                display: flex;
                 width: 44px;
                 height: 44px;
                 padding: 10px;
                 justify-content: center;
                 align-items: center;
+                border-radius: 6px;
+                transition: background 0.3s ease;
+            }
+
+            .mobile-menu:active {
+                background: rgba(255,255,255,0.1);
+            }
+
+            .mobile-menu span {
+                width: 20px;
+                height: 2px;
+                background: #fff;
+                margin: 2px 0;
+                transition: all 0.3s ease;
+                transform-origin: center;
+            }
+
+            /* Active mobile menu state */
+            .nav-links.active {
+                display: flex;
+                animation: slideDown 0.3s ease;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* When mobile menu is open, prevent body scroll */
+            body.menu-open {
+                overflow: hidden;
             }
 
             .landing-content h1 {
-                font-size: 3em;
-                letter-spacing: 4px;
+                font-size: 2.8em; /* Adjusted for mobile screens */
+                letter-spacing: 3px;
+                margin-bottom: 30px;
             }
 
             .landing-links {
                 flex-direction: column;
-                gap: 40px;
-                margin-top: 40px;
+                gap: 35px;
+                margin-top: 35px;
+                padding: 0 20px;
             }
 
             .landing-link h3 {
-                font-size: 1.5em;
+                font-size: 1.4em;
                 letter-spacing: 2px;
+                margin-bottom: 15px;
+            }
+
+            .sub-links a {
+                font-size: 1em;
+                padding: 8px 0;
             }
 
             .section-title {
-                font-size: 2em;
+                font-size: 2.2em;
+                margin-bottom: 40px;
             }
 
             .menu-grid,
             .space-grid,
             .gallery-grid {
                 grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .space-item,
+            .menu-item {
+                padding: 25px 20px;
+                margin: 0 10px;
             }
 
             .landing-page {
                 min-height: 100vh;
                 height: auto;
-                padding: 80px 20px 40px;
+                padding: 90px 15px 40px; /* Account for fixed nav */
+            }
+
+            .section {
+                padding: 80px 0 60px; /* Account for fixed nav */
             }
 
             .reservation-form,
             .contact-card {
-                margin: 0 10px;
-                padding: 30px 20px;
+                margin: 0 15px;
+                padding: 25px 20px;
             }
 
             /* Better mobile form inputs */
@@ -831,12 +911,86 @@
             .form-group select,
             .form-group textarea {
                 font-size: 16px; /* Prevents zoom on iOS */
-                padding: 15px; /* Larger touch target */
+                padding: 15px;
+                border-radius: 8px;
             }
 
             .submit-btn {
-                padding: 18px; /* Larger button */
-                font-size: 18px;
+                padding: 18px;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+        }
+
+        /* iPhone-specific optimizations */
+        @media (max-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
+            .splash-hint {
+                bottom: 40px; /* More space for iPhone home indicator */
+                font-size: 0.9em;
+            }
+
+            .landing-content h1 {
+                font-size: 2.4em;
+                letter-spacing: 2px;
+            }
+
+            .section-title {
+                font-size: 1.9em;
+            }
+
+            .nav {
+                padding: 10px 0;
+            }
+
+            .logo {
+                font-size: 1.4em;
+                letter-spacing: 1px;
+            }
+
+            .space-item,
+            .menu-item,
+            .event-item {
+                padding: 20px 15px;
+                margin: 0 5px;
+            }
+
+            .reservation-form,
+            .contact-card {
+                margin: 0 10px;
+                padding: 20px 15px;
+            }
+        }
+
+        /* iPhone-specific additional styles */
+        .iphone-device .splash-page {
+            /* Better handling of iPhone notch and home indicator */
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .iphone-device .nav {
+            /* Ensure nav doesn't conflict with notch */
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* iPhone Pro Max and larger screens */
+        @media (min-width: 431px) and (max-width: 768px) {
+            .landing-content h1 {
+                font-size: 3.2em;
+                letter-spacing: 4px;
+            }
+
+            .section-title {
+                font-size: 2.4em;
+            }
+        }
+
+        /* Prevent iOS bounce scroll on main containers */
+        @media (max-width: 768px) {
+            .landing-page,
+            .section {
+                overscroll-behavior: none;
             }
         }
 
@@ -861,25 +1015,59 @@
             }
         }
 
+        /* Better mobile scroll behavior and iPhone optimizations */
+        @media (max-width: 768px) {
+            body {
+                -webkit-overflow-scrolling: touch;
+                /* iPhone safe area support */
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .section {
+                padding: 60px 0; /* Less padding on mobile */
+            }
+
+            .nav {
+                /* Account for iPhone notch */
+                padding-top: max(12px, env(safe-area-inset-top));
+            }
+
+            .splash-audio-toggle {
+                /* Account for iPhone notch */
+                top: max(20px, calc(env(safe-area-inset-top) + 10px));
+                right: max(20px, env(safe-area-inset-right));
+            }
+
+            .splash-hint {
+                /* Account for iPhone home indicator */
+                bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
+            }
+        }
+
         /* Mobile-specific styles */
         .mobile-device .splash-page:hover {
             transform: none; /* Disable hover effects on mobile */
         }
         
-        .mobile-device .door-sign:hover,
         .mobile-device .space-item:hover,
-        .mobile-device .menu-item:hover {
+        .mobile-device .menu-item:hover,
+        .mobile-device .landing-link:hover {
             transform: none;
         }
-        
-        /* Better mobile scroll behavior */
+
+        /* Improve mobile touch feedback */
         @media (max-width: 768px) {
-            body {
-                -webkit-overflow-scrolling: touch;
+            .space-item:active,
+            .menu-item:active,
+            .landing-link:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
             }
-            
-            .section {
-                padding: 60px 0; /* Less padding on mobile */
+
+            .nav-links a:active {
+                background: rgba(255,255,255,0.1);
+                color: #fff;
             }
         }
 
@@ -1562,8 +1750,40 @@
 
         function toggleMobileMenu() {
             const navLinks = document.getElementById('navLinks');
-            if (navLinks) {
-                navLinks.classList.toggle('active');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            if (navLinks && mobileMenu) {
+                const isActive = navLinks.classList.contains('active');
+                
+                if (isActive) {
+                    // Close menu
+                    navLinks.classList.remove('active');
+                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    
+                    // Reset hamburger animation
+                    const spans = mobileMenu.querySelectorAll('span');
+                    spans.forEach(span => {
+                        span.style.transform = '';
+                        span.style.opacity = '';
+                    });
+                } else {
+                    // Open menu
+                    navLinks.classList.add('active');
+                    mobileMenu.setAttribute('aria-expanded', 'true');
+                    
+                    // Animate hamburger to X
+                    const spans = mobileMenu.querySelectorAll('span');
+                    if (spans.length >= 3) {
+                        spans[0].style.transform = 'rotate(45deg) translateY(7px)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'rotate(-45deg) translateY(-7px)';
+                    }
+                }
+                
+                // Add haptic feedback on supported devices
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
             }
         }
 
@@ -1571,9 +1791,22 @@
         document.addEventListener('click', function(event) {
             const nav = document.querySelector('.nav');
             const navLinks = document.getElementById('navLinks');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const body = document.body;
             
-            if (nav && navLinks && !nav.contains(event.target)) {
+            if (nav && navLinks && !nav.contains(event.target) && navLinks.classList.contains('active')) {
                 navLinks.classList.remove('active');
+                body.classList.remove('menu-open');
+                
+                if (mobileMenu) {
+                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    // Reset hamburger animation
+                    const spans = mobileMenu.querySelectorAll('span');
+                    spans.forEach(span => {
+                        span.style.transform = '';
+                        span.style.opacity = '';
+                    });
+                }
             }
         });
 
@@ -1617,8 +1850,20 @@
             initializeAudio();
             
             // Mobile-specific optimizations
-            if (window.innerWidth <= 768) {
+            const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
                 console.log('📱 Mobile device detected');
+                
+                // Add mobile class to body
+                document.body.classList.add('mobile-device');
+                
+                // iPhone-specific detection
+                const isIPhone = /iPhone/.test(navigator.userAgent);
+                if (isIPhone) {
+                    document.body.classList.add('iphone-device');
+                    console.log('📱 iPhone detected');
+                }
                 
                 // Disable hover effects on mobile
                 document.body.classList.add('mobile-device');
@@ -1645,6 +1890,38 @@
                             this.style.transform = '';
                         }, 150);
                     });
+                });
+
+                // Improve mobile nav functionality
+                const nav = document.querySelector('.nav');
+                if (nav) {
+                    // Always keep nav visible on mobile
+                    nav.style.opacity = '1';
+                    nav.style.transform = 'translateY(0)';
+                }
+
+                // Add touch-friendly swipe gesture for mobile menu
+                let touchStartX = 0;
+                let touchStartY = 0;
+                
+                document.addEventListener('touchstart', function(e) {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                });
+                
+                document.addEventListener('touchmove', function(e) {
+                    const touchEndX = e.touches[0].clientX;
+                    const touchEndY = e.touches[0].clientY;
+                    const deltaX = touchEndX - touchStartX;
+                    const deltaY = touchEndY - touchStartY;
+                    
+                    // Horizontal swipe gesture to close mobile menu
+                    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                        const navLinks = document.getElementById('navLinks');
+                        if (navLinks && navLinks.classList.contains('active')) {
+                            navLinks.classList.remove('active');
+                        }
+                    }
                 });
             }
         });
