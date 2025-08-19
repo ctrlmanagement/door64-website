@@ -9,8 +9,8 @@
     
     <!-- Background Audio -->
     <audio id="backgroundAudio" loop preload="auto" style="display: none;">
-        <source src="QUIETSTORM.mp3" type="audio/mpeg">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
     
@@ -76,6 +76,12 @@
             padding: 0 20px;
         }
 
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .logo {
             font-size: 2em;
             font-weight: bold;
@@ -88,6 +94,98 @@
 
         .logo:hover {
             color: #ccc;
+        }
+
+        /* Audio Toggle Button - Fixed positioning */
+        .audio-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .audio-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .audio-toggle.playing {
+            background: rgba(255, 107, 53, 0.8);
+            border-color: rgba(255, 107, 53, 1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 53, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
+        }
+
+        /* Global Audio Button - Fixed positioning */
+        .global-audio-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            z-index: 1001;
+            font-family: 'Georgia', serif;
+        }
+
+        .global-audio-toggle:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .global-audio-toggle.playing {
+            background: rgba(255, 107, 53, 0.9);
+            border-color: rgba(255, 107, 53, 1);
+            animation: pulse 2s infinite;
+        }
+
+        /* Autoplay notification */
+        .autoplay-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 107, 53, 0.95);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            text-align: center;
+            z-index: 1002;
+            font-family: 'Georgia', serif;
+            display: none;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .autoplay-notification:hover {
+            transform: scale(1.05);
         }
 
         .nav-links {
@@ -261,7 +359,7 @@
         .enter-btn {
             position: fixed;
             bottom: 50px;
-            right: 50px;
+            left: 50px;
             background: #000;
             color: white;
             padding: 15px 30px;
@@ -692,9 +790,17 @@
 
             .enter-btn {
                 bottom: 20px;
-                right: 20px;
+                left: 20px;
                 padding: 12px 24px;
                 font-size: 14px;
+            }
+
+            .global-audio-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
             }
 
             .landing-page {
@@ -717,7 +823,7 @@
         <div class="nav-container">
             <div class="nav-left">
                 <div class="logo" onclick="showSection('landing')">Door 64</div>
-                <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="Toggle Background Music">♪</button>
+                <button class="audio-toggle" onclick="toggleAudio()" title="Toggle Background Music">♪</button>
             </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" onclick="showSection('landing')">64</a></li>
@@ -833,12 +939,12 @@
         </div>
     </section>
 
-    <!-- Global Audio Controls (appear on all pages) -->
-    <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="background music">♪</button>
+    <!-- Global Audio Controls -->
+    <button class="global-audio-toggle" onclick="toggleAudio()" title="background music">♪</button>
     
-    <!-- Auto-play notification (global) -->
-    <div id="autoplayNotification" class="autoplay-notification">
-        <strong>click ♪ for background music</strong><br>
+    <!-- Auto-play notification -->
+    <div id="autoplayNotification" class="autoplay-notification" onclick="toggleAudio()">
+        <strong>🎵 Click for music</strong><br>
         <small>enhance your door 64 experience</small>
     </div>
 
@@ -1162,6 +1268,164 @@
     </section>
 
     <script>
+        // Audio Control - Improved and Simplified
+        let audioPlaying = false;
+        let audioLoaded = false;
+        let backgroundAudio;
+        let audioButtons;
+        let autoplayNotification;
+
+        // Initialize audio system
+        function initializeAudio() {
+            console.log('🚀 Initializing audio system...');
+            
+            backgroundAudio = document.getElementById('backgroundAudio');
+            audioButtons = document.querySelectorAll('.audio-toggle, .global-audio-toggle');
+            autoplayNotification = document.getElementById('autoplayNotification');
+            
+            if (!backgroundAudio) {
+                console.error('❌ Background audio element not found!');
+                return;
+            }
+            
+            console.log('✅ Audio elements found');
+            
+            // Set up audio event listeners
+            backgroundAudio.addEventListener('canplay', () => {
+                console.log('✅ Audio can play - file loaded successfully');
+                audioLoaded = true;
+                hideAutoplayNotification();
+            });
+            
+            backgroundAudio.addEventListener('loadeddata', () => {
+                console.log('📊 Audio data loaded');
+                audioLoaded = true;
+            });
+            
+            backgroundAudio.addEventListener('error', (e) => {
+                console.error('❌ Audio error:', e);
+                console.error('Error details:', backgroundAudio.error);
+                showErrorMessage();
+            });
+            
+            backgroundAudio.addEventListener('ended', () => {
+                console.log('🔄 Audio ended, restarting...');
+                backgroundAudio.currentTime = 0;
+                backgroundAudio.play();
+            });
+            
+            // Test audio loading
+            backgroundAudio.load();
+            updateAudioButtons();
+            
+            // Show play prompt after short delay
+            setTimeout(() => {
+                if (!audioPlaying && audioLoaded) {
+                    showPlayPrompt();
+                } else if (!audioLoaded) {
+                    console.log('⏳ Audio still loading...');
+                    // Check again after more time
+                    setTimeout(() => {
+                        if (!audioLoaded) {
+                            showErrorMessage();
+                        } else if (!audioPlaying) {
+                            showPlayPrompt();
+                        }
+                    }, 3000);
+                }
+            }, 1500);
+        }
+
+        function showErrorMessage() {
+            if (!autoplayNotification) return;
+            autoplayNotification.innerHTML = '<strong>❌ Audio file not found</strong><br><small>Upload QUIETSTORM.mp3 to assets/audio/</small>';
+            autoplayNotification.style.display = 'block';
+            autoplayNotification.style.borderColor = 'red';
+            autoplayNotification.style.background = 'rgba(255, 0, 0, 0.9)';
+        }
+
+        function showPlayPrompt() {
+            if (!autoplayNotification) return;
+            autoplayNotification.innerHTML = '<strong>🎵 Click for music</strong><br><small>enhance your door 64 experience</small>';
+            autoplayNotification.style.display = 'block';
+            autoplayNotification.style.borderColor = '#fff';
+            autoplayNotification.style.background = 'rgba(255, 107, 53, 0.95)';
+        }
+
+        function hideAutoplayNotification() {
+            if (!autoplayNotification) return;
+            autoplayNotification.style.display = 'none';
+        }
+
+        function updateAudioButtons() {
+            if (!audioButtons) return;
+            
+            audioButtons.forEach(button => {
+                if (audioPlaying) {
+                    button.innerText = '⏸';
+                    button.classList.add('playing');
+                    button.title = 'Pause QUIETSTORM';
+                } else {
+                    button.innerText = '♪';
+                    button.classList.remove('playing');
+                    button.title = 'Play QUIETSTORM';
+                }
+            });
+        }
+
+        function toggleAudio() {
+            console.log('🎵 Audio button clicked!');
+            hideAutoplayNotification();
+            
+            if (!backgroundAudio) {
+                console.error('❌ No audio element available');
+                alert('Audio system not initialized');
+                return;
+            }
+            
+            if (!audioLoaded) {
+                console.warn('⚠️ Audio not loaded yet');
+                
+                // Try to force load
+                backgroundAudio.load();
+                
+                // Wait a moment and try again
+                setTimeout(() => {
+                    if (audioLoaded) {
+                        toggleAudio();
+                    } else {
+                        alert('Audio is still loading. Please check that QUIETSTORM.mp3 is uploaded to assets/audio/ folder.');
+                    }
+                }, 1000);
+                return;
+            }
+            
+            if (audioPlaying) {
+                backgroundAudio.pause();
+                audioPlaying = false;
+                console.log('⏸ Audio paused');
+            } else {
+                backgroundAudio.volume = 0.3;
+                console.log('▶️ Starting audio...');
+                
+                backgroundAudio.play().then(() => {
+                    audioPlaying = true;
+                    console.log('✅ Audio started successfully!');
+                }).catch((error) => {
+                    console.error('❌ Audio play failed:', error);
+                    
+                    if (error.name === 'NotAllowedError') {
+                        alert('🚫 Browser blocked audio playback. Please try clicking the button again or refresh the page.');
+                    } else if (error.name === 'AbortError' || error.name === 'NotSupportedError') {
+                        alert('❌ Audio file format not supported or file not found.\n\nPlease ensure QUIETSTORM.mp3 is uploaded to the assets/audio/ folder.');
+                    } else {
+                        alert(`❌ Audio error: ${error.message}`);
+                    }
+                });
+            }
+            updateAudioButtons();
+        }
+
         // Background gallery slider functionality
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
@@ -1186,12 +1450,17 @@
             document.getElementById(sectionId).classList.add('active');
             
             // Close mobile menu if open
-            document.getElementById('navLinks').classList.remove('active');
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks) {
+                navLinks.classList.remove('active');
+            }
         }
 
         function toggleMobileMenu() {
             const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
+            if (navLinks) {
+                navLinks.classList.toggle('active');
+            }
         }
 
         // Close mobile menu when clicking outside
@@ -1199,16 +1468,39 @@
             const nav = document.querySelector('.nav');
             const navLinks = document.getElementById('navLinks');
             
-            if (!nav.contains(event.target)) {
+            if (nav && navLinks && !nav.contains(event.target)) {
                 navLinks.classList.remove('active');
             }
         });
 
         // Handle form submission
-        document.querySelector('.reservation-form form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('thank you for your reservation request! we will contact you within 24 hours to confirm.');
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.reservation-form form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('thank you for your reservation request! we will contact you within 24 hours to confirm.');
+                });
+            }
         });
+
+        // Initialize everything when page loads
+        window.addEventListener('load', function() {
+            console.log('📄 Page loaded, initializing audio...');
+            initializeAudio();
+        });
+
+        // Debug functions for console
+        window.debugAudio = function() {
+            console.log('=== AUDIO DEBUG INFO ===');
+            console.log('Audio element:', backgroundAudio);
+            console.log('Audio source:', backgroundAudio?.src);
+            console.log('Audio ready state:', backgroundAudio?.readyState);
+            console.log('Audio duration:', backgroundAudio?.duration);
+            console.log('Audio loaded:', audioLoaded);
+            console.log('Audio playing:', audioPlaying);
+            console.log('Buttons found:', audioButtons?.length || 0);
+        };
     </script>
 
     <!-- Swiper JS -->
@@ -1216,261 +1508,6 @@
     
     <!-- Initialize Swiper -->
     <script>
-        // Audio Control - Enhanced Debugging
-        let audioPlaying = false;
-        let audioLoaded = false;
-        let backgroundAudio;
-        let audioToggle;
-        let autoplayNotification;
-
-        // Initialize all elements
-        function initializeElements() {
-            backgroundAudio = document.getElementById('backgroundAudio');
-            audioToggle = document.getElementById('audioToggle');
-            autoplayNotification = document.getElementById('autoplayNotification');
-            
-            console.log('=== AUDIO INITIALIZATION ===');
-            console.log('Background audio element:', backgroundAudio);
-            console.log('Audio toggle button:', audioToggle);
-            console.log('Notification element:', autoplayNotification);
-            
-            if (!backgroundAudio) {
-                console.error('❌ Background audio element not found!');
-                return false;
-            }
-            if (!audioToggle) {
-                console.error('❌ Audio toggle button not found!');
-                return false;
-            }
-            if (!autoplayNotification) {
-                console.error('❌ Notification element not found!');
-                return false;
-            }
-            
-            console.log('✅ All audio elements found');
-            return true;
-        }
-
-        // Test if audio file loads correctly
-        function testAudioFile() {
-            if (!backgroundAudio) return;
-            
-            console.log('Testing audio file...');
-            console.log('Audio source:', backgroundAudio.src);
-            console.log('Full audio URL:', window.location.origin + '/' + backgroundAudio.getAttribute('src'));
-            
-            backgroundAudio.addEventListener('loadstart', () => {
-                console.log('📥 Audio loading started');
-            });
-            
-            backgroundAudio.addEventListener('canplay', () => {
-                console.log('✅ Audio can play - file loaded successfully');
-                console.log('Audio duration:', backgroundAudio.duration);
-                audioLoaded = true;
-                hideAutoplayNotification();
-            });
-            
-            backgroundAudio.addEventListener('error', (e) => {
-                console.error('❌ Audio error:', e);
-                console.error('Error code:', backgroundAudio.error?.code);
-                console.error('Error message:', backgroundAudio.error?.message);
-                showErrorMessage();
-            });
-            
-            backgroundAudio.addEventListener('loadeddata', () => {
-                console.log('📊 Audio data loaded');
-            });
-            
-            // Force load the audio
-            backgroundAudio.load();
-        }
-
-        function showErrorMessage() {
-            if (!autoplayNotification) return;
-            autoplayNotification.innerHTML = '<strong>❌ Audio file missing</strong><br><small>Upload QUIETSTORM.mp3 to GitHub</small>';
-            autoplayNotification.style.display = 'block';
-            autoplayNotification.style.borderColor = 'red';
-            autoplayNotification.style.background = 'rgba(255, 0, 0, 0.9)';
-        }
-
-        function showPlayPrompt() {
-            if (!autoplayNotification) return;
-            autoplayNotification.innerHTML = '<strong>🎵 Click ♪ for music</strong><br><small>QUIETSTORM background</small>';
-            autoplayNotification.style.display = 'block';
-            autoplayNotification.style.borderColor = '#fff';
-            autoplayNotification.style.background = 'rgba(255, 107, 53, 0.95)';
-            
-            // Make button more prominent
-            if (audioToggle) {
-                audioToggle.classList.add('blocked');
-            }
-        }
-
-        function hideAutoplayNotification() {
-            if (!autoplayNotification) return;
-            autoplayNotification.style.display = 'none';
-            if (audioToggle) {
-                audioToggle.classList.remove('blocked');
-            }
-        }
-
-        function updateAudioButton() {
-            if (!audioToggle) return;
-            
-            if (audioPlaying) {
-                audioToggle.innerText = '⏸';
-                audioToggle.classList.add('playing');
-                audioToggle.title = 'Pause QUIETSTORM';
-                console.log('🎵 Button updated: Playing state');
-            } else {
-                audioToggle.innerText = '♪';
-                audioToggle.classList.remove('playing');
-                audioToggle.title = 'Play QUIETSTORM';
-                console.log('⏸ Button updated: Stopped state');
-            }
-        }
-
-        function toggleAudio() {
-            console.log('🎵 Audio button clicked!');
-            hideAutoplayNotification();
-            
-            if (!backgroundAudio) {
-                console.error('❌ No audio element available');
-                alert('Audio system not initialized');
-                return;
-            }
-            
-            if (!audioLoaded) {
-                console.warn('⚠️ Audio not loaded yet');
-                alert('Audio is still loading. Please wait a moment and try again.');
-                return;
-            }
-            
-            if (audioPlaying) {
-                backgroundAudio.pause();
-                audioPlaying = false;
-                console.log('⏸ Audio paused');
-            } else {
-                backgroundAudio.volume = 0.3;
-                console.log('▶️ Starting audio manually...');
-                console.log('Audio duration:', backgroundAudio.duration);
-                console.log('Audio current time:', backgroundAudio.currentTime);
-                
-                backgroundAudio.play().then(() => {
-                    audioPlaying = true;
-                    console.log('✅ Audio started successfully!');
-                    console.log('Playing from time:', backgroundAudio.currentTime);
-                }).catch((error) => {
-                    console.error('❌ Audio play failed:', error);
-                    console.error('Error name:', error.name);
-                    console.error('Error message:', error.message);
-                    
-                    if (error.name === 'NotFoundError' || error.name === 'AbortError') {
-                        alert('❌ Audio file not found.\n\nCheck:\n1. QUIETSTORM.mp3 exists in GitHub repo\n2. Try both: assets/audio/ and root folder\n3. File uploaded correctly\n4. Cloudflare site rebuilt');
-                    } else if (error.name === 'NotAllowedError') {
-                        alert('🚫 Browser blocked audio.\n\nTry:\n1. Click the button again\n2. Refresh the page\n3. Check browser audio settings');
-                    } else {
-                        alert(`❌ Audio error: ${error.message}\n\nCheck browser console for details.`);
-                    }
-                });
-            }
-            updateAudioButton();
-        }
-
-        // Initialize audio system
-        function initializeAudio() {
-            console.log('🚀 Initializing audio system...');
-            
-            if (!initializeElements()) {
-                console.error('❌ Failed to initialize audio elements');
-                return;
-            }
-            
-            // Force audio loading
-            backgroundAudio.load();
-            
-            testAudioFile();
-            updateAudioButton();
-            
-            // Show play prompt after delay
-            setTimeout(() => {
-                if (!audioPlaying) {
-                    showPlayPrompt();
-                }
-            }, 1000); // Reduced delay
-        }
-
-        // Start when page loads
-        window.addEventListener('load', function() {
-            console.log('📄 Page loaded, initializing audio...');
-            setTimeout(initializeAudio, 1000);
-        });
-
-        // Debug functions - use in browser console
-        window.debugAudio = function() {
-            console.log('=== AUDIO DEBUG INFO ===');
-            console.log('Audio element:', backgroundAudio);
-            console.log('Audio source:', backgroundAudio?.src);
-            console.log('Audio ready state:', backgroundAudio?.readyState);
-            console.log('Audio duration:', backgroundAudio?.duration);
-            console.log('Audio current time:', backgroundAudio?.currentTime);
-            console.log('Audio loaded:', audioLoaded);
-            console.log('Audio playing:', audioPlaying);
-            console.log('Button element:', audioToggle);
-            console.log('Button visible:', audioToggle ? window.getComputedStyle(audioToggle).display : 'N/A');
-            console.log('Button position:', audioToggle ? audioToggle.getBoundingClientRect() : 'N/A');
-            console.log('=========================');
-        };
-
-        window.testAudioFile = function() {
-            if (backgroundAudio) {
-                console.log('🧪 Testing audio file manually...');
-                backgroundAudio.play().then(() => {
-                    console.log('✅ Manual test successful');
-                }).catch(e => {
-                    console.error('❌ Manual test failed:', e);
-                });
-            }
-        };
-
-        window.testFileLocations = function() {
-            console.log('🔍 Testing audio file locations...');
-            
-            const locations = [
-                'assets/audio/QUIETSTORM.mp3',
-                'QUIETSTORM.mp3',
-                './assets/audio/QUIETSTORM.mp3',
-                './QUIETSTORM.mp3'
-            ];
-            
-            locations.forEach(location => {
-                fetch(location)
-                    .then(response => {
-                        console.log(`${location}: ${response.ok ? '✅ Found' : '❌ Not found'}`);
-                    })
-                    .catch(error => {
-                        console.log(`${location}: ❌ Error - ${error.message}`);
-                    });
-            });
-        };
-
-        // Navigation between sections
-        function showSection(sectionId) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Audio continues playing across all pages - no pause needed
-            
-            // Close mobile menu if open
-            document.getElementById('navLinks').classList.remove('active');
-        }
-
         // Initialize Landing Page Swiper
         var landingSwiper = new Swiper('#landing-swiper', {
             slidesPerView: 'auto',
