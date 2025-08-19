@@ -220,6 +220,13 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 107, 53, 0); }
         }
 
+        /* Blue pulse animation for splash button */
+        @keyframes pulseBlue {
+            0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
+        }
+
         /* Splash Audio Button */
         .splash-audio-toggle {
             position: fixed;
@@ -251,10 +258,10 @@
         }
 
         .splash-audio-toggle.playing {
-            background: rgba(255, 107, 53, 0.9) !important;
-            border-color: rgba(255, 107, 53, 1) !important;
+            background: rgba(95, 179, 211, 0.9) !important;
+            border-color: rgba(95, 179, 211, 1) !important;
             color: #fff !important;
-            animation: pulse 2s infinite;
+            animation: pulseBlue 2s infinite;
         }
 
         .nav-links {
@@ -1687,9 +1694,9 @@
                 console.log('✅ Audio can play - file loaded successfully');
                 audioLoaded = true;
                 updateAllAudioButtons();
-                // Try to start immediately when ready
+                // IMMEDIATE auto-start when ready
                 if (!audioPlaying) {
-                    console.log('🚀 Audio ready - attempting immediate auto-start');
+                    console.log('🚀 Audio ready - IMMEDIATE auto-start attempt');
                     startAudioAutomatically();
                 }
             });
@@ -1697,11 +1704,9 @@
             backgroundAudio.addEventListener('loadeddata', () => {
                 console.log('📊 Audio data loaded');
                 audioLoaded = true;
-                // Another attempt when data is loaded
+                // Another immediate attempt when data is loaded
                 if (!audioPlaying) {
-                    setTimeout(() => {
-                        startAudioAutomatically();
-                    }, 100);
+                    startAudioAutomatically();
                 }
             });
             
@@ -1716,72 +1721,98 @@
                 backgroundAudio.play();
             });
             
-            // Load audio
+            // More aggressive loading
+            backgroundAudio.preload = "auto";
             backgroundAudio.load();
             updateAllAudioButtons();
             
-            // Immediate auto-start attempt
+            // IMMEDIATE first attempt (don't wait)
+            setTimeout(() => {
+                console.log('🎵 IMMEDIATE auto-start attempt (no delay)');
+                startAudioAutomatically();
+            }, 1);
+            
+            // Multiple rapid-fire attempts
             setTimeout(() => {
                 if (!audioPlaying) {
-                    console.log('🎵 First auto-start attempt (immediate)');
+                    console.log('🎵 Rapid attempt #1');
                     startAudioAutomatically();
                 }
-            }, 100);
+            }, 50);
             
-            // More aggressive auto-start attempts
             setTimeout(() => {
-                if (audioLoaded && !audioPlaying) {
-                    console.log('🎵 Second auto-start attempt');
+                if (!audioPlaying) {
+                    console.log('🎵 Rapid attempt #2');
+                    startAudioAutomatically();
+                }
+            }, 200);
+            
+            setTimeout(() => {
+                if (!audioPlaying) {
+                    console.log('🎵 Standard attempt #1');
                     startAudioAutomatically();
                 }
             }, 500);
             
             setTimeout(() => {
-                if (!audioPlaying && audioLoaded) {
-                    console.log('🎵 Third auto-start attempt');
+                if (!audioPlaying) {
+                    console.log('🎵 Standard attempt #2');
                     startAudioAutomatically();
                 }
-            }, 1500);
+            }, 1000);
             
-            // Final attempt
             setTimeout(() => {
-                if (!audioPlaying && audioLoaded) {
-                    console.log('🎵 Final auto-start attempt');
+                if (!audioPlaying) {
+                    console.log('🎵 Final fallback attempt');
                     startAudioAutomatically();
                 }
-            }, 3000);
+            }, 2000);
         }
 
         function startAudioAutomatically() {
-            if (!backgroundAudio || !audioLoaded) {
-                console.log('⚠️ Audio not ready for auto-start');
+            if (!backgroundAudio) {
+                console.log('❌ No audio element found');
                 return;
             }
+            
+            // Set properties for better autoplay success
+            backgroundAudio.muted = false;
+            backgroundAudio.loop = true;
+            backgroundAudio.preload = "auto";
             
             // Check if mobile device (audio autoplay often blocked)
             const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             
-            backgroundAudio.volume = isMobile ? 0.3 : 0.4; // Slightly higher volume
-            console.log('🎵 Attempting auto-start...');
+            backgroundAudio.volume = isMobile ? 0.3 : 0.5; // Higher volume for better detection
+            console.log('🎵 Attempting aggressive auto-start...');
             
-            backgroundAudio.play().then(() => {
-                audioPlaying = true;
-                console.log('✅ Audio started automatically');
-                updateAllAudioButtons();
-            }).catch((error) => {
-                console.log('ℹ️ Auto-play blocked by browser:', error.name);
-                // Show visual indicator that audio is available
-                if (splashAudioButton) {
-                    splashAudioButton.style.animation = 'pulse 2s infinite';
-                    splashAudioButton.style.background = 'rgba(255, 107, 53, 0.7)';
-                    setTimeout(() => {
-                        if (splashAudioButton && !audioPlaying) {
-                            splashAudioButton.style.animation = '';
-                            splashAudioButton.style.background = '';
-                        }
-                    }, 8000);
-                }
-            });
+            // Create new promise for better error handling
+            const playPromise = backgroundAudio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioPlaying = true;
+                    console.log('✅ AUDIO AUTO-STARTED SUCCESSFULLY!');
+                    updateAllAudioButtons();
+                }).catch((error) => {
+                    console.log('⚠️ Auto-play blocked:', error.name);
+                    // Enhanced visual indicator
+                    if (splashAudioButton) {
+                        splashAudioButton.style.animation = 'pulseBlue 1.5s infinite';
+                        splashAudioButton.style.background = 'rgba(95, 179, 211, 0.8)';
+                        splashAudioButton.style.borderColor = 'rgba(95, 179, 211, 1)';
+                        console.log('🔵 Splash button now pulsing blue to indicate audio available');
+                        
+                        setTimeout(() => {
+                            if (splashAudioButton && !audioPlaying) {
+                                splashAudioButton.style.animation = '';
+                                splashAudioButton.style.background = '';
+                                splashAudioButton.style.borderColor = '';
+                            }
+                        }, 10000);
+                    }
+                });
+            }
         }
 
         function updateAllAudioButtons() {
@@ -1792,7 +1823,12 @@
                     button.innerText = '⏸';
                     button.classList.add('playing');
                     button.title = 'Pause QUIETSTORM';
-                    console.log('🔵 Audio button set to PLAYING (orange)');
+                    
+                    if (button === splashAudioButton) {
+                        console.log('🔵 Splash audio button set to PLAYING (blue)');
+                    } else {
+                        console.log('🟠 Nav audio button set to PLAYING (orange)');
+                    }
                 } else {
                     button.innerText = '♪';
                     button.classList.remove('playing');
@@ -2192,28 +2228,89 @@
 
         // Even more aggressive auto-start on DOM ready
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 DOM ready - attempting super early audio start');
+            console.log('📄 DOM ready - attempting SUPER EARLY audio start');
+            
+            // Try immediate start on DOM ready
             setTimeout(() => {
                 const audio = document.getElementById('backgroundAudio');
                 if (audio) {
-                    audio.volume = 0.4;
-                    audio.play().then(() => {
-                        audioPlaying = true;
-                        console.log('✅ Super early audio start successful!');
-                        if (splashAudioButton) {
-                            updateAllAudioButtons();
-                        }
-                    }).catch(() => {
-                        console.log('⚠️ Super early audio blocked (expected)');
-                    });
+                    console.log('🎵 SUPER EARLY attempt - DOM just loaded');
+                    audio.volume = 0.5;
+                    audio.muted = false;
+                    audio.preload = "auto";
+                    
+                    const earlyPromise = audio.play();
+                    if (earlyPromise !== undefined) {
+                        earlyPromise.then(() => {
+                            audioPlaying = true;
+                            console.log('🎉 SUPER EARLY AUDIO SUCCESS!');
+                            setTimeout(() => {
+                                if (splashAudioButton) {
+                                    updateAllAudioButtons();
+                                }
+                            }, 100);
+                        }).catch(() => {
+                            console.log('⚠️ Super early audio blocked (expected, will retry)');
+                        });
+                    }
                 }
-            }, 50);
+            }, 1); // Immediate
+            
+            // Additional DOM-ready attempts
+            setTimeout(() => {
+                const audio = document.getElementById('backgroundAudio');
+                if (audio && !audioPlaying) {
+                    console.log('🎵 DOM ready follow-up attempt');
+                    audio.play().catch(() => {});
+                }
+            }, 100);
         });
+
+        // Even earlier attempt - as soon as script loads
+        setTimeout(() => {
+            console.log('🎵 SCRIPT LOAD attempt');
+            const audio = document.getElementById('backgroundAudio');
+            if (audio) {
+                audio.volume = 0.5;
+                audio.play().then(() => {
+                    audioPlaying = true;
+                    console.log('🎉 SCRIPT LOAD AUDIO SUCCESS!');
+                }).catch(() => {
+                    console.log('⚠️ Script load audio blocked (will retry)');
+                });
+            }
+        }, 1);
 
         // Initialize when page loads
         window.addEventListener('load', function() {
             console.log('📄 Page loaded, initializing...');
             initializeAudio();
+            
+            // Page visibility API for more aggressive auto-start
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden && !audioPlaying && audioLoaded) {
+                    console.log('🎵 Page became visible - attempting audio start');
+                    startAudioAutomatically();
+                }
+            });
+            
+            // Focus event for additional attempt
+            window.addEventListener('focus', function() {
+                if (!audioPlaying && audioLoaded) {
+                    console.log('🎵 Window focused - attempting audio start');
+                    startAudioAutomatically();
+                }
+            });
+            
+            // Mouse movement trigger (very aggressive)
+            let mouseMoveTriggered = false;
+            document.addEventListener('mousemove', function() {
+                if (!mouseMoveTriggered && !audioPlaying && audioLoaded) {
+                    mouseMoveTriggered = true;
+                    console.log('🎵 Mouse movement detected - attempting audio start');
+                    startAudioAutomatically();
+                }
+            }, { once: true });
             
             // Mobile-specific optimizations
             const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
