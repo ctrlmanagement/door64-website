@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     
     <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="none" style="display: none;">
+    <audio id="backgroundAudio" loop preload="auto" style="display: none;">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -824,6 +824,11 @@
         
         <!-- Audio Toggle Button -->
         <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="background music">♪</button>
+        
+        <!-- Auto-play notification -->
+        <div id="autoplayNotification" class="autoplay-notification">
+            click ♪ to start background music
+        </div>
     </section>
 
     <!-- Space Section -->
@@ -1204,9 +1209,43 @@
         let audioPlaying = false;
         let backgroundAudio = document.getElementById('backgroundAudio');
         let audioToggle = document.getElementById('audioToggle');
+        let autoplayNotification = document.getElementById('autoplayNotification');
+
+        // Auto-play attempt on page load
+        function attemptAutoPlay() {
+            console.log('Attempting auto-play...');
+            backgroundAudio.volume = 0.3;
+            
+            backgroundAudio.play().then(() => {
+                console.log('Auto-play successful!');
+                audioToggle.innerText = '⏸';
+                audioToggle.classList.add('playing');
+                audioPlaying = true;
+                hideAutoplayNotification();
+            }).catch((error) => {
+                console.log('Auto-play blocked:', error.message);
+                showAutoplayNotification();
+            });
+        }
+
+        function showAutoplayNotification() {
+            autoplayNotification.style.display = 'block';
+            audioToggle.classList.add('blocked');
+            
+            // Hide notification after 5 seconds
+            setTimeout(() => {
+                hideAutoplayNotification();
+            }, 5000);
+        }
+
+        function hideAutoplayNotification() {
+            autoplayNotification.style.display = 'none';
+            audioToggle.classList.remove('blocked');
+        }
 
         function toggleAudio() {
-            console.log('Audio button clicked!'); // Debug line
+            console.log('Audio button clicked!');
+            hideAutoplayNotification(); // Hide notification when user interacts
             
             if (audioPlaying) {
                 backgroundAudio.pause();
@@ -1215,7 +1254,7 @@
                 audioPlaying = false;
                 console.log('Audio paused');
             } else {
-                backgroundAudio.volume = 0.3; // Set volume to 30%
+                backgroundAudio.volume = 0.3;
                 console.log('Attempting to play audio...');
                 
                 backgroundAudio.play().then(() => {
@@ -1226,7 +1265,6 @@
                 }).catch((error) => {
                     console.error('Audio play failed:', error);
                     
-                    // Try to identify the specific issue
                     if (error.name === 'NotFoundError') {
                         alert('Audio file not found. Please check if QUIETSTORM.mp3 is uploaded to assets/audio/ folder.');
                     } else if (error.name === 'NotAllowedError') {
@@ -1237,6 +1275,21 @@
                 });
             }
         }
+
+        // Try auto-play when page loads
+        window.addEventListener('load', function() {
+            console.log('Page loaded, attempting auto-play...');
+            setTimeout(attemptAutoPlay, 1000); // Wait 1 second for everything to load
+        });
+
+        // Also try on first user interaction if auto-play failed
+        document.addEventListener('click', function firstClick() {
+            if (!audioPlaying) {
+                console.log('First click detected, trying auto-play...');
+                attemptAutoPlay();
+            }
+            document.removeEventListener('click', firstClick); // Remove listener after first attempt
+        }, { once: true });
 
         // Pause audio when navigating away from landing page
         function showSection(sectionId) {
