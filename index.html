@@ -330,7 +330,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -1; /* Back to -1 but ensure slides are working */
         }
 
         .slide {
@@ -425,7 +425,7 @@
         }
 
         .landing-content {
-            z-index: 10;
+            z-index: 10; /* Increased to ensure it stays above background slides */
             position: relative;
             width: 100%;
             max-width: 1200px;
@@ -1829,8 +1829,15 @@
                 setTimeout(() => {
                     console.log('🏠 Setting initial landing page');
                     showSection('landing');
-                    // slides will auto-start via showSection
-                }, 300); // Give time for initialization
+                }, 300);
+                
+                // Force auto-start of background slides
+                setTimeout(() => {
+                    console.log('🎬 Force-starting background slides...');
+                    if (isOnMainSite) {
+                        startBackgroundSlides();
+                    }
+                }, 600);
             }, 1200);
             
             // Door creak sound effect
@@ -1861,7 +1868,9 @@
             const currentSection = document.querySelector('.section.active');
             const isOnLanding = currentSection?.id === 'landing';
             
-            if (!isOnLanding) {
+            console.log('🔍 ensureSlidesRunning: isOnLanding =', isOnLanding, 'isOnMainSite =', isOnMainSite);
+            
+            if (!isOnLanding || !isOnMainSite) {
                 stopBackgroundSlides();
                 return;
             }
@@ -1879,6 +1888,7 @@
             }
 
             // Start fresh
+            console.log('🚀 Starting background slides...');
             startBackgroundSlides();
         }
 
@@ -1903,6 +1913,11 @@
             currentSlide = 0;
 
             console.log(`🎬 Starting slides with ${slides.length} slides`);
+            console.log(`🟦 Initial slide: BLUE gradient (INTIMATE DINING)`);
+
+            // Verify first slide is active
+            const activeSlides = document.querySelectorAll('.slide.active');
+            console.log(`📊 Initial active slides: ${activeSlides.length}`);
 
             // Create the looping function with enhanced logging
             function nextSlide() {
@@ -1915,10 +1930,11 @@
 
                 // Show what's happening
                 const prevSlide = currentSlide;
-                const slideNames = ['INTIMATE DINING', 'CRAFT COCKTAILS', 'CULINARY ART'];
+                const slideNames = ['BLUE: INTIMATE DINING', 'PINK: CRAFT COCKTAILS', 'GREEN: CULINARY ART'];
                 
                 // Remove active from current slide
                 slides[currentSlide].classList.remove('active');
+                console.log(`🔄 Hiding slide ${currentSlide + 1}: ${slideNames[currentSlide]}`);
                 
                 // Move to next slide with explicit looping
                 currentSlide = currentSlide + 1;
@@ -1929,6 +1945,11 @@
                 
                 // Add active to next slide
                 slides[currentSlide].classList.add('active');
+                console.log(`✨ Showing slide ${currentSlide + 1}: ${slideNames[currentSlide]}`);
+                
+                // Verify the slide is actually active
+                const activeSlides = document.querySelectorAll('.slide.active');
+                console.log(`📊 Active slides count: ${activeSlides.length}`);
                 
                 const prevName = slideNames[prevSlide] || `Slide ${prevSlide + 1}`;
                 const currentName = slideNames[currentSlide] || `Slide ${currentSlide + 1}`;
@@ -1937,7 +1958,7 @@
                 
                 // Verify the loop worked
                 if (prevSlide === slides.length - 1 && currentSlide === 0) {
-                    console.log('✅ LOOP CONFIRMED: CULINARY ART → INTIMATE DINING (Perfect Loop!)');
+                    console.log('✅ LOOP CONFIRMED: GREEN → BLUE (Perfect Loop!)');
                 }
             }
 
@@ -1981,12 +2002,13 @@
                 targetSection.classList.add('active');
             }
             
-            // Handle background slides - more aggressive starting
+            // Handle background slides - ensure they start on landing page
             if (sectionId === 'landing') {
                 console.log('🏠 Showing landing page - starting slides');
+                // Wait for section to be visible, then start slides
                 setTimeout(() => {
-                    startBackgroundSlides(); // Direct call instead of ensureSlidesRunning
-                }, 100);
+                    ensureSlidesRunning();
+                }, 200);
             } else {
                 stopBackgroundSlides();
             }
