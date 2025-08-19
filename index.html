@@ -26,6 +26,10 @@
             --vh: 1vh;
             --nav-height: 80px;
             --mobile-nav-height: 64px;
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
         }
 
         body {
@@ -38,6 +42,19 @@
             -ms-text-size-adjust: 100%;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: none;
+            /* iPhone specific optimizations */
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* iPhone specific styles */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* Additional iPhone optimizations */
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
         }
 
         .container {
@@ -64,6 +81,23 @@
             justify-content: center;
             cursor: pointer;
             transition: all 1.2s ease;
+            /* iPhone safe areas */
+            padding-top: var(--safe-area-top);
+            padding-bottom: var(--safe-area-bottom);
+            padding-left: var(--safe-area-left);
+            padding-right: var(--safe-area-right);
+        }
+
+        /* iPhone X and newer optimization */
+        @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3),
+               only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2),
+               only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3),
+               only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3),
+               only screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) {
+            .splash-page {
+                background-size: cover;
+                background-position: center top;
+            }
         }
 
         /* Mobile splash page - use crop/cover for better mobile experience */
@@ -98,7 +132,7 @@
         .splash-hint {
             position: fixed;
             bottom: 30px;
-            bottom: max(30px, env(safe-area-inset-bottom, 30px));
+            bottom: max(30px, calc(var(--safe-area-bottom) + 30px));
             left: 50%;
             transform: translateX(-50%);
             color: rgba(255, 255, 255, 0.8);
@@ -119,6 +153,43 @@
         @keyframes fadeInOut {
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
+        }
+
+        /* Audio splash notification */
+        .audio-splash-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            text-align: center;
+            z-index: 10001;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: pulseNotification 2s infinite;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .audio-splash-notification.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @keyframes pulseNotification {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7);
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 0 15px rgba(95, 179, 211, 0);
+                transform: translate(-50%, -50%) scale(1.02);
+            }
         }
 
         /* =============== MAIN SITE STYLES =============== */
@@ -147,6 +218,10 @@
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
+            /* iPhone safe areas */
+            padding-top: max(20px, calc(var(--safe-area-top) + 10px));
+            padding-left: var(--safe-area-left);
+            padding-right: var(--safe-area-right);
         }
 
         /* Desktop hover behavior */
@@ -188,6 +263,8 @@
             letter-spacing: 3px;
             cursor: pointer;
             transition: color 0.3s ease;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .logo:hover {
@@ -209,6 +286,7 @@
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .audio-toggle:hover {
@@ -241,9 +319,9 @@
         .splash-audio-toggle {
             position: fixed;
             top: 30px;
-            top: max(30px, env(safe-area-inset-top, 30px));
+            top: max(30px, calc(var(--safe-area-top) + 20px));
             right: 30px;
-            right: max(30px, env(safe-area-inset-right, 30px));
+            right: max(30px, calc(var(--safe-area-right) + 20px));
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
@@ -259,6 +337,7 @@
             backdrop-filter: blur(10px);
             z-index: 10000;
             font-family: 'Georgia', serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .splash-audio-toggle:hover {
@@ -287,6 +366,7 @@
             font-size: 14px;
             letter-spacing: 1px;
             transition: color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .nav-links a:hover {
@@ -297,6 +377,7 @@
             display: none;
             flex-direction: column;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mobile-menu span {
@@ -481,6 +562,7 @@
             flex: 1;
             min-width: 200px;
             max-width: 300px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .landing-link:hover {
@@ -509,6 +591,7 @@
             transition: color 0.3s ease;
             text-transform: lowercase;
             padding: 5px 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .sub-links a:hover {
@@ -562,6 +645,7 @@
             border-radius: 10px;
             text-align: center;
             transition: transform 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .space-item:hover {
@@ -592,6 +676,7 @@
             padding: 30px;
             border-radius: 10px;
             border-left: 4px solid #000;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .menu-item h3 {
@@ -625,6 +710,7 @@
             margin-bottom: 30px;
             border-radius: 10px;
             border-left: 4px solid #000;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .event-date {
@@ -665,6 +751,7 @@
             text-align: center;
             transition: transform 0.3s ease;
             text-transform: lowercase;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .gallery-item:hover {
@@ -801,6 +888,7 @@
             text-transform: lowercase;
             letter-spacing: 1px;
             transition: color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .social-links a:hover {
@@ -839,6 +927,8 @@
             font-size: 16px;
             font-family: 'Georgia', serif;
             color: #000;
+            -webkit-appearance: none;
+            -webkit-border-radius: 5px;
         }
 
         .form-group input:focus,
@@ -862,6 +952,7 @@
             cursor: pointer;
             transition: background 0.3s ease;
             font-family: 'Georgia', serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .submit-btn:hover {
@@ -875,15 +966,15 @@
             }
 
             .splash-audio-toggle {
-                top: max(20px, calc(env(safe-area-inset-top, 0px) + 10px));
-                right: max(20px, env(safe-area-inset-right, 0px));
+                top: max(20px, calc(var(--safe-area-top) + 10px));
+                right: max(20px, calc(var(--safe-area-right) + 10px));
                 width: 50px;
                 height: 50px;
                 font-size: 18px;
             }
 
             .splash-hint {
-                bottom: max(30px, calc(env(safe-area-inset-bottom, 0px) + 20px));
+                bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
                 font-size: 0.9em;
                 padding: 12px 20px;
                 max-width: 90%;
@@ -897,11 +988,13 @@
                 transform: translateY(0);
                 position: fixed;
                 top: 0;
-                padding-top: max(12px, env(safe-area-inset-top, 0px));
+                padding-top: max(12px, calc(var(--safe-area-top) + 5px));
             }
 
             .nav-container {
                 padding: 0 15px;
+                padding-left: max(15px, calc(var(--safe-area-left) + 5px));
+                padding-right: max(15px, calc(var(--safe-area-right) + 5px));
             }
 
             .logo {
@@ -927,6 +1020,7 @@
                 gap: 25px;
                 border-top: 1px solid #333;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+                padding-bottom: max(25px, calc(var(--safe-area-bottom) + 15px));
             }
 
             .nav-links.active {
@@ -969,7 +1063,7 @@
                 height: calc(var(--vh, 1vh) * 100);
                 min-height: -webkit-fill-available;
                 min-height: 100vh;
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 15px max(40px, env(safe-area-inset-bottom, 0px));
+                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 15px max(40px, calc(var(--safe-area-bottom) + 20px));
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -1042,7 +1136,7 @@
             }
 
             .section {
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, env(safe-area-inset-bottom, 0px));
+                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, calc(var(--safe-area-bottom) + 30px));
                 min-height: calc(100vh - var(--mobile-nav-height));
             }
 
@@ -1122,9 +1216,10 @@
             }
         }
 
-        @media (max-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
+        /* iPhone specific optimizations */
+        @media only screen and (max-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
             .splash-hint {
-                bottom: max(40px, calc(env(safe-area-inset-bottom, 0px) + 30px));
+                bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
                 font-size: 0.85em;
             }
 
@@ -1139,6 +1234,7 @@
 
             .nav {
                 padding: 8px 0;
+                padding-top: max(8px, calc(var(--safe-area-top) + 3px));
             }
 
             .logo {
@@ -1161,6 +1257,15 @@
 
             .landing-swiper {
                 height: 180px;
+            }
+
+            /* iPhone X+ specific audio button positioning */
+            .splash-audio-toggle {
+                top: max(15px, calc(var(--safe-area-top) + 5px));
+                right: max(15px, calc(var(--safe-area-right) + 5px));
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
             }
         }
 
@@ -1191,6 +1296,7 @@
             }
         }
 
+        /* Disable hover effects on touch devices */
         @media (hover: none) and (pointer: coarse) {
             .space-item:hover,
             .menu-item:hover,
@@ -1199,9 +1305,28 @@
                 transform: none;
             }
         }
+
+        /* Audio notification animation */
+        @keyframes audioNotificationBounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translate(-50%, -50%) translateY(0);
+            }
+            40% {
+                transform: translate(-50%, -50%) translateY(-5px);
+            }
+            60% {
+                transform: translate(-50%, -50%) translateY(-3px);
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Audio splash notification -->
+    <div class="audio-splash-notification" id="audioNotification">
+        <div style="margin-bottom: 8px;">🎵 QUIETSTORM is ready to play!</div>
+        <div style="font-size: 0.9em; opacity: 0.8;">Tap anywhere to start the experience</div>
+    </div>
+
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
         <div class="splash-overlay"></div>
@@ -1659,42 +1784,48 @@
             setTimeout(setVH, 100);
         });
 
-        // SIMPLE, RELIABLE AUDIO SYSTEM
+        // ENHANCED AUDIO SYSTEM WITH AUTO-PLAY
         let audioPlaying = false;
         let audioLoaded = false;
         let backgroundAudio;
         let splashAudioButton;
         let navAudioButton;
         let isOnMainSite = false;
+        let autoStartAttempted = false;
+        let audioNotification;
 
         // Initialize audio on page load
         function initAudio() {
-            console.log('🎵 Initializing audio system...');
+            console.log('🎵 Initializing enhanced audio system...');
             
             backgroundAudio = document.getElementById('backgroundAudio');
             splashAudioButton = document.getElementById('splashAudioToggle');
             navAudioButton = document.querySelector('.audio-toggle');
+            audioNotification = document.getElementById('audioNotification');
             
             if (!backgroundAudio) {
                 console.error('❌ Audio element not found');
                 return;
             }
             
-            // Set up audio properties
+            // Set up audio properties for better iOS compatibility
             backgroundAudio.volume = 0.5;
             backgroundAudio.loop = true;
             backgroundAudio.preload = "auto";
+            backgroundAudio.muted = false;
+            backgroundAudio.crossOrigin = "anonymous";
             
             // Audio event listeners
-            backgroundAudio.addEventListener('canplay', () => {
+            backgroundAudio.addEventListener('canplaythrough', () => {
                 audioLoaded = true;
-                console.log('✅ Audio loaded and ready');
-                tryAutoStart();
+                console.log('✅ Audio fully loaded and ready');
+                attemptAutoStart();
             });
             
             backgroundAudio.addEventListener('loadeddata', () => {
                 audioLoaded = true;
-                tryAutoStart();
+                console.log('✅ Audio data loaded');
+                attemptAutoStart();
             });
             
             backgroundAudio.addEventListener('ended', () => {
@@ -1706,33 +1837,60 @@
             
             backgroundAudio.addEventListener('error', (e) => {
                 console.error('❌ Audio error:', e);
+                hideAudioNotification();
+            });
+
+            backgroundAudio.addEventListener('play', () => {
+                console.log('🎵 Audio started playing');
+                audioPlaying = true;
+                updateAudioButtons();
+                hideAudioNotification();
+            });
+
+            backgroundAudio.addEventListener('pause', () => {
+                console.log('⏸ Audio paused');
+                audioPlaying = false;
+                updateAudioButtons();
             });
             
-            // Load the audio
+            // Load the audio immediately
             backgroundAudio.load();
             
-            // Try auto-start immediately
-            setTimeout(tryAutoStart, 100);
-            setTimeout(tryAutoStart, 500);
-            setTimeout(tryAutoStart, 1000);
+            // Multiple auto-start attempts
+            setTimeout(attemptAutoStart, 100);
+            setTimeout(attemptAutoStart, 500);
+            setTimeout(attemptAutoStart, 1000);
+            setTimeout(attemptAutoStart, 2000);
         }
 
-        // Try to auto-start audio
-        function tryAutoStart() {
-            if (!backgroundAudio || audioPlaying || !audioLoaded) {
+        // Enhanced auto-start function
+        function attemptAutoStart() {
+            if (!backgroundAudio || audioPlaying || autoStartAttempted || !audioLoaded) {
                 return;
             }
             
-            console.log('🎵 Attempting auto-start...');
+            autoStartAttempted = true;
+            console.log('🎵 Attempting aggressive auto-start...');
             
-            const playPromise = backgroundAudio.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    audioPlaying = true;
-                    console.log('🎉 Audio auto-started successfully!');
-                    updateAudioButtons();
+            // Try muted first, then unmute (iOS trick)
+            backgroundAudio.muted = true;
+            const mutedPromise = backgroundAudio.play();
+            
+            if (mutedPromise !== undefined) {
+                mutedPromise.then(() => {
+                    console.log('🔇 Muted auto-start successful, unmuting...');
+                    setTimeout(() => {
+                        backgroundAudio.muted = false;
+                        if (backgroundAudio.volume === 0) {
+                            backgroundAudio.volume = 0.5;
+                        }
+                        audioPlaying = true;
+                        updateAudioButtons();
+                        hideAudioNotification();
+                    }, 100);
                 }).catch((error) => {
                     console.log('⚠️ Auto-start blocked:', error.name);
+                    backgroundAudio.muted = false;
                     showAudioReady();
                 });
             }
@@ -1745,6 +1903,7 @@
             }
             
             console.log('🎵 Starting audio via user interaction');
+            backgroundAudio.muted = false;
             backgroundAudio.volume = 0.5;
             
             const playPromise = backgroundAudio.play();
@@ -1753,8 +1912,10 @@
                     audioPlaying = true;
                     console.log('✅ Audio started via interaction!');
                     updateAudioButtons();
+                    hideAudioNotification();
                 }).catch((error) => {
                     console.error('❌ Audio start failed:', error);
+                    showAudioReady();
                 });
             }
         }
@@ -1776,11 +1937,31 @@
             });
         }
 
-        // Show audio ready state
+        // Show audio ready notification
         function showAudioReady() {
+            if (audioNotification) {
+                audioNotification.classList.add('show');
+                
+                if (splashAudioButton) {
+                    splashAudioButton.style.animation = 'pulseBlue 2s infinite';
+                    splashAudioButton.title = '🎵 Click to start QUIETSTORM!';
+                }
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    hideAudioNotification();
+                }, 5000);
+            }
+        }
+
+        // Hide audio notification
+        function hideAudioNotification() {
+            if (audioNotification) {
+                audioNotification.classList.remove('show');
+            }
+            
             if (splashAudioButton) {
-                splashAudioButton.style.animation = 'pulseBlue 2s infinite';
-                splashAudioButton.title = '🎵 Click to start QUIETSTORM!';
+                splashAudioButton.style.animation = '';
             }
         }
 
@@ -1804,54 +1985,77 @@
             updateAudioButtons();
         }
 
-        // Set up user interaction triggers
+        // Set up enhanced interaction triggers
         function setupInteractionTriggers() {
-            console.log('📱 Setting up interaction triggers...');
+            console.log('📱 Setting up enhanced interaction triggers...');
             
             const splashPage = document.getElementById('splashPage');
             if (!splashPage) return;
             
-            // Multiple interaction triggers
-            ['click', 'touchstart', 'mousemove', 'keydown'].forEach(eventType => {
-                const handler = () => {
+            // Immediate triggers for various interaction types
+            const interactionEvents = ['click', 'touchstart', 'touchend', 'mousemove', 'keydown', 'focus'];
+            
+            interactionEvents.forEach(eventType => {
+                const handler = (e) => {
                     startAudioOnInteraction();
                     document.removeEventListener(eventType, handler);
                 };
-                document.addEventListener(eventType, handler, { once: true });
+                document.addEventListener(eventType, handler, { once: true, passive: true });
             });
             
             // Splash page specific triggers
             splashPage.addEventListener('mouseenter', startAudioOnInteraction, { once: true });
+            splashPage.addEventListener('touchmove', startAudioOnInteraction, { once: true, passive: true });
             window.addEventListener('focus', startAudioOnInteraction, { once: true });
+            
+            // iOS specific triggers
+            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                document.addEventListener('devicemotion', startAudioOnInteraction, { once: true });
+                document.addEventListener('deviceorientation', startAudioOnInteraction, { once: true });
+            }
         }
 
-        // Background gallery slider functionality
+        // FIXED Background gallery slider functionality
         let slideInterval = null;
         let currentSlide = 0;
+        let slidesPaused = false;
 
         function startBackgroundSlides() {
             const slides = document.querySelectorAll('.slide');
             if (slides.length === 0) return;
             
-            // Clear any existing interval
-            if (slideInterval) {
-                clearInterval(slideInterval);
-            }
+            // Clear any existing interval first
+            stopBackgroundSlides();
             
-            // Reset to first slide
-            slides.forEach(slide => slide.classList.remove('active'));
-            slides[0].classList.add('active');
+            // Reset to first slide with immediate visibility
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === 0) {
+                    slide.classList.add('active');
+                }
+            });
             currentSlide = 0;
+            slidesPaused = false;
             
             console.log('🎬 Starting background slides');
             
-            // Start the slide rotation
+            // Start the slide rotation with proper error handling
             slideInterval = setInterval(() => {
-                const slides = document.querySelectorAll('.slide');
-                if (slides.length === 0) return;
+                if (slidesPaused) return;
                 
+                const slides = document.querySelectorAll('.slide');
+                if (slides.length === 0) {
+                    stopBackgroundSlides();
+                    return;
+                }
+                
+                // Remove active from current slide
                 slides[currentSlide].classList.remove('active');
+                
+                // Move to next slide
                 currentSlide = (currentSlide + 1) % slides.length;
+                
+                // Add active to new slide
                 slides[currentSlide].classList.add('active');
                 
                 console.log(`🎬 Slide ${currentSlide + 1}/${slides.length} active`);
@@ -1862,14 +2066,30 @@
             if (slideInterval) {
                 clearInterval(slideInterval);
                 slideInterval = null;
+                slidesPaused = true;
                 console.log('⏸ Background slides stopped');
             }
+        }
+
+        function pauseBackgroundSlides() {
+            slidesPaused = true;
+            console.log('⏸ Background slides paused');
+        }
+
+        function resumeBackgroundSlides() {
+            slidesPaused = false;
+            console.log('▶️ Background slides resumed');
         }
 
         // Enter main site function
         function enterMainSite() {
             const splashPage = document.getElementById('splashPage');
             const mainSite = document.getElementById('mainSite');
+            
+            // Ensure audio starts if not already playing
+            if (!audioPlaying) {
+                startAudioOnInteraction();
+            }
             
             splashPage.classList.add('hidden');
             
@@ -1886,8 +2106,10 @@
             }, 1200);
         }
 
-        // Show section function
+        // FIXED Show section function with proper slide management
         function showSection(sectionId) {
+            console.log(`📍 Showing section: ${sectionId}`);
+            
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
@@ -1899,9 +2121,12 @@
                 targetSection.classList.add('active');
             }
             
-            // Handle background slides
+            // Handle background slides with proper timing
             if (sectionId === 'landing') {
-                setTimeout(startBackgroundSlides, 100);
+                // Small delay to ensure DOM is ready
+                setTimeout(() => {
+                    startBackgroundSlides();
+                }, 150);
             } else {
                 stopBackgroundSlides();
             }
@@ -1910,6 +2135,17 @@
             const navLinks = document.getElementById('navLinks');
             if (navLinks) {
                 navLinks.classList.remove('active');
+                
+                // Reset mobile menu animation
+                const mobileMenu = document.querySelector('.mobile-menu');
+                if (mobileMenu) {
+                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    const spans = mobileMenu.querySelectorAll('span');
+                    spans.forEach(span => {
+                        span.style.transform = '';
+                        span.style.opacity = '';
+                    });
+                }
             }
         }
 
@@ -1940,6 +2176,7 @@
                     }
                 }
                 
+                // Haptic feedback on supported devices
                 if (navigator.vibrate) {
                     navigator.vibrate(50);
                 }
@@ -1966,21 +2203,32 @@
             }
         });
 
-        // Splash page interactions
+        // Enhanced splash page interactions
         document.getElementById('splashPage').addEventListener('click', function(event) {
             if (event.target.closest('.splash-audio-toggle')) return;
+            if (event.target.closest('.audio-splash-notification')) return;
+            
             startAudioOnInteraction();
             enterMainSite();
         });
 
         document.getElementById('splashPage').addEventListener('touchend', function(event) {
             if (event.target.closest('.splash-audio-toggle')) return;
+            if (event.target.closest('.audio-splash-notification')) return;
+            
             event.preventDefault();
             startAudioOnInteraction();
             enterMainSite();
         });
 
-        // Keyboard support
+        // Audio notification click handler
+        document.getElementById('audioNotification').addEventListener('click', function(event) {
+            event.stopPropagation();
+            startAudioOnInteraction();
+            hideAudioNotification();
+        });
+
+        // Enhanced keyboard support
         document.addEventListener('keydown', function(event) {
             if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
                 event.preventDefault();
@@ -2119,24 +2367,37 @@
 
         // Initialize everything when page loads
         window.addEventListener('load', function() {
-            console.log('📄 Page loaded - initializing...');
+            console.log('📄 Page loaded - initializing Door 64...');
             
-            // Initialize audio system
+            // Initialize enhanced audio system
             initAudio();
             
-            // Set up interaction triggers
+            // Set up enhanced interaction triggers
             setupInteractionTriggers();
             
-            // Mobile optimizations
+            // Device detection and optimizations
             const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             
             if (isMobile) {
                 console.log('📱 Mobile device detected');
                 document.body.classList.add('mobile-device');
                 
-                // iPhone specific
+                if (isIOS) {
+                    console.log('🍎 iOS device detected - applying optimizations');
+                    document.body.classList.add('ios-device');
+                    
+                    // iOS specific audio optimizations
+                    if (backgroundAudio) {
+                        backgroundAudio.setAttribute('playsinline', 'true');
+                        backgroundAudio.setAttribute('webkit-playsinline', 'true');
+                    }
+                }
+                
+                // Enhanced iPhone specific
                 if (/iPhone/.test(navigator.userAgent)) {
                     document.body.classList.add('iphone-device');
+                    console.log('📱 iPhone specific optimizations applied');
                 }
                 
                 // Prevent zoom on form inputs
@@ -2154,16 +2415,33 @@
                 touchElements.forEach(element => {
                     element.addEventListener('touchstart', function() {
                         this.style.transform = 'scale(0.98)';
-                    });
+                    }, { passive: true });
+                    
                     element.addEventListener('touchend', function() {
                         setTimeout(() => {
                             this.style.transform = '';
                         }, 150);
-                    });
+                    }, { passive: true });
                 });
             }
             
-            console.log('✅ Initialization complete');
+            console.log('✅ Door 64 initialization complete');
+        });
+
+        // Page visibility change handler to manage audio
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                pauseBackgroundSlides();
+            } else {
+                if (document.getElementById('landing').classList.contains('active')) {
+                    resumeBackgroundSlides();
+                }
+                
+                // Resume audio if it was playing
+                if (audioPlaying && backgroundAudio && backgroundAudio.paused) {
+                    backgroundAudio.play().catch(console.error);
+                }
+            }
         });
     </script>
 
