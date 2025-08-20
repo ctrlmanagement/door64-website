@@ -1063,16 +1063,18 @@
                 padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-start;
                 align-items: center;
                 box-sizing: border-box;
+                overflow-y: auto;
             }
 
             .landing-content {
                 width: 100%;
                 max-width: none;
                 padding: 0;
-                gap: 30px;
+                gap: 25px;
+                margin-bottom: 20px;
             }
 
             .landing-content h1 {
@@ -1117,9 +1119,10 @@
 
             .landing-splide {
                 height: 280px;
-                margin: 35px 0 0 0;
+                margin: 25px 0 30px 0;
                 width: 100%;
                 border-radius: 12px;
+                flex-shrink: 0;
             }
 
             .section-title {
@@ -1403,7 +1406,6 @@
                     <div class="landing-link">
                         <h3>space</h3>
                         <div class="sub-links">
-                            <a href="#" onclick="showSection('space')">venue</a>
                             <a href="#" onclick="showSection('kitchen')">in the kitchen</a>
                             <a href="#" onclick="showSection('bar')">at the bar</a>
                         </div>
