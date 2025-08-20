@@ -590,15 +590,15 @@
             color: #fff;
         }
 
-        /* Landing Swiper - Made more visible */
-        .landing-swiper {
+        /* Landing Splide - Matches other gallery styles */
+        .landing-splide {
             width: 100%;
             max-width: 100%;
-            height: 350px;
-            margin: 30px auto 0 auto;
+            height: 500px;
+            margin: 40px auto 0 auto;
             overflow: hidden;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         /* Section Styles */
@@ -939,7 +939,7 @@
             background: #333;
         }
 
-        /* =============== MOBILE RESPONSIVE - FIXED =============== */
+        /* =============== MOBILE RESPONSIVE - OPTIMIZED FOR IPHONE 14/15 SERIES =============== */
         @media (max-width: 768px) {
             :root {
                 --nav-height: var(--mobile-nav-height);
@@ -954,45 +954,50 @@
             }
 
             .splash-hint {
-                bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
-                font-size: 0.9em;
-                padding: 12px 20px;
-                max-width: 90%;
+                bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
+                font-size: 16px; /* Minimum 16px for readability */
+                padding: 15px 25px;
+                max-width: 85%;
                 margin: 0 auto;
+                border-radius: 25px;
             }
 
             .nav {
-                padding: 12px 0;
+                padding: 15px 0;
                 height: var(--mobile-nav-height);
                 opacity: 1;
                 transform: translateY(0);
                 position: fixed;
                 top: 0;
-                padding-top: max(12px, calc(var(--safe-area-top) + 5px));
+                padding-top: max(15px, calc(var(--safe-area-top) + 8px));
             }
 
             .nav-container {
-                padding: 0 15px;
-                padding-left: max(15px, calc(var(--safe-area-left) + 5px));
-                padding-right: max(15px, calc(var(--safe-area-right) + 5px));
+                padding: 0 20px;
+                padding-left: max(20px, calc(var(--safe-area-left) + 10px));
+                padding-right: max(20px, calc(var(--safe-area-right) + 10px));
                 max-width: 100%;
                 justify-content: space-between;
             }
 
             .nav-left-section {
                 flex-direction: row;
-                gap: 15px;
+                gap: 20px;
                 align-items: center;
                 width: auto;
                 justify-content: flex-start;
             }
 
+            /* Audio toggle - minimum 44×44px touch target */
             .audio-toggle {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+                min-width: 44px;
+                min-height: 44px;
             }
 
+            /* Mobile menu - minimum 44×44px touch target */
             .mobile-menu {
                 display: flex;
                 width: 44px;
@@ -1000,8 +1005,10 @@
                 padding: 10px;
                 justify-content: center;
                 align-items: center;
-                border-radius: 6px;
+                border-radius: 8px;
                 transition: background 0.3s ease;
+                min-width: 44px;
+                min-height: 44px;
             }
 
             .nav-links {
@@ -1012,11 +1019,11 @@
                 width: 100%;
                 background: rgba(10, 10, 10, 0.98);
                 flex-direction: column;
-                padding: 25px 20px;
-                gap: 25px;
+                padding: 30px 20px;
+                gap: 20px;
                 border-top: 1px solid #333;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-                padding-bottom: max(25px, calc(var(--safe-area-bottom) + 15px));
+                padding-bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
                 justify-content: flex-start;
             }
 
@@ -1025,21 +1032,14 @@
             }
 
             .nav-links a {
-                font-size: 16px;
-                padding: 12px 0;
+                font-size: 18px; /* Minimum readable size */
+                padding: 15px 0; /* Minimum 44px touch target */
                 border-bottom: 1px solid rgba(255,255,255,0.1);
                 text-align: center;
-            }
-
-            .mobile-menu {
+                min-height: 44px;
                 display: flex;
-                width: 44px;
-                height: 44px;
-                padding: 10px;
-                justify-content: center;
                 align-items: center;
-                border-radius: 6px;
-                transition: background 0.3s ease;
+                justify-content: center;
             }
 
             .mobile-menu:active {
@@ -1047,10 +1047,10 @@
             }
 
             .mobile-menu span {
-                width: 20px;
+                width: 22px;
                 height: 2px;
                 background: #fff;
-                margin: 2px 0;
+                margin: 3px 0;
                 transition: all 0.3s ease;
                 transform-origin: center;
             }
@@ -1060,7 +1060,7 @@
                 height: calc(var(--vh, 1vh) * 100);
                 min-height: -webkit-fill-available;
                 min-height: 100vh;
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 15px max(40px, calc(var(--safe-area-bottom) + 20px));
+                padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -1072,20 +1072,20 @@
                 width: 100%;
                 max-width: none;
                 padding: 0;
-                gap: 20px;
+                gap: 30px;
             }
 
             .landing-content h1 {
-                font-size: clamp(2.2rem, 10vw, 3.5rem);
-                letter-spacing: clamp(1px, 2vw, 4px);
-                margin-bottom: 20px;
+                font-size: clamp(2.5rem, 12vw, 4rem);
+                letter-spacing: clamp(2px, 3vw, 6px);
+                margin-bottom: 30px;
                 line-height: 1.1;
             }
 
             .landing-links {
                 flex-direction: column;
-                gap: 25px;
-                margin: 20px 0;
+                gap: 35px;
+                margin: 30px 0;
                 width: 100%;
                 padding: 0;
             }
@@ -1094,94 +1094,115 @@
                 min-width: auto;
                 max-width: none;
                 width: 100%;
+                /* Minimum 44px touch target */
+                min-height: 44px;
+                padding: 10px;
             }
 
             .landing-link h3 {
-                font-size: clamp(1.2rem, 5vw, 1.6rem);
-                letter-spacing: clamp(1px, 2vw, 3px);
-                margin-bottom: 15px;
+                font-size: clamp(1.4rem, 6vw, 1.8rem);
+                letter-spacing: clamp(1px, 3vw, 4px);
+                margin-bottom: 20px;
+                color: #fff; /* Better contrast on mobile */
             }
 
             .sub-links a {
-                font-size: clamp(0.9rem, 4vw, 1.1rem);
-                padding: 8px 0;
+                font-size: 18px; /* Minimum readable size */
+                padding: 12px 0; /* Minimum 44px touch target */
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
-            .landing-swiper {
-                height: 250px;
-                margin: 25px 0 0 0;
+            .landing-splide {
+                height: 280px;
+                margin: 35px 0 0 0;
                 width: 100%;
-                border-radius: 8px;
+                border-radius: 12px;
             }
 
             .section-title {
-                font-size: clamp(1.8rem, 8vw, 2.5rem);
-                margin-bottom: 40px;
+                font-size: clamp(2rem, 10vw, 2.8rem);
+                margin-bottom: 50px;
             }
 
             .menu-grid,
             .space-grid,
             .gallery-grid {
                 grid-template-columns: 1fr;
-                gap: 25px;
+                gap: 30px;
             }
 
             .space-item,
             .menu-item {
-                padding: 25px 20px;
-                margin: 0 10px;
+                padding: 30px 25px;
+                margin: 0 15px;
+            }
+
+            .space-item h3,
+            .menu-item h3 {
+                font-size: 18px; /* Minimum readable size */
+            }
+
+            .space-item p,
+            .menu-item p {
+                font-size: 16px; /* Minimum readable size */
+                line-height: 1.6;
             }
 
             .section {
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, calc(var(--safe-area-bottom) + 30px));
+                padding: max(90px, calc(var(--mobile-nav-height) + 30px)) 0 max(70px, calc(var(--safe-area-bottom) + 40px));
                 min-height: calc(100vh - var(--mobile-nav-height));
             }
 
             .reservation-form,
             .contact-card {
-                margin: 0 15px;
-                padding: 25px 20px;
+                margin: 0 20px;
+                padding: 30px 25px;
             }
 
             .form-group input,
             .form-group select,
             .form-group textarea {
-                font-size: 16px;
-                padding: 15px;
-                border-radius: 8px;
+                font-size: 16px; /* Prevent zoom on iOS */
+                padding: 18px;
+                border-radius: 10px;
+                min-height: 44px; /* Minimum touch target */
             }
 
             .submit-btn {
-                padding: 18px;
-                font-size: 16px;
-                border-radius: 8px;
+                padding: 20px;
+                font-size: 18px;
+                border-radius: 10px;
+                min-height: 44px; /* Minimum touch target */
             }
 
             .slide:nth-child(1)::before,
             .slide:nth-child(2)::before,
             .slide:nth-child(3)::before {
-                font-size: clamp(1.4rem, 6vw, 2rem);
-                padding: 15px 25px;
-                border-radius: 15px;
+                font-size: clamp(1.6rem, 8vw, 2.2rem);
+                padding: 20px 30px;
+                border-radius: 20px;
             }
 
             .swiper-container {
-                height: 250px;
+                height: 280px;
             }
             
             .gallery-placeholder {
-                font-size: 0.9em;
+                font-size: 16px;
             }
             
             .swiper-button-next,
             .swiper-button-prev {
-                width: 40px;
-                height: 40px;
+                width: 44px;
+                height: 44px;
             }
             
             .swiper-button-next:after,
             .swiper-button-prev:after {
-                font-size: 16px;
+                font-size: 18px;
             }
 
             .nav-links.active {
@@ -1211,68 +1232,97 @@
                 background: rgba(255,255,255,0.1);
                 color: #fff;
             }
+
+            /* Social links - minimum touch targets */
+            .social-links {
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .social-links a {
+                font-size: 18px;
+                padding: 12px 15px;
+                min-height: 44px;
+                min-width: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                transition: background 0.3s ease;
+            }
+
+            .social-links a:active {
+                background: rgba(0,0,0,0.1);
+            }
         }
 
-        /* iPhone specific optimizations */
-        @media only screen and (max-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
+        /* iPhone 14/15 Standard (393px) optimizations */
+        @media only screen and (max-width: 393px) and (-webkit-min-device-pixel-ratio: 2) {
             .splash-hint {
-                bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
-                font-size: 0.85em;
+                bottom: max(45px, calc(var(--safe-area-bottom) + 35px));
+                font-size: 16px;
+                padding: 15px 20px;
             }
 
             .landing-content h1 {
-                font-size: clamp(2rem, 12vw, 3rem);
-                letter-spacing: clamp(1px, 3vw, 3px);
+                font-size: clamp(2.2rem, 14vw, 3.5rem);
+                letter-spacing: clamp(2px, 4vw, 5px);
             }
 
             .section-title {
-                font-size: clamp(1.6rem, 10vw, 2.2rem);
+                font-size: clamp(1.8rem, 12vw, 2.5rem);
             }
 
             .nav {
-                padding: 8px 0;
-                padding-top: max(8px, calc(var(--safe-area-top) + 3px));
+                padding: 12px 0;
+                padding-top: max(12px, calc(var(--safe-area-top) + 6px));
             }
 
             .space-item,
             .menu-item,
             .event-item {
-                padding: 20px 15px;
-                margin: 0 5px;
+                padding: 25px 20px;
+                margin: 0 10px;
             }
 
             .reservation-form,
             .contact-card {
-                margin: 0 10px;
-                padding: 20px 15px;
+                margin: 0 15px;
+                padding: 25px 20px;
             }
 
-            .landing-splide {
-                height: 120px;
+            .landing-swiper {
+                height: 250px;
             }
 
-            /* iPhone X+ specific audio button positioning */
+            /* iPhone specific audio button positioning */
             .splash-audio-toggle {
-                top: max(15px, calc(var(--safe-area-top) + 5px));
-                right: max(15px, calc(var(--safe-area-right) + 5px));
-                width: 45px;
-                height: 45px;
-                font-size: 16px;
+                top: max(20px, calc(var(--safe-area-top) + 8px));
+                right: max(20px, calc(var(--safe-area-right) + 8px));
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
             }
         }
 
-        @media (min-width: 431px) and (max-width: 768px) {
+        /* iPhone 14/15 Plus/Pro Max (430px) optimizations */
+        @media (min-width: 394px) and (max-width: 430px) {
             .landing-content h1 {
-                font-size: clamp(2.5rem, 8vw, 3.5rem);
-                letter-spacing: clamp(2px, 2vw, 5px);
+                font-size: clamp(2.8rem, 10vw, 4.2rem);
+                letter-spacing: clamp(3px, 3vw, 7px);
             }
 
             .section-title {
-                font-size: clamp(2rem, 6vw, 2.8rem);
+                font-size: clamp(2.2rem, 8vw, 3.2rem);
             }
 
-            .landing-splide {
-                height: 180px;
+            .landing-swiper {
+                height: 320px;
+            }
+
+            .space-item,
+            .menu-item {
+                padding: 35px 30px;
             }
         }
 
@@ -1544,10 +1594,6 @@
             <div class="container">
                 <h2 class="section-title">space</h2>
                 <div class="space-grid">
-                    <div class="space-item">
-                        <h3>venue</h3>
-                        <p>intimate setting for 24 guests with an open kitchen view. experience the energy and artistry of our culinary team in action.</p>
-                    </div>
                     <div class="space-item">
                         <h3>cocktails cellar</h3>
                         <p>exclusive space for up to 12 guests. perfect for special occasions, business dinners, or intimate celebrations.</p>
