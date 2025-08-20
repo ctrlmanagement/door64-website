@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="format-detection" content="telephone=no">
     <title>Door 64</title>
-    
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
+        /* CSS Custom Properties for dynamic height calculations */
         :root {
             --vh: 1vh;
             --nav-height: 80px;
@@ -37,19 +39,28 @@
             background-color: #0a0a0a;
             overflow-x: hidden;
             -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: none;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            /* iPhone specific optimizations */
+            -webkit-touch-callout: none;
             -webkit-user-select: none;
-            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* iPhone specific styles */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* Additional iPhone optimizations */
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
-            width: 100%;
         }
 
         /* =============== SPLASH PAGE STYLES =============== */
@@ -63,19 +74,36 @@
             z-index: 9999;
             background: url('assets/audio/splash.png') center/contain no-repeat;
             background-color: #000;
+            background-size: contain;
+            background-position: center center;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 1.2s ease;
+            /* iPhone safe areas */
             padding-top: var(--safe-area-top);
             padding-bottom: var(--safe-area-bottom);
             padding-left: var(--safe-area-left);
             padding-right: var(--safe-area-right);
         }
 
+        /* iPhone X and newer optimization */
+        @media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3),
+               only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2),
+               only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3),
+               only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3),
+               only screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) {
+            .splash-page {
+                background-size: cover;
+                background-position: center top;
+            }
+        }
+
+        /* Mobile splash page - use crop/cover for better mobile experience */
         @media (max-width: 768px) {
             .splash-page {
+                background: url('assets/audio/splash.png') center/cover no-repeat;
                 background-size: cover;
                 background-position: center center;
             }
@@ -87,8 +115,23 @@
             pointer-events: none;
         }
 
+        .splash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .splash-content {
+            display: none;
+        }
+
         .splash-hint {
             position: fixed;
+            bottom: 30px;
             bottom: max(30px, calc(var(--safe-area-bottom) + 30px));
             left: 50%;
             transform: translateX(-50%);
@@ -112,218 +155,21 @@
             50% { opacity: 1; }
         }
 
-        /* TURQUOISE Audio Toggle for Splash Page (Door Color) */
-        .splash-audio-toggle {
-            position: fixed;
-            top: max(30px, calc(var(--safe-area-top) + 20px));
-            right: max(30px, calc(var(--safe-area-right) + 20px));
-            background: rgba(72, 201, 176, 0.9);
-            border: 2px solid rgba(72, 201, 176, 0.8);
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            z-index: 10000;
-            font-family: 'Georgia', serif;
-            box-shadow: 0 4px 20px rgba(72, 201, 176, 0.3);
-        }
 
-        .splash-audio-toggle:hover {
-            background: rgba(72, 201, 176, 1);
-            border-color: rgba(72, 201, 176, 1);
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(72, 201, 176, 0.5);
-        }
 
-        .splash-audio-toggle.playing {
-            background: rgba(72, 201, 176, 1) !important;
-            border-color: rgba(72, 201, 176, 1) !important;
-            color: #fff !important;
-            animation: pulseTurquoise 2s infinite;
-        }
-
-        .splash-audio-toggle.loading {
-            background: rgba(72, 201, 176, 0.9) !important;
-            border-color: rgba(72, 201, 176, 1) !important;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes pulseTurquoise {
-            0% { box-shadow: 0 0 0 0 rgba(72, 201, 176, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(72, 201, 176, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(72, 201, 176, 0); }
-        }
-
-        /* ORANGE Audio Toggle for Main Site */
-        .audio-toggle {
-            background: rgba(255, 111, 97, 0.9);
-            border: 2px solid rgba(255, 111, 97, 0.8);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 3px 15px rgba(255, 111, 97, 0.3);
-        }
-
-        .audio-toggle:hover {
-            background: rgba(255, 111, 97, 1);
-            border-color: rgba(255, 111, 97, 1);
-            transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(255, 111, 97, 0.5);
-        }
-
-        .audio-toggle.playing {
-            background: rgba(255, 111, 97, 1) !important;
-            border-color: rgba(255, 111, 97, 1) !important;
-            color: #fff !important;
-            animation: pulseOrange 2s infinite;
-        }
-
-        .audio-toggle.loading {
-            background: rgba(255, 111, 97, 0.9) !important;
-            border-color: rgba(255, 111, 97, 1) !important;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes pulseOrange {
-            0% { box-shadow: 0 0 0 0 rgba(255, 111, 97, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 111, 97, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 111, 97, 0); }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Audio Status Indicator - HIDDEN */
-        .audio-status {
-            display: none;
-        }
-
-        /* =============== MAIN SITE STYLES - FIXED ALIGNMENT =============== */
+        /* =============== MAIN SITE STYLES =============== */
         .main-site {
             opacity: 0;
             transition: opacity 1s ease 0.5s;
             min-height: 100vh;
             min-height: calc(var(--vh, 1vh) * 100);
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         .main-site.active {
             opacity: 1;
         }
 
-        /* =============== LANDING PAGE - CENTERED AND ALIGNED =============== */
-        .landing-page {
-            height: 100vh;
-            height: calc(var(--vh, 1vh) * 100);
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .landing-content {
-            z-index: 10;
-            position: relative;
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-        }
-
-        .landing-content h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: clamp(2px, 2vw, 8px);
-            font-weight: 300;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            color: #fff;
-            line-height: 1.2;
-            text-align: center;
-        }
-
-        .landing-links {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: clamp(20px, 8vw, 60px);
-            margin: 40px 0;
-            flex-wrap: wrap;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        .landing-link {
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            flex: 1;
-            min-width: 200px;
-            max-width: 300px;
-        }
-
-        .landing-link:hover {
-            transform: translateY(-5px);
-        }
-
-        .landing-link h3 {
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
-            margin-bottom: 20px;
-            text-transform: lowercase;
-            letter-spacing: clamp(1px, 1vw, 3px);
-            color: #fff;
-        }
-
-        .sub-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .sub-links a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-            text-transform: lowercase;
-            padding: 5px 0;
-        }
-
-        .sub-links a:hover {
-            color: #fff;
-        }
-
-        /* Navigation - Better Mobile Optimization */
+        /* Navigation - Fixed sizing */
         .nav {
             position: fixed;
             top: 0;
@@ -337,11 +183,13 @@
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
+            /* iPhone safe areas */
             padding-top: max(20px, calc(var(--safe-area-top) + 10px));
             padding-left: var(--safe-area-left);
             padding-right: var(--safe-area-right);
         }
 
+        /* Desktop hover behavior */
         @media (min-width: 769px) {
             .nav {
                 opacity: 0;
@@ -360,7 +208,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
             width: 100%;
@@ -380,10 +228,87 @@
             letter-spacing: 3px;
             cursor: pointer;
             transition: color 0.3s ease;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .logo:hover {
             color: #ccc;
+        }
+
+        /* Audio Toggle Button */
+        .audio-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .audio-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+
+        .audio-toggle.playing {
+            background: rgba(95, 179, 211, 0.8) !important;
+            border-color: rgba(95, 179, 211, 1) !important;
+            color: #fff !important;
+            animation: pulseBlue 2s infinite;
+        }
+
+        @keyframes pulseBlue {
+            0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
+        }
+
+        /* Splash Audio Button */
+        .splash-audio-toggle {
+            position: fixed;
+            top: 30px;
+            top: max(30px, calc(var(--safe-area-top) + 20px));
+            right: 30px;
+            right: max(30px, calc(var(--safe-area-right) + 20px));
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            font-family: 'Georgia', serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .splash-audio-toggle:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .splash-audio-toggle.playing {
+            background: rgba(95, 179, 211, 0.9) !important;
+            border-color: rgba(95, 179, 211, 1) !important;
+            color: #fff !important;
+            animation: pulseBlue 2s infinite;
         }
 
         .nav-links {
@@ -399,16 +324,18 @@
             font-size: 14px;
             letter-spacing: 1px;
             transition: color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .nav-links a:hover {
-            color: #fff;
+            color: #000;
         }
 
         .mobile-menu {
             display: none;
             flex-direction: column;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mobile-menu span {
@@ -434,10 +361,12 @@
             background: #fff;
         }
 
-        /* =============== LANDING PAGE =============== */
+        /* =============== LANDING PAGE - FIXED SIZING =============== */
         .landing-page {
             height: 100vh;
             height: calc(var(--vh, 1vh) * 100);
+            min-height: 100vh;
+            min-height: calc(var(--vh, 1vh) * 100);
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -447,6 +376,8 @@
             color: white;
             position: relative;
             overflow: hidden;
+            top: 0;
+            left: 0;
         }
 
         .gallery-slider {
@@ -468,10 +399,6 @@
             transition: opacity 1.5s ease-in-out;
             background-size: cover;
             background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
         }
 
         .slide.active {
@@ -480,6 +407,10 @@
 
         .slide:nth-child(1) {
             background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .slide:nth-child(1)::before {
@@ -501,6 +432,10 @@
 
         .slide:nth-child(2) {
             background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .slide:nth-child(2)::before {
@@ -522,6 +457,10 @@
 
         .slide:nth-child(3) {
             background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .slide:nth-child(3)::before {
@@ -551,6 +490,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
         }
 
         .landing-content h1 {
@@ -580,6 +520,7 @@
             flex: 1;
             min-width: 200px;
             max-width: 300px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .landing-link:hover {
@@ -591,7 +532,7 @@
             margin-bottom: 20px;
             text-transform: lowercase;
             letter-spacing: clamp(1px, 1vw, 3px);
-            color: #fff;
+            color: #000;
         }
 
         .sub-links {
@@ -608,158 +549,30 @@
             transition: color 0.3s ease;
             text-transform: lowercase;
             padding: 5px 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .sub-links a:hover {
             color: #fff;
         }
 
+        /* Landing Swiper - Made more visible */
         .landing-swiper {
-            width: 100vw;
-            height: 450px;
-            margin: 40px 0 0 0;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            margin: 30px 0 0 0;
             overflow: hidden;
-            border-radius: 0;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .landing-swiper .swiper-slide {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .landing-swiper .gallery-placeholder {
-            height: 450px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Full-width gallery overlay */
-        .landing-swiper .gallery-placeholder::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
-            z-index: 1;
-        }
-
-        .landing-swiper .gallery-placeholder::after {
-            content: attr(data-title);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            color: white;
-            font-size: clamp(1.5rem, 4vw, 3rem);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: clamp(2px, 2vw, 8px);
-            text-align: center;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
-            background: rgba(0,0,0,0.4);
-            padding: 20px 40px;
-            border-radius: 15px;
-            border: 2px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
-            max-width: 90vw;
-        }
-
-        /* Enhanced gallery images for full-width display */
-        .landing-swiper .gallery-placeholder[data-title="intimate dining experience"] {
-            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&h=900&fit=crop');
-        }
-
-        .landing-swiper .gallery-placeholder[data-title="craft cocktails"] {
-            background-image: url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=1600&h=900&fit=crop');
-        }
-
-        .landing-swiper .gallery-placeholder[data-title="culinary artistry"] {
-            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=1600&h=900&fit=crop');
-        }
-
-        .landing-swiper .gallery-placeholder[data-title="elegant atmosphere"] {
-            background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&h=900&fit=crop');
-        }
-
-        .landing-swiper .gallery-placeholder[data-title="chef's table"] {
-            background-image: url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=1600&h=900&fit=crop');
-        }
-
-        .landing-swiper .gallery-placeholder[data-title="wine cellar"] {
-            background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=1600&h=900&fit=crop');
-        }
-
-        .landing-swiper .gallery-placeholder[data-title="private dining"] {
-            background-image: url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1600&h=900&fit=crop');
-        }
-
-        /* Landing Swiper Controls */
-        .landing-swiper .swiper-pagination {
-            bottom: 20px;
-        }
-
-        .landing-swiper .swiper-pagination-bullet {
-            background: rgba(255, 255, 255, 0.6);
-            opacity: 0.7;
-            width: 12px;
-            height: 12px;
-        }
-
-        .landing-swiper .swiper-pagination-bullet-active {
-            background: #fff;
-            opacity: 1;
-            transform: scale(1.2);
-        }
-
-        .landing-swiper .swiper-button-next,
-        .landing-swiper .swiper-button-prev {
-            color: rgba(255, 255, 255, 0.8);
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            margin-top: -25px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .landing-swiper .swiper-button-next:hover,
-        .landing-swiper .swiper-button-prev:hover {
-            color: #fff;
-            background: rgba(0, 0, 0, 0.6);
-            transform: scale(1.1);
-        }
-
-        .landing-swiper .swiper-button-next::after,
-        .landing-swiper .swiper-button-prev::after {
-            font-size: 18px;
-        }
-
-        .landing-swiper .gallery-placeholder[data-title="kitchen mastery"] {
-            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=900&fit=crop');
-        }
-
-        /* Section Styles - CENTERED ALIGNMENT */
+        /* Section Styles */
         .section {
             padding: 100px 0;
             background: #fff;
             display: none;
             min-height: calc(100vh - var(--nav-height));
-            width: 100%;
-            margin: 0 auto;
         }
 
         .section.active {
@@ -776,17 +589,6 @@
             color: #000;
         }
 
-        /* Ensure all content is centered */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         /* Space Section */
         .space-grid {
             display: grid;
@@ -801,7 +603,7 @@
             border-radius: 10px;
             text-align: center;
             transition: transform 0.3s ease;
-            border-left: 4px solid #000;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .space-item:hover {
@@ -832,6 +634,7 @@
             padding: 30px;
             border-radius: 10px;
             border-left: 4px solid #000;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .menu-item h3 {
@@ -865,6 +668,7 @@
             margin-bottom: 30px;
             border-radius: 10px;
             border-left: 4px solid #000;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .event-date {
@@ -905,6 +709,7 @@
             text-align: center;
             transition: transform 0.3s ease;
             text-transform: lowercase;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .gallery-item:hover {
@@ -929,155 +734,62 @@
             overflow: hidden;
         }
 
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .gallery-placeholder {
             width: 100%;
             height: 100%;
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
             color: white;
             font-size: 1.2em;
             text-transform: lowercase;
             letter-spacing: 1px;
-            position: relative;
         }
 
-        /* Add overlay for text readability */
-        .gallery-placeholder::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(transparent 60%, rgba(0,0,0,0.7));
-            z-index: 1;
+        .gallery-placeholder:nth-child(2n) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
 
-        .gallery-placeholder::after {
-            content: attr(data-title);
-            position: relative;
-            z-index: 2;
-            padding: 20px;
-            text-align: center;
-            background: rgba(0,0,0,0.6);
-            border-radius: 8px;
-            margin: 20px;
-            backdrop-filter: blur(5px);
+        .gallery-placeholder:nth-child(3n) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
 
-        /* Landing Gallery Images */
-        .gallery-placeholder[data-title="intimate dining experience"] {
-            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop');
+        .gallery-placeholder:nth-child(4n) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
 
-        .gallery-placeholder[data-title="craft cocktails"] {
-            background-image: url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&h=600&fit=crop');
+        .gallery-placeholder:nth-child(5n) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
         }
 
-        .gallery-placeholder[data-title="culinary artistry"] {
-            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop');
+        /* Swiper navigation customization */
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: #000;
         }
 
-        .gallery-placeholder[data-title="wine selection"] {
-            background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=800&h=600&fit=crop');
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 20px;
         }
 
-        .gallery-placeholder[data-title="elegant atmosphere"] {
-            background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop');
+        .swiper-pagination-bullet {
+            background: #000;
         }
 
-        .gallery-placeholder[data-title="chef's expertise"] {
-            background-image: url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=600&fit=crop');
+        .swiper-pagination-bullet-active {
+            background: #000;
         }
 
-        .gallery-placeholder[data-title="fresh ingredients"] {
-            background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="private events"] {
-            background-image: url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="seasonal menu"] {
-            background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="kitchen artistry"] {
-            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop');
-        }
-
-        /* Gallery Section Images */
-        .gallery-placeholder[data-title="opening night celebration"] {
-            background-image: url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="chef collaboration dinner"] {
-            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="wine pairing evening"] {
-            background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="anniversary celebration"] {
-            background-image: url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="private party"] {
-            background-image: url('https://images.unsplash.com/photo-1529543730-eec3cf6a3f22?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="food critics visit"] {
-            background-image: url('https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="seasonal tasting menu"] {
-            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="signature cocktail"] {
-            background-image: url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="chef's special creation"] {
-            background-image: url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="artisanal dessert"] {
-            background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="craft cocktail preparation"] {
-            background-image: url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="kitchen in action"] {
-            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="team collaboration"] {
-            background-image: url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="ingredient preparation"] {
-            background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="plating perfection"] {
-            background-image: url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="daily setup"] {
-            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop');
-        }
-
-        .gallery-placeholder[data-title="creative process"] {
-            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop');
-        }
-
+        /* Multiple galleries */
         .gallery-section {
             margin-bottom: 60px;
         }
@@ -1134,6 +846,7 @@
             text-transform: lowercase;
             letter-spacing: 1px;
             transition: color 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .social-links a:hover {
@@ -1173,6 +886,7 @@
             font-family: 'Georgia', serif;
             color: #000;
             -webkit-appearance: none;
+            -webkit-border-radius: 5px;
         }
 
         .form-group input:focus,
@@ -1196,13 +910,14 @@
             cursor: pointer;
             transition: background 0.3s ease;
             font-family: 'Georgia', serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .submit-btn:hover {
             background: #333;
         }
 
-        /* =============== MOBILE RESPONSIVE OPTIMIZATION =============== */
+        /* =============== MOBILE RESPONSIVE - FIXED =============== */
         @media (max-width: 768px) {
             :root {
                 --nav-height: var(--mobile-nav-height);
@@ -1213,20 +928,15 @@
                 right: max(20px, calc(var(--safe-area-right) + 10px));
                 width: 50px;
                 height: 50px;
-                font-size: 16px;
-            }
-
-            .audio-status {
-                top: max(80px, calc(var(--safe-area-top) + 60px));
-                right: max(20px, calc(var(--safe-area-right) + 10px));
-                font-size: 11px;
-                padding: 6px 12px;
+                font-size: 18px;
             }
 
             .splash-hint {
                 bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
                 font-size: 0.9em;
-                padding: 8px 16px;
+                padding: 12px 20px;
+                max-width: 90%;
+                margin: 0 auto;
             }
 
             .nav {
@@ -1234,11 +944,15 @@
                 height: var(--mobile-nav-height);
                 opacity: 1;
                 transform: translateY(0);
+                position: fixed;
+                top: 0;
                 padding-top: max(12px, calc(var(--safe-area-top) + 5px));
             }
 
             .nav-container {
                 padding: 0 15px;
+                padding-left: max(15px, calc(var(--safe-area-left) + 5px));
+                padding-right: max(15px, calc(var(--safe-area-right) + 5px));
             }
 
             .logo {
@@ -1263,7 +977,172 @@
                 padding: 25px 20px;
                 gap: 25px;
                 border-top: 1px solid #333;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
                 padding-bottom: max(25px, calc(var(--safe-area-bottom) + 15px));
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                text-align: center;
+            }
+
+            .mobile-menu {
+                display: flex;
+                width: 44px;
+                height: 44px;
+                padding: 10px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 6px;
+                transition: background 0.3s ease;
+            }
+
+            .mobile-menu:active {
+                background: rgba(255,255,255,0.1);
+            }
+
+            .mobile-menu span {
+                width: 20px;
+                height: 2px;
+                background: #fff;
+                margin: 2px 0;
+                transition: all 0.3s ease;
+                transform-origin: center;
+            }
+
+            .landing-page {
+                height: 100vh;
+                height: calc(var(--vh, 1vh) * 100);
+                min-height: -webkit-fill-available;
+                min-height: 100vh;
+                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 15px max(40px, calc(var(--safe-area-bottom) + 20px));
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+
+            .landing-content {
+                width: 100%;
+                max-width: none;
+                padding: 0;
+                gap: 20px;
+            }
+
+            .landing-content h1 {
+                font-size: clamp(2.2rem, 10vw, 3.5rem);
+                letter-spacing: clamp(1px, 2vw, 4px);
+                margin-bottom: 20px;
+                line-height: 1.1;
+            }
+
+            .landing-links {
+                flex-direction: column;
+                gap: 25px;
+                margin: 20px 0;
+                width: 100%;
+                padding: 0;
+            }
+
+            .landing-link {
+                min-width: auto;
+                max-width: none;
+                width: 100%;
+            }
+
+            .landing-link h3 {
+                font-size: clamp(1.2rem, 5vw, 1.6rem);
+                letter-spacing: clamp(1px, 2vw, 3px);
+                margin-bottom: 15px;
+            }
+
+            .sub-links a {
+                font-size: clamp(0.9rem, 4vw, 1.1rem);
+                padding: 8px 0;
+            }
+
+            .landing-swiper {
+                height: 250px;
+                margin: 25px 0 0 0;
+                width: 100%;
+                border-radius: 8px;
+            }
+
+            .section-title {
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
+                margin-bottom: 40px;
+            }
+
+            .menu-grid,
+            .space-grid,
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .space-item,
+            .menu-item {
+                padding: 25px 20px;
+                margin: 0 10px;
+            }
+
+            .section {
+                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, calc(var(--safe-area-bottom) + 30px));
+                min-height: calc(100vh - var(--mobile-nav-height));
+            }
+
+            .reservation-form,
+            .contact-card {
+                margin: 0 15px;
+                padding: 25px 20px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px;
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .submit-btn {
+                padding: 18px;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+
+            .slide:nth-child(1)::before,
+            .slide:nth-child(2)::before,
+            .slide:nth-child(3)::before {
+                font-size: clamp(1.4rem, 6vw, 2rem);
+                padding: 15px 25px;
+                border-radius: 15px;
+            }
+
+            .swiper-container {
+                height: 250px;
+            }
+            
+            .gallery-placeholder {
+                font-size: 0.9em;
+            }
+            
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 16px;
             }
 
             .nav-links.active {
@@ -1282,160 +1161,121 @@
                 }
             }
 
-            .nav-links a {
-                font-size: 16px;
-                padding: 12px 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                text-align: center;
+            .space-item:active,
+            .menu-item:active,
+            .landing-link:active {
+                transform: scale(0.98);
+                transition: transform 0.1s ease;
             }
 
-            .mobile-menu {
-                display: flex;
-                width: 44px;
-                height: 44px;
-                padding: 10px;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .mobile-menu span {
-                width: 20px;
-                margin: 2px 0;
-            }
-
-            .landing-page {
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 15px max(40px, calc(var(--safe-area-bottom) + 20px));
-            }
-
-            .landing-links {
-                flex-direction: column;
-                gap: 25px;
-                margin: 30px 0;
-            }
-
-            .landing-link {
-                min-width: auto;
-                padding: 25px 15px;
-            }
-
-            .landing-swiper {
-                height: 300px;
-                margin: 30px 0 0 0;
-            }
-
-            .section-title {
-                font-size: clamp(1.8rem, 8vw, 2.5rem);
-            }
-
-            .menu-grid,
-            .space-grid,
-            .gallery-grid,
-            .contact-info {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                padding: max(80px, calc(var(--mobile-nav-height) + 20px)) 0 max(60px, calc(var(--safe-area-bottom) + 30px));
-            }
-
-            .slide:nth-child(1)::before,
-            .slide:nth-child(2)::before,
-            .slide:nth-child(3)::before {
-                font-size: clamp(1.4rem, 6vw, 2rem);
-                padding: 15px 25px;
-            }
-
-            .swiper-container {
-                height: 250px;
+            .nav-links a:active {
+                background: rgba(255,255,255,0.1);
+                color: #fff;
             }
         }
 
-        /* Extra small devices */
-        @media (max-width: 480px) {
+        /* iPhone specific optimizations */
+        @media only screen and (max-width: 430px) and (-webkit-min-device-pixel-ratio: 2) {
+            .splash-hint {
+                bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
+                font-size: 0.85em;
+            }
+
             .landing-content h1 {
-                font-size: clamp(2rem, 12vw, 4rem);
-                padding: 15px 25px;
-                margin-bottom: 30px;
+                font-size: clamp(2rem, 12vw, 3rem);
+                letter-spacing: clamp(1px, 3vw, 3px);
             }
 
-            .landing-link {
-                padding: 20px 12px;
+            .section-title {
+                font-size: clamp(1.6rem, 10vw, 2.2rem);
             }
 
-            .slide:nth-child(1)::after,
-            .slide:nth-child(2)::after,
-            .slide:nth-child(3)::after {
-                font-size: clamp(1.2rem, 5vw, 2rem);
-                padding: 15px 20px;
-                top: 25%;
+            .nav {
+                padding: 8px 0;
+                padding-top: max(8px, calc(var(--safe-area-top) + 3px));
             }
 
-            .swiper-container,
+            .logo {
+                font-size: 1.4em;
+                letter-spacing: 1px;
+            }
+
+            .space-item,
+            .menu-item,
+            .event-item {
+                padding: 20px 15px;
+                margin: 0 5px;
+            }
+
+            .reservation-form,
+            .contact-card {
+                margin: 0 10px;
+                padding: 20px 15px;
+            }
+
             .landing-swiper {
-                height: auto;
-                margin: 30px 0 0 0;
-                box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+                height: 180px;
             }
 
-            .landing-swiper .gallery-placeholder {
-                padding: 50px 15px;
+            /* iPhone X+ specific audio button positioning */
+            .splash-audio-toggle {
+                top: max(15px, calc(var(--safe-area-top) + 5px));
+                right: max(15px, calc(var(--safe-area-right) + 5px));
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+        }
+
+        @media (min-width: 431px) and (max-width: 768px) {
+            .landing-content h1 {
+                font-size: clamp(2.5rem, 8vw, 3.5rem);
+                letter-spacing: clamp(2px, 2vw, 5px);
             }
 
-            .landing-swiper .gallery-placeholder[data-title="culinary artistry"] {
-                padding: 70px 15px;
+            .section-title {
+                font-size: clamp(2rem, 6vw, 2.8rem);
             }
 
-            .landing-swiper .gallery-placeholder[data-title="chef's table"] {
-                padding: 65px 15px;
+            .landing-swiper {
+                height: 280px;
             }
+        }
 
-            .landing-swiper .gallery-placeholder[data-title="kitchen mastery"] {
-                padding: 70px 15px;
+        @media (max-width: 768px) {
+            body {
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior: none;
             }
-
-            .landing-swiper .gallery-placeholder::after {
-                font-size: clamp(1.2rem, 5vw, 2rem);
-                padding: 15px 25px;
-                letter-spacing: clamp(1px, 1.5vw, 4px);
-                line-height: 1.3;
+            
+            .landing-page,
+            .section {
+                overscroll-behavior: none;
             }
+        }
 
-            .landing-swiper .swiper-button-next,
-            .landing-swiper .swiper-button-prev {
-                width: 40px;
-                height: 40px;
-                margin-top: -20px;
-            }
-
-            .landing-swiper .swiper-button-next::after,
-            .landing-swiper .swiper-button-prev::after {
-                font-size: 14px;
-            }
-
-            .landing-swiper .swiper-pagination-bullet {
-                width: 10px;
-                height: 10px;
+        /* Disable hover effects on touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            .space-item:hover,
+            .menu-item:hover,
+            .landing-link:hover,
+            .gallery-item:hover {
+                transform: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Background Audio with Enhanced Auto-Play -->
-    <audio id="backgroundAudio" loop preload="auto" playsinline webkit-playsinline muted>
-        <!-- Primary audio source (your local file) -->
-        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
-        <!-- Fallback local source -->
-        <source src="QUIETSTORM.mp3" type="audio/mpeg">
-        <!-- Reliable online fallback -->
-        <source src="https://file-examples.com/storage/fe68c1c1d44996cd7f18db6/2017/11/file_example_MP3_700KB.mp3" type="audio/mpeg">
-        <!-- Additional fallback -->
-        <source src="https://www.kozco.com/tech/LRMonoPhase4.mp3" type="audio/mpeg">
-    </audio>
+
 
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
+        <div class="splash-overlay"></div>
+        
         <div class="splash-hint">click anywhere to enter door 64</div>
-        <button class="splash-audio-toggle" onclick="toggleAudio(event)" id="splashAudioToggle">♪</button>
+        
+        <!-- Splash Audio Controls -->
+        <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
     </div>
 
     <!-- MAIN SITE -->
@@ -1445,7 +1285,7 @@
             <div class="nav-container">
                 <div class="nav-left">
                     <div class="logo" onclick="showSection('landing')">Door 64</div>
-                    <button class="audio-toggle" onclick="toggleAudio(event)">♪</button>
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
                 </div>
                 <ul class="nav-links" id="navLinks">
                     <li><a href="#" onclick="showSection('landing')">64</a></li>
@@ -1503,37 +1343,60 @@
                     </div>
                 </div>
                 
-                <!-- Full-Width Landing Gallery Swiper -->
+                <!-- Landing Gallery Swiper -->
                 <div class="swiper-container landing-swiper" id="landing-swiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="intimate dining experience"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>intimate dining experience</span>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="craft cocktails"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>craft cocktails</span>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="culinary artistry"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>culinary artistry</span>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="elegant atmosphere"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>wine selection</span>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="chef's table"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>elegant atmosphere</span>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="wine cellar"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>chef's expertise</span>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="private dining"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>fresh ingredients</span>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="kitchen mastery"></div>
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>private events</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>seasonal menu</span>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=280&fit=crop'); background-size: cover;">
+                                <span>kitchen artistry</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
                 </div>
             </div>
         </section>
@@ -1623,22 +1486,22 @@
                     <div class="swiper-container" id="events-swiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="opening night celebration"></div>
+                                <div class="gallery-placeholder">opening night celebration</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="chef collaboration dinner"></div>
+                                <div class="gallery-placeholder">chef collaboration dinner</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="wine pairing evening"></div>
+                                <div class="gallery-placeholder">wine pairing evening</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="anniversary celebration"></div>
+                                <div class="gallery-placeholder">anniversary celebration</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="private party"></div>
+                                <div class="gallery-placeholder">private party</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="food critics visit"></div>
+                                <div class="gallery-placeholder">food critics visit</div>
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -1653,22 +1516,22 @@
                     <div class="swiper-container" id="food-swiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="seasonal tasting menu"></div>
+                                <div class="gallery-placeholder">seasonal tasting menu</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="signature cocktail"></div>
+                                <div class="gallery-placeholder">signature cocktail</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="chef's special creation"></div>
+                                <div class="gallery-placeholder">chef's special creation</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="artisanal dessert"></div>
+                                <div class="gallery-placeholder">artisanal dessert</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="craft cocktail preparation"></div>
+                                <div class="gallery-placeholder">craft cocktail preparation</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="fresh ingredients"></div>
+                                <div class="gallery-placeholder">fresh ingredients</div>
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -1683,22 +1546,22 @@
                     <div class="swiper-container" id="bts-swiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="kitchen in action"></div>
+                                <div class="gallery-placeholder">kitchen in action</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="team collaboration"></div>
+                                <div class="gallery-placeholder">team collaboration</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="ingredient preparation"></div>
+                                <div class="gallery-placeholder">ingredient preparation</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="plating perfection"></div>
+                                <div class="gallery-placeholder">plating perfection</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="daily setup"></div>
+                                <div class="gallery-placeholder">daily setup</div>
                             </div>
                             <div class="swiper-slide">
-                                <div class="gallery-placeholder" data-title="creative process"></div>
+                                <div class="gallery-placeholder">creative process</div>
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -1835,621 +1698,633 @@
                         <a href="#">twitter</a>
                         <a href="#">tiktok</a>
                     </div>
+                    <div style="margin-top: 40px;">
+                        <p><strong>newsletter signup</strong></p>
+                        <p>be the first to know about special events, new menu items, and exclusive offers.</p>
+                        <div style="margin-top: 20px;">
+                            <input type="email" placeholder="enter your email" style="padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 5px; font-family: Georgia, serif; color: #000;">
+                            <button style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif; text-transform: lowercase;">subscribe</button>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">questions? email us at inquiry@door64atl.com</p>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
-        // ============ ENHANCED MOBILE-FIRST AUDIO SYSTEM ============
-        (function() {
-            'use strict';
+        // Dynamic viewport height calculation for mobile
+        function setVH() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(setVH, 100);
+        });
+
+        // ENHANCED AUDIO SYSTEM WITH IMMEDIATE AUTO-PLAY
+        let audioPlaying = false;
+        let audioLoaded = false;
+        let backgroundAudio;
+        let splashAudioButton;
+        let navAudioButton;
+        let isOnMainSite = false;
+
+        // Initialize audio on page load with immediate play
+        function initAudio() {
+            console.log('🎵 Initializing immediate audio system...');
             
-            let audioPlaying = false;
-            let audioLoaded = false;
-            let audioEnabled = false;
-            let backgroundAudio;
-            let audioContext;
-            let currentSlide = 0;
-            let slideInterval = null;
-            let autoPlayAttempted = false;
+            backgroundAudio = document.getElementById('backgroundAudio');
+            splashAudioButton = document.getElementById('splashAudioToggle');
+            navAudioButton = document.querySelector('.audio-toggle');
             
-            // Enhanced viewport height for better mobile support
-            function setVH() {
-                let vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            if (!backgroundAudio) {
+                console.error('❌ Audio element not found');
+                return;
             }
-            setVH();
-            window.addEventListener('resize', setVH);
-            window.addEventListener('orientationchange', () => {
-                setTimeout(setVH, 100);
+            
+            // Set up audio properties for immediate play
+            backgroundAudio.volume = 0.5;
+            backgroundAudio.loop = true;
+            backgroundAudio.preload = "auto";
+            backgroundAudio.muted = false;
+            backgroundAudio.autoplay = true;
+            
+            // iOS specific attributes
+            backgroundAudio.setAttribute('playsinline', 'true');
+            backgroundAudio.setAttribute('webkit-playsinline', 'true');
+            
+            // Immediate play attempt
+            const immediatePlay = () => {
+                backgroundAudio.play().then(() => {
+                    audioPlaying = true;
+                    audioLoaded = true;
+                    console.log('🎉 Audio started immediately!');
+                    updateAudioButtons();
+                }).catch(() => {
+                    // Try muted approach for iOS
+                    backgroundAudio.muted = true;
+                    backgroundAudio.play().then(() => {
+                        setTimeout(() => {
+                            backgroundAudio.muted = false;
+                            audioPlaying = true;
+                            audioLoaded = true;
+                            updateAudioButtons();
+                        }, 100);
+                    }).catch(console.error);
+                });
+            };
+            
+            // Audio event listeners
+            backgroundAudio.addEventListener('canplay', () => {
+                audioLoaded = true;
+                immediatePlay();
             });
             
-            // ============ AUDIO STATUS SYSTEM - SILENT MODE ============
-            function showAudioStatus(message) {
-                // Silent mode - no status messages
-                console.log('🎵 Audio Status:', message);
-            }
+            backgroundAudio.addEventListener('loadeddata', () => {
+                audioLoaded = true;
+                immediatePlay();
+            });
             
-            function updateAudioButtons() {
-                const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
-                buttons.forEach(btn => {
-                    btn.classList.remove('loading');
-                    if (audioPlaying) {
-                        btn.textContent = '⏸';
-                        btn.classList.add('playing');
-                    } else {
-                        btn.textContent = '♪';
-                        btn.classList.remove('playing');
-                    }
-                });
-                
-                // Update beat sync
-                if (window.toggleBeatSync) {
-                    window.toggleBeatSync();
-                }
-            }
-            
-            function setLoadingState() {
-                const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
-                buttons.forEach(btn => {
-                    btn.textContent = '⟳';
-                    btn.classList.add('loading');
-                    btn.classList.remove('playing');
-                });
-            }
-            
-            // ============ ENHANCED AUTO-PLAY SYSTEM ============
-            async function createAudioContext() {
-                if (!audioContext) {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    if (AudioContext) {
-                        audioContext = new AudioContext();
-                        console.log('Audio context created');
-                    }
-                }
-                
-                if (audioContext && audioContext.state === 'suspended') {
-                    try {
-                        await audioContext.resume();
-                        console.log('Audio context resumed');
-                    } catch (e) {
-                        console.log('Failed to resume audio context');
-                    }
-                }
-            }
-            
-            async function attemptAudioPlay() {
-                if (!backgroundAudio || audioEnabled) return false;
-                
-                try {
-                    setLoadingState();
-                    
-                    // Create audio context for iOS
-                    await createAudioContext();
-                    
-                    // Reset audio
+            backgroundAudio.addEventListener('ended', () => {
+                if (audioPlaying) {
                     backgroundAudio.currentTime = 0;
-                    backgroundAudio.volume = 0;
-                    backgroundAudio.muted = false;
-                    
-                    // Try to play
-                    const playPromise = backgroundAudio.play();
-                    await playPromise;
-                    
-                    // Smooth volume fade-in
-                    const fadeInInterval = setInterval(() => {
-                        if (backgroundAudio.volume < 0.4) {
-                            backgroundAudio.volume = Math.min(0.4, backgroundAudio.volume + 0.02);
-                        } else {
-                            clearInterval(fadeInInterval);
-                        }
-                    }, 50);
-                    
+                    backgroundAudio.play().catch(console.error);
+                }
+            });
+            
+            backgroundAudio.addEventListener('play', () => {
+                audioPlaying = true;
+                updateAudioButtons();
+            });
+
+            backgroundAudio.addEventListener('pause', () => {
+                audioPlaying = false;
+                updateAudioButtons();
+            });
+            
+            // Load and immediate play attempts
+            backgroundAudio.load();
+            immediatePlay();
+            
+            // Multiple attempts
+            setTimeout(immediatePlay, 10);
+            setTimeout(immediatePlay, 50);
+            setTimeout(immediatePlay, 100);
+            setTimeout(immediatePlay, 200);
+        }
+
+        // Start audio on user interaction
+        function startAudioOnInteraction() {
+            if (!backgroundAudio || audioPlaying) {
+                return;
+            }
+            
+            console.log('🎵 Starting audio via user interaction');
+            backgroundAudio.muted = false;
+            backgroundAudio.volume = 0.5;
+            
+            const playPromise = backgroundAudio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
                     audioPlaying = true;
-                    audioEnabled = true;
+                    console.log('✅ Audio started via interaction!');
                     updateAudioButtons();
-                    showAudioStatus('audio playing successfully');
-                    return true;
-                    
-                } catch (error) {
-                    console.log('Auto-play failed:', error.message);
-                    updateAudioButtons();
-                    return false;
-                }
-            }
-            
-            // ============ AGGRESSIVE AUTO-PLAY ON SPLASH LOAD ============
-            function initAudio() {
-                backgroundAudio = document.getElementById('backgroundAudio');
-                if (!backgroundAudio) {
-                    console.log('Audio element not found');
-                    return;
-                }
-                
-                // Configure for aggressive auto-play
-                backgroundAudio.volume = 0;
-                backgroundAudio.loop = true;
-                backgroundAudio.muted = true; // Start muted for browser compliance
-                backgroundAudio.preload = 'auto';
-                
-                // Immediate load attempt
-                backgroundAudio.load();
-                
-                // Audio event listeners
-                backgroundAudio.addEventListener('loadstart', () => {
-                    showAudioStatus('loading audio...');
-                });
-                
-                backgroundAudio.addEventListener('canplay', () => {
-                    audioLoaded = true;
-                    showAudioStatus('audio ready');
-                    
-                    // IMMEDIATE AUTO-PLAY ATTEMPT
-                    if (!autoPlayAttempted) {
-                        autoPlayAttempted = true;
-                        setTimeout(() => attemptAudioPlay(), 100);
-                    }
-                });
-                
-                backgroundAudio.addEventListener('canplaythrough', () => {
-                    audioLoaded = true;
-                    showAudioStatus('audio fully loaded');
-                    
-                    // Additional auto-play attempts
-                    if (!audioEnabled) {
-                        setTimeout(() => attemptAudioPlay(), 200);
-                        setTimeout(() => attemptAudioPlay(), 500);
-                    }
-                });
-                
-                backgroundAudio.addEventListener('play', () => {
-                    audioPlaying = true;
-                    updateAudioButtons();
-                    showAudioStatus('♪ music playing');
-                });
-                
-                backgroundAudio.addEventListener('pause', () => {
-                    audioPlaying = false;
-                    updateAudioButtons();
-                    showAudioStatus('music paused');
-                });
-                
-                backgroundAudio.addEventListener('error', (e) => {
-                    console.error('Audio error:', e);
-                    showAudioStatus('audio error - trying fallback');
-                    updateAudioButtons();
-                });
-                
-                // MULTIPLE AUTO-PLAY TRIGGERS ON SPLASH LOAD
-                const autoPlayTriggers = [
-                    () => attemptAudioPlay(), // Immediate
-                    () => setTimeout(() => attemptAudioPlay(), 1),
-                    () => setTimeout(() => attemptAudioPlay(), 10),
-                    () => setTimeout(() => attemptAudioPlay(), 50),
-                    () => setTimeout(() => attemptAudioPlay(), 100),
-                    () => setTimeout(() => attemptAudioPlay(), 200),
-                    () => setTimeout(() => attemptAudioPlay(), 500),
-                    () => setTimeout(() => attemptAudioPlay(), 1000)
-                ];
-                
-                // Execute all triggers
-                autoPlayTriggers.forEach(trigger => trigger());
-                
-                // Set up interaction handlers for stubborn browsers
-                const enableAudioOnInteraction = async (event) => {
-                    if (!audioEnabled) {
-                        console.log('🎵 Enabling audio on interaction:', event.type);
-                        await createAudioContext();
-                        if (audioLoaded) {
-                            await attemptAudioPlay();
-                        }
-                    }
-                };
-                
-                // Comprehensive interaction listeners
-                const events = ['touchstart', 'touchend', 'mousedown', 'mouseup', 'click', 'keydown', 'scroll'];
-                events.forEach(event => {
-                    document.addEventListener(event, enableAudioOnInteraction, { once: true, passive: true });
-                });
-                
-                // Special handling for splash page click
-                document.addEventListener('DOMContentLoaded', () => {
-                    const splash = document.getElementById('splashPage');
-                    if (splash) {
-                        splash.addEventListener('click', enableAudioOnInteraction, { once: true });
-                    }
+                }).catch((error) => {
+                    console.error('❌ Audio start failed:', error);
                 });
             }
+        }
+
+        // Update audio button states
+        function updateAudioButtons() {
+            const buttons = [splashAudioButton, navAudioButton].filter(btn => btn);
             
-            // ============ AUDIO TOGGLE FUNCTION ============
-            window.toggleAudio = async function(event) {
-                if (event) event.stopPropagation();
-                
-                if (!backgroundAudio) {
-                    console.log('Audio not available');
-                    return;
-                }
-                
-                if (!audioLoaded) {
-                    console.log('Audio still loading...');
-                    setLoadingState();
-                    return;
-                }
-                
-                try {
-                    if (audioPlaying) {
-                        backgroundAudio.pause();
-                        audioEnabled = false;
-                        console.log('Music paused');
-                    } else {
-                        await attemptAudioPlay();
-                    }
-                } catch (error) {
-                    console.error('Toggle audio error:', error);
-                }
-            };
-            
-            // ============ ENHANCED SLIDESHOW SYSTEM ============
-            function startSlideshow() {
-                const slides = document.querySelectorAll('.gallery-slider .slide');
-                if (slides.length === 0) return;
-                
-                if (slideInterval) clearInterval(slideInterval);
-                
-                currentSlide = 0;
-                slides.forEach((slide, index) => {
-                    slide.classList.toggle('active', index === 0);
-                });
-                
-                slideInterval = setInterval(() => {
-                    slides[currentSlide].classList.remove('active');
-                    currentSlide = (currentSlide + 1) % slides.length;
-                    slides[currentSlide].classList.add('active');
-                }, 3500); // Original timing
-                
-                console.log('🎬 Slideshow started');
-            }
-            
-            function stopSlideshow() {
-                if (slideInterval) {
-                    clearInterval(slideInterval);
-                    slideInterval = null;
-                    console.log('🎬 Slideshow stopped');
-                }
-            }
-            
-            // ============ NAVIGATION SYSTEM ============
-            window.showSection = function(sectionId) {
-                document.querySelectorAll('.section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                
-                const targetSection = document.getElementById(sectionId);
-                if (targetSection) {
-                    targetSection.classList.add('active');
-                }
-                
-                if (sectionId === 'landing') {
-                    setTimeout(startSlideshow, 100);
+            buttons.forEach(button => {
+                if (audioPlaying) {
+                    button.innerText = '⏸';
+                    button.classList.add('playing');
+                    button.title = 'Pause QUIETSTORM';
                 } else {
-                    stopSlideshow();
+                    button.innerText = '♪';
+                    button.classList.remove('playing');
+                    button.title = 'Play QUIETSTORM';
                 }
-                
-                const navLinks = document.getElementById('navLinks');
-                if (navLinks) {
-                    navLinks.classList.remove('active');
-                }
-            };
+            });
+        }
+
+        // Toggle audio function
+        function toggleAudio(event) {
+            event.stopPropagation();
             
-            window.toggleMobileMenu = function() {
-                const navLinks = document.getElementById('navLinks');
-                if (navLinks) {
-                    navLinks.classList.toggle('active');
-                }
-            };
-            
-            // ============ ENTER MAIN SITE ============
-            function enterMainSite() {
-                const splashPage = document.getElementById('splashPage');
-                const mainSite = document.getElementById('mainSite');
-                
-                // Final audio attempt when entering main site
-                if (!audioEnabled && backgroundAudio && audioLoaded) {
-                    attemptAudioPlay();
-                }
-                
-                splashPage.classList.add('hidden');
-                
-                setTimeout(() => {
-                    splashPage.style.display = 'none';
-                    mainSite.classList.add('active');
-                    
-                    // Initialize Swipers
-                    initializeSwipers();
-                    
-                    // Start slideshow
-                    setTimeout(startSlideshow, 200);
-                }, 1200);
+            if (!backgroundAudio) {
+                console.error('❌ No audio element');
+                return;
             }
             
-            // ============ SWIPER INITIALIZATION ============
-            // ============ BEAT-SYNCED SWIPER INITIALIZATION ============
-            function initializeSwipers() {
-                if (typeof Swiper === 'undefined') {
-                    console.log('⚠️ Swiper not loaded');
+            if (audioPlaying) {
+                backgroundAudio.pause();
+                audioPlaying = false;
+                console.log('⏸ Audio paused');
+            } else {
+                startAudioOnInteraction();
+            }
+            
+            updateAudioButtons();
+        }
+
+        // Set up enhanced interaction triggers
+        function setupInteractionTriggers() {
+            console.log('📱 Setting up enhanced interaction triggers...');
+            
+            const splashPage = document.getElementById('splashPage');
+            if (!splashPage) return;
+            
+            // Immediate triggers for various interaction types
+            const interactionEvents = ['click', 'touchstart', 'touchend', 'mousemove', 'keydown', 'focus'];
+            
+            interactionEvents.forEach(eventType => {
+                const handler = (e) => {
+                    startAudioOnInteraction();
+                    document.removeEventListener(eventType, handler);
+                };
+                document.addEventListener(eventType, handler, { once: true, passive: true });
+            });
+            
+            // Splash page specific triggers
+            splashPage.addEventListener('mouseenter', startAudioOnInteraction, { once: true });
+            splashPage.addEventListener('touchmove', startAudioOnInteraction, { once: true, passive: true });
+            window.addEventListener('focus', startAudioOnInteraction, { once: true });
+            
+            // iOS specific triggers
+            if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                document.addEventListener('devicemotion', startAudioOnInteraction, { once: true });
+                document.addEventListener('deviceorientation', startAudioOnInteraction, { once: true });
+            }
+        }
+
+        // FIXED Background gallery slider functionality
+        let slideInterval = null;
+        let currentSlide = 0;
+        let slidesPaused = false;
+
+        function startBackgroundSlides() {
+            const slides = document.querySelectorAll('.slide');
+            if (slides.length === 0) return;
+            
+            // Clear any existing interval first
+            stopBackgroundSlides();
+            
+            // Reset to first slide with immediate visibility
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === 0) {
+                    slide.classList.add('active');
+                }
+            });
+            currentSlide = 0;
+            slidesPaused = false;
+            
+            console.log('🎬 Starting background slides');
+            
+            // Start the slide rotation with proper error handling
+            slideInterval = setInterval(() => {
+                if (slidesPaused) return;
+                
+                const slides = document.querySelectorAll('.slide');
+                if (slides.length === 0) {
+                    stopBackgroundSlides();
                     return;
                 }
                 
-                try {
-                    // Landing Page Swiper - Auto Height with Beat Sync
-                    const landingSwiper = new Swiper('#landing-swiper', {
-                        slidesPerView: 1,
-                        spaceBetween: 0,
-                        loop: true,
-                        autoHeight: true,
-                        centeredSlides: true,
-                        autoplay: {
-                            delay: 4800, // Synced to music beat (4.8 seconds = 125 BPM)
-                            disableOnInteraction: false,
-                        },
-                        speed: 600,
-                        effect: 'slide',
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                            dynamicBullets: true,
-                        },
-                        navigation: {
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                        },
-                        on: {
-                            init: function () {
-                                this.updateAutoHeight(0);
-                                // Add beat sync when audio is playing
-                                if (audioPlaying) {
-                                    document.querySelector('.landing-swiper').classList.add('beat-sync');
-                                }
-                            },
-                            slideChangeTransitionStart: function () {
-                                this.updateAutoHeight(400);
-                            },
-                            slideChangeTransitionEnd: function () {
-                                // Ensure height is properly set
-                                setTimeout(() => this.updateAutoHeight(0), 100);
-                            }
-                        }
-                    });
+                // Remove active from current slide
+                slides[currentSlide].classList.remove('active');
+                
+                // Move to next slide
+                currentSlide = (currentSlide + 1) % slides.length;
+                
+                // Add active to new slide
+                slides[currentSlide].classList.add('active');
+                
+                console.log(`🎬 Slide ${currentSlide + 1}/${slides.length} active`);
+            }, 3500);
+        }
 
-                    // Beat synchronization
-                    function toggleBeatSync() {
-                        const swiperEl = document.querySelector('.landing-swiper');
-                        if (audioPlaying) {
-                            swiperEl.classList.add('beat-sync');
-                        } else {
-                            swiperEl.classList.remove('beat-sync');
-                        }
-                    }
-
-                    // Update beat sync when audio state changes
-                    window.landingSwiper = landingSwiper;
-                    window.toggleBeatSync = toggleBeatSync;
-
-                    // Events Swiper
-                    new Swiper('#events-swiper', {
-                        slidesPerView: 1,
-                        spaceBetween: 20,
-                        loop: true,
-                        autoplay: {
-                            delay: 5100,
-                            disableOnInteraction: false,
-                        },
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                        },
-                        breakpoints: {
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                        },
-                    });
-
-                    // Food Swiper
-                    new Swiper('#food-swiper', {
-                        slidesPerView: 1,
-                        spaceBetween: 20,
-                        loop: true,
-                        autoplay: {
-                            delay: 4300,
-                            disableOnInteraction: false,
-                        },
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                        },
-                        breakpoints: {
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                        },
-                    });
-
-                    // Behind the Scenes Swiper
-                    new Swiper('#bts-swiper', {
-                        slidesPerView: 1,
-                        spaceBetween: 20,
-                        loop: true,
-                        autoplay: {
-                            delay: 6000,
-                            disableOnInteraction: false,
-                        },
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                        },
-                        breakpoints: {
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                        },
-                    });
-                    
-                    console.log('✅ All Swipers initialized successfully');
-                } catch (error) {
-                    console.error('❌ Swiper initialization error:', error);
-                }
+        function stopBackgroundSlides() {
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+                slidesPaused = true;
+                console.log('⏸ Background slides stopped');
             }
+        }
 
-                    // Events Swiper
-                    new Swiper('#events-swiper', {
-                        slidesPerView: 1,
-                        spaceBetween: 20,
-                        loop: true,
-                        autoplay: {
-                            delay: 5100,
-                            disableOnInteraction: false,
-                        },
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                        },
-                        breakpoints: {
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                        },
-                    });
+        function pauseBackgroundSlides() {
+            slidesPaused = true;
+            console.log('⏸ Background slides paused');
+        }
 
-                    // Food Swiper
-                    new Swiper('#food-swiper', {
-                        slidesPerView: 1,
-                        spaceBetween: 20,
-                        loop: true,
-                        autoplay: {
-                            delay: 4300,
-                            disableOnInteraction: false,
-                        },
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                        },
-                        breakpoints: {
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                        },
-                    });
+        function resumeBackgroundSlides() {
+            slidesPaused = false;
+            console.log('▶️ Background slides resumed');
+        }
 
-                    // Behind the Scenes Swiper
-                    new Swiper('#bts-swiper', {
-                        slidesPerView: 1,
-                        spaceBetween: 20,
-                        loop: true,
-                        autoplay: {
-                            delay: 6000,
-                            disableOnInteraction: false,
-                        },
-                        pagination: {
-                            el: '.swiper-pagination',
-                            clickable: true,
-                        },
-                        navigation: {
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                        },
-                        breakpoints: {
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                        },
-                    });
-                    
-                    console.log('✅ All Swipers initialized successfully');
-                } catch (error) {
-                    console.error('❌ Swiper initialization error:', error);
-                }
+        // Enter main site function
+        function enterMainSite() {
+            const splashPage = document.getElementById('splashPage');
+            const mainSite = document.getElementById('mainSite');
+            
+            // Ensure audio starts if not already playing
+            if (!audioPlaying) {
+                startAudioOnInteraction();
             }
             
-            // ============ INITIALIZATION ============
-            function init() {
-                console.log('🚀 Initializing Door 64...');
+            splashPage.classList.add('hidden');
+            
+            setTimeout(() => {
+                splashPage.style.display = 'none';
+                mainSite.classList.add('active');
+                isOnMainSite = true;
                 
-                // Initialize audio system FIRST
-                initAudio();
+                // Initialize main site features
+                initializeSwiper();
+                showSection('landing');
                 
-                // Splash page interactions
-                const splashPage = document.getElementById('splashPage');
-                if (splashPage) {
-                    splashPage.addEventListener('click', function(e) {
-                        if (!e.target.closest('.splash-audio-toggle')) {
-                            enterMainSite();
-                        }
-                    });
-                    
-                    splashPage.addEventListener('touchend', function(e) {
-                        if (!e.target.closest('.splash-audio-toggle')) {
-                            e.preventDefault();
-                            enterMainSite();
-                        }
-                    });
-                }
-                
-                // Form submission
-                const form = document.querySelector('.reservation-form form');
-                if (form) {
-                    form.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        alert('Thank you for your reservation request! We will contact you within 24 hours to confirm.');
-                    });
-                }
-                
-                // Page visibility handling
-                document.addEventListener('visibilitychange', function() {
-                    if (document.hidden) {
-                        stopSlideshow();
-                    } else if (document.getElementById('landing')?.classList.contains('active')) {
-                        setTimeout(startSlideshow, 100);
-                    }
-                });
-                
-                // Window focus/blur for audio management
-                window.addEventListener('focus', () => {
-                    if (audioEnabled && !audioPlaying) {
-                        attemptAudioPlay();
-                    }
-                });
-                
-                console.log('✅ Door 64 initialized successfully');
+                console.log('🏠 Entered main site');
+            }, 1200);
+        }
+
+        // FIXED Show section function with proper slide management
+        function showSection(sectionId) {
+            console.log(`📍 Showing section: ${sectionId}`);
+            
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
             }
             
-            // ============ MULTIPLE INITIALIZATION ATTEMPTS ============
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
+            // Handle background slides with proper timing
+            if (sectionId === 'landing') {
+                // Small delay to ensure DOM is ready
+                setTimeout(() => {
+                    startBackgroundSlides();
+                }, 150);
             } else {
-                init();
+                stopBackgroundSlides();
             }
             
-            // Additional init for iOS
-            window.addEventListener('load', init);
-            setTimeout(init, 100);
+            // Close mobile menu
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks) {
+                navLinks.classList.remove('active');
+                
+                // Reset mobile menu animation
+                const mobileMenu = document.querySelector('.mobile-menu');
+                if (mobileMenu) {
+                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    const spans = mobileMenu.querySelectorAll('span');
+                    spans.forEach(span => {
+                        span.style.transform = '';
+                        span.style.opacity = '';
+                    });
+                }
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenu = document.querySelector('.mobile-menu');
             
-        })();
+            if (navLinks && mobileMenu) {
+                const isActive = navLinks.classList.contains('active');
+                
+                if (isActive) {
+                    navLinks.classList.remove('active');
+                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    const spans = mobileMenu.querySelectorAll('span');
+                    spans.forEach(span => {
+                        span.style.transform = '';
+                        span.style.opacity = '';
+                    });
+                } else {
+                    navLinks.classList.add('active');
+                    mobileMenu.setAttribute('aria-expanded', 'true');
+                    const spans = mobileMenu.querySelectorAll('span');
+                    if (spans.length >= 3) {
+                        spans[0].style.transform = 'rotate(45deg) translateY(7px)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'rotate(-45deg) translateY(-7px)';
+                    }
+                }
+                
+                // Haptic feedback on supported devices
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }
+        }
+
+        // Click outside to close mobile menu
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('.nav');
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            if (nav && navLinks && !nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                
+                if (mobileMenu) {
+                    mobileMenu.setAttribute('aria-expanded', 'false');
+                    const spans = mobileMenu.querySelectorAll('span');
+                    spans.forEach(span => {
+                        span.style.transform = '';
+                        span.style.opacity = '';
+                    });
+                }
+            }
+        });
+
+        // Enhanced splash page interactions
+        document.getElementById('splashPage').addEventListener('click', function(event) {
+            if (event.target.closest('.splash-audio-toggle')) return;
+            
+            startAudioOnInteraction();
+            enterMainSite();
+        });
+
+        document.getElementById('splashPage').addEventListener('touchend', function(event) {
+            if (event.target.closest('.splash-audio-toggle')) return;
+            
+            event.preventDefault();
+            startAudioOnInteraction();
+            enterMainSite();
+        });
+
+        // Enhanced keyboard support
+        document.addEventListener('keydown', function(event) {
+            if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
+                event.preventDefault();
+                startAudioOnInteraction();
+                enterMainSite();
+            }
+        });
+
+        // Form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.reservation-form form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Thank you for your reservation request! We will contact you within 24 hours to confirm.');
+                });
+            }
+        });
+
+        // Initialize Swiper galleries
+        function initializeSwiper() {
+            // Landing Page Swiper
+            new Swiper('#landing-swiper', {
+                slidesPerView: 'auto',
+                spaceBetween: 0,
+                loop: true,
+                autoplay: {
+                    delay: 0,
+                    disableOnInteraction: false,
+                },
+                speed: 2400,
+                allowTouchMove: true,
+                freeMode: true,
+                freeModeMomentum: false,
+            });
+
+            // Events Swiper
+            new Swiper('#events-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 5100,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+
+            // Food Swiper
+            new Swiper('#food-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 4300,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+
+            // Behind the Scenes Swiper
+            new Swiper('#bts-swiper', {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 6000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 30,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+        }
+
+        // Initialize everything when page loads
+        window.addEventListener('load', function() {
+            console.log('📄 Page loaded - initializing Door 64...');
+            
+            // Initialize enhanced audio system
+            initAudio();
+            
+            // Set up enhanced interaction triggers
+            setupInteractionTriggers();
+            
+            // Device detection and optimizations
+            const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                console.log('📱 Mobile device detected');
+                document.body.classList.add('mobile-device');
+                
+                if (isIOS) {
+                    console.log('🍎 iOS device detected - applying optimizations');
+                    document.body.classList.add('ios-device');
+                    
+                    // iOS specific audio optimizations
+                    if (backgroundAudio) {
+                        backgroundAudio.setAttribute('playsinline', 'true');
+                        backgroundAudio.setAttribute('webkit-playsinline', 'true');
+                    }
+                }
+                
+                // Enhanced iPhone specific
+                if (/iPhone/.test(navigator.userAgent)) {
+                    document.body.classList.add('iphone-device');
+                    console.log('📱 iPhone specific optimizations applied');
+                }
+                
+                // Prevent zoom on form inputs
+                const inputs = document.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('focus', function() {
+                        if (parseInt(window.getComputedStyle(this).fontSize) < 16) {
+                            this.style.fontSize = '16px';
+                        }
+                    });
+                });
+                
+                // Enhanced touch feedback
+                const touchElements = document.querySelectorAll('.landing-link, .space-item, .menu-item, .event-item');
+                touchElements.forEach(element => {
+                    element.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    }, { passive: true });
+                    
+                    element.addEventListener('touchend', function() {
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                    }, { passive: true });
+                });
+            }
+            
+            console.log('✅ Door 64 initialization complete');
+        });
+
+        // Page visibility change handler to manage audio
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                pauseBackgroundSlides();
+            } else {
+                if (document.getElementById('landing').classList.contains('active')) {
+                    resumeBackgroundSlides();
+                }
+                
+                // Resume audio if it was playing
+                if (audioPlaying && backgroundAudio && backgroundAudio.paused) {
+                    backgroundAudio.play().catch(console.error);
+                }
+            }
+        });
     </script>
 
     <!-- Swiper JS -->
