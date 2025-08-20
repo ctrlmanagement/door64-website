@@ -1340,7 +1340,7 @@
                         <li><a href="#" onclick="showSection('events')">what to do</a></li>
                         <li><a href="#" onclick="showSection('social')">check on us</a></li>
                         <li><a href="#" onclick="showSection('reservations')">come see us</a></li>
-                        <li><a href="#" onclick="showSection('contact')">hit us</a></li>
+                        <li><a href="#" onclick="showSection('contact')">hit us up</a></li>
                     </ul>
                 </div>
                 <div class="mobile-menu" onclick="toggleMobileMenu()">
@@ -1364,16 +1364,9 @@
                 
                 <div class="landing-links">
                     <div class="landing-link">
-                        <h3>what to do</h3>
-                        <div class="sub-links">
-                            <a href="#" onclick="showSection('reservations')">make reservation</a>
-                            <a href="#" onclick="showSection('events')">upcoming events</a>
-                        </div>
-                    </div>
-                    
-                    <div class="landing-link">
                         <h3>space</h3>
                         <div class="sub-links">
+                            <a href="#" onclick="showSection('space')">venue</a>
                             <a href="#" onclick="showSection('kitchen')">in the kitchen</a>
                             <a href="#" onclick="showSection('bar')">at the bar</a>
                         </div>
@@ -1384,6 +1377,14 @@
                         <div class="sub-links">
                             <a href="#" onclick="showSection('gallery')">who was here</a>
                             <a href="#" onclick="showSection('social')">check on us</a>
+                        </div>
+                    </div>
+                    
+                    <div class="landing-link">
+                        <h3>what to do</h3>
+                        <div class="sub-links">
+                            <a href="#" onclick="showSection('reservations')">make reservation</a>
+                            <a href="#" onclick="showSection('events')">upcoming events</a>
                         </div>
                     </div>
                 </div>
@@ -1500,11 +1501,6 @@
                         <h3>signature cocktails</h3>
                         <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
                         <div class="price">$16 - $22</div>
-                    </div>
-                    <div class="menu-item">
-                        <h3>classic collection</h3>
-                        <p>timeless cocktails executed with precision using the finest spirits and traditional methods.</p>
-                        <div class="price">$14 - $18</div>
                     </div>
                     <div class="menu-item">
                         <h3>rare spirits</h3>
@@ -1729,7 +1725,7 @@
         <!-- Contact Section -->
         <section id="contact" class="section">
             <div class="container">
-                <h2 class="section-title">hit us</h2>
+                <h2 class="section-title">hit us up</h2>
                 <div class="contact-info">
                     <div class="contact-card">
                         <h3>location</h3>
@@ -2033,14 +2029,11 @@
                 initializeSwiper();
                 showSection('landing');
                 
-                // Enable trackpad/wheel scrolling
-                window.addEventListener('wheel', handleWheelScroll, { passive: false });
-                
                 console.log('🏠 Entered main site');
             }, 1200);
         }
 
-        // FIXED Show section function with proper slide management
+        // Show section function with proper slide management
         function showSection(sectionId) {
             console.log(`📍 Showing section: ${sectionId}`);
             
@@ -2054,9 +2047,6 @@
             if (targetSection) {
                 targetSection.classList.add('active');
             }
-            
-            // Update current section index for trackpad scrolling
-            currentSectionIndex = sections.indexOf(sectionId);
             
             // Handle background slides with proper timing
             if (sectionId === 'landing') {
@@ -2085,76 +2075,6 @@
                 }
             }
         }
-
-        // Natural trackpad/wheel scrolling functionality - FIXED ORDER
-        const sections = ['landing', 'space', 'kitchen', 'bar', 'gallery', 'events', 'social', 'reservations', 'contact'];
-        let currentSectionIndex = 0;
-        let isScrolling = false;
-
-        function scrollToSection(direction) {
-            if (!isOnMainSite || isScrolling) return;
-            
-            isScrolling = true;
-            
-            if (direction === 'up') {
-                currentSectionIndex = currentSectionIndex > 0 ? currentSectionIndex - 1 : sections.length - 1;
-            } else if (direction === 'down') {
-                currentSectionIndex = currentSectionIndex < sections.length - 1 ? currentSectionIndex + 1 : 0;
-            }
-            
-            const targetSection = sections[currentSectionIndex];
-            showSection(targetSection);
-            
-            // Haptic feedback on supported devices
-            if (navigator.vibrate) {
-                navigator.vibrate(30);
-            }
-            
-            console.log(`📜 Scrolled ${direction} to: ${targetSection}`);
-            
-            // Reset scrolling flag after animation
-            setTimeout(() => {
-                isScrolling = false;
-            }, 800);
-        }
-
-        // Trackpad/wheel scroll event handler
-        function handleWheelScroll(event) {
-            if (!isOnMainSite || isScrolling) return;
-            
-            event.preventDefault();
-            
-            // Determine scroll direction with threshold
-            const delta = event.deltaY;
-            const threshold = 10;
-            
-            if (Math.abs(delta) > threshold) {
-                if (delta > 0) {
-                    scrollToSection('down');
-                } else {
-                    scrollToSection('up');
-                }
-            }
-        }
-
-        // Keyboard navigation for sections
-        document.addEventListener('keydown', function(event) {
-            if (isOnMainSite && !isScrolling) {
-                if (event.key === 'ArrowUp' || event.key === 'PageUp') {
-                    event.preventDefault();
-                    scrollToSection('up');
-                } else if (event.key === 'ArrowDown' || event.key === 'PageDown') {
-                    event.preventDefault();
-                    scrollToSection('down');
-                }
-            }
-            
-            if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
-                event.preventDefault();
-                startAudioOnInteraction();
-                enterMainSite();
-            }
-        });
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -2237,7 +2157,7 @@
             }
         });
 
-        // Initialize Swiper galleries - FIXED
+        // Initialize Swiper galleries
         function initializeSwiper() {
             // Landing Page Swiper
             new Swiper('#landing-swiper', {
