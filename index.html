@@ -216,24 +216,27 @@
 
         .nav-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0;
             width: 100%;
         }
 
         .nav-center {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             flex: 0 0 auto;
+            margin-left: 20px;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
             gap: 25px;
+            margin-left: 0;
+            padding-left: 0;
         }
 
         /* Audio Toggle Button - Updated colors */
@@ -1013,23 +1016,13 @@
             .nav-center {
                 order: -1;
                 margin-right: 15px;
+                margin-left: max(15px, calc(var(--safe-area-left) + 5px));
             }
 
             .audio-toggle {
                 width: 40px;
                 height: 40px;
                 font-size: 16px;
-            }
-
-            .scroll-nav {
-                right: 15px;
-                gap: 8px;
-            }
-
-            .scroll-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
             }
 
             .nav-links {
@@ -1340,12 +1333,6 @@
 
     <!-- MAIN SITE -->
     <div class="main-site" id="mainSite">
-        <!-- Scroll Navigation -->
-        <div class="scroll-nav" id="scrollNav">
-            <button class="scroll-btn" onclick="scrollToSection('up')" title="Previous Section">↑</button>
-            <button class="scroll-btn" onclick="scrollToSection('down')" title="Next Section">↓</button>
-        </div>
-
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
@@ -1363,7 +1350,7 @@
                     <li><a href="#" onclick="showSection('reservations')">come see us</a></li>
                     <li><a href="#" onclick="showSection('contact')">hit us</a></li>
                 </ul>
-                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                <div class="mobile-menu" onclick="toggleMobileMenu()">>
                     <span></span>
                     <span></span>
                     <span></span>
@@ -2052,7 +2039,9 @@
                 // Initialize main site features
                 initializeSwiper();
                 showSection('landing');
-                updateScrollNavigation();
+                
+                // Enable trackpad/wheel scrolling
+                window.addEventListener('wheel', handleWheelScroll, { passive: false });
                 
                 console.log('🏠 Entered main site');
             }, 1200);
@@ -2073,6 +2062,9 @@
                 targetSection.classList.add('active');
             }
             
+            // Update current section index for trackpad scrolling
+            currentSectionIndex = sections.indexOf(sectionId);
+            
             // Handle background slides with proper timing
             if (sectionId === 'landing') {
                 // Small delay to ensure DOM is ready
@@ -2082,9 +2074,6 @@
             } else {
                 stopBackgroundSlides();
             }
-            
-            // Show/hide scroll navigation
-            updateScrollNavigation();
             
             // Close mobile menu
             const navLinks = document.getElementById('navLinks');
@@ -2104,25 +2093,15 @@
             }
         }
 
-        // Scroll navigation functionality
+        // Natural trackpad/wheel scrolling functionality
         const sections = ['landing', 'space', 'kitchen', 'bar', 'gallery', 'events', 'reservations', 'contact', 'social'];
         let currentSectionIndex = 0;
-
-        function updateScrollNavigation() {
-            const scrollNav = document.getElementById('scrollNav');
-            if (scrollNav && isOnMainSite) {
-                scrollNav.classList.add('active');
-                
-                // Update current section index
-                const activeSection = document.querySelector('.section.active');
-                if (activeSection) {
-                    currentSectionIndex = sections.indexOf(activeSection.id);
-                }
-            }
-        }
+        let isScrolling = false;
 
         function scrollToSection(direction) {
-            if (!isOnMainSite) return;
+            if (!isOnMainSite || isScrolling) return;
+            
+            isScrolling = true;
             
             if (direction === 'up') {
                 currentSectionIndex = currentSectionIndex > 0 ? currentSectionIndex - 1 : sections.length - 1;
@@ -2139,11 +2118,35 @@
             }
             
             console.log(`📜 Scrolled ${direction} to: ${targetSection}`);
+            
+            // Reset scrolling flag after animation
+            setTimeout(() => {
+                isScrolling = false;
+            }, 800);
+        }
+
+        // Trackpad/wheel scroll event handler
+        function handleWheelScroll(event) {
+            if (!isOnMainSite || isScrolling) return;
+            
+            event.preventDefault();
+            
+            // Determine scroll direction with threshold
+            const delta = event.deltaY;
+            const threshold = 10;
+            
+            if (Math.abs(delta) > threshold) {
+                if (delta > 0) {
+                    scrollToSection('down');
+                } else {
+                    scrollToSection('up');
+                }
+            }
         }
 
         // Keyboard navigation for sections
         document.addEventListener('keydown', function(event) {
-            if (isOnMainSite) {
+            if (isOnMainSite && !isScrolling) {
                 if (event.key === 'ArrowUp' || event.key === 'PageUp') {
                     event.preventDefault();
                     scrollToSection('up');
