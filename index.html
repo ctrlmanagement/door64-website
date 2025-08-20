@@ -520,13 +520,141 @@
         }
 
         .landing-swiper {
-            width: 100%;
-            max-width: 100%;
-            height: 350px;
-            margin: 30px 0 0 0;
+            width: 100vw;
+            height: 450px;
+            margin: 40px 0 0 0;
             overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-radius: 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+
+        .landing-swiper .swiper-slide {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing-swiper .gallery-placeholder {
+            height: 450px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Full-width gallery overlay */
+        .landing-swiper .gallery-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+        }
+
+        .landing-swiper .gallery-placeholder::after {
+            content: attr(data-title);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            color: white;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: clamp(2px, 2vw, 8px);
+            text-align: center;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.4);
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            max-width: 90vw;
+        }
+
+        /* Enhanced gallery images for full-width display */
+        .landing-swiper .gallery-placeholder[data-title="intimate dining experience"] {
+            background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&h=900&fit=crop');
+        }
+
+        .landing-swiper .gallery-placeholder[data-title="craft cocktails"] {
+            background-image: url('https://images.unsplash.com/photo-1551024601-bec78aea704b?w=1600&h=900&fit=crop');
+        }
+
+        .landing-swiper .gallery-placeholder[data-title="culinary artistry"] {
+            background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=1600&h=900&fit=crop');
+        }
+
+        .landing-swiper .gallery-placeholder[data-title="elegant atmosphere"] {
+            background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&h=900&fit=crop');
+        }
+
+        .landing-swiper .gallery-placeholder[data-title="chef's table"] {
+            background-image: url('https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=1600&h=900&fit=crop');
+        }
+
+        .landing-swiper .gallery-placeholder[data-title="wine cellar"] {
+            background-image: url('https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=1600&h=900&fit=crop');
+        }
+
+        .landing-swiper .gallery-placeholder[data-title="private dining"] {
+            background-image: url('https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=1600&h=900&fit=crop');
+        }
+
+        /* Landing Swiper Controls */
+        .landing-swiper .swiper-pagination {
+            bottom: 20px;
+        }
+
+        .landing-swiper .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.6);
+            opacity: 0.7;
+            width: 12px;
+            height: 12px;
+        }
+
+        .landing-swiper .swiper-pagination-bullet-active {
+            background: #fff;
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .landing-swiper .swiper-button-next,
+        .landing-swiper .swiper-button-prev {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-top: -25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .landing-swiper .swiper-button-next:hover,
+        .landing-swiper .swiper-button-prev:hover {
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            transform: scale(1.1);
+        }
+
+        .landing-swiper .swiper-button-next::after,
+        .landing-swiper .swiper-button-prev::after {
+            font-size: 18px;
+        }
+
+        .landing-swiper .gallery-placeholder[data-title="kitchen mastery"] {
+            background-image: url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&h=900&fit=crop');
         }
 
         /* Section Styles */
@@ -1136,7 +1264,32 @@
 
             .swiper-container,
             .landing-swiper {
-                height: 250px;
+                height: 300px;
+                margin: 30px 0 0 0;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            }
+
+            .landing-swiper .swiper-button-next,
+            .landing-swiper .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+                margin-top: -20px;
+            }
+
+            .landing-swiper .swiper-button-next::after,
+            .landing-swiper .swiper-button-prev::after {
+                font-size: 14px;
+            }
+
+            .landing-swiper .swiper-pagination-bullet {
+                width: 10px;
+                height: 10px;
+            }
+
+            .landing-swiper .gallery-placeholder::after {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+                padding: 15px 25px;
+                letter-spacing: clamp(1px, 1.5vw, 4px);
             }
         }
     </style>
@@ -1225,7 +1378,7 @@
                     </div>
                 </div>
                 
-                <!-- Landing Gallery Swiper -->
+                <!-- Full-Width Landing Gallery Swiper -->
                 <div class="swiper-container landing-swiper" id="landing-swiper">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
@@ -1238,27 +1391,24 @@
                             <div class="gallery-placeholder" data-title="culinary artistry"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="wine selection"></div>
-                        </div>
-                        <div class="swiper-slide">
                             <div class="gallery-placeholder" data-title="elegant atmosphere"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="chef's expertise"></div>
+                            <div class="gallery-placeholder" data-title="chef's table"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="fresh ingredients"></div>
+                            <div class="gallery-placeholder" data-title="wine cellar"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="private events"></div>
+                            <div class="gallery-placeholder" data-title="private dining"></div>
                         </div>
                         <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="seasonal menu"></div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" data-title="kitchen artistry"></div>
+                            <div class="gallery-placeholder" data-title="kitchen mastery"></div>
                         </div>
                     </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
             </div>
         </section>
@@ -1625,16 +1775,16 @@
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     if (AudioContext) {
                         audioContext = new AudioContext();
-                        showAudioStatus('audio context created');
+                        console.log('Audio context created');
                     }
                 }
                 
                 if (audioContext && audioContext.state === 'suspended') {
                     try {
                         await audioContext.resume();
-                        showAudioStatus('audio context resumed');
+                        console.log('Audio context resumed');
                     } catch (e) {
-                        showAudioStatus('failed to resume audio context');
+                        console.log('Failed to resume audio context');
                     }
                 }
             }
@@ -1683,7 +1833,7 @@
             function initAudio() {
                 backgroundAudio = document.getElementById('backgroundAudio');
                 if (!backgroundAudio) {
-                    showAudioStatus('audio element not found');
+                    console.log('Audio element not found');
                     return;
                 }
                 
@@ -1787,12 +1937,12 @@
                 if (event) event.stopPropagation();
                 
                 if (!backgroundAudio) {
-                    showAudioStatus('audio not available');
+                    console.log('Audio not available');
                     return;
                 }
                 
                 if (!audioLoaded) {
-                    showAudioStatus('audio still loading...');
+                    console.log('Audio still loading...');
                     setLoadingState();
                     return;
                 }
@@ -1801,12 +1951,11 @@
                     if (audioPlaying) {
                         backgroundAudio.pause();
                         audioEnabled = false;
-                        showAudioStatus('music paused');
+                        console.log('Music paused');
                     } else {
                         await attemptAudioPlay();
                     }
                 } catch (error) {
-                    showAudioStatus('audio toggle failed');
                     console.error('Toggle audio error:', error);
                 }
             };
@@ -1902,18 +2051,29 @@
                 }
                 
                 try {
-                    // Landing Page Swiper
+                    // Landing Page Swiper - Full Width with Controls
                     new Swiper('#landing-swiper', {
-                        slidesPerView: 'auto',
+                        slidesPerView: 1,
                         spaceBetween: 0,
                         loop: true,
                         autoplay: {
-                            delay: 0,
+                            delay: 4000,
                             disableOnInteraction: false,
                         },
-                        speed: 2400,
-                        freeMode: true,
-                        freeModeMomentum: false,
+                        speed: 1000,
+                        effect: 'fade',
+                        fadeEffect: {
+                            crossFade: true
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                            dynamicBullets: true,
+                        },
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
                     });
 
                     // Events Swiper
