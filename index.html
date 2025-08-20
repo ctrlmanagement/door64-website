@@ -308,10 +308,16 @@
         }
 
         .splash-audio-toggle.playing {
-            background: var(--tuscan-orange-light) !important;
-            border-color: var(--tuscan-orange) !important;
+            background: rgba(95, 179, 211, 0.9) !important;
+            border-color: rgba(95, 179, 211, 1) !important;
             color: #fff !important;
-            animation: pulseTuscanOrange 2s infinite;
+            animation: pulseBlue 2s infinite;
+        }
+
+        @keyframes pulseBlue {
+            0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
         }
 
         .nav-links {
