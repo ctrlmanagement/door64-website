@@ -406,6 +406,19 @@
             padding-top: var(--nav-height);
         }
 
+        /* Mobile landing page override */
+        @media (max-width: 768px) {
+            .landing-page {
+                height: auto !important;
+                min-height: 100vh;
+                min-height: calc(var(--vh, 1vh) * 100);
+                overflow: visible !important;
+                justify-content: flex-start !important;
+                padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
+                box-sizing: border-box;
+            }
+        }
+
         .gallery-slider {
             position: absolute;
             top: 0;
@@ -1001,25 +1014,15 @@
                 transform-origin: center;
             }
 
-            .landing-page {
-                min-height: 100vh;
-                min-height: calc(var(--vh, 1vh) * 100);
-                min-height: -webkit-fill-available;
-                padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: center;
-                box-sizing: border-box;
-                overflow-y: visible;
-            }
+            /* Landing page mobile styles handled by specific override above */
 
             .landing-content {
                 width: 100%;
                 max-width: none;
                 padding: 0;
                 gap: 25px;
-                margin-bottom: 20px;
+                margin-bottom: 40px;
+                flex-shrink: 0;
             }
 
             .landing-content h1 {
@@ -1272,6 +1275,8 @@
             body {
                 -webkit-overflow-scrolling: touch;
                 overscroll-behavior: none;
+                overflow-x: hidden;
+                overflow-y: auto;
             }
             
             .landing-page,
