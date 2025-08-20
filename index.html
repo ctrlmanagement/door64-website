@@ -2051,16 +2051,17 @@
                 }
                 
                 try {
-                    // Landing Page Swiper - Full Width with Controls
+                    // Landing Page Swiper - Auto Height with Enhanced Content
                     new Swiper('#landing-swiper', {
                         slidesPerView: 1,
                         spaceBetween: 0,
                         loop: true,
+                        autoHeight: true,
                         autoplay: {
-                            delay: 4000,
+                            delay: 5000,
                             disableOnInteraction: false,
                         },
-                        speed: 1000,
+                        speed: 800,
                         effect: 'fade',
                         fadeEffect: {
                             crossFade: true
@@ -2074,6 +2075,12 @@
                             nextEl: '.swiper-button-next',
                             prevEl: '.swiper-button-prev',
                         },
+                        on: {
+                            slideChange: function () {
+                                // Smooth height transition
+                                this.updateAutoHeight(300);
+                            }
+                        }
                     });
 
                     // Events Swiper
