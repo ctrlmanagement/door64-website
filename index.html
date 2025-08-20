@@ -1264,9 +1264,32 @@
 
             .swiper-container,
             .landing-swiper {
-                height: 300px;
+                height: auto;
                 margin: 30px 0 0 0;
                 box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            }
+
+            .landing-swiper .gallery-placeholder {
+                padding: 50px 15px;
+            }
+
+            .landing-swiper .gallery-placeholder[data-title="culinary artistry"] {
+                padding: 70px 15px;
+            }
+
+            .landing-swiper .gallery-placeholder[data-title="chef's table"] {
+                padding: 65px 15px;
+            }
+
+            .landing-swiper .gallery-placeholder[data-title="kitchen mastery"] {
+                padding: 70px 15px;
+            }
+
+            .landing-swiper .gallery-placeholder::after {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+                padding: 15px 25px;
+                letter-spacing: clamp(1px, 1.5vw, 4px);
+                line-height: 1.3;
             }
 
             .landing-swiper .swiper-button-next,
@@ -1284,12 +1307,6 @@
             .landing-swiper .swiper-pagination-bullet {
                 width: 10px;
                 height: 10px;
-            }
-
-            .landing-swiper .gallery-placeholder::after {
-                font-size: clamp(1.2rem, 5vw, 2rem);
-                padding: 15px 25px;
-                letter-spacing: clamp(1px, 1.5vw, 4px);
             }
         }
     </style>
@@ -2051,7 +2068,7 @@
                 }
                 
                 try {
-                    // Landing Page Swiper - Auto Height with Enhanced Content
+                    // Landing Page Swiper - True Auto Height
                     new Swiper('#landing-swiper', {
                         slidesPerView: 1,
                         spaceBetween: 0,
@@ -2061,11 +2078,8 @@
                             delay: 5000,
                             disableOnInteraction: false,
                         },
-                        speed: 800,
-                        effect: 'fade',
-                        fadeEffect: {
-                            crossFade: true
-                        },
+                        speed: 600,
+                        effect: 'slide',
                         pagination: {
                             el: '.swiper-pagination',
                             clickable: true,
@@ -2076,8 +2090,10 @@
                             prevEl: '.swiper-button-prev',
                         },
                         on: {
-                            slideChange: function () {
-                                // Smooth height transition
+                            init: function () {
+                                this.updateAutoHeight(0);
+                            },
+                            transitionStart: function () {
                                 this.updateAutoHeight(300);
                             }
                         }
