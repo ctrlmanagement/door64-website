@@ -45,6 +45,7 @@
             -ms-text-size-adjust: 100%;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: none;
+            scroll-behavior: smooth;
             /* iPhone specific optimizations */
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -158,8 +159,6 @@
             50% { opacity: 1; }
         }
 
-
-
         /* =============== MAIN SITE STYLES =============== */
         .main-site {
             opacity: 0;
@@ -220,7 +219,13 @@
         .nav-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            flex: 1;
+        }
+
+        .nav-center {
+            display: flex;
+            justify-content: center;
+            flex: 0 0 auto;
         }
 
         .logo {
@@ -246,7 +251,7 @@
             border-radius: 50%;
             width: 45px;
             height: 45px;
-            color: #fff;
+            color: #fff !important;
             font-size: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -261,6 +266,7 @@
             background: rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.5);
             transform: scale(1.1);
+            color: #fff !important;
         }
 
         .audio-toggle.playing {
@@ -368,6 +374,51 @@
 
         .section {
             background: #fff;
+        }
+
+        /* Scroll Navigation */
+        .scroll-nav {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-nav.active {
+            opacity: 1;
+        }
+
+        .scroll-btn {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .scroll-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        .scroll-btn:active {
+            transform: scale(0.95);
         }
 
         /* =============== LANDING PAGE - ALIGNED WITH NAV =============== */
@@ -967,6 +1018,11 @@
                 padding-right: max(15px, calc(var(--safe-area-right) + 5px));
             }
 
+            .nav-center {
+                order: -1;
+                margin-right: 15px;
+            }
+
             .logo {
                 font-size: 1.6em;
                 letter-spacing: 2px;
@@ -976,6 +1032,17 @@
                 width: 40px;
                 height: 40px;
                 font-size: 16px;
+            }
+
+            .scroll-nav {
+                right: 15px;
+                gap: 8px;
+            }
+
+            .scroll-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
             }
 
             .nav-links {
@@ -1275,23 +1342,9 @@
                 transform: none;
             }
         }
-
-        /* Audio notification animation */
-        @keyframes audioNotificationBounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translate(-50%, -50%) translateY(0);
-            }
-            40% {
-                transform: translate(-50%, -50%) translateY(-5px);
-            }
-            60% {
-                transform: translate(-50%, -50%) translateY(-3px);
-            }
-        }
     </style>
 </head>
 <body>
-
 
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
@@ -1305,11 +1358,19 @@
 
     <!-- MAIN SITE -->
     <div class="main-site" id="mainSite">
+        <!-- Scroll Navigation -->
+        <div class="scroll-nav" id="scrollNav">
+            <button class="scroll-btn" onclick="scrollToSection('up')" title="Previous Section">↑</button>
+            <button class="scroll-btn" onclick="scrollToSection('down')" title="Next Section">↓</button>
+        </div>
+
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
                 <div class="nav-left">
                     <div class="logo" onclick="showSection('landing')">Door 64</div>
+                </div>
+                <div class="nav-center">
                     <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
                 </div>
                 <ul class="nav-links" id="navLinks">
@@ -1750,7 +1811,7 @@
             setTimeout(setVH, 100);
         });
 
-        // ENHANCED AUDIO SYSTEM WITH IMMEDIATE AUTO-PLAY
+        // ENHANCED AUDIO SYSTEM WITH SPLASH PAGE START
         let audioPlaying = false;
         let audioLoaded = false;
         let backgroundAudio;
@@ -1758,9 +1819,9 @@
         let navAudioButton;
         let isOnMainSite = false;
 
-        // Initialize audio on page load with immediate play
+        // Initialize audio immediately on splash page load
         function initAudio() {
-            console.log('🎵 Initializing immediate audio system...');
+            console.log('🎵 Initializing splash page audio system...');
             
             backgroundAudio = document.getElementById('backgroundAudio');
             splashAudioButton = document.getElementById('splashAudioToggle');
@@ -1771,7 +1832,7 @@
                 return;
             }
             
-            // Set up audio properties for immediate play
+            // Set up audio properties for splash page start
             backgroundAudio.volume = 0.5;
             backgroundAudio.loop = true;
             backgroundAudio.preload = "auto";
@@ -1782,36 +1843,31 @@
             backgroundAudio.setAttribute('playsinline', 'true');
             backgroundAudio.setAttribute('webkit-playsinline', 'true');
             
-            // Immediate play attempt
-            const immediatePlay = () => {
+            // Immediate play on splash
+            const startAudioOnSplash = () => {
+                console.log('🎵 Starting audio on splash page...');
                 backgroundAudio.play().then(() => {
                     audioPlaying = true;
                     audioLoaded = true;
-                    console.log('🎉 Audio started immediately!');
+                    console.log('🎉 Splash audio started!');
                     updateAudioButtons();
-                }).catch(() => {
-                    // Try muted approach for iOS
-                    backgroundAudio.muted = true;
-                    backgroundAudio.play().then(() => {
-                        setTimeout(() => {
-                            backgroundAudio.muted = false;
-                            audioPlaying = true;
-                            audioLoaded = true;
-                            updateAudioButtons();
-                        }, 100);
-                    }).catch(console.error);
+                }).catch((error) => {
+                    console.log('🔇 Initial play blocked, will start on user interaction');
+                    // Set up for user interaction
+                    audioLoaded = true;
+                    updateAudioButtons();
                 });
             };
             
             // Audio event listeners
             backgroundAudio.addEventListener('canplay', () => {
                 audioLoaded = true;
-                immediatePlay();
+                startAudioOnSplash();
             });
             
             backgroundAudio.addEventListener('loadeddata', () => {
                 audioLoaded = true;
-                immediatePlay();
+                startAudioOnSplash();
             });
             
             backgroundAudio.addEventListener('ended', () => {
@@ -1831,15 +1887,13 @@
                 updateAudioButtons();
             });
             
-            // Load and immediate play attempts
+            // Load and immediate play attempts for splash
             backgroundAudio.load();
-            immediatePlay();
             
-            // Multiple attempts
-            setTimeout(immediatePlay, 10);
-            setTimeout(immediatePlay, 50);
-            setTimeout(immediatePlay, 100);
-            setTimeout(immediatePlay, 200);
+            // Multiple immediate attempts
+            setTimeout(startAudioOnSplash, 10);
+            setTimeout(startAudioOnSplash, 50);
+            setTimeout(startAudioOnSplash, 100);
         }
 
         // Start audio on user interaction
@@ -2004,9 +2058,9 @@
             const splashPage = document.getElementById('splashPage');
             const mainSite = document.getElementById('mainSite');
             
-            // Ensure audio starts if not already playing
-            if (!audioPlaying) {
-                startAudioOnInteraction();
+            // Ensure audio continues if playing
+            if (audioPlaying && backgroundAudio && backgroundAudio.paused) {
+                backgroundAudio.play().catch(console.error);
             }
             
             splashPage.classList.add('hidden');
@@ -2019,6 +2073,7 @@
                 // Initialize main site features
                 initializeSwiper();
                 showSection('landing');
+                updateScrollNavigation();
                 
                 console.log('🏠 Entered main site');
             }, 1200);
@@ -2049,6 +2104,9 @@
                 stopBackgroundSlides();
             }
             
+            // Show/hide scroll navigation
+            updateScrollNavigation();
+            
             // Close mobile menu
             const navLinks = document.getElementById('navLinks');
             if (navLinks) {
@@ -2066,6 +2124,62 @@
                 }
             }
         }
+
+        // Scroll navigation functionality
+        const sections = ['landing', 'space', 'kitchen', 'bar', 'gallery', 'events', 'reservations', 'contact', 'social'];
+        let currentSectionIndex = 0;
+
+        function updateScrollNavigation() {
+            const scrollNav = document.getElementById('scrollNav');
+            if (scrollNav && isOnMainSite) {
+                scrollNav.classList.add('active');
+                
+                // Update current section index
+                const activeSection = document.querySelector('.section.active');
+                if (activeSection) {
+                    currentSectionIndex = sections.indexOf(activeSection.id);
+                }
+            }
+        }
+
+        function scrollToSection(direction) {
+            if (!isOnMainSite) return;
+            
+            if (direction === 'up') {
+                currentSectionIndex = currentSectionIndex > 0 ? currentSectionIndex - 1 : sections.length - 1;
+            } else if (direction === 'down') {
+                currentSectionIndex = currentSectionIndex < sections.length - 1 ? currentSectionIndex + 1 : 0;
+            }
+            
+            const targetSection = sections[currentSectionIndex];
+            showSection(targetSection);
+            
+            // Haptic feedback on supported devices
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
+            }
+            
+            console.log(`📜 Scrolled ${direction} to: ${targetSection}`);
+        }
+
+        // Keyboard navigation for sections
+        document.addEventListener('keydown', function(event) {
+            if (isOnMainSite) {
+                if (event.key === 'ArrowUp' || event.key === 'PageUp') {
+                    event.preventDefault();
+                    scrollToSection('up');
+                } else if (event.key === 'ArrowDown' || event.key === 'PageDown') {
+                    event.preventDefault();
+                    scrollToSection('down');
+                }
+            }
+            
+            if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
+                event.preventDefault();
+                startAudioOnInteraction();
+                enterMainSite();
+            }
+        });
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -2135,15 +2249,6 @@
             event.preventDefault();
             startAudioOnInteraction();
             enterMainSite();
-        });
-
-        // Enhanced keyboard support
-        document.addEventListener('keydown', function(event) {
-            if (!isOnMainSite && (event.code === 'Space' || event.code === 'Enter')) {
-                event.preventDefault();
-                startAudioOnInteraction();
-                enterMainSite();
-            }
         });
 
         // Form submission
