@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Door 64</title>
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <!-- Splide CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
     
     <!-- Background Audio -->
     <audio id="backgroundAudio" loop preload="auto">
@@ -805,38 +805,25 @@
             background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
         }
 
-        /* Swiper navigation customization */
-        .swiper-button-next,
-        .swiper-button-prev {
-            color: #000;
+        /* Splide navigation customization */
+        .splide__arrow {
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
         }
 
-        .swiper-button-next:after,
-        .swiper-button-prev:after {
-            font-size: 20px;
+        .splide__arrow:hover {
+            background: rgba(0, 0, 0, 1);
         }
 
-        .swiper-pagination-bullet {
+        .splide__pagination__page {
             background: #000;
         }
 
-        .swiper-pagination-bullet-active {
+        .splide__pagination__page.is-active {
             background: #000;
         }
 
-        /* Multiple galleries */
-        .gallery-section {
-            margin-bottom: 60px;
-        }
 
-        .gallery-section h3 {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            text-transform: lowercase;
-            letter-spacing: 2px;
-            color: #000;
-            text-align: center;
-        }
 
         /* Contact Info */
         .contact-info {
@@ -1260,7 +1247,7 @@
                 padding: 20px 15px;
             }
 
-            .landing-swiper {
+            .landing-splide {
                 height: 180px;
             }
 
@@ -1284,7 +1271,7 @@
                 font-size: clamp(2rem, 6vw, 2.8rem);
             }
 
-            .landing-swiper {
+            .landing-splide {
                 height: 280px;
             }
         }
@@ -1389,59 +1376,61 @@
                     </div>
                 </div>
                 
-                <!-- Landing Gallery Swiper -->
-                <div class="swiper-container landing-swiper" id="landing-swiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>intimate dining experience</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>craft cocktails</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>culinary artistry</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>wine selection</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>elegant atmosphere</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>chef's expertise</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>fresh ingredients</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>private events</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>seasonal menu</span>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=280&fit=crop'); background-size: cover;">
-                                <span>kitchen artistry</span>
-                            </div>
-                        </div>
+                <!-- Landing Gallery Splide -->
+                <div class="splide landing-splide" id="landing-splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>intimate dining experience</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>craft cocktails</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>culinary artistry</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>wine selection</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>elegant atmosphere</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>chef's expertise</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>fresh ingredients</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>private events</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>seasonal menu</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>kitchen artistry</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1463,6 +1452,44 @@
                     <div class="space-item">
                         <h3>chef's delights</h3>
                         <p>six seats directly at the kitchen counter. the ultimate interactive dining experience with direct chef interaction.</p>
+                    </div>
+                </div>
+                
+                <!-- Space Gallery Splide -->
+                <div class="splide space-splide" id="space-splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>elegant venue</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>cocktails cellar</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>chef's counter</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>open kitchen view</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>intimate seating</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>private dining</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1489,6 +1516,44 @@
                         <div class="price">$85 per person</div>
                     </div>
                 </div>
+                
+                <!-- Kitchen Gallery Splide -->
+                <div class="splide kitchen-splide" id="kitchen-splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>seasonal ingredients</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>chef's creativity</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>kitchen artistry</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>tasting menu</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>vegetarian artistry</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>culinary techniques</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1513,6 +1578,44 @@
                         <div class="price">$12 - $16</div>
                     </div>
                 </div>
+                
+                <!-- Bar Gallery Splide -->
+                <div class="splide bar-splide" id="bar-splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>signature cocktails</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>rare spirits</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>craft mixology</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>premium ingredients</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>zero-proof artistry</span>
+                                </div>
+                            </li>
+                            <li class="splide__slide">
+                                <div class="gallery-placeholder" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop'); background-size: cover;">
+                                    <span>bar atmosphere</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1521,93 +1624,65 @@
             <div class="container">
                 <h2 class="section-title">who was here</h2>
                 
-                <!-- Featured Events Gallery -->
-                <div class="gallery-section">
-                    <h3>featured events</h3>
-                    <div class="swiper-container" id="events-swiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
+                <!-- Main Gallery Splide -->
+                <div class="splide gallery-splide" id="gallery-splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">opening night celebration</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">chef collaboration dinner</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">wine pairing evening</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">anniversary celebration</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">private party</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">food critics visit</div>
-                            </div>
-                        </div>
-                        <div class="swiper-pagination"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                    </div>
-                </div>
-
-                <!-- Food & Cocktails Gallery -->
-                <div class="gallery-section">
-                    <h3>culinary artistry</h3>
-                    <div class="swiper-container" id="food-swiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">seasonal tasting menu</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">signature cocktail</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">chef's special creation</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">artisanal dessert</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">craft cocktail preparation</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">fresh ingredients</div>
-                            </div>
-                        </div>
-                        <div class="swiper-pagination"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                    </div>
-                </div>
-
-                <!-- Behind the Scenes Gallery -->
-                <div class="gallery-section">
-                    <h3>behind the scenes</h3>
-                    <div class="swiper-container" id="bts-swiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">kitchen in action</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">team collaboration</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">ingredient preparation</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">plating perfection</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">daily setup</div>
-                            </div>
-                            <div class="swiper-slide">
+                            </li>
+                            <li class="splide__slide">
                                 <div class="gallery-placeholder">creative process</div>
-                            </div>
-                        </div>
-                        <div class="swiper-pagination"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1728,14 +1803,16 @@
                 <h2 class="section-title">hit us up</h2>
                 <div class="contact-info">
                     <div class="contact-card">
+                        <h3>contact</h3>
+                        <p><strong>phone:</strong> (404) 555-DOOR</p>
+                        <p>(404) 555-3667</p>
+                        <p><strong>email:</strong> inquiry@door64atl.com</p>
+                        <p>events@door64atl.com</p>
+                    </div>
+                    <div class="contact-card">
                         <h3>location</h3>
                         <p>64 Third St NW</p>
                         <p>Atlanta, GA 30308</p>
-                    </div>
-                    <div class="contact-card">
-                        <h3>phone</h3>
-                        <p>(404) 555-DOOR</p>
-                        <p>(404) 555-3667</p>
                     </div>
                     <div class="contact-card">
                         <h3>hours</h3>
@@ -1743,10 +1820,21 @@
                         <p>sunday: 5:00 PM - 12:00 AM</p>
                         <p>monday - wednesday: closed</p>
                     </div>
-                    <div class="contact-card">
-                        <h3>email</h3>
-                        <p>inquiry@door64atl.com</p>
-                        <p>events@door64atl.com</p>
+                </div>
+                
+                <!-- Google Maps -->
+                <div class="map-container" style="margin-top: 60px;">
+                    <h3 style="text-align: center; margin-bottom: 30px; font-size: 1.5em; text-transform: lowercase; letter-spacing: 2px; color: #000;">find us</h3>
+                    <div style="width: 100%; height: 400px; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3316.8267661234567!2d-84.39876!3d33.77123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88f5045d6993098d%3A0x66fede2f990b630b!2s64%203rd%20St%20NW%2C%20Atlanta%2C%20GA%2030308!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
                 </div>
             </div>
@@ -2026,7 +2114,7 @@
                 isOnMainSite = true;
                 
                 // Initialize main site features
-                initializeSwiper();
+                initializeSplide();
                 showSection('landing');
                 
                 console.log('🏠 Entered main site');
@@ -2157,121 +2245,142 @@
             }
         });
 
-        // Initialize Swiper galleries
-        function initializeSwiper() {
-            // Landing Page Swiper
-            new Swiper('#landing-swiper', {
-                slidesPerView: 'auto',
-                spaceBetween: 0,
-                loop: true,
-                autoplay: {
-                    delay: 0,
-                    disableOnInteraction: false,
-                },
-                speed: 2400,
-                allowTouchMove: true,
-                freeMode: true,
-                freeModeMomentum: false,
-            });
+        // Initialize Splide galleries
+        function initializeSplide() {
+            // Landing Page Splide
+            if (document.querySelector('#landing-splide')) {
+                const landingSplide = new Splide('#landing-splide', {
+                    type: 'loop',
+                    drag: 'free',
+                    focus: 'center',
+                    perPage: 3,
+                    autoScroll: {
+                        speed: 1,
+                    },
+                    breakpoints: {
+                        768: {
+                            perPage: 2,
+                        },
+                        480: {
+                            perPage: 1,
+                        },
+                    },
+                });
+                
+                if (window.splide && window.splide.Extensions) {
+                    landingSplide.mount(window.splide.Extensions);
+                } else {
+                    landingSplide.mount();
+                }
+            }
 
-            // Events Swiper
-            new Swiper('#events-swiper', {
-                slidesPerView: 1,
-                spaceBetween: 20,
-                loop: true,
-                autoplay: {
-                    delay: 5100,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: '#events-swiper .swiper-pagination',
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: '#events-swiper .swiper-button-next',
-                    prevEl: '#events-swiper .swiper-button-prev',
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
+            // Space Splide
+            if (document.querySelector('#space-splide')) {
+                const spaceSplide = new Splide('#space-splide', {
+                    type: 'loop',
+                    drag: 'free',
+                    focus: 'center',
+                    perPage: 3,
+                    autoScroll: {
+                        speed: 1,
                     },
-                    768: {
-                        slidesPerView: 2,
-                        spaceBetween: 30,
+                    breakpoints: {
+                        768: {
+                            perPage: 2,
+                        },
+                        480: {
+                            perPage: 1,
+                        },
                     },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 30,
-                    },
-                },
-            });
+                });
+                
+                if (window.splide && window.splide.Extensions) {
+                    spaceSplide.mount(window.splide.Extensions);
+                } else {
+                    spaceSplide.mount();
+                }
+            }
 
-            // Food Swiper
-            new Swiper('#food-swiper', {
-                slidesPerView: 1,
-                spaceBetween: 20,
-                loop: true,
-                autoplay: {
-                    delay: 4300,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: '#food-swiper .swiper-pagination',
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: '#food-swiper .swiper-button-next',
-                    prevEl: '#food-swiper .swiper-button-prev',
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
+            // Kitchen Splide
+            if (document.querySelector('#kitchen-splide')) {
+                const kitchenSplide = new Splide('#kitchen-splide', {
+                    type: 'loop',
+                    drag: 'free',
+                    focus: 'center',
+                    perPage: 3,
+                    autoScroll: {
+                        speed: 1,
                     },
-                    768: {
-                        slidesPerView: 2,
-                        spaceBetween: 30,
+                    breakpoints: {
+                        768: {
+                            perPage: 2,
+                        },
+                        480: {
+                            perPage: 1,
+                        },
                     },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 30,
-                    },
-                },
-            });
+                });
+                
+                if (window.splide && window.splide.Extensions) {
+                    kitchenSplide.mount(window.splide.Extensions);
+                } else {
+                    kitchenSplide.mount();
+                }
+            }
 
-            // Behind the Scenes Swiper
-            new Swiper('#bts-swiper', {
-                slidesPerView: 1,
-                spaceBetween: 20,
-                loop: true,
-                autoplay: {
-                    delay: 6000,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: '#bts-swiper .swiper-pagination',
-                    clickable: true,
-                },
-                navigation: {
-                    nextEl: '#bts-swiper .swiper-button-next',
-                    prevEl: '#bts-swiper .swiper-button-prev',
-                },
-                breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
+            // Bar Splide
+            if (document.querySelector('#bar-splide')) {
+                const barSplide = new Splide('#bar-splide', {
+                    type: 'loop',
+                    drag: 'free',
+                    focus: 'center',
+                    perPage: 3,
+                    autoScroll: {
+                        speed: 1,
                     },
-                    768: {
-                        slidesPerView: 2,
-                        spaceBetween: 30,
+                    breakpoints: {
+                        768: {
+                            perPage: 2,
+                        },
+                        480: {
+                            perPage: 1,
+                        },
                     },
-                    1024: {
-                        slidesPerView: 3,
-                        spaceBetween: 30,
+                });
+                
+                if (window.splide && window.splide.Extensions) {
+                    barSplide.mount(window.splide.Extensions);
+                } else {
+                    barSplide.mount();
+                }
+            }
+
+            // Gallery Splide
+            if (document.querySelector('#gallery-splide')) {
+                const gallerySplide = new Splide('#gallery-splide', {
+                    type: 'loop',
+                    drag: 'free',
+                    focus: 'center',
+                    perPage: 3,
+                    autoScroll: {
+                        speed: 1,
                     },
-                },
-            });
+                    breakpoints: {
+                        768: {
+                            perPage: 2,
+                        },
+                        480: {
+                            perPage: 1,
+                        },
+                    },
+                });
+                
+                if (window.splide && window.splide.Extensions) {
+                    gallerySplide.mount(window.splide.Extensions);
+                } else {
+                    gallerySplide.mount();
+                }
+            }
         }
 
         // Initialize everything when page loads
@@ -2354,7 +2463,8 @@
         });
     </script>
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- Splide JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
 </body>
 </html>
