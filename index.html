@@ -2564,8 +2564,17 @@
                 mainSite.classList.add('active');
                 isOnMainSite = true;
                 
-                // Initialize main site features
-                initializeSplide();
+                // Initialize main site features with delay for scripts to load
+                setTimeout(() => {
+                    initializeSplide();
+                }, 500);
+                
+                // Backup initialization after longer delay
+                setTimeout(() => {
+                    console.log('🔄 Running backup Splide initialization...');
+                    initializeSplide();
+                }, 2000);
+                
                 showSection('landing');
                 
                 console.log('🏠 Entered main site');
@@ -2696,21 +2705,66 @@
             }
         });
 
-        // Initialize Splide galleries
+        // Status report function - call window.checkGalleries() in console
+        window.checkGalleries = function() {
+            console.log('📊 Gallery Status Report:');
+            
+            const galleries = [
+                { name: '64 (Landing)', id: '#landing-splide' },
+                { name: 'Space', id: '#space-splide' },
+                { name: 'Kitchen', id: '#kitchen-splide' },
+                { name: 'Bar', id: '#bar-splide' },
+                { name: 'Gallery', id: '#gallery-splide' }
+            ];
+            
+            galleries.forEach(gallery => {
+                const element = document.querySelector(gallery.id);
+                const slideCount = element ? element.querySelectorAll('.splide__slide').length : 0;
+                console.log(`${gallery.name}: ${element ? '✅ Found' : '❌ Missing'} - ${slideCount} slides`);
+            });
+        };
+
+        // Manual fallback auto-scroll function
+        function createManualAutoScroll(splideInstance, speed = 1) {
+            console.log('🔧 Creating manual auto-scroll fallback');
+            
+            setInterval(() => {
+                if (splideInstance && splideInstance.go) {
+                    splideInstance.go('+');
+                }
+            }, 3000 / speed); // Adjust timing based on speed
+        }
+
+        // Initialize Splide galleries with enhanced debugging
         function initializeSplide() {
+            console.log('🎬 Initializing Splide galleries...');
+            
+            // Check if Splide is loaded
+            if (typeof Splide === 'undefined') {
+                console.error('❌ Splide library not loaded');
+                return;
+            }
+            
             // Check if AutoScroll extension is available
             const AutoScroll = window.splide?.Extensions?.AutoScroll || window.AutoScroll;
+            console.log('🔧 AutoScroll extension available:', !!AutoScroll);
 
-            // Landing Page Splide - Fix auto-scroll
+            // Landing Page Splide - Enhanced debugging
             if (document.querySelector('#landing-splide')) {
+                console.log('🏠 Initializing 64 (Landing) gallery...');
+                
                 const landingSplide = new Splide('#landing-splide', {
                     type: 'loop',
                     drag: 'free',
                     focus: 'center',
                     perPage: 4,
-                    autoScroll: {
+                    autoScroll: AutoScroll ? {
                         speed: 1,
-                    },
+                        pauseOnHover: false,
+                        pauseOnFocus: false,
+                    } : false,
+                    pagination: false,
+                    arrows: false,
                     breakpoints: {
                         1024: {
                             perPage: 3,
@@ -2724,14 +2778,32 @@
                     },
                 });
                 
-                if (AutoScroll) {
-                    landingSplide.mount({ AutoScroll });
-                } else {
-                    landingSplide.mount();
+                try {
+                    if (AutoScroll) {
+                        landingSplide.mount({ AutoScroll });
+                        console.log('✅ 64 gallery mounted with AutoScroll');
+                    } else {
+                        landingSplide.mount();
+                        console.log('⚠️ 64 gallery mounted WITHOUT AutoScroll - using manual fallback');
+                        createManualAutoScroll(landingSplide, 1);
+                    }
+                    
+                    landingSplide.on('mounted', () => {
+                        console.log('🎉 64 gallery successfully mounted');
+                    });
+                    
+                    landingSplide.on('move', () => {
+                        console.log('🔄 64 gallery slide moved');
+                    });
+                    
+                } catch (error) {
+                    console.error('❌ 64 gallery mount error:', error);
                 }
+            } else {
+                console.error('❌ 64 gallery element not found');
             }
 
-            // Space Splide - Fix auto-scroll to match working galleries
+            // Space Splide - Keep working as is
             if (document.querySelector('#space-splide')) {
                 const spaceSplide = new Splide('#space-splide', {
                     type: 'loop',
@@ -2756,15 +2828,15 @@
                     },
                 });
                 
-                // Use same mounting approach as working galleries
                 if (AutoScroll) {
                     spaceSplide.mount({ AutoScroll });
                 } else {
                     spaceSplide.mount();
+                    createManualAutoScroll(spaceSplide, 2);
                 }
             }
 
-            // Kitchen Splide - Fix auto-scroll to match working galleries  
+            // Kitchen Splide - Keep working as is
             if (document.querySelector('#kitchen-splide')) {
                 const kitchenSplide = new Splide('#kitchen-splide', {
                     type: 'loop',
@@ -2789,24 +2861,30 @@
                     },
                 });
                 
-                // Use same mounting approach as working galleries
                 if (AutoScroll) {
                     kitchenSplide.mount({ AutoScroll });
                 } else {
                     kitchenSplide.mount();
+                    createManualAutoScroll(kitchenSplide, 2);
                 }
             }
 
-            // Bar Splide - Fix auto-scroll
+            // Bar Splide - Enhanced debugging
             if (document.querySelector('#bar-splide')) {
+                console.log('🍸 Initializing Bar gallery...');
+                
                 const barSplide = new Splide('#bar-splide', {
                     type: 'loop',
                     drag: 'free',
                     focus: 'center',
                     perPage: 4,
-                    autoScroll: {
+                    autoScroll: AutoScroll ? {
                         speed: 1,
-                    },
+                        pauseOnHover: false,
+                        pauseOnFocus: false,
+                    } : false,
+                    pagination: false,
+                    arrows: false,
                     breakpoints: {
                         1024: {
                             perPage: 3,
@@ -2820,23 +2898,47 @@
                     },
                 });
                 
-                if (AutoScroll) {
-                    barSplide.mount({ AutoScroll });
-                } else {
-                    barSplide.mount();
+                try {
+                    if (AutoScroll) {
+                        barSplide.mount({ AutoScroll });
+                        console.log('✅ Bar gallery mounted with AutoScroll');
+                    } else {
+                        barSplide.mount();
+                        console.log('⚠️ Bar gallery mounted WITHOUT AutoScroll - using manual fallback');
+                        createManualAutoScroll(barSplide, 1);
+                    }
+                    
+                    barSplide.on('mounted', () => {
+                        console.log('🎉 Bar gallery successfully mounted');
+                    });
+                    
+                    barSplide.on('move', () => {
+                        console.log('🔄 Bar gallery slide moved');
+                    });
+                    
+                } catch (error) {
+                    console.error('❌ Bar gallery mount error:', error);
                 }
+            } else {
+                console.error('❌ Bar gallery element not found');
             }
 
-            // Gallery Splide - Fix auto-scroll (was manual before)
+            // Gallery Splide - Enhanced debugging
             if (document.querySelector('#gallery-splide')) {
+                console.log('📸 Initializing Gallery (who was here)...');
+                
                 const gallerySplide = new Splide('#gallery-splide', {
                     type: 'loop',
                     drag: 'free',
                     focus: 'center',
                     perPage: 4,
-                    autoScroll: {
+                    autoScroll: AutoScroll ? {
                         speed: 1,
-                    },
+                        pauseOnHover: false,
+                        pauseOnFocus: false,
+                    } : false,
+                    pagination: false,
+                    arrows: false,
                     breakpoints: {
                         1024: {
                             perPage: 3,
@@ -2850,15 +2952,29 @@
                     },
                 });
                 
-                if (AutoScroll) {
-                    gallerySplide.mount({ AutoScroll });
-                } else {
-                    gallerySplide.mount();
+                try {
+                    if (AutoScroll) {
+                        gallerySplide.mount({ AutoScroll });
+                        console.log('✅ Gallery mounted with AutoScroll');
+                    } else {
+                        gallerySplide.mount();
+                        console.log('⚠️ Gallery mounted WITHOUT AutoScroll - using manual fallback');
+                        createManualAutoScroll(gallerySplide, 1);
+                    }
+                    
+                    gallerySplide.on('mounted', () => {
+                        console.log('🎉 Gallery successfully mounted');
+                    });
+                    
+                    gallerySplide.on('move', () => {
+                        console.log('🔄 Gallery slide moved');
+                    });
+                    
+                } catch (error) {
+                    console.error('❌ Gallery mount error:', error);
                 }
-                
-                gallerySplide.on('move', function () {
-                    console.log('Gallery slide moved');
-                });
+            } else {
+                console.error('❌ Gallery element not found');
             }
         }
 
