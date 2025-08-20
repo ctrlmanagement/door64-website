@@ -191,16 +191,24 @@
             padding-right: var(--safe-area-right);
         }
 
-        /* Desktop hover behavior */
+        /* Desktop hover behavior - RESTORED */
         @media (min-width: 769px) {
             .nav {
                 opacity: 0;
                 transform: translateY(-100%);
+                transition: all 0.3s ease;
             }
 
             .nav:hover,
             .nav.show-nav,
-            body:hover .nav {
+            body:hover .nav,
+            .main-site:hover .nav {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            
+            /* Ensure nav shows when hovering over any main site content */
+            .main-site.active:hover .nav {
                 opacity: 1;
                 transform: translateY(0);
             }
@@ -212,7 +220,7 @@
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 0 0 0;
             width: 100%;
         }
 
@@ -220,12 +228,15 @@
             display: flex;
             align-items: center;
             flex: 1;
+            padding-left: 0;
+            margin-left: 0;
         }
 
         .nav-center {
             display: flex;
             justify-content: center;
             flex: 0 0 auto;
+            margin-right: 20px;
         }
 
         .logo {
@@ -238,6 +249,8 @@
             transition: color 0.3s ease;
             -webkit-user-select: none;
             user-select: none;
+            margin-left: 0;
+            padding-left: 20px;
         }
 
         .logo:hover {
@@ -1013,19 +1026,26 @@
             }
 
             .nav-container {
-                padding: 0 15px;
-                padding-left: max(15px, calc(var(--safe-area-left) + 5px));
+                padding: 0;
+                padding-left: 0;
                 padding-right: max(15px, calc(var(--safe-area-right) + 5px));
+            }
+
+            .nav-left {
+                padding-left: 0;
+                margin-left: 0;
             }
 
             .nav-center {
                 order: -1;
                 margin-right: 15px;
+                margin-left: 15px;
             }
 
             .logo {
                 font-size: 1.6em;
                 letter-spacing: 2px;
+                padding-left: max(20px, calc(var(--safe-area-left) + 10px));
             }
 
             .audio-toggle {
@@ -1277,6 +1297,7 @@
             .logo {
                 font-size: 1.4em;
                 letter-spacing: 1px;
+                padding-left: max(15px, calc(var(--safe-area-left) + 5px));
             }
 
             .space-item,
