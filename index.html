@@ -1935,8 +1935,8 @@
         let slideInterval = null;
         let currentSlide = 0;
         let slidesPaused = false;
-        // Increased beat sync timing from 3500ms to match audio rhythm better
-        const BEAT_SYNC_INTERVAL = 2400; // Synced to roughly match audio beat
+        // Original timing that worked with audio
+        const SLIDE_INTERVAL = 3500; // Original working timing
 
         function startBackgroundSlides() {
             const slides = document.querySelectorAll('.slide');
@@ -1955,9 +1955,9 @@
             currentSlide = 0;
             slidesPaused = false;
             
-            console.log('🎬 Starting beat-synced background slides');
+            console.log('🎬 Starting background slides');
             
-            // Start the slide rotation synced to audio beat
+            // Start the slide rotation with proper error handling
             slideInterval = setInterval(() => {
                 if (slidesPaused) return;
                 
@@ -1976,8 +1976,8 @@
                 // Add active to new slide
                 slides[currentSlide].classList.add('active');
                 
-                console.log(`🎵 Beat-synced slide ${currentSlide + 1}/${slides.length} active`);
-            }, BEAT_SYNC_INTERVAL);
+                console.log(`🎬 Slide ${currentSlide + 1}/${slides.length} active`);
+            }, SLIDE_INTERVAL);
         }
 
         function stopBackgroundSlides() {
@@ -2159,7 +2159,7 @@
 
         // Initialize Swiper galleries
         function initializeSwiper() {
-            // Landing Page Swiper - also synced to beat
+            // Landing Page Swiper
             new Swiper('#landing-swiper', {
                 slidesPerView: 'auto',
                 spaceBetween: 0,
@@ -2168,7 +2168,7 @@
                     delay: 0,
                     disableOnInteraction: false,
                 },
-                speed: BEAT_SYNC_INTERVAL, // Synced to audio beat
+                speed: 2400,
                 allowTouchMove: true,
                 freeMode: true,
                 freeModeMomentum: false,
@@ -2337,7 +2337,7 @@
             console.log('✅ Door 64 initialization complete');
         });
 
-        // Page visibility change handler to manage audio and slides
+        // Page visibility change handler to manage audio
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 pauseBackgroundSlides();
