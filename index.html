@@ -2564,18 +2564,12 @@
                 mainSite.classList.add('active');
                 isOnMainSite = true;
                 
-                // Initialize main site features with delay for scripts to load
+                // Initialize main site features with delay for DOM
                 setTimeout(() => {
+                    console.log('🎬 Initializing galleries from enterMainSite...');
                     initializeSplide();
-                }, 500);
-                
-                // Backup initialization after longer delay
-                setTimeout(() => {
-                    console.log('🔄 Running backup Splide initialization...');
-                    initializeSplide();
-                }, 2000);
-                
-                showSection('landing');
+                    showSection('landing');
+                }, 100);
                 
                 console.log('🏠 Entered main site');
             }, 1200);
@@ -2705,106 +2699,32 @@
             }
         });
 
-        // Status report function - call window.checkGalleries() in console
-        window.checkGalleries = function() {
-            console.log('📊 Gallery Status Report:');
-            
-            const galleries = [
-                { name: '64 (Landing)', id: '#landing-splide' },
-                { name: 'Space', id: '#space-splide' },
-                { name: 'Kitchen', id: '#kitchen-splide' },
-                { name: 'Bar', id: '#bar-splide' },
-                { name: 'Gallery', id: '#gallery-splide' }
-            ];
-            
-            galleries.forEach(gallery => {
-                const element = document.querySelector(gallery.id);
-                const slideCount = element ? element.querySelectorAll('.splide__slide').length : 0;
-                console.log(`${gallery.name}: ${element ? '✅ Found' : '❌ Missing'} - ${slideCount} slides`);
-            });
-        };
-
-        // Manual fallback auto-scroll function
-        function createManualAutoScroll(splideInstance, speed = 1) {
-            console.log('🔧 Creating manual auto-scroll fallback');
-            
-            setInterval(() => {
-                if (splideInstance && splideInstance.go) {
-                    splideInstance.go('+');
-                }
-            }, 3000 / speed); // Adjust timing based on speed
-        }
-
-        // Initialize Splide galleries with enhanced debugging
+        // Initialize Splide galleries with simple configuration
         function initializeSplide() {
             console.log('🎬 Initializing Splide galleries...');
-            
-            // Check if Splide is loaded
-            if (typeof Splide === 'undefined') {
-                console.error('❌ Splide library not loaded');
-                return;
-            }
-            
-            // Check if AutoScroll extension is available
-            const AutoScroll = window.splide?.Extensions?.AutoScroll || window.AutoScroll;
-            console.log('🔧 AutoScroll extension available:', !!AutoScroll);
 
-            // Landing Page Splide - Enhanced debugging
+            // Landing Page Splide - Simple configuration like gallery
             if (document.querySelector('#landing-splide')) {
-                console.log('🏠 Initializing 64 (Landing) gallery...');
-                
-                const landingSplide = new Splide('#landing-splide', {
-                    type: 'loop',
-                    drag: 'free',
-                    focus: 'center',
-                    perPage: 4,
-                    autoScroll: AutoScroll ? {
-                        speed: 1,
-                        pauseOnHover: false,
-                        pauseOnFocus: false,
-                    } : false,
-                    pagination: false,
-                    arrows: false,
-                    breakpoints: {
-                        1024: {
-                            perPage: 3,
-                        },
-                        768: {
-                            perPage: 2,
-                        },
-                        480: {
-                            perPage: 1,
-                        },
-                    },
-                });
+                console.log('🏠 Initializing Landing (64) gallery...');
                 
                 try {
-                    if (AutoScroll) {
-                        landingSplide.mount({ AutoScroll });
-                        console.log('✅ 64 gallery mounted with AutoScroll');
-                    } else {
-                        landingSplide.mount();
-                        console.log('⚠️ 64 gallery mounted WITHOUT AutoScroll - using manual fallback');
-                        createManualAutoScroll(landingSplide, 1);
-                    }
-                    
-                    landingSplide.on('mounted', () => {
-                        console.log('🎉 64 gallery successfully mounted');
+                    var landingSplide = new Splide('#landing-splide').mount();
+                    landingSplide.on('move', function () {
+                        console.log('🏠 Landing gallery moved');
                     });
-                    
-                    landingSplide.on('move', () => {
-                        console.log('🔄 64 gallery slide moved');
-                    });
-                    
+                    console.log('✅ Landing gallery mounted successfully');
                 } catch (error) {
-                    console.error('❌ 64 gallery mount error:', error);
+                    console.error('❌ Landing gallery initialization error:', error);
                 }
             } else {
-                console.error('❌ 64 gallery element not found');
+                console.error('❌ Landing gallery element not found');
             }
 
-            // Space Splide - Keep working as is
+            // Space Splide - Keep auto-scroll
             if (document.querySelector('#space-splide')) {
+                console.log('🏢 Initializing Space gallery...');
+                const AutoScroll = window.splide?.Extensions?.AutoScroll || window.AutoScroll;
+                
                 const spaceSplide = new Splide('#space-splide', {
                     type: 'loop',
                     drag: 'free',
@@ -2832,12 +2752,14 @@
                     spaceSplide.mount({ AutoScroll });
                 } else {
                     spaceSplide.mount();
-                    createManualAutoScroll(spaceSplide, 2);
                 }
             }
 
-            // Kitchen Splide - Keep working as is
+            // Kitchen Splide - Keep auto-scroll
             if (document.querySelector('#kitchen-splide')) {
+                console.log('👨‍🍳 Initializing Kitchen gallery...');
+                const AutoScroll = window.splide?.Extensions?.AutoScroll || window.AutoScroll;
+                
                 const kitchenSplide = new Splide('#kitchen-splide', {
                     type: 'loop',
                     drag: 'free',
@@ -2865,117 +2787,44 @@
                     kitchenSplide.mount({ AutoScroll });
                 } else {
                     kitchenSplide.mount();
-                    createManualAutoScroll(kitchenSplide, 2);
                 }
             }
 
-            // Bar Splide - Enhanced debugging
+            // Bar Splide - Simple configuration like gallery
             if (document.querySelector('#bar-splide')) {
                 console.log('🍸 Initializing Bar gallery...');
                 
-                const barSplide = new Splide('#bar-splide', {
-                    type: 'loop',
-                    drag: 'free',
-                    focus: 'center',
-                    perPage: 4,
-                    autoScroll: AutoScroll ? {
-                        speed: 1,
-                        pauseOnHover: false,
-                        pauseOnFocus: false,
-                    } : false,
-                    pagination: false,
-                    arrows: false,
-                    breakpoints: {
-                        1024: {
-                            perPage: 3,
-                        },
-                        768: {
-                            perPage: 2,
-                        },
-                        480: {
-                            perPage: 1,
-                        },
-                    },
-                });
-                
                 try {
-                    if (AutoScroll) {
-                        barSplide.mount({ AutoScroll });
-                        console.log('✅ Bar gallery mounted with AutoScroll');
-                    } else {
-                        barSplide.mount();
-                        console.log('⚠️ Bar gallery mounted WITHOUT AutoScroll - using manual fallback');
-                        createManualAutoScroll(barSplide, 1);
-                    }
-                    
-                    barSplide.on('mounted', () => {
-                        console.log('🎉 Bar gallery successfully mounted');
+                    var barSplide = new Splide('#bar-splide').mount();
+                    barSplide.on('move', function () {
+                        console.log('🍸 Bar gallery moved');
                     });
-                    
-                    barSplide.on('move', () => {
-                        console.log('🔄 Bar gallery slide moved');
-                    });
-                    
+                    console.log('✅ Bar gallery mounted successfully');
                 } catch (error) {
-                    console.error('❌ Bar gallery mount error:', error);
+                    console.error('❌ Bar gallery initialization error:', error);
                 }
             } else {
                 console.error('❌ Bar gallery element not found');
             }
 
-            // Gallery Splide - Enhanced debugging
+            // Gallery Splide - Simple configuration
             if (document.querySelector('#gallery-splide')) {
-                console.log('📸 Initializing Gallery (who was here)...');
-                
-                const gallerySplide = new Splide('#gallery-splide', {
-                    type: 'loop',
-                    drag: 'free',
-                    focus: 'center',
-                    perPage: 4,
-                    autoScroll: AutoScroll ? {
-                        speed: 1,
-                        pauseOnHover: false,
-                        pauseOnFocus: false,
-                    } : false,
-                    pagination: false,
-                    arrows: false,
-                    breakpoints: {
-                        1024: {
-                            perPage: 3,
-                        },
-                        768: {
-                            perPage: 2,
-                        },
-                        480: {
-                            perPage: 1,
-                        },
-                    },
-                });
+                console.log('🖼️ Initializing Gallery (who was here)...');
                 
                 try {
-                    if (AutoScroll) {
-                        gallerySplide.mount({ AutoScroll });
-                        console.log('✅ Gallery mounted with AutoScroll');
-                    } else {
-                        gallerySplide.mount();
-                        console.log('⚠️ Gallery mounted WITHOUT AutoScroll - using manual fallback');
-                        createManualAutoScroll(gallerySplide, 1);
-                    }
-                    
-                    gallerySplide.on('mounted', () => {
-                        console.log('🎉 Gallery successfully mounted');
+                    var gallerySplide = new Splide('#gallery-splide').mount();
+                    gallerySplide.on('move', function () {
+                        console.log('🖼️ Gallery moved');
                     });
-                    
-                    gallerySplide.on('move', () => {
-                        console.log('🔄 Gallery slide moved');
-                    });
-                    
+                    console.log('✅ Gallery mounted successfully');
                 } catch (error) {
-                    console.error('❌ Gallery mount error:', error);
+                    console.error('❌ Gallery initialization error:', error);
                 }
             } else {
                 console.error('❌ Gallery element not found');
             }
+            
+            console.log('🎬 Splide initialization complete');
         }
 
         // Initialize everything when page loads
@@ -2987,6 +2836,41 @@
             
             // Set up enhanced interaction triggers
             setupInteractionTriggers();
+            
+            // Wait a bit for external scripts to load, then initialize Splide
+            setTimeout(() => {
+                console.log('🎬 Initializing Splide after delay...');
+                initializeSplide();
+                
+                // Fallback check after 2 seconds
+                setTimeout(() => {
+                    console.log('🔍 Checking gallery status...');
+                    const landingGallery = document.querySelector('#landing-splide');
+                    const barGallery = document.querySelector('#bar-splide');
+                    const mainGallery = document.querySelector('#gallery-splide');
+                    
+                    if (landingGallery) {
+                        console.log('Landing gallery element found:', landingGallery.classList.contains('splide'));
+                    }
+                    if (barGallery) {
+                        console.log('Bar gallery element found:', barGallery.classList.contains('splide'));
+                    }
+                    if (mainGallery) {
+                        console.log('Main gallery element found:', mainGallery.classList.contains('splide'));
+                    }
+                    
+                    // Check if AutoScroll extension loaded
+                    if (window.splide?.Extensions?.AutoScroll || window.AutoScroll) {
+                        console.log('✅ AutoScroll extension confirmed loaded');
+                    } else {
+                        console.warn('⚠️ AutoScroll extension not detected - galleries may not auto-scroll');
+                        
+                        // Try reinitializing without AutoScroll
+                        console.log('🔄 Attempting fallback initialization...');
+                        setTimeout(initializeSplide, 500);
+                    }
+                }, 2000);
+            }, 500);
             
             // Device detection and optimizations
             const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -3059,6 +2943,25 @@
     </script>
 
     <!-- Splide JS -->
+    <script>
+        // Debug script loading
+        console.log('🔗 Loading Splide scripts...');
+        
+        // Check if scripts are loaded
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                console.log('🔍 Checking script availability:');
+                console.log('- Splide available:', typeof Splide !== 'undefined');
+                console.log('- AutoScroll available:', !!(window.splide?.Extensions?.AutoScroll || window.AutoScroll));
+                
+                if (typeof Splide === 'undefined') {
+                    console.error('❌ Splide library not loaded!');
+                } else {
+                    console.log('✅ Splide library loaded successfully');
+                }
+            }, 100);
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
 </body>
