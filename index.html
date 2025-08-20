@@ -387,10 +387,6 @@
 
         /* =============== LANDING PAGE - ALIGNED WITH NAV =============== */
         .landing-page {
-            height: 100vh;
-            height: calc(var(--vh, 1vh) * 100);
-            min-height: 100vh;
-            min-height: calc(var(--vh, 1vh) * 100);
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -399,23 +395,22 @@
             text-align: center;
             color: white;
             position: relative;
-            overflow: hidden;
             top: 0;
             left: 0;
             /* Align with navigation bar */
             padding-top: var(--nav-height);
+            min-height: 100vh;
+            min-height: calc(var(--vh, 1vh) * 100);
+            overflow-y: auto;
         }
 
-        /* Mobile landing page override */
-        @media (max-width: 768px) {
+        /* Desktop specific */
+        @media (min-width: 769px) {
             .landing-page {
-                height: auto !important;
+                height: auto;
                 min-height: 100vh;
                 min-height: calc(var(--vh, 1vh) * 100);
-                overflow: visible !important;
-                justify-content: flex-start !important;
-                padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
-                box-sizing: border-box;
+                overflow-y: auto;
             }
         }
 
@@ -426,6 +421,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
         }
 
         .slide {
@@ -1014,7 +1010,12 @@
                 transform-origin: center;
             }
 
-            /* Landing page mobile styles handled by specific override above */
+            /* Mobile landing page specific styles */
+            .landing-page {
+                padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
+                justify-content: flex-start;
+                box-sizing: border-box;
+            }
 
             .landing-content {
                 width: 100%;
@@ -1337,11 +1338,7 @@
 
         <!-- Landing Page -->
         <section id="landing" class="landing-page section active">
-            <div class="gallery-slider">
-                <div class="slide active"></div>
-                <div class="slide"></div>
-                <div class="slide"></div>
-            </div>
+            <div class="gallery-slider"></div>
             
             <div class="landing-content">
                 <h1>Door 64</h1>
@@ -2585,73 +2582,8 @@
             }
         }
 
-        // ENHANCED Background gallery slider functionality - SYNCED TO AUDIO BEAT
-        let slideInterval = null;
-        let currentSlide = 0;
-        let slidesPaused = false;
-        // Original timing that worked with audio
-        const SLIDE_INTERVAL = 3500; // Original working timing
-
-        function startBackgroundSlides() {
-            const slides = document.querySelectorAll('.slide');
-            if (slides.length === 0) return;
-            
-            // Clear any existing interval first
-            stopBackgroundSlides();
-            
-            // Reset to first slide with immediate visibility
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active');
-                if (index === 0) {
-                    slide.classList.add('active');
-                }
-            });
-            currentSlide = 0;
-            slidesPaused = false;
-            
-            console.log('🎬 Starting background slides');
-            
-            // Start the slide rotation with proper error handling
-            slideInterval = setInterval(() => {
-                if (slidesPaused) return;
-                
-                const slides = document.querySelectorAll('.slide');
-                if (slides.length === 0) {
-                    stopBackgroundSlides();
-                    return;
-                }
-                
-                // Remove active from current slide
-                slides[currentSlide].classList.remove('active');
-                
-                // Move to next slide
-                currentSlide = (currentSlide + 1) % slides.length;
-                
-                // Add active to new slide
-                slides[currentSlide].classList.add('active');
-                
-                console.log(`🎬 Slide ${currentSlide + 1}/${slides.length} active`);
-            }, SLIDE_INTERVAL);
-        }
-
-        function stopBackgroundSlides() {
-            if (slideInterval) {
-                clearInterval(slideInterval);
-                slideInterval = null;
-                slidesPaused = true;
-                console.log('⏸ Background slides stopped');
-            }
-        }
-
-        function pauseBackgroundSlides() {
-            slidesPaused = true;
-            console.log('⏸ Background slides paused');
-        }
-
-        function resumeBackgroundSlides() {
-            slidesPaused = false;
-            console.log('▶️ Background slides resumed');
-        }
+        // ENHANCED Background gallery slider functionality - REMOVED
+        // Background slides removed to prevent colored pages appearing on mobile
 
         // Enter main site function
         function enterMainSite() {
@@ -2681,7 +2613,7 @@
             }, 1200);
         }
 
-        // Show section function with proper slide management
+        // Show section function
         function showSection(sectionId) {
             console.log(`📍 Showing section: ${sectionId}`);
             
@@ -2694,16 +2626,6 @@
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
-            }
-            
-            // Handle background slides with proper timing
-            if (sectionId === 'landing') {
-                // Small delay to ensure DOM is ready
-                setTimeout(() => {
-                    startBackgroundSlides();
-                }, 150);
-            } else {
-                stopBackgroundSlides();
             }
             
             // Close mobile menu
@@ -3077,12 +2999,8 @@
         // Page visibility change handler to manage audio
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
-                pauseBackgroundSlides();
+                // Audio handling only
             } else {
-                if (document.getElementById('landing').classList.contains('active')) {
-                    resumeBackgroundSlides();
-                }
-                
                 // Resume audio if it was playing
                 if (audioPlaying && backgroundAudio && backgroundAudio.paused) {
                     backgroundAudio.play().catch(console.error);
