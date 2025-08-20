@@ -30,6 +30,9 @@
             --safe-area-bottom: env(safe-area-inset-bottom, 0px);
             --safe-area-left: env(safe-area-inset-left, 0px);
             --safe-area-right: env(safe-area-inset-right, 0px);
+            --tuscan-orange: #C65102;
+            --tuscan-orange-light: rgba(198, 81, 2, 0.8);
+            --tuscan-orange-glow: rgba(198, 81, 2, 0.7);
         }
 
         body {
@@ -236,7 +239,7 @@
             color: #ccc;
         }
 
-        /* Audio Toggle Button */
+        /* Audio Toggle Button - Updated colors */
         .audio-toggle {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.3);
@@ -261,16 +264,16 @@
         }
 
         .audio-toggle.playing {
-            background: rgba(95, 179, 211, 0.8) !important;
-            border-color: rgba(95, 179, 211, 1) !important;
+            background: var(--tuscan-orange-light) !important;
+            border-color: var(--tuscan-orange) !important;
             color: #fff !important;
-            animation: pulseBlue 2s infinite;
+            animation: pulseTuscanOrange 2s infinite;
         }
 
-        @keyframes pulseBlue {
-            0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
+        @keyframes pulseTuscanOrange {
+            0% { box-shadow: 0 0 0 0 var(--tuscan-orange-glow); }
+            70% { box-shadow: 0 0 0 10px rgba(198, 81, 2, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(198, 81, 2, 0); }
         }
 
         /* Splash Audio Button */
@@ -305,10 +308,10 @@
         }
 
         .splash-audio-toggle.playing {
-            background: rgba(95, 179, 211, 0.9) !important;
-            border-color: rgba(95, 179, 211, 1) !important;
+            background: var(--tuscan-orange-light) !important;
+            border-color: var(--tuscan-orange) !important;
             color: #fff !important;
-            animation: pulseBlue 2s infinite;
+            animation: pulseTuscanOrange 2s infinite;
         }
 
         .nav-links {
@@ -361,7 +364,7 @@
             background: #fff;
         }
 
-        /* =============== LANDING PAGE - FIXED SIZING =============== */
+        /* =============== LANDING PAGE - ALIGNED WITH NAV =============== */
         .landing-page {
             height: 100vh;
             height: calc(var(--vh, 1vh) * 100);
@@ -378,6 +381,8 @@
             overflow: hidden;
             top: 0;
             left: 0;
+            /* Align with navigation bar */
+            padding-top: var(--nav-height);
         }
 
         .gallery-slider {
@@ -589,7 +594,7 @@
             color: #000;
         }
 
-        /* Space Section */
+        /* Space Section - Added borders like other pages */
         .space-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -601,6 +606,7 @@
             background: #f8f8f8;
             padding: 40px;
             border-radius: 10px;
+            border-left: 4px solid #000;
             text-align: center;
             transition: transform 0.3s ease;
             -webkit-tap-highlight-color: transparent;
@@ -1919,10 +1925,12 @@
             }
         }
 
-        // FIXED Background gallery slider functionality
+        // ENHANCED Background gallery slider functionality - SYNCED TO AUDIO BEAT
         let slideInterval = null;
         let currentSlide = 0;
         let slidesPaused = false;
+        // Increased beat sync timing from 3500ms to match audio rhythm better
+        const BEAT_SYNC_INTERVAL = 2400; // Synced to roughly match audio beat
 
         function startBackgroundSlides() {
             const slides = document.querySelectorAll('.slide');
@@ -1941,9 +1949,9 @@
             currentSlide = 0;
             slidesPaused = false;
             
-            console.log('🎬 Starting background slides');
+            console.log('🎬 Starting beat-synced background slides');
             
-            // Start the slide rotation with proper error handling
+            // Start the slide rotation synced to audio beat
             slideInterval = setInterval(() => {
                 if (slidesPaused) return;
                 
@@ -1962,8 +1970,8 @@
                 // Add active to new slide
                 slides[currentSlide].classList.add('active');
                 
-                console.log(`🎬 Slide ${currentSlide + 1}/${slides.length} active`);
-            }, 3500);
+                console.log(`🎵 Beat-synced slide ${currentSlide + 1}/${slides.length} active`);
+            }, BEAT_SYNC_INTERVAL);
         }
 
         function stopBackgroundSlides() {
@@ -2145,7 +2153,7 @@
 
         // Initialize Swiper galleries
         function initializeSwiper() {
-            // Landing Page Swiper
+            // Landing Page Swiper - also synced to beat
             new Swiper('#landing-swiper', {
                 slidesPerView: 'auto',
                 spaceBetween: 0,
@@ -2154,7 +2162,7 @@
                     delay: 0,
                     disableOnInteraction: false,
                 },
-                speed: 2400,
+                speed: BEAT_SYNC_INTERVAL, // Synced to audio beat
                 allowTouchMove: true,
                 freeMode: true,
                 freeModeMomentum: false,
@@ -2323,7 +2331,7 @@
             console.log('✅ Door 64 initialization complete');
         });
 
-        // Page visibility change handler to manage audio
+        // Page visibility change handler to manage audio and slides
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 pauseBackgroundSlides();
