@@ -142,6 +142,28 @@
             display: none;
         }
 
+        .splash-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .splash-logo h1 {
+            font-size: clamp(3rem, 12vw, 8rem);
+            color: #fff;
+            text-align: center;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: clamp(4px, 3vw, 12px);
+            margin: 0;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
+            font-family: 'Georgia', serif;
+            line-height: 1;
+        }
+
         .splash-hint {
             position: fixed;
             bottom: 30px;
@@ -234,10 +256,29 @@
             box-sizing: border-box;
         }
 
+        .nav-logo {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 300;
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-family: 'Georgia', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-logo:hover {
+            opacity: 0.8;
+        }
+
         .nav-left-section {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
+            margin-left: auto;
         }
 
         .nav-center {
@@ -573,6 +614,37 @@
 
         .section.active {
             display: block;
+        }
+
+        /* Page Logo (above section titles) - White Embossed Style */
+        .page-logo {
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: clamp(2px, 2vw, 6px);
+            color: #fff;
+            font-family: 'Georgia', serif;
+            text-shadow: 
+                1px 1px 0px #ccc,
+                2px 2px 0px #bbb,
+                3px 3px 0px #aaa,
+                4px 4px 0px #999,
+                5px 5px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .page-logo::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: rgba(255,255,255,0.1);
+            text-shadow: none;
+            z-index: -1;
         }
 
         .section-title {
@@ -934,20 +1006,39 @@
                 padding-top: max(15px, calc(var(--safe-area-top) + 8px));
             }
 
+            /* Ensure logo is visible and properly positioned on mobile */
             .nav-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
                 padding: 0 20px;
                 padding-left: max(20px, calc(var(--safe-area-left) + 10px));
                 padding-right: max(20px, calc(var(--safe-area-right) + 10px));
                 max-width: 100%;
-                justify-content: space-between;
+            }
+
+            .nav-logo {
+                font-size: clamp(1rem, 4vw, 1.4rem);
+                color: #000;
+                text-shadow: none;
+                flex-shrink: 0;
+                order: 1;
             }
 
             .nav-left-section {
                 flex-direction: row;
-                gap: 20px;
+                gap: 15px;
                 align-items: center;
                 width: auto;
-                justify-content: flex-start;
+                justify-content: flex-end;
+                order: 2;
+                margin-left: auto;
+            }
+
+            .mobile-menu {
+                order: 3;
+                margin-left: 10px;
             }
 
             /* Audio toggle - minimum 44×44px touch target */
@@ -1095,6 +1186,18 @@
                 flex-shrink: 0;
             }
 
+            .page-logo {
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
+                margin-bottom: 20px;
+                letter-spacing: clamp(2px, 3vw, 4px);
+                color: #fff;
+                text-shadow: 
+                    1px 1px 0px #ddd,
+                    2px 2px 0px #ccc,
+                    3px 3px 0px #bbb,
+                    4px 4px 5px rgba(0,0,0,0.3);
+            }
+
             .section-title {
                 font-size: clamp(2rem, 10vw, 2.8rem);
                 margin-bottom: 50px;
@@ -1236,6 +1339,17 @@
                 letter-spacing: clamp(2px, 4vw, 5px);
             }
 
+            .page-logo {
+                font-size: clamp(1.6rem, 10vw, 2.2rem);
+                margin-bottom: 15px;
+                letter-spacing: clamp(2px, 4vw, 3px);
+                color: #fff;
+                text-shadow: 
+                    1px 1px 0px #ddd,
+                    2px 2px 0px #ccc,
+                    3px 3px 5px rgba(0,0,0,0.2);
+            }
+
             .section-title {
                 font-size: clamp(1.8rem, 12vw, 2.5rem);
             }
@@ -1279,6 +1393,18 @@
                 letter-spacing: clamp(3px, 3vw, 7px);
             }
 
+            .page-logo {
+                font-size: clamp(2rem, 6vw, 2.8rem);
+                margin-bottom: 25px;
+                letter-spacing: clamp(3px, 3vw, 5px);
+                color: #fff;
+                text-shadow: 
+                    1px 1px 0px #ccc,
+                    2px 2px 0px #bbb,
+                    3px 3px 0px #aaa,
+                    4px 4px 8px rgba(0,0,0,0.3);
+            }
+
             .section-title {
                 font-size: clamp(2.2rem, 8vw, 3.2rem);
             }
@@ -1299,11 +1425,62 @@
                 overscroll-behavior: none;
                 overflow-x: hidden;
                 overflow-y: auto;
+                background: #fff !important;
             }
             
             .landing-page,
             .section {
                 overscroll-behavior: none;
+                background: #fff !important;
+            }
+
+            /* Remove any purple masks or overlays */
+            .landing-page::before,
+            .section::before,
+            .main-site::before,
+            body::before {
+                display: none !important;
+            }
+
+            /* Ensure white background for all content areas */
+            .main-site,
+            .container,
+            .landing-content,
+            .space-grid,
+            .menu-grid,
+            .gallery-grid,
+            .events-list,
+            .contact-info {
+                background: #fff !important;
+            }
+        }
+
+        /* Mobile landscape orientation fixes */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body,
+            .main-site,
+            .section,
+            .landing-page {
+                background: #fff !important;
+            }
+
+            /* Remove any potential purple overlays in landscape */
+            *::before,
+            *::after {
+                background: transparent !important;
+            }
+
+            .nav-logo {
+                font-size: 1rem;
+            }
+
+            .nav {
+                background: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(10px);
+            }
+
+            .nav-logo {
+                color: #000 !important;
             }
         }
 
@@ -1324,6 +1501,11 @@
     <div class="splash-page" id="splashPage">
         <div class="splash-overlay"></div>
         
+        <!-- Fallback logo for splash page -->
+        <div class="splash-logo">
+            <h1>DOOR 64</h1>
+        </div>
+        
         <div class="splash-hint">click anywhere to enter door 64</div>
         
         <!-- Splash Audio Controls -->
@@ -1335,6 +1517,7 @@
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
+                <a href="#" class="nav-logo" onclick="showSection('landing')">DOOR 64</a>
                 <div class="nav-left-section">
                     <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
                     <ul class="nav-links" id="navLinks">
@@ -1556,6 +1739,7 @@
         <!-- Space Section -->
         <section id="space" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">space</h2>
                 <div class="space-grid">
                     <div class="space-item">
@@ -1734,6 +1918,7 @@
         <!-- Kitchen Section -->
         <section id="kitchen" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">in the kitchen</h2>
                 <div class="menu-grid">
                     <div class="menu-item">
@@ -1919,6 +2104,7 @@
         <!-- Bar Section -->
         <section id="bar" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">at the bar</h2>
                 <div class="menu-grid">
                     <div class="menu-item">
@@ -2095,6 +2281,7 @@
         <!-- Gallery Section -->
         <section id="gallery" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">who was here</h2>
                 
                 <!-- Main Gallery Splide -->
@@ -2266,6 +2453,7 @@
         <!-- Events Section -->
         <section id="events" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">what to do</h2>
                 <div class="events-list">
                     <div class="event-item">
@@ -2295,6 +2483,7 @@
         <!-- Social Section -->
         <section id="social" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">check on us</h2>
                 <div class="contact-card" style="max-width: 600px; margin: 0 auto;">
                     <h3>follow our journey</h3>
@@ -2321,6 +2510,7 @@
         <!-- Reservations Section -->
         <section id="reservations" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">come see us</h2>
                 <div class="reservation-form">
                     <form>
@@ -2375,6 +2565,7 @@
         <!-- Contact Section -->
         <section id="contact" class="section">
             <div class="container">
+                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
                 <h2 class="section-title">hit us up</h2>
                 <div class="contact-info">
                     <div class="contact-card">
