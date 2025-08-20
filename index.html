@@ -424,6 +424,13 @@
             background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
         }
 
+        /* Mobile page 64 - white background like other pages */
+        @media (max-width: 768px) {
+            .gallery-slider {
+                background: #fff;
+            }
+        }
+
         .slide {
             position: absolute;
             top: 0;
@@ -1015,6 +1022,7 @@
                 padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
                 justify-content: flex-start;
                 box-sizing: border-box;
+                color: #000; /* Black text on mobile */
             }
 
             .landing-content {
@@ -1031,6 +1039,8 @@
                 letter-spacing: clamp(2px, 3vw, 6px);
                 margin-bottom: 30px;
                 line-height: 1.1;
+                color: #000; /* Black title on mobile */
+                text-shadow: none; /* Remove shadow on mobile */
             }
 
             .landing-links {
@@ -1054,7 +1064,7 @@
                 font-size: clamp(1.4rem, 6vw, 1.8rem);
                 letter-spacing: clamp(1px, 3vw, 4px);
                 margin-bottom: 20px;
-                color: #fff; /* Better contrast on mobile */
+                color: #000; /* Black headings on mobile */
             }
 
             .sub-links a {
@@ -1064,6 +1074,17 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                color: #666; /* Dark gray links on mobile */
+            }
+
+            .sub-links a:hover,
+            .sub-links a:active {
+                color: #000; /* Black on interaction */
+            }
+
+            /* Ensure section background is white on mobile */
+            .landing-page.section {
+                background: #fff;
             }
 
             .landing-splide {
