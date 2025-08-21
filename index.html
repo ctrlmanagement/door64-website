@@ -469,12 +469,26 @@
         @media (max-width: 768px) {
             .gallery-slider {
                 background: #fff !important;
+                z-index: -2; /* Lower z-index to prevent layering issues */
             }
 
             /* Additional mobile landscape override */
             .landing-page .gallery-slider {
                 background: #fff !important;
                 background-image: none !important;
+                z-index: -2; /* Ensure it stays behind content */
+            }
+
+            /* Fix gallery layering - ensure landing splide is properly positioned */
+            .landing-splide {
+                position: relative;
+                z-index: 5; /* Above background but below content */
+                background: #fff !important;
+            }
+
+            /* Prevent double gallery layering */
+            .landing-page .splide {
+                background: #fff !important;
             }
         }
 
@@ -545,6 +559,23 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             color: #fff;
             line-height: 1.2;
+        }
+
+        /* Mobile page 64 logo - white embossed like other pages */
+        @media (max-width: 768px) {
+            .landing-content h1 {
+                font-size: clamp(2.5rem, 12vw, 4rem);
+                letter-spacing: clamp(2px, 3vw, 6px);
+                margin-bottom: 30px;
+                line-height: 1.1;
+                color: #fff !important; /* White embossed logo on mobile */
+                text-shadow: 
+                    1px 1px 0px #ccc,
+                    2px 2px 0px #bbb,
+                    3px 3px 0px #aaa,
+                    4px 4px 0px #999,
+                    5px 5px 10px rgba(0,0,0,0.2) !important;
+            }
         }
 
         .landing-links {
@@ -1206,6 +1237,9 @@
                 width: 100%;
                 border-radius: 12px;
                 flex-shrink: 0;
+                position: relative;
+                z-index: 5;
+                background: #fff !important;
             }
 
             .page-logo {
@@ -1357,8 +1391,13 @@
             }
 
             .landing-content h1 {
-                font-size: clamp(2.2rem, 14vw, 3.5rem);
-                letter-spacing: clamp(2px, 4vw, 5px);
+                font-size: clamp(2.5rem, 15vw, 4rem);
+                letter-spacing: clamp(3px, 4vw, 8px);
+                color: #fff !important; /* White embossed logo */
+                text-shadow: 
+                    1px 1px 0px #ddd,
+                    2px 2px 0px #ccc,
+                    3px 3px 5px rgba(0,0,0,0.2) !important;
             }
 
             .page-logo {
@@ -1413,6 +1452,12 @@
             .landing-content h1 {
                 font-size: clamp(2.8rem, 10vw, 4.2rem);
                 letter-spacing: clamp(3px, 3vw, 7px);
+                color: #fff !important; /* White embossed logo */
+                text-shadow: 
+                    1px 1px 0px #ccc,
+                    2px 2px 0px #bbb,
+                    3px 3px 0px #aaa,
+                    4px 4px 8px rgba(0,0,0,0.3) !important;
             }
 
             .page-logo {
@@ -1528,10 +1573,15 @@
                 background: #fff !important;
             }
 
-            /* Ensure main title is black in landscape */
+            /* Ensure main title is white embossed in landscape */
             .landing-content h1 {
-                color: #000 !important;
-                text-shadow: none !important;
+                color: #fff !important; /* White embossed logo */
+                text-shadow: 
+                    1px 1px 0px #ccc,
+                    2px 2px 0px #bbb,
+                    3px 3px 0px #aaa,
+                    4px 4px 0px #999,
+                    5px 5px 10px rgba(0,0,0,0.2) !important;
             }
 
             /* Ensure section headings are black in landscape */
@@ -1555,6 +1605,17 @@
                 background: #fff !important;
                 background-image: none !important;
                 background-color: #fff !important;
+                z-index: auto;
+            }
+
+            /* Fix gallery stacking in landscape */
+            .landing-splide {
+                z-index: 5 !important;
+                position: relative !important;
+            }
+
+            .gallery-slider {
+                z-index: -2 !important;
             }
         }
 
