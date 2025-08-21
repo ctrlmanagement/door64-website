@@ -142,28 +142,6 @@
             display: none;
         }
 
-        .splash-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .splash-logo h1 {
-            font-size: clamp(3rem, 12vw, 8rem);
-            color: #fff;
-            text-align: center;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: clamp(4px, 3vw, 12px);
-            margin: 0;
-            text-shadow: 4px 4px 8px rgba(0,0,0,0.8);
-            font-family: 'Georgia', serif;
-            line-height: 1;
-        }
-
         .splash-hint {
             position: fixed;
             bottom: 30px;
@@ -455,6 +433,28 @@
             }
         }
 
+        /* Mobile landing page - force white background in ALL orientations */
+        @media (max-width: 768px) {
+            .landing-page {
+                background: #fff !important;
+                background-image: none !important;
+                background-color: #fff !important;
+            }
+
+            .landing-page .gallery-slider {
+                background: #fff !important;
+                background-image: none !important;
+                background-color: #fff !important;
+            }
+
+            /* Remove gradients on all child elements */
+            .landing-page *,
+            .landing-content *,
+            .landing-links * {
+                background-image: none !important;
+            }
+        }
+
         .gallery-slider {
             position: absolute;
             top: 0;
@@ -463,6 +463,19 @@
             height: 100%;
             z-index: -1;
             background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Force white background on mobile for page 64 */
+        @media (max-width: 768px) {
+            .gallery-slider {
+                background: #fff !important;
+            }
+
+            /* Additional mobile landscape override */
+            .landing-page .gallery-slider {
+                background: #fff !important;
+                background-image: none !important;
+            }
         }
 
         /* Mobile page 64 - white background like other pages */
@@ -633,6 +646,15 @@
                 4px 4px 0px #999,
                 5px 5px 10px rgba(0,0,0,0.2);
             position: relative;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            display: block;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .page-logo:hover {
+            opacity: 0.8;
         }
 
         .page-logo::before {
@@ -1434,6 +1456,16 @@
                 background: #fff !important;
             }
 
+            /* Comprehensive page 64 mobile background override */
+            .landing-page,
+            .landing-page *,
+            #landing,
+            #landing * {
+                background-color: #fff !important;
+                background-image: none !important;
+                background: #fff !important;
+            }
+
             /* Remove any purple masks or overlays */
             .landing-page::before,
             .section::before,
@@ -1464,6 +1496,12 @@
                 background: #fff !important;
             }
 
+            /* Force white background for page 64 in landscape */
+            .landing-page,
+            .landing-page .gallery-slider {
+                background: #fff !important;
+            }
+
             /* Remove any potential purple overlays in landscape */
             *::before,
             *::after {
@@ -1481,6 +1519,42 @@
 
             .nav-logo {
                 color: #000 !important;
+            }
+
+            /* Landing page content white background in landscape */
+            .landing-content,
+            .landing-links,
+            .landing-link {
+                background: #fff !important;
+            }
+
+            /* Ensure main title is black in landscape */
+            .landing-content h1 {
+                color: #000 !important;
+                text-shadow: none !important;
+            }
+
+            /* Ensure section headings are black in landscape */
+            .landing-link h3 {
+                color: #000 !important;
+            }
+
+            .sub-links a {
+                color: #666 !important;
+            }
+
+            /* Kill any gradients in landscape mobile */
+            * {
+                background-image: none !important;
+            }
+
+            .gallery-slider,
+            .slide,
+            .landing-page,
+            #landing {
+                background: #fff !important;
+                background-image: none !important;
+                background-color: #fff !important;
             }
         }
 
@@ -1500,11 +1574,6 @@
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
         <div class="splash-overlay"></div>
-        
-        <!-- Fallback logo for splash page -->
-        <div class="splash-logo">
-            <h1>DOOR 64</h1>
-        </div>
         
         <div class="splash-hint">click anywhere to enter door 64</div>
         
@@ -1739,7 +1808,7 @@
         <!-- Space Section -->
         <section id="space" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">space</h2>
                 <div class="space-grid">
                     <div class="space-item">
@@ -1918,7 +1987,7 @@
         <!-- Kitchen Section -->
         <section id="kitchen" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">in the kitchen</h2>
                 <div class="menu-grid">
                     <div class="menu-item">
@@ -2104,7 +2173,7 @@
         <!-- Bar Section -->
         <section id="bar" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">at the bar</h2>
                 <div class="menu-grid">
                     <div class="menu-item">
@@ -2281,7 +2350,7 @@
         <!-- Gallery Section -->
         <section id="gallery" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">who was here</h2>
                 
                 <!-- Main Gallery Splide -->
@@ -2453,7 +2522,7 @@
         <!-- Events Section -->
         <section id="events" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">what to do</h2>
                 <div class="events-list">
                     <div class="event-item">
@@ -2483,7 +2552,7 @@
         <!-- Social Section -->
         <section id="social" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">check on us</h2>
                 <div class="contact-card" style="max-width: 600px; margin: 0 auto;">
                     <h3>follow our journey</h3>
@@ -2510,7 +2579,7 @@
         <!-- Reservations Section -->
         <section id="reservations" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">come see us</h2>
                 <div class="reservation-form">
                     <form>
@@ -2565,7 +2634,7 @@
         <!-- Contact Section -->
         <section id="contact" class="section">
             <div class="container">
-                <h1 class="page-logo" data-text="DOOR 64">Door 64</h1>
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">hit us up</h2>
                 <div class="contact-info">
                     <div class="contact-card">
