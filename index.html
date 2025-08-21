@@ -142,32 +142,6 @@
             display: none;
         }
 
-        .splash-hint {
-            position: fixed;
-            bottom: 30px;
-            bottom: max(30px, calc(var(--safe-area-bottom) + 30px));
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1em;
-            letter-spacing: 2px;
-            text-transform: lowercase;
-            animation: fadeInOut 3s infinite;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px 20px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-            white-space: nowrap;
-            max-width: 90vw;
-            text-align: center;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
         /* =============== MAIN SITE STYLES =============== */
         .main-site {
             opacity: 0;
@@ -1635,8 +1609,6 @@
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
         <div class="splash-overlay"></div>
-        
-        <div class="splash-hint">click anywhere to enter door 64</div>
         
         <!-- Splash Audio Controls -->
         <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
