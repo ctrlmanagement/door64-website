@@ -143,6 +143,63 @@
         </section>
     </div>
 
+    <!-- Simple Splash Page Functionality -->
+    <script>
+        // Simple splash page click to enter
+        document.addEventListener('DOMContentLoaded', function() {
+            const splash = document.getElementById('splashPage');
+            const mainSite = document.getElementById('mainSite');
+            
+            if (splash && mainSite) {
+                // Click splash to enter main site
+                splash.addEventListener('click', function(e) {
+                    // Don't trigger if clicking audio button
+                    if (e.target.closest('.splash-audio-toggle')) return;
+                    
+                    // Hide splash and show main site
+                    splash.style.opacity = '0';
+                    splash.style.transform = 'scale(1.1)';
+                    
+                    setTimeout(function() {
+                        splash.style.display = 'none';
+                        mainSite.style.opacity = '1';
+                    }, 1000);
+                });
+                
+                // Touch support for mobile
+                splash.addEventListener('touchend', function(e) {
+                    if (e.target.closest('.splash-audio-toggle')) return;
+                    e.preventDefault();
+                    
+                    splash.style.opacity = '0';
+                    splash.style.transform = 'scale(1.1)';
+                    
+                    setTimeout(function() {
+                        splash.style.display = 'none';
+                        mainSite.style.opacity = '1';
+                    }, 1000);
+                });
+            }
+        });
+        
+        // Simple audio toggle function
+        function toggleAudio(event) {
+            event.stopPropagation();
+            const audio = document.getElementById('backgroundAudio');
+            const button = event.target;
+            
+            if (audio.paused) {
+                audio.play().catch(console.error);
+                button.innerHTML = '⏸';
+                button.classList.add('playing');
+            } else {
+                audio.pause();
+                button.innerHTML = '♪';
+                button.classList.remove('playing');
+            }
+        }
+    </script>
+
     <!-- Main JavaScript File -->
     <script src="assets/js/script.js"></script>
 </body>
