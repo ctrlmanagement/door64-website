@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Who Was Here - Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+
+    <!-- MAIN SITE -->
+    <div class="main-site active" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="64.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Gallery Section -->
+        <section class="section active">
+            <div class="container">
+                <a href="64.html" class="page-logo" data-text="DOOR 64">Door 64</a>
+                <h2 class="section-title">who was here</h2>
+                
+                <!-- CSS3 Gallery -->
+                <div class="css-gallery" id="gallery-main">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="gallery-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>opening night celebration</h3>
+                                    <p>celebrating our grand opening with atlanta's finest</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>chef collaboration dinner</h3>
+                                    <p>exclusive evening with guest chef marcus</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>wine pairing evening</h3>
+                                    <p>curated selections from our sommelier</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>anniversary celebration</h3>
+                                    <p>one year of unforgettable experiences</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>private party</h3>
+                                    <p>intimate gathering in our exclusive space</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gallery Navigation -->
+                        <button class="gallery-nav prev" onclick="previousSlide('gallery-main')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('gallery-main')">›</button>
+                        
+                        <!-- Gallery Dots -->
+                        <div class="gallery-dots" id="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('gallery-main', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 3)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 4)"></span>
+                        </div>
+                        
+                        <!-- Auto-play Progress -->
+                        <div class="gallery-progress" id="gallery-progress"></div>
+                    </div>
+                </div>
+
+                <!-- Static Gallery Grid -->
+                <div class="gallery-grid">
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&h=300&fit=crop')">
+                        <span>food critics visit</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=300&h=300&fit=crop')">
+                        <span>seasonal tasting menu</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=300&h=300&fit=crop')">
+                        <span>signature cocktail</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=300&h=300&fit=crop')">
+                        <span>chef's special creation</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=300&h=300&fit=crop')">
+                        <span>artisanal dessert</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=300&h=300&fit=crop')">
+                        <span>craft cocktail preparation</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1493770348161-369560ae357d?w=300&h=300&fit=crop')">
+                        <span>fresh ingredients</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1587899897387-091f316dbf10?w=300&h=300&fit=crop')">
+                        <span>outdoor dining</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
