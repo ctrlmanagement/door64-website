@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>At The Bar - Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+
+    <!-- MAIN SITE -->
+    <div class="main-site active" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="64.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Bar Section -->
+        <section class="section active">
+            <div class="container">
+                <a href="64.html" class="page-logo" data-text="DOOR 64">Door 64</a>
+                <h2 class="section-title">at the bar</h2>
+                
+                <!-- Bar Navigation Tabs -->
+                <div class="sub-nav">
+                    <div class="sub-nav-links">
+                        <a href="signature-cocktails.html" class="sub-nav-link">signature cocktails</a>
+                        <a href="rare-spirits.html" class="sub-nav-link">rare spirits</a>
+                        <a href="zero-proof.html" class="sub-nav-link">zero proof</a>
+                    </div>
+                </div>
+                
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <a href="signature-cocktails.html" style="text-decoration: none; color: inherit;">
+                            <h3>signature cocktails</h3>
+                            <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
+                            <div class="price">$16 - $22</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="rare-spirits.html" style="text-decoration: none; color: inherit;">
+                            <h3>rare spirits</h3>
+                            <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
+                            <div class="price">$25 - $150</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="zero-proof.html" style="text-decoration: none; color: inherit;">
+                            <h3>zero-proof options</h3>
+                            <p>sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
+                            <div class="price">$12 - $16</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Bar Gallery -->
+                <div class="css-gallery" id="bar-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="bar-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>signature cocktails</h3>
+                                    <p>handcrafted with premium ingredients</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>rare spirits collection</h3>
+                                    <p>exceptional whiskies and vintage rums</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>craft mixology</h3>
+                                    <p>innovative techniques and fresh flavors</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>zero-proof artistry</h3>
+                                    <p>sophisticated non-alcoholic creations</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('bar-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('bar-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('bar-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('bar-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('bar-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('bar-gallery', 3)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
