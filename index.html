@@ -2,313 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Door 64 - Homepage Preview</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Georgia', serif;
-            background-color: #fff;
-            color: #2c2c2c;
-            overflow-x: hidden;
-        }
-
-        /* Navigation */
-        .nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 20px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            width: 100%;
-        }
-
-        .nav-logo {
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: #000;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .nav-left-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-left: auto;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-            margin: 0;
-            padding: 0;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: #666;
-            text-decoration: none;
-            text-transform: lowercase;
-            font-size: 14px;
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #000;
-        }
-
-        .audio-toggle {
-            background: rgba(0, 0, 0, 0.1);
-            border: 2px solid rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            color: #000;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Splash Page */
-        .splash-page {
-            width: 100%;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 9999;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 1.2s ease;
-        }
-
-        .splash-page.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .splash-content {
-            text-align: center;
-            color: #fff;
-        }
-
-        .splash-content h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
-            margin-bottom: 20px;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: clamp(4px, 2vw, 10px);
-        }
-
-        .splash-content p {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            margin-top: 20px;
-        }
-
-        .splash-audio-toggle {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            width: 55px;
-            height: 55px;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        }
-
-        /* Main Site */
-        .main-site {
-            opacity: 0;
-            transition: opacity 1s ease;
-            min-height: 100vh;
-            background: #fff;
-        }
-
-        .main-site.active {
-            opacity: 1;
-        }
-
-        .landing-page {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #000;
-            position: relative;
-            padding-top: 80px;
-            min-height: 100vh;
-            background: #fff;
-        }
-
-        .landing-content {
-            z-index: 10;
-            position: relative;
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .landing-content h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            margin-bottom: 40px;
-            text-transform: uppercase;
-            letter-spacing: clamp(2px, 2vw, 8px);
-            font-weight: 300;
-            color: #fff;
-            line-height: 1.2;
-            text-shadow: 
-                1px 1px 0px #ccc,
-                2px 2px 0px #bbb,
-                3px 3px 0px #aaa,
-                4px 4px 0px #999,
-                5px 5px 10px rgba(0,0,0,0.2);
-        }
-
-        .landing-links {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: clamp(30px, 5vw, 80px);
-            margin: 40px auto;
-            flex-wrap: wrap;
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-        }
-
-        .landing-link {
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            flex: 1;
-            min-width: 280px;
-            max-width: 350px;
-            margin-bottom: 30px;
-        }
-
-        .landing-link:hover {
-            transform: translateY(-5px);
-        }
-
-        .landing-link h3 {
-            font-size: clamp(1.4rem, 4vw, 2rem);
-            margin-bottom: 25px;
-            text-transform: lowercase;
-            letter-spacing: clamp(1px, 1vw, 3px);
-            color: #000;
-            font-weight: 300;
-        }
-
-        .sub-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .sub-links a {
-            color: #666;
-            text-decoration: none;
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            letter-spacing: 1px;
-            transition: color 0.3s ease;
-            text-transform: lowercase;
-            padding: 5px 0;
-        }
-
-        .sub-links a:hover {
-            color: #000;
-        }
-
-        .gallery-placeholder {
-            margin-top: 60px;
-            padding: 40px;
-            background: #f8f8f8;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .gallery-placeholder h4 {
-            margin-bottom: 10px;
-            color: #000;
-            text-transform: lowercase;
-        }
-
-        .gallery-placeholder p {
-            color: #666;
-            font-style: italic;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .landing-links {
-                flex-direction: column;
-                gap: 35px;
-                margin: 30px 0;
-                width: 100%;
-                padding: 0;
-            }
-
-            .landing-link {
-                min-width: auto;
-                max-width: none;
-                width: 100%;
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 </head>
 <body>
+
     <!-- SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
-        <button class="splash-audio-toggle" onclick="toggleSplash()">♪</button>
-        <div class="splash-content">
-            <h1>DOOR 64</h1>
-            <p>Click anywhere to enter</p>
-        </div>
+        <div class="splash-overlay"></div>
+        
+        <!-- Splash Audio Controls -->
+        <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
     </div>
 
     <!-- MAIN SITE -->
@@ -316,25 +33,32 @@
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
-                <a href="#" class="nav-logo">DOOR 64</a>
+                <a href="index.html" class="nav-logo">DOOR 64</a>
                 <div class="nav-left-section">
-                    <button class="audio-toggle" title="Toggle Background Music">♪</button>
-                    <ul class="nav-links">
-                        <li><a href="#">64</a></li>
-                        <li><a href="#">space</a></li>
-                        <li><a href="#">in the kitchen</a></li>
-                        <li><a href="#">at the bar</a></li>
-                        <li><a href="#">who was here</a></li>
-                        <li><a href="#">what to do</a></li>
-                        <li><a href="#">come see us</a></li>
-                        <li><a href="#">hit us up</a></li>
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="index.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
                     </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             </div>
         </nav>
 
         <!-- Landing Page -->
-        <section class="landing-page">
+        <section class="landing-page section active">
+            <div class="gallery-slider"></div>
+            
             <div class="landing-content">
                 <h1>Door 64</h1>
                 
@@ -342,58 +66,83 @@
                     <div class="landing-link">
                         <h3>space</h3>
                         <div class="sub-links">
-                            <a href="#">in the kitchen</a>
-                            <a href="#">at the bar</a>
+                            <a href="in.the.kitchen.html">in the kitchen</a>
+                            <a href="at.the.bar.html">at the bar</a>
                         </div>
                     </div>
                     
                     <div class="landing-link">
                         <h3>what to do</h3>
                         <div class="sub-links">
-                            <a href="#">make reservation</a>
-                            <a href="#">upcoming events</a>
+                            <a href="come.see.us.html">make reservation</a>
+                            <a href="what.to.do.html">upcoming events</a>
                         </div>
                     </div>
                     
                     <div class="landing-link">
                         <h3>connect</h3>
                         <div class="sub-links">
-                            <a href="#">who was here</a>
-                            <a href="#">come see us</a>
+                            <a href="who.was.here.html">who was here</a>
+                            <a href="come.see.us.html">come see us</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Gallery Placeholder -->
-                <div class="gallery-placeholder">
-                    <h4>Interactive Gallery</h4>
-                    <p>Slideshow of restaurant atmosphere, dishes, and experiences</p>
-                </div>
-
-                <div style="margin-top: 40px; text-align: center;">
-                    <p style="opacity: 0.6; font-size: 1.1rem; color: #666;">Atlanta's premier dining experience</p>
+                <!-- Landing Gallery -->
+                <div class="css-gallery" id="landing-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="landing-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>intimate dining experience</h3>
+                                    <p>where every meal becomes a memory</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>craft cocktails</h3>
+                                    <p>handcrafted with passion and precision</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>culinary artistry</h3>
+                                    <p>seasonal ingredients, chef's creativity</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>wine selection</h3>
+                                    <p>curated collection of exceptional wines</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>elegant atmosphere</h3>
+                                    <p>designed for unforgettable experiences</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('landing-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('landing-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('landing-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 3)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 4)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
-    <script>
-        function toggleSplash() {
-            const splashPage = document.getElementById('splashPage');
-            const mainSite = document.getElementById('mainSite');
-            
-            splashPage.classList.add('hidden');
-            
-            setTimeout(() => {
-                splashPage.style.display = 'none';
-                mainSite.classList.add('active');
-            }, 1000);
-        }
-
-        // Auto-enter after 3 seconds for demo
-        setTimeout(() => {
-            toggleSplash();
-        }, 3000);
-    </script>
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
