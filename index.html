@@ -884,8 +884,6 @@
             background: #000;
         }
 
-
-
         /* Contact Info */
         .contact-info {
             display: grid;
@@ -998,6 +996,107 @@
 
         .submit-btn:hover {
             background: #333;
+        }
+
+        /* Menu Download Styles */
+        .download-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .download-hint.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .download-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .download-modal.show {
+            display: flex;
+        }
+
+        .download-content {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 350px;
+            margin: 20px;
+        }
+
+        .download-content h3 {
+            color: #000;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            text-transform: lowercase;
+        }
+
+        .download-content p {
+            color: #666;
+            margin-bottom: 30px;
+            text-transform: lowercase;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .download-btn {
+            padding: 12px 25px;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .download-btn.secondary {
+            background: #fff;
+            color: #000;
+        }
+
+        .download-btn.secondary:hover {
+            background: #000;
+            color: #fff;
         }
 
         /* =============== MOBILE RESPONSIVE - OPTIMIZED FOR IPHONE 14/15 SERIES =============== */
@@ -1284,8 +1383,6 @@
                 min-height: 44px; /* Minimum touch target */
             }
 
-            /* Slide text removed - now just background gradients */
-
             .swiper-container {
                 height: 280px;
             }
@@ -1353,6 +1450,30 @@
 
             .social-links a:active {
                 background: rgba(0,0,0,0.1);
+            }
+
+            .download-hint {
+                bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
+                right: max(20px, calc(var(--safe-area-right) + 10px));
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+
+            .download-content {
+                margin: 20px;
+                padding: 30px 25px;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .download-btn {
+                width: 100%;
+                padding: 15px;
+                font-size: 16px;
+                min-height: 44px;
             }
         }
 
@@ -1614,6 +1735,23 @@
         <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
     </div>
 
+    <!-- Download Hint -->
+    <div class="download-hint" id="downloadHint">
+        right-click or long press to download menu
+    </div>
+
+    <!-- Download Modal -->
+    <div class="download-modal" id="downloadModal">
+        <div class="download-content">
+            <h3>download cocktail menu</h3>
+            <p>choose your preferred format to save our cocktail menu</p>
+            <div class="download-buttons">
+                <button class="download-btn" onclick="downloadMenuPDF()">download PDF</button>
+                <button class="download-btn secondary" onclick="closeDownloadModal()">cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN SITE -->
     <div class="main-site" id="mainSite">
         <!-- Navigation -->
@@ -1709,129 +1847,6 @@
                             <li class="splide__slide">
                                 <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=280&fit=crop" alt="kitchen artistry">
                             </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=280&fit=crop" alt="plated dish">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?w=400&h=280&fit=crop" alt="breakfast setup">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=280&fit=crop" alt="pasta preparation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=280&fit=crop" alt="burger grill">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400&h=280&fit=crop" alt="restaurant interior">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=280&fit=crop" alt="chef cooking">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=400&h=280&fit=crop" alt="food presentation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=280&fit=crop" alt="pancakes">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=280&fit=crop" alt="salad bowl">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=280&fit=crop" alt="tacos">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=280&fit=crop" alt="burger close up">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1563379091339-03246963d117?w=400&h=280&fit=crop" alt="wine tasting">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=280&fit=crop" alt="cocktail making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=280&fit=crop" alt="wine glass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=280&fit=crop" alt="coffee cup">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=400&h=280&fit=crop" alt="pizza slice">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=400&h=280&fit=crop" alt="fine dining">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=280&fit=crop" alt="kitchen flames">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=280&fit=crop" alt="food preparation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=280&fit=crop" alt="soup bowl">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=280&fit=crop" alt="steak dinner">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&h=280&fit=crop" alt="kitchen herbs">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=280&fit=crop" alt="bread making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1516684669134-de6f7c473a2a?w=400&h=280&fit=crop" alt="brunch spread">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565895405229-71bec5b52be9?w=400&h=280&fit=crop" alt="dessert plate">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1606787366850-de6ba128a456?w=400&h=280&fit=crop" alt="martini glass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=280&fit=crop" alt="cheese board">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&h=280&fit=crop" alt="chef plating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1587899897387-091f316dbf10?w=400&h=280&fit=crop" alt="outdoor dining">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=280&fit=crop" alt="candle dinner">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=280&fit=crop" alt="cocktail bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=280&fit=crop" alt="bread basket">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85?w=400&h=280&fit=crop" alt="pasta dish">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1572115753107-46b09827f88b?w=400&h=280&fit=crop" alt="seafood platter">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=280&fit=crop" alt="avocado toast">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578474846511-04ba529f0b88?w=400&h=280&fit=crop" alt="smoothie bowl">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586511925558-a4c6376fe65f?w=400&h=280&fit=crop" alt="croissant">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=280&fit=crop" alt="gourmet plate">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=400&h=280&fit=crop" alt="wine cellar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=400&h=280&fit=crop" alt="chef hands">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586816879360-004f5b0c51e2?w=400&h=280&fit=crop" alt="restaurant table">
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -1872,144 +1887,6 @@
                             </li>
                             <li class="splide__slide">
                                 <img src="https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=280&fit=crop" alt="intimate seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop" alt="private dining">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400&h=280&fit=crop" alt="restaurant ambiance">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586816879360-004f5b0c51e2?w=400&h=280&fit=crop" alt="dining table setup">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=280&fit=crop" alt="candlelit dinner">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1587899897387-091f316dbf10?w=400&h=280&fit=crop" alt="outdoor terrace">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=280&fit=crop" alt="bar counter">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=400&h=280&fit=crop" alt="wine cellar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=400&h=280&fit=crop" alt="modern interior">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1529444491650-d447f67a6e0b?w=400&h=280&fit=crop" alt="booth seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=400&h=280&fit=crop" alt="ceiling design">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&h=280&fit=crop" alt="restaurant lighting">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=280&fit=crop" alt="elegant chairs">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=280&fit=crop" alt="kitchen window">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=280&fit=crop" alt="chef workspace">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578474846511-04ba529f0b88?w=400&h=280&fit=crop" alt="counter seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551787219-4f95c6db0db6?w=400&h=280&fit=crop" alt="table setting">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=280&fit=crop" alt="food service area">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=400&h=280&fit=crop" alt="window seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1592861956120-e524fc739696?w=400&h=280&fit=crop" alt="interior design">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1596522354195-e84ae3c98731?w=400&h=280&fit=crop" alt="dining room">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1552566149-a4a40d86e243?w=400&h=280&fit=crop" alt="restaurant floor">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&h=280&fit=crop" alt="restaurant entrance">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&h=280&fit=crop" alt="dining atmosphere">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=280&fit=crop" alt="chef station">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1559329007-40df8dd8c4df?w=400&h=280&fit=crop" alt="private room">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1561758033-48d52648efd6?w=400&h=280&fit=crop" alt="dining hall">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1524541140007-8f5552b6c8d5?w=400&h=280&fit=crop" alt="kitchen pass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1564298804554-8db0b3b9c5b5?w=400&h=280&fit=crop" alt="restaurant design">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?w=400&h=280&fit=crop" alt="luxury seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=280&fit=crop" alt="wine display">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=280&fit=crop" alt="bar setup">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1606787366850-de6ba128a456?w=400&h=280&fit=crop" alt="cocktail area">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=280&fit=crop" alt="coffee station">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=400&h=280&fit=crop" alt="pizza oven">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=400&h=280&fit=crop" alt="fine dining room">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=280&fit=crop" alt="kitchen exhibition">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=280&fit=crop" alt="soup station">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=280&fit=crop" alt="grill area">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&h=280&fit=crop" alt="herb garden">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=280&fit=crop" alt="bread station">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1516684669134-de6f7c473a2a?w=400&h=280&fit=crop" alt="brunch area">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565895405229-71bec5b52be9?w=400&h=280&fit=crop" alt="dessert counter">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=280&fit=crop" alt="cheese display">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&h=280&fit=crop" alt="plating station">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=280&fit=crop" alt="bread display">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85?w=400&h=280&fit=crop" alt="pasta corner">
                             </li>
                         </ul>
                     </div>
@@ -2059,164 +1936,81 @@
                             <li class="splide__slide">
                                 <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop" alt="vegetarian artistry">
                             </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop" alt="culinary techniques">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=280&fit=crop" alt="food preparation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=280&fit=crop" alt="pasta making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=280&fit=crop" alt="grilling">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=280&fit=crop" alt="chef cooking">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=400&h=280&fit=crop" alt="plating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=280&fit=crop" alt="fine plating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=400&h=280&fit=crop" alt="chef hands">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&h=280&fit=crop" alt="herbs spices">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=280&fit=crop" alt="bread baking">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=280&fit=crop" alt="kitchen station">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1524541140007-8f5552b6c8d5?w=400&h=280&fit=crop" alt="kitchen pass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?w=400&h=280&fit=crop" alt="breakfast prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1516684669134-de6f7c473a2a?w=400&h=280&fit=crop" alt="brunch kitchen">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=280&fit=crop" alt="steak prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=280&fit=crop" alt="soup making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=400&h=280&fit=crop" alt="pizza prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85?w=400&h=280&fit=crop" alt="pasta cooking">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1572115753107-46b09827f88b?w=400&h=280&fit=crop" alt="seafood prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=280&fit=crop" alt="avocado prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=280&fit=crop" alt="bread prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586511925558-a4c6376fe65f?w=400&h=280&fit=crop" alt="pastry making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578474846511-04ba529f0b88?w=400&h=280&fit=crop" alt="smoothie prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&h=280&fit=crop" alt="chef plating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=280&fit=crop" alt="pancake making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=280&fit=crop" alt="salad prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=280&fit=crop" alt="taco prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=280&fit=crop" alt="burger assembly">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565895405229-71bec5b52be9?w=400&h=280&fit=crop" alt="dessert making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=280&fit=crop" alt="cheese prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=400&h=280&fit=crop" alt="fine dining prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1559329007-40df8dd8c4df?w=400&h=280&fit=crop" alt="kitchen workspace">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=400&h=280&fit=crop" alt="knife skills">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1556805348-ba76c29daa63?w=400&h=280&fit=crop" alt="vegetable prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&h=280&fit=crop" alt="meat prep">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1608039755401-742074f0548d?w=400&h=280&fit=crop" alt="sauce making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1528712306091-ed0763094c98?w=400&h=280&fit=crop" alt="kitchen tools">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=280&fit=crop" alt="cooking flames">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=280&fit=crop" alt="kitchen setup">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=400&h=280&fit=crop" alt="cooking process">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571091655789-405eb7a3a3a8?w=400&h=280&fit=crop" alt="kitchen action">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=400&h=280&fit=crop" alt="presentation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=280&fit=crop" alt="chef work">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?w=400&h=280&fit=crop" alt="professional cooking">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1556908114-236f4326750d?w=400&h=280&fit=crop" alt="kitchen creativity">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1516684669134-de6f7c473a2a?w=400&h=280&fit=crop" alt="culinary art">
-                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Bar Section -->
+        <!-- Bar Section with Integrated Cocktail Menu -->
         <section id="bar" class="section">
             <div class="container">
                 <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
                 <h2 class="section-title">at the bar</h2>
-                <div class="menu-grid">
-                    <div class="menu-item">
-                        <h3>signature cocktails</h3>
-                        <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
-                        <div class="price">$16 - $22</div>
+                
+                <div style="text-align: center; margin-bottom: 60px; padding: 40px; background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%); border-radius: 6px; border-left: 2px solid #333;">
+                    <h2 style="font-size: 1.8rem; font-weight: 300; color: #1a1a1a; margin-bottom: 20px; text-transform: lowercase; letter-spacing: 3px;">the art of the cocktail</h2>
+                    <p style="color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto; text-transform: lowercase;">at DOOR 64, we believe the essential cocktail emerges from the harmony of premium spirits, masterful mixology, and the genuine connections formed between bartender and guest at our bar.</p>
+                </div>
+
+                <h3 style="font-size: 2.2rem; text-align: center; margin-bottom: 40px; font-weight: 300; text-transform: lowercase; letter-spacing: 3px; color: #000;">signature cocktails</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 60px;">
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">peach 75</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">our twist on the classic french 75. gin, peach puree, agave, and a splash of peach schnapps topped off with prosecco. served in a champagne flute.</p>
                     </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">midtown spritz</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">elderflower liqueur, fresh lime juice, club soda and prosecco. served over ice in a wine glass.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">velvet room</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">smooth velvety cognac, orange liqueur, lemon and honey, shaken and poured over a big rock. served in a rocks glass.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">walk it out</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">vodka, gin, rum, tequila, triple sec and blue curaçao with pineapple juice and a splash of sour. served in a tall glass.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">otp water</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">tequila, fresh lime juice, splash of triple sec and sprite. served in a tall glass.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">hartsfield in the am</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">for the folks with the early flights. sour and peach schnapps over ice topped with club soda. served in a tall glass.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">lenox lemondrop</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">tequila, simple syrup, lemon juice and triple sec, shaken and served in a martini glass with a sugar rim.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">stone mountain punch</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">dark rum or spiced rum with orange juice, pineapple juice and grenadine. served in a tall glass with lime garnish.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">the 285'tini</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">citrus vodka, pomegranate juice, triple sec, fresh lime juice and a couple of dashes of orange bitters. shaken and served in a martini glass with a lemon twist.</p>
+                    </div>
+                    
+                    <div style="background: #f8f8f8; padding: 25px; border-radius: 6px; border-left: 2px solid #333;">
+                        <h5 style="font-size: 1.1rem; font-weight: 500; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 1px;">old atlanta</h5>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px; text-transform: lowercase;">our atl twist on the classic old fashion cocktail...a sweet tea old fashion. sweet tea, bourbon, splash of limoncello, peach bitters, agave. stirred in the rocks glass and served with a big rock. garnish with lemon twist and luxardo cherry.</p>
+                    </div>
+                </div>
+
+                <div class="menu-grid" style="margin-bottom: 60px;">
                     <div class="menu-item">
                         <h3>rare spirits</h3>
-                        <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
+                        <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies for the discerning palate.</p>
                         <div class="price">$25 - $150</div>
                     </div>
                     <div class="menu-item">
@@ -2225,9 +2019,80 @@
                         <div class="price">$12 - $16</div>
                     </div>
                 </div>
+
+                <div style="background: linear-gradient(135deg, #fbfbfb 0%, #f5f5f5 100%); padding: 40px; border-radius: 6px; margin: 40px 0;">
+                    <h3 style="font-size: 2rem; font-weight: 400; color: #1a1a1a; margin-bottom: 8px; text-transform: lowercase; letter-spacing: 4px; position: relative; padding-bottom: 12px;">wine program</h3>
+                    <p style="color: #888; font-size: 0.95rem; margin-bottom: 40px; text-transform: lowercase; letter-spacing: 1px;">carefully curated selections to complement our culinary offerings</p>
+                    
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="font-size: 1.2rem; color: #1a1a1a; margin-bottom: 15px; text-transform: lowercase; letter-spacing: 2px;">sparkling & champagne</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dotted #ddd;">
+                            <div>
+                                <div style="font-weight: 500; color: #1a1a1a; text-transform: lowercase;">armand de brignac (ace of spades)</div>
+                                <div style="color: #888; font-size: 0.9rem; text-transform: lowercase;">champagne, france</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dotted #ddd;">
+                            <div>
+                                <div style="font-weight: 500; color: #1a1a1a; text-transform: lowercase;">dom pérignon vintage champagne</div>
+                                <div style="color: #888; font-size: 0.9rem; text-transform: lowercase;">champagne, france</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                            <div>
+                                <div style="font-weight: 500; color: #1a1a1a; text-transform: lowercase;">la marca prosecco</div>
+                                <div style="color: #888; font-size: 0.9rem; text-transform: lowercase;">veneto, italy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="font-size: 1.2rem; color: #1a1a1a; margin-bottom: 15px; text-transform: lowercase; letter-spacing: 2px;">white wines</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dotted #ddd;">
+                            <div>
+                                <div style="font-weight: 500; color: #1a1a1a; text-transform: lowercase;">chablis les montmains</div>
+                                <div style="color: #888; font-size: 0.9rem; text-transform: lowercase;">burgundy, france</div>
+                            </div>
+                            <div style="font-weight: 600; color: #000; margin-left: 15px;">$22</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                            <div>
+                                <div style="font-weight: 500; color: #1a1a1a; text-transform: lowercase;">grüner veltliner federspiel</div>
+                                <div style="color: #888; font-size: 0.9rem; text-transform: lowercase;">wachau, austria</div>
+                            </div>
+                            <div style="font-weight: 600; color: #000; margin-left: 15px;">$16</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="font-size: 1.2rem; color: #1a1a1a; margin-bottom: 15px; text-transform: lowercase; letter-spacing: 2px;">red wines</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dotted #ddd;">
+                            <div>
+                                <div style="font-weight: 500; color: #1a1a1a; text-transform: lowercase;">côtes du rhône villages</div>
+                                <div style="color: #888; font-size: 0.9rem; text-transform: lowercase;">rhône valley, france</div>
+                            </div>
+                            <div style="font-weight: 600; color: #000; margin-left: 15px;">$19</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                            <div>
+                                <div style="font-weight: 500; color: #1a1a1a; text-transform: lowercase;">pinot noir willamette valley</div>
+                                <div style="color: #888; font-size: 0.9rem; text-transform: lowercase;">oregon, usa</div>
+                            </div>
+                            <div style="font-weight: 600; color: #000; margin-left: 15px;">$24</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 6px; margin: 30px 0; border-left: 3px solid #ccc;">
+                    <p style="color: #666; font-size: 0.85rem; text-transform: lowercase; letter-spacing: 0.5px;">please inform your server of any dietary restrictions or allergies. our kitchen can accommodate most dietary needs with advance notice. all prices exclude tax and gratuity.</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 60px; padding: 40px; background: rgb(95, 179, 211); color: white; border-radius: 6px;">
+                    <p style="font-size: 0.9rem; opacity: 0.8; text-transform: lowercase; letter-spacing: 1px; color: #000;">64 third st nw, atlanta, ga 30308 • (773) 640-7789 • DOOR64ATL.com</p>
+                </div>
                 
                 <!-- Bar Gallery Splide -->
-                <div class="splide bar-splide" id="bar-splide">
+                <div class="splide bar-splide" id="bar-splide" style="margin-top: 60px;">
                     <div class="splide__track">
                         <ul class="splide__list">
                             <li class="splide__slide">
@@ -2244,135 +2109,6 @@
                             </li>
                             <li class="splide__slide">
                                 <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=280&fit=crop" alt="zero-proof artistry">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=280&fit=crop" alt="bar atmosphere">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=280&fit=crop" alt="cocktail making">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=280&fit=crop" alt="wine glass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=280&fit=crop" alt="coffee preparation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1606787366850-de6ba128a456?w=400&h=280&fit=crop" alt="martini glass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=280&fit=crop" alt="cocktail bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=400&h=280&fit=crop" alt="wine cellar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1563379091339-03246963d117?w=400&h=280&fit=crop" alt="wine tasting">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=280&fit=crop" alt="bar counter">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=280&fit=crop" alt="elegant bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1559329007-40df8dd8c4df?w=400&h=280&fit=crop" alt="private bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=280&fit=crop" alt="candlelit cocktails">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1587899897387-091f316dbf10?w=400&h=280&fit=crop" alt="outdoor bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586816879360-004f5b0c51e2?w=400&h=280&fit=crop" alt="bar seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&h=280&fit=crop" alt="bar lighting">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=280&fit=crop" alt="bar stools">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=400&h=280&fit=crop" alt="modern bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1529444491650-d447f67a6e0b?w=400&h=280&fit=crop" alt="booth seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1528605105345-5344ea20e269?w=400&h=280&fit=crop" alt="bar design">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=400&h=280&fit=crop" alt="window bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1592861956120-e524fc739696?w=400&h=280&fit=crop" alt="bar interior">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1596522354195-e84ae3c98731?w=400&h=280&fit=crop" alt="bar room">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1552566149-a4a40d86e243?w=400&h=280&fit=crop" alt="bar floor">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&h=280&fit=crop" alt="bar entrance">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&h=280&fit=crop" alt="bar atmosphere">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=280&fit=crop" alt="cocktail station">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1561758033-48d52648efd6?w=400&h=280&fit=crop" alt="bar hall">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1524541140007-8f5552b6c8d5?w=400&h=280&fit=crop" alt="bar pass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1564298804554-8db0b3b9c5b5?w=400&h=280&fit=crop" alt="bar design">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?w=400&h=280&fit=crop" alt="luxury bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=400&h=280&fit=crop" alt="pizza bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=400&h=280&fit=crop" alt="fine bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=280&fit=crop" alt="live bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=280&fit=crop" alt="soup bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=280&fit=crop" alt="grill bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&h=280&fit=crop" alt="herb bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=280&fit=crop" alt="bread bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1516684669134-de6f7c473a2a?w=400&h=280&fit=crop" alt="brunch bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565895405229-71bec5b52be9?w=400&h=280&fit=crop" alt="dessert bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=280&fit=crop" alt="cheese bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&h=280&fit=crop" alt="plating bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=280&fit=crop" alt="bread display">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85?w=400&h=280&fit=crop" alt="pasta bar">
                             </li>
                         </ul>
                     </div>
@@ -2404,147 +2140,6 @@
                             </li>
                             <li class="splide__slide">
                                 <img src="https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=400&h=300&fit=crop" alt="private party">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=300&fit=crop" alt="food critics visit">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=300&fit=crop" alt="seasonal tasting menu">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=400&h=300&fit=crop" alt="signature cocktail">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=400&h=300&fit=crop" alt="chef's special creation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=300&fit=crop" alt="artisanal dessert">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=400&h=300&fit=crop" alt="craft cocktail preparation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?w=400&h=300&fit=crop" alt="fresh ingredients">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop" alt="kitchen in action">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop" alt="team collaboration">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop" alt="ingredient preparation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop" alt="plating perfection">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=300&fit=crop" alt="daily setup">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=400&h=300&fit=crop" alt="creative process">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop" alt="brunch event">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop" alt="healthy dining">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop" alt="casual dining">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=300&fit=crop" alt="comfort food">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1563379091339-03246963d117?w=400&h=300&fit=crop" alt="wine tasting event">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop" alt="cocktail masterclass">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop" alt="wine dinner">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop" alt="coffee tasting">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=400&h=300&fit=crop" alt="pizza night">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1506354666786-959d6d497f1a?w=400&h=300&fit=crop" alt="fine dining experience">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=400&h=300&fit=crop" alt="live cooking demo">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop" alt="food photography">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&h=300&fit=crop" alt="soup course">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop" alt="meat course">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=400&h=300&fit=crop" alt="herb garden event">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop" alt="bread workshop">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1516684669134-de6f7c473a2a?w=400&h=300&fit=crop" alt="weekend brunch">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565895405229-71bec5b52be9?w=400&h=300&fit=crop" alt="dessert showcase">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1606787366850-de6ba128a456?w=400&h=300&fit=crop" alt="cocktail hour">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?w=400&h=300&fit=crop" alt="cheese tasting">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&h=300&fit=crop" alt="chef presentation">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1587899897387-091f316dbf10?w=400&h=300&fit=crop" alt="outdoor event">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=300&fit=crop" alt="romantic dinner">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=400&h=300&fit=crop" alt="cocktail bar event">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=300&fit=crop" alt="bread service">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1595295333158-4742f28fbd85?w=400&h=300&fit=crop" alt="pasta night">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1572115753107-46b09827f88b?w=400&h=300&fit=crop" alt="seafood special">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=400&h=300&fit=crop" alt="healthy options">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1578474846511-04ba529f0b88?w=400&h=300&fit=crop" alt="smoothie bar">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1586511925558-a4c6376fe65f?w=400&h=300&fit=crop" alt="pastry selection">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=400&h=300&fit=crop" alt="modern dining">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1529444491650-d447f67a6e0b?w=400&h=300&fit=crop" alt="cozy atmosphere">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop" alt="elegant seating">
-                            </li>
-                            <li class="splide__slide">
-                                <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&h=300&fit=crop" alt="evening ambiance">
                             </li>
                         </ul>
                     </div>
@@ -2866,6 +2461,245 @@
             updateAudioButtons();
         }
 
+        // =============== MENU DOWNLOAD FUNCTIONALITY ===============
+        let downloadHintTimeout;
+        let longPressTimer;
+        let isLongPress = false;
+
+        // Show download hint
+        function showDownloadHint() {
+            const hint = document.getElementById('downloadHint');
+            if (hint) {
+                hint.classList.add('show');
+                clearTimeout(downloadHintTimeout);
+                downloadHintTimeout = setTimeout(() => {
+                    hint.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Menu download functionality
+        function downloadMenuPDF() {
+            // Create a print-friendly version
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>DOOR 64 - Cocktail Menu</title>
+                    <style>
+                        body { 
+                            font-family: Georgia, serif; 
+                            color: #000; 
+                            padding: 40px; 
+                            background: #fff;
+                            line-height: 1.6;
+                        }
+                        h1, h2, h3, h4, h5 { 
+                            text-transform: lowercase; 
+                            color: #000; 
+                            margin-bottom: 15px;
+                        }
+                        h1 { 
+                            font-size: 2.5rem; 
+                            text-align: center; 
+                            margin-bottom: 30px; 
+                            letter-spacing: 4px;
+                        }
+                        h2 { 
+                            font-size: 2rem; 
+                            text-align: center; 
+                            margin-bottom: 40px; 
+                            letter-spacing: 3px;
+                        }
+                        .cocktail-grid { 
+                            display: grid; 
+                            grid-template-columns: repeat(2, 1fr); 
+                            gap: 20px; 
+                            margin-bottom: 40px;
+                        }
+                        .cocktail-item { 
+                            border: 1px solid #ddd; 
+                            padding: 20px; 
+                            border-radius: 5px; 
+                            page-break-inside: avoid;
+                        }
+                        .cocktail-name { 
+                            font-weight: bold; 
+                            margin-bottom: 8px; 
+                            font-size: 1.1rem;
+                        }
+                        .wine-section { 
+                            margin-top: 40px; 
+                            padding: 30px; 
+                            background: #f8f8f8; 
+                            border-radius: 5px;
+                        }
+                        @media print {
+                            body { margin: 0; padding: 20px; }
+                            .cocktail-grid { grid-template-columns: 1fr; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>DOOR 64</h1>
+                    <div style="text-align: center; margin-bottom: 40px; padding: 20px; background: #f5f5f5; border-radius: 5px;">
+                        <h3>the art of the cocktail</h3>
+                        <p>at DOOR 64, we believe the essential cocktail emerges from the harmony of premium spirits, masterful mixology, and the genuine connections formed between bartender and guest at our bar.</p>
+                    </div>
+                    
+                    <h2>signature cocktails</h2>
+                    <div class="cocktail-grid">
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">peach 75</div>
+                            <p>our twist on the classic french 75. gin, peach puree, agave, and a splash of peach schnapps topped off with prosecco. served in a champagne flute.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">midtown spritz</div>
+                            <p>elderflower liqueur, fresh lime juice, club soda and prosecco. served over ice in a wine glass.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">velvet room</div>
+                            <p>smooth velvety cognac, orange liqueur, lemon and honey, shaken and poured over a big rock. served in a rocks glass.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">walk it out</div>
+                            <p>vodka, gin, rum, tequila, triple sec and blue curaçao with pineapple juice and a splash of sour. served in a tall glass.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">otp water</div>
+                            <p>tequila, fresh lime juice, splash of triple sec and sprite. served in a tall glass.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">hartsfield in the am</div>
+                            <p>for the folks with the early flights. sour and peach schnapps over ice topped with club soda. served in a tall glass.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">lenox lemondrop</div>
+                            <p>tequila, simple syrup, lemon juice and triple sec, shaken and served in a martini glass with a sugar rim.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">stone mountain punch</div>
+                            <p>dark rum or spiced rum with orange juice, pineapple juice and grenadine. served in a tall glass with lime garnish.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">the 285'tini</div>
+                            <p>citrus vodka, pomegranate juice, triple sec, fresh lime juice and a couple of dashes of orange bitters. shaken and served in a martini glass with a lemon twist.</p>
+                        </div>
+                        <div class="cocktail-item">
+                            <div class="cocktail-name">old atlanta</div>
+                            <p>our atl twist on the classic old fashion cocktail...a sweet tea old fashion. sweet tea, bourbon, splash of limoncello, peach bitters, agave. stirred in the rocks glass and served with a big rock. garnish with lemon twist and luxardo cherry.</p>
+                        </div>
+                    </div>
+
+                    <div class="wine-section">
+                        <h3>wine program</h3>
+                        <p>carefully curated selections to complement our culinary offerings</p>
+                        
+                        <h4>sparkling & champagne</h4>
+                        <p>• armand de brignac (ace of spades) - champagne, france</p>
+                        <p>• dom pérignon vintage champagne - champagne, france</p>
+                        <p>• la marca prosecco - veneto, italy</p>
+                        
+                        <h4>white wines</h4>
+                        <p>• chablis les montmains - burgundy, france - $22</p>
+                        <p>• grüner veltliner federspiel - wachau, austria - $16</p>
+                        
+                        <h4>red wines</h4>
+                        <p>• côtes du rhône villages - rhône valley, france - $19</p>
+                        <p>• pinot noir willamette valley - oregon, usa - $24</p>
+                    </div>
+                    
+                    <div style="margin-top: 40px; text-align: center; padding: 20px; background: #f0f0f0; border-radius: 5px;">
+                        <p>please inform your server of any dietary restrictions or allergies. our kitchen can accommodate most dietary needs with advance notice. all prices exclude tax and gratuity.</p>
+                        <p style="margin-top: 20px; font-weight: bold;">64 third st nw, atlanta, ga 30308 • (773) 640-7789 • DOOR64ATL.com</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            setTimeout(() => {
+                printWindow.print();
+                closeDownloadModal();
+            }, 500);
+        }
+
+        function showDownloadModal() {
+            const modal = document.getElementById('downloadModal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function closeDownloadModal() {
+            const modal = document.getElementById('downloadModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Menu section event listeners for download
+        function setupMenuDownload() {
+            const barSection = document.getElementById('bar');
+            if (!barSection) return;
+
+            // Desktop right-click
+            barSection.addEventListener('contextmenu', function(e) {
+                if (document.getElementById('bar').classList.contains('active')) {
+                    e.preventDefault();
+                    showDownloadModal();
+                    showDownloadHint();
+                }
+            });
+
+            // Mobile long-press detection
+            barSection.addEventListener('touchstart', function(e) {
+                if (!document.getElementById('bar').classList.contains('active')) return;
+                
+                isLongPress = false;
+                longPressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    if (navigator.vibrate) {
+                        navigator.vibrate(50); // Haptic feedback
+                    }
+                    showDownloadModal();
+                    showDownloadHint();
+                }, 800); // 800ms for long press
+            }, { passive: true });
+
+            barSection.addEventListener('touchend', function(e) {
+                clearTimeout(longPressTimer);
+                if (isLongPress) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            barSection.addEventListener('touchmove', function(e) {
+                clearTimeout(longPressTimer);
+            }, { passive: true });
+
+            // Show hint when entering bar section
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target.classList.contains('active') && mutation.target.id === 'bar') {
+                        setTimeout(showDownloadHint, 1000);
+                    }
+                });
+            });
+
+            observer.observe(barSection, { attributes: true, attributeFilter: ['class'] });
+        }
+
+        // Close modal on click outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('downloadModal');
+            if (modal && e.target === modal) {
+                closeDownloadModal();
+            }
+        });
+
         // Set up enhanced interaction triggers
         function setupInteractionTriggers() {
             console.log('📱 Setting up enhanced interaction triggers...');
@@ -2895,9 +2729,6 @@
                 document.addEventListener('deviceorientation', startAudioOnInteraction, { once: true });
             }
         }
-
-        // ENHANCED Background gallery slider functionality - REMOVED
-        // Background slides removed to prevent colored pages appearing on mobile
 
         // Enter main site function
         function enterMainSite() {
@@ -3072,7 +2903,7 @@
             // Get AutoScroll extension
             const AutoScroll = window.splide?.Extensions?.AutoScroll || window.AutoScroll;
 
-            // Landing Page Splide - NOW with AutoContinuousKitchenComplex
+            // Landing Page Splide
             if (document.querySelector('#landing-splide')) {
                 console.log('🏠 Initializing Landing (64) gallery with AutoContinuousKitchenComplex...');
                 
@@ -3087,18 +2918,12 @@
                         console.log('⚠️ Landing gallery mounted without AutoScroll extension');
                     }
                     
-                    landingSplide.on('move', function () {
-                        console.log('🏠 Landing gallery auto-moved');
-                    });
-                    
                 } catch (error) {
                     console.error('❌ Landing gallery initialization error:', error);
                 }
-            } else {
-                console.error('❌ Landing gallery element not found');
             }
 
-            // Space Splide - Keep AutoContinuousKitchenComplex
+            // Space Splide
             if (document.querySelector('#space-splide')) {
                 console.log('🏢 Initializing Space gallery with AutoContinuousKitchenComplex...');
                 
@@ -3113,16 +2938,12 @@
                         console.log('⚠️ Space gallery mounted without AutoScroll extension');
                     }
                     
-                    spaceSplide.on('move', function () {
-                        console.log('🏢 Space gallery auto-moved');
-                    });
-                    
                 } catch (error) {
                     console.error('❌ Space gallery initialization error:', error);
                 }
             }
 
-            // Kitchen Splide - Keep AutoContinuousKitchenComplex (original)
+            // Kitchen Splide
             if (document.querySelector('#kitchen-splide')) {
                 console.log('👨‍🍳 Initializing Kitchen gallery with AutoContinuousKitchenComplex...');
                 
@@ -3137,16 +2958,12 @@
                         console.log('⚠️ Kitchen gallery mounted without AutoScroll extension');
                     }
                     
-                    kitchenSplide.on('move', function () {
-                        console.log('👨‍🍳 Kitchen gallery auto-moved');
-                    });
-                    
                 } catch (error) {
                     console.error('❌ Kitchen gallery initialization error:', error);
                 }
             }
 
-            // Bar Splide - NOW with AutoContinuousKitchenComplex
+            // Bar Splide
             if (document.querySelector('#bar-splide')) {
                 console.log('🍸 Initializing Bar gallery with AutoContinuousKitchenComplex...');
                 
@@ -3161,18 +2978,12 @@
                         console.log('⚠️ Bar gallery mounted without AutoScroll extension');
                     }
                     
-                    barSplide.on('move', function () {
-                        console.log('🍸 Bar gallery auto-moved');
-                    });
-                    
                 } catch (error) {
                     console.error('❌ Bar gallery initialization error:', error);
                 }
-            } else {
-                console.error('❌ Bar gallery element not found');
             }
 
-            // Gallery Splide - NOW with AutoContinuousKitchenComplex
+            // Gallery Splide
             if (document.querySelector('#gallery-splide')) {
                 console.log('🖼️ Initializing Gallery (who was here) with AutoContinuousKitchenComplex...');
                 
@@ -3187,29 +2998,12 @@
                         console.log('⚠️ Gallery mounted without AutoScroll extension');
                     }
                     
-                    gallerySplide.on('move', function () {
-                        console.log('🖼️ Gallery auto-moved');
-                    });
-                    
                 } catch (error) {
                     console.error('❌ Gallery initialization error:', error);
                 }
-            } else {
-                console.error('❌ Gallery element not found');
             }
             
             console.log('🎬 All galleries initialized with AutoContinuousKitchenComplex configuration');
-            
-            // Log final status
-            setTimeout(() => {
-                console.log('📊 Gallery Status Report:');
-                console.log('- AutoScroll Extension:', !!(AutoScroll));
-                console.log('- Landing Gallery Element:', !!document.querySelector('#landing-splide'));
-                console.log('- Space Gallery Element:', !!document.querySelector('#space-splide'));
-                console.log('- Kitchen Gallery Element:', !!document.querySelector('#kitchen-splide'));
-                console.log('- Bar Gallery Element:', !!document.querySelector('#bar-splide'));
-                console.log('- Main Gallery Element:', !!document.querySelector('#gallery-splide'));
-            }, 1000);
         }
 
         // Initialize everything when page loads
@@ -3222,6 +3016,9 @@
             // Set up enhanced interaction triggers
             setupInteractionTriggers();
             
+            // Set up menu download functionality
+            setupMenuDownload();
+            
             // Wait a bit for external scripts to load, then initialize Splide
             setTimeout(() => {
                 console.log('🎬 Initializing Splide after delay...');
@@ -3230,19 +3027,6 @@
                 // Fallback check after 2 seconds
                 setTimeout(() => {
                     console.log('🔍 Checking gallery status...');
-                    const landingGallery = document.querySelector('#landing-splide');
-                    const barGallery = document.querySelector('#bar-splide');
-                    const mainGallery = document.querySelector('#gallery-splide');
-                    
-                    if (landingGallery) {
-                        console.log('Landing gallery element found:', landingGallery.classList.contains('splide'));
-                    }
-                    if (barGallery) {
-                        console.log('Bar gallery element found:', barGallery.classList.contains('splide'));
-                    }
-                    if (mainGallery) {
-                        console.log('Main gallery element found:', mainGallery.classList.contains('splide'));
-                    }
                     
                     // Check if AutoScroll extension loaded
                     if (window.splide?.Extensions?.AutoScroll || window.AutoScroll) {
@@ -3324,6 +3108,9 @@
     </script>
 
     <!-- Splide JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
+    
     <script>
         // Debug script loading
         console.log('🔗 Loading Splide scripts...');
@@ -3343,7 +3130,5 @@
             }, 100);
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
 </body>
 </html>
