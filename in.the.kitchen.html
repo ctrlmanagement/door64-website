@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>In The Kitchen - Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+
+    <!-- MAIN SITE -->
+    <div class="main-site active" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="64.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Kitchen Section -->
+        <section class="section active">
+            <div class="container">
+                <a href="64.html" class="page-logo" data-text="DOOR 64">Door 64</a>
+                <h2 class="section-title">in the kitchen</h2>
+                
+                <!-- Kitchen Navigation Tabs -->
+                <div class="sub-nav">
+                    <div class="sub-nav-links">
+                        <a href="seasonal-tasting.html" class="sub-nav-link">seasonal tasting menu</a>
+                        <a href="vegetarian-experience.html" class="sub-nav-link">vegetarian experience</a>
+                        <a href="chefs-selection.html" class="sub-nav-link">chef's selection</a>
+                    </div>
+                </div>
+                
+                <div class="menu-grid">
+                    <div class="menu-item">
+                        <a href="seasonal-tasting.html" style="text-decoration: none; color: inherit;">
+                            <h3>seasonal tasting menu</h3>
+                            <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
+                            <div class="price">$125 per person</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="vegetarian-experience.html" style="text-decoration: none; color: inherit;">
+                            <h3>vegetarian experience</h3>
+                            <p>plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
+                            <div class="price">$85 per person</div>
+                        </a>
+                    </div>
+                    <div class="menu-item">
+                        <a href="chefs-selection.html" style="text-decoration: none; color: inherit;">
+                            <h3>chef's selection</h3>
+                            <p>let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
+                            <div class="price">$95 per person</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Kitchen Gallery -->
+                <div class="css-gallery" id="kitchen-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="kitchen-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>seasonal ingredients</h3>
+                                    <p>fresh from local farms and markets</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>chef's creativity</h3>
+                                    <p>artistry in every dish preparation</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>kitchen artistry</h3>
+                                    <p>precision and passion combined</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>tasting menu</h3>
+                                    <p>eight courses of culinary excellence</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('kitchen-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('kitchen-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('kitchen-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('kitchen-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('kitchen-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('kitchen-gallery', 3)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
