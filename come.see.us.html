@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Come See Us - Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+
+    <!-- MAIN SITE -->
+    <div class="main-site active" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="64.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Combined Reservations & Social Section -->
+        <section class="section active">
+            <div class="container">
+                <a href="64.html" class="page-logo" data-text="DOOR 64">Door 64</a>
+                <h2 class="section-title">come see us</h2>
+                
+                <!-- Reservation Form -->
+                <div class="reservation-form">
+                    <h3 style="text-align: center; font-size: 1.5em; margin-bottom: 30px; text-transform: lowercase; letter-spacing: 2px; color: #000;">make a reservation</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="name">name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">phone</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">preferred date</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">preferred time</label>
+                            <select id="time" name="time" required>
+                                <option value="">select time</option>
+                                <option value="6:00 PM">6:00 PM</option>
+                                <option value="6:30 PM">6:30 PM</option>
+                                <option value="8:00 PM">8:00 PM</option>
+                                <option value="9:00 PM">9:00 PM</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="guests">number of guests</label>
+                            <select id="guests" name="guests" required>
+                                <option value="">select</option>
+                                <option value="1">1 guest</option>
+                                <option value="2">2 guests</option>
+                                <option value="3">3 guests</option>
+                                <option value="4">4 guests</option>
+                                <option value="5">5 guests</option>
+                                <option value="6">6 guests</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="special">special requests</label>
+                            <textarea id="special" name="special" rows="4" placeholder="dietary restrictions, allergies, special occasions..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">request reservation</button>
+                    </form>
+                </div>
+                
+                <!-- Social Media & Newsletter Section -->
+                <div class="social-newsletter-section" style="margin-top: 80px;">
+                    <div class="contact-card" style="max-width: 600px; margin: 0 auto;">
+                        <h3>follow our journey</h3>
+                        <p>stay connected with door 64 for the latest updates, behind-the-scenes content, and special announcements.</p>
+                        <div class="social-links">
+                            <a href="https://www.instagram.com/door64atl/">instagram</a>
+                            <a href="#">facebook</a>
+                            <a href="#">twitter</a>
+                            <a href="#">tiktok</a>
+                        </div>
+                        <div style="margin-top: 40px;">
+                            <p><strong>newsletter signup</strong></p>
+                            <p>be the first to know about special events, new menu items, and exclusive offers.</p>
+                            <div style="margin-top: 20px;">
+                                <input type="email" placeholder="enter your email" style="padding: 12px; width: 70%; border: 2px solid #ddd; border-radius: 5px; font-family: Georgia, serif; color: #000;">
+                                <button style="padding: 12px 20px; background: #000; color: white; border: none; border-radius: 5px; margin-left: 10px; font-family: Georgia, serif; text-transform: lowercase;">subscribe</button>
+                            </div>
+                            <p style="margin-top: 10px; font-size: 12px; color: #666;">questions? email us at inquiry@door64atl.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
