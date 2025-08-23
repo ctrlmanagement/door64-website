@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>What To Do - Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+
+    <!-- MAIN SITE -->
+    <div class="main-site active" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="64.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Events Section -->
+        <section class="section active">
+            <div class="container">
+                <a href="64.html" class="page-logo" data-text="DOOR 64">Door 64</a>
+                <h2 class="section-title">what to do</h2>
+                <div class="events-list">
+                    <div class="event-item">
+                        <div class="event-date">every tuesday</div>
+                        <h3>wine & dine</h3>
+                        <p>join us for an intimate evening featuring wine pairings with a special 5-course menu. limited to 16 guests.</p>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">first friday</div>
+                        <h3>chef's table experience</h3>
+                        <p>exclusive 6-seat experience at the chef's counter with personalized menu and wine selections.</p>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">saturday afternoons</div>
+                        <h3>cooking classes</h3>
+                        <p>learn the techniques behind our signature dishes in hands-on cooking workshops.</p>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-date">monthly</div>
+                        <h3>private events</h3>
+                        <p>book the entire restaurant for your special occasion. customized menus and service available.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
