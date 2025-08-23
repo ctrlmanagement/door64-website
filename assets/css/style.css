@@ -70,7 +70,7 @@ body {
     top: 0;
     left: 0;
     z-index: 9999;
-    background: url('assets/audio/splash.png') center/contain no-repeat;
+    background: url('../audio/splash.png') center/contain no-repeat;
     background-color: #000;
     background-size: contain;
     background-position: center center;
@@ -101,7 +101,7 @@ body {
 /* Mobile splash page - use crop/cover for better mobile experience */
 @media (max-width: 768px) {
     .splash-page {
-        background: url('assets/audio/splash.png') center/cover no-repeat;
+        background: url('../audio/splash.png') center/cover no-repeat;
         background-size: cover;
         background-position: center center;
     }
