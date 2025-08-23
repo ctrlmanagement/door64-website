@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Door 64</title>
     
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
     <!-- Background Audio -->
     <audio id="backgroundAudio" loop preload="auto">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
@@ -597,6 +600,217 @@
             color: #fff;
         }
 
+        /* =============== CSS3 GALLERY STYLES =============== */
+        .css-gallery {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 400px;
+            margin: 40px auto 60px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            background: #f8f8f8;
+        }
+
+        .gallery-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .gallery-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        .gallery-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .gallery-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05));
+            pointer-events: none;
+        }
+
+        .gallery-content {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            color: white;
+            z-index: 2;
+        }
+
+        .gallery-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            text-transform: lowercase;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            color: #fff;
+        }
+
+        .gallery-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            color: #fff;
+        }
+
+        /* Gallery Controls */
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 18px;
+        }
+
+        .gallery-nav:hover {
+            background: rgba(0,0,0,0.8);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-nav.prev {
+            left: 20px;
+        }
+
+        .gallery-nav.next {
+            right: 20px;
+        }
+
+        /* Gallery Dots */
+        .gallery-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 3;
+        }
+
+        .gallery-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+
+        /* Auto-play indicator */
+        .gallery-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(255,255,255,0.8);
+            transition: width 4s linear;
+            z-index: 3;
+        }
+
+        /* Mobile Gallery Optimizations */
+        @media (max-width: 768px) {
+            .css-gallery {
+                height: 300px;
+                margin: 30px auto 40px;
+                border-radius: 12px;
+            }
+
+            .gallery-content {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+            }
+
+            .gallery-content h3 {
+                font-size: 1.4rem;
+                margin-bottom: 8px;
+            }
+
+            .gallery-content p {
+                font-size: 0.9rem;
+            }
+
+            .gallery-nav {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+            }
+
+            .gallery-nav.prev {
+                left: 15px;
+            }
+
+            .gallery-nav.next {
+                right: 15px;
+            }
+
+            .gallery-dots {
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .gallery-dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        /* Touch/Swipe Effects */
+        .gallery-container.swiping .gallery-track {
+            transition: none;
+        }
+
+        .gallery-slide.fade-in {
+            animation: fadeInSlide 0.6s ease-out;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Section Styles */
         .section {
             padding: 100px 0;
@@ -954,6 +1168,59 @@
             color: #666;
         }
 
+        /* Gallery Grid for Gallery Section */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            text-transform: lowercase;
+            -webkit-tap-highlight-color: transparent;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item:hover::before {
+            opacity: 0;
+        }
+
+        .gallery-item span {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
         /* Contact Info */
         .contact-info {
             display: grid;
@@ -1296,7 +1563,8 @@
             }
 
             .menu-grid,
-            .space-grid {
+            .space-grid,
+            .gallery-grid {
                 grid-template-columns: 1fr;
                 gap: 30px;
             }
@@ -1684,7 +1952,8 @@
         @media (hover: none) and (pointer: coarse) {
             .space-item:hover,
             .menu-item:hover,
-            .landing-link:hover {
+            .landing-link:hover,
+            .gallery-item:hover {
                 transform: none;
             }
         }
@@ -1713,6 +1982,7 @@
                         <li><a href="#" onclick="showSection('space')">space</a></li>
                         <li><a href="#" onclick="showSection('kitchen')">in the kitchen</a></li>
                         <li><a href="#" onclick="showSection('bar')">at the bar</a></li>
+                        <li><a href="#" onclick="showSection('gallery')">who was here</a></li>
                         <li><a href="#" onclick="showSection('events')">what to do</a></li>
                         <li><a href="#" onclick="showSection('social')">check on us</a></li>
                         <li><a href="#" onclick="showSection('reservations')">come see us</a></li>
@@ -1754,9 +2024,257 @@
                     <div class="landing-link">
                         <h3>connect</h3>
                         <div class="sub-links">
+                            <a href="#" onclick="showSection('gallery')">who was here</a>
                             <a href="#" onclick="showSection('social')">check on us</a>
-                            <a href="#" onclick="showSection('contact')">hit us up</a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section - RESTORED -->
+        <section id="gallery" class="section">
+            <div class="container">
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
+                <h2 class="section-title">who was here</h2>
+                
+                <!-- CSS3 Gallery -->
+                <div class="css-gallery" id="gallery-main">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="gallery-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>opening night celebration</h3>
+                                    <p>celebrating our grand opening with atlanta's finest</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>chef collaboration dinner</h3>
+                                    <p>exclusive evening with guest chef marcus</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>wine pairing evening</h3>
+                                    <p>curated selections from our sommelier</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>anniversary celebration</h3>
+                                    <p>one year of unforgettable experiences</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>private party</h3>
+                                    <p>intimate gathering in our exclusive space</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Gallery Navigation -->
+                        <button class="gallery-nav prev" onclick="previousSlide('gallery-main')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('gallery-main')">›</button>
+                        
+                        <!-- Gallery Dots -->
+                        <div class="gallery-dots" id="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('gallery-main', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 3)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('gallery-main', 4)"></span>
+                        </div>
+                        
+                        <!-- Auto-play Progress -->
+                        <div class="gallery-progress" id="gallery-progress"></div>
+                    </div>
+                </div>
+
+                <!-- Static Gallery Grid -->
+                <div class="gallery-grid">
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=300&h=300&fit=crop')">
+                        <span>food critics visit</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=300&h=300&fit=crop')">
+                        <span>seasonal tasting menu</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=300&h=300&fit=crop')">
+                        <span>signature cocktail</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=300&h=300&fit=crop')">
+                        <span>chef's special creation</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=300&h=300&fit=crop')">
+                        <span>artisanal dessert</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=300&h=300&fit=crop')">
+                        <span>craft cocktail preparation</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1493770348161-369560ae357d?w=300&h=300&fit=crop')">
+                        <span>fresh ingredients</span>
+                    </div>
+                    <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1587899897387-091f316dbf10?w=300&h=300&fit=crop')">
+                        <span>outdoor dining</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kitchen Section -->
+        <section id="kitchen" class="section">
+            <div class="container">
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
+                <h2 class="section-title">in the kitchen</h2>
+                
+                <!-- Kitchen Navigation Tabs -->
+                <div class="sub-nav">
+                    <div class="sub-nav-links">
+                        <a href="#" onclick="showSection('seasonal-tasting')" class="sub-nav-link">seasonal tasting menu</a>
+                        <a href="#" onclick="showSection('vegetarian-experience')" class="sub-nav-link">vegetarian experience</a>
+                        <a href="#" onclick="showSection('chefs-selection')" class="sub-nav-link">chef's selection</a>
+                    </div>
+                </div>
+                
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="showSection('seasonal-tasting')">
+                        <h3>seasonal tasting menu</h3>
+                        <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
+                        <div class="price">$125 per person</div>
+                    </div>
+                    <div class="menu-item" onclick="showSection('vegetarian-experience')">
+                        <h3>vegetarian experience</h3>
+                        <p>plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
+                        <div class="price">$85 per person</div>
+                    </div>
+                    <div class="menu-item" onclick="showSection('chefs-selection')">
+                        <h3>chef's selection</h3>
+                        <p>let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
+                        <div class="price">$95 per person</div>
+                    </div>
+                </div>
+
+                <!-- Kitchen Gallery -->
+                <div class="css-gallery" id="kitchen-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="kitchen-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>seasonal ingredients</h3>
+                                    <p>fresh from local farms and markets</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>chef's creativity</h3>
+                                    <p>artistry in every dish preparation</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>kitchen artistry</h3>
+                                    <p>precision and passion combined</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>tasting menu</h3>
+                                    <p>eight courses of culinary excellence</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('kitchen-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('kitchen-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('kitchen-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('kitchen-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('kitchen-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('kitchen-gallery', 3)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bar Section -->
+        <section id="bar" class="section">
+            <div class="container">
+                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
+                <h2 class="section-title">at the bar</h2>
+                
+                <!-- Bar Navigation Tabs -->
+                <div class="sub-nav">
+                    <div class="sub-nav-links">
+                        <a href="#" onclick="showSection('signature-cocktails')" class="sub-nav-link">signature cocktails</a>
+                        <a href="#" onclick="showSection('rare-spirits')" class="sub-nav-link">rare spirits</a>
+                        <a href="#" onclick="showSection('zero-proof')" class="sub-nav-link">zero proof</a>
+                    </div>
+                </div>
+                
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="showSection('signature-cocktails')">
+                        <h3>signature cocktails</h3>
+                        <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
+                        <div class="price">$16 - $22</div>
+                    </div>
+                    <div class="menu-item" onclick="showSection('rare-spirits')">
+                        <h3>rare spirits</h3>
+                        <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
+                        <div class="price">$25 - $150</div>
+                    </div>
+                    <div class="menu-item" onclick="showSection('zero-proof')">
+                        <h3>zero-proof options</h3>
+                        <p>sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
+                        <div class="price">$12 - $16</div>
+                    </div>
+                </div>
+
+                <!-- Bar Gallery -->
+                <div class="css-gallery" id="bar-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="bar-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>signature cocktails</h3>
+                                    <p>handcrafted with premium ingredients</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>rare spirits collection</h3>
+                                    <p>exceptional whiskies and vintage rums</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>craft mixology</h3>
+                                    <p>innovative techniques and fresh flavors</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>zero-proof artistry</h3>
+                                    <p>sophisticated non-alcoholic creations</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('bar-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('bar-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('bar-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('bar-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('bar-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('bar-gallery', 3)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
                     </div>
                 </div>
             </div>
@@ -2124,41 +2642,6 @@
             </div>
         </section>
 
-        <!-- Kitchen Section -->
-        <section id="kitchen" class="section">
-            <div class="container">
-                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
-                <h2 class="section-title">in the kitchen</h2>
-                
-                <!-- Kitchen Navigation Tabs -->
-                <div class="sub-nav">
-                    <div class="sub-nav-links">
-                        <a href="#" onclick="showSection('seasonal-tasting')" class="sub-nav-link">seasonal tasting menu</a>
-                        <a href="#" onclick="showSection('vegetarian-experience')" class="sub-nav-link">vegetarian experience</a>
-                        <a href="#" onclick="showSection('chefs-selection')" class="sub-nav-link">chef's selection</a>
-                    </div>
-                </div>
-                
-                <div class="menu-grid">
-                    <div class="menu-item" onclick="showSection('seasonal-tasting')">
-                        <h3>seasonal tasting menu</h3>
-                        <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
-                        <div class="price">$125 per person</div>
-                    </div>
-                    <div class="menu-item" onclick="showSection('vegetarian-experience')">
-                        <h3>vegetarian experience</h3>
-                        <p>plant-based artistry that celebrates vegetables, grains, and legumes in unexpected and delicious ways.</p>
-                        <div class="price">$85 per person</div>
-                    </div>
-                    <div class="menu-item" onclick="showSection('chefs-selection')">
-                        <h3>chef's selection</h3>
-                        <p>let our chef surprise you with a personalized menu based on the finest ingredients available today.</p>
-                        <div class="price">$95 per person</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Seasonal Tasting Menu Section -->
         <section id="seasonal-tasting" class="section">
             <div class="container">
@@ -2303,41 +2786,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Bar Section -->
-        <section id="bar" class="section">
-            <div class="container">
-                <a href="#" class="page-logo" data-text="DOOR 64" onclick="showSection('landing')">Door 64</a>
-                <h2 class="section-title">at the bar</h2>
-                
-                <!-- Bar Navigation Tabs -->
-                <div class="sub-nav">
-                    <div class="sub-nav-links">
-                        <a href="#" onclick="showSection('signature-cocktails')" class="sub-nav-link">signature cocktails</a>
-                        <a href="#" onclick="showSection('rare-spirits')" class="sub-nav-link">rare spirits</a>
-                        <a href="#" onclick="showSection('zero-proof')" class="sub-nav-link">zero proof</a>
-                    </div>
-                </div>
-                
-                <div class="menu-grid">
-                    <div class="menu-item" onclick="showSection('signature-cocktails')">
-                        <h3>signature cocktails</h3>
-                        <p>house-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.</p>
-                        <div class="price">$16 - $22</div>
-                    </div>
-                    <div class="menu-item" onclick="showSection('rare-spirits')">
-                        <h3>rare spirits</h3>
-                        <p>an exceptional selection of aged whiskies, vintage rums, and artisanal brandies.</p>
-                        <div class="price">$25 - $150</div>
-                    </div>
-                    <div class="menu-item" onclick="showSection('zero-proof')">
-                        <h3>zero-proof options</h3>
-                        <p>sophisticated non-alcoholic cocktails with complex flavors and beautiful presentation.</p>
-                        <div class="price">$12 - $16</div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 
     <script>
@@ -2352,6 +2800,234 @@
         window.addEventListener('orientationchange', () => {
             setTimeout(setVH, 100);
         });
+
+        // =============== CSS3 GALLERY SYSTEM ===============
+        const galleryData = {
+            'gallery-main': { currentSlide: 0, totalSlides: 5, autoPlay: true, interval: null },
+            'kitchen-gallery': { currentSlide: 0, totalSlides: 4, autoPlay: true, interval: null },
+            'bar-gallery': { currentSlide: 0, totalSlides: 4, autoPlay: true, interval: null }
+        };
+
+        // Initialize galleries
+        function initializeGalleries() {
+            Object.keys(galleryData).forEach(galleryId => {
+                const gallery = document.getElementById(galleryId);
+                if (gallery) {
+                    console.log(`🎬 Initializing gallery: ${galleryId}`);
+                    setupGallery(galleryId);
+                    if (galleryData[galleryId].autoPlay) {
+                        startAutoPlay(galleryId);
+                    }
+                }
+            });
+        }
+
+        // Setup individual gallery
+        function setupGallery(galleryId) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+
+            const container = gallery.querySelector('.gallery-container');
+            const track = gallery.querySelector('.gallery-track');
+            
+            // Touch/swipe support
+            let startX = 0;
+            let currentX = 0;
+            let isDragging = false;
+            let startTime = 0;
+
+            // Touch events
+            container.addEventListener('touchstart', handleTouchStart, { passive: true });
+            container.addEventListener('touchmove', handleTouchMove, { passive: false });
+            container.addEventListener('touchend', handleTouchEnd);
+
+            // Mouse events for desktop
+            container.addEventListener('mousedown', handleMouseDown);
+            container.addEventListener('mousemove', handleMouseMove);
+            container.addEventListener('mouseup', handleMouseEnd);
+            container.addEventListener('mouseleave', handleMouseEnd);
+
+            // Prevent context menu on long press
+            container.addEventListener('contextmenu', e => e.preventDefault());
+
+            function handleTouchStart(e) {
+                startTouch(e.touches[0].clientX);
+            }
+
+            function handleMouseDown(e) {
+                e.preventDefault();
+                startTouch(e.clientX);
+            }
+
+            function startTouch(x) {
+                startX = x;
+                currentX = x;
+                isDragging = true;
+                startTime = Date.now();
+                stopAutoPlay(galleryId);
+                container.classList.add('swiping');
+            }
+
+            function handleTouchMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                updateTouch(e.touches[0].clientX);
+            }
+
+            function handleMouseMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                updateTouch(e.clientX);
+            }
+
+            function updateTouch(x) {
+                currentX = x;
+                const diff = currentX - startX;
+                const translateX = -galleryData[galleryId].currentSlide * 100 + (diff / container.offsetWidth) * 100;
+                track.style.transform = `translateX(${translateX}%)`;
+            }
+
+            function handleTouchEnd() {
+                handleEnd();
+            }
+
+            function handleMouseEnd() {
+                handleEnd();
+            }
+
+            function handleEnd() {
+                if (!isDragging) return;
+
+                const diff = currentX - startX;
+                const threshold = container.offsetWidth * 0.2; // 20% threshold
+                const velocity = Math.abs(diff) / (Date.now() - startTime);
+
+                container.classList.remove('swiping');
+                isDragging = false;
+
+                if (Math.abs(diff) > threshold || velocity > 0.5) {
+                    if (diff > 0) {
+                        previousSlide(galleryId);
+                    } else {
+                        nextSlide(galleryId);
+                    }
+                } else {
+                    // Snap back to current slide
+                    updateGalleryPosition(galleryId);
+                }
+
+                // Restart autoplay after interaction
+                setTimeout(() => {
+                    if (galleryData[galleryId].autoPlay) {
+                        startAutoPlay(galleryId);
+                    }
+                }, 3000);
+            }
+
+            // Pause autoplay on hover (desktop only)
+            if (window.matchMedia("(min-width: 769px)").matches) {
+                container.addEventListener('mouseenter', () => stopAutoPlay(galleryId));
+                container.addEventListener('mouseleave', () => {
+                    if (galleryData[galleryId].autoPlay) {
+                        startAutoPlay(galleryId);
+                    }
+                });
+            }
+        }
+
+        // Gallery navigation functions
+        function nextSlide(galleryId) {
+            const data = galleryData[galleryId];
+            data.currentSlide = (data.currentSlide + 1) % data.totalSlides;
+            updateGalleryPosition(galleryId);
+            updateDots(galleryId);
+        }
+
+        function previousSlide(galleryId) {
+            const data = galleryData[galleryId];
+            data.currentSlide = (data.currentSlide - 1 + data.totalSlides) % data.totalSlides;
+            updateGalleryPosition(galleryId);
+            updateDots(galleryId);
+        }
+
+        function goToSlide(galleryId, slideIndex) {
+            galleryData[galleryId].currentSlide = slideIndex;
+            updateGalleryPosition(galleryId);
+            updateDots(galleryId);
+            
+            // Reset autoplay
+            stopAutoPlay(galleryId);
+            if (galleryData[galleryId].autoPlay) {
+                startAutoPlay(galleryId);
+            }
+        }
+
+        function updateGalleryPosition(galleryId) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+
+            const track = gallery.querySelector('.gallery-track');
+            const currentSlide = galleryData[galleryId].currentSlide;
+            
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Add fade-in effect to current slide
+            const slides = track.querySelectorAll('.gallery-slide');
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('fade-in');
+                    setTimeout(() => slide.classList.remove('fade-in'), 600);
+                }
+            });
+        }
+
+        function updateDots(galleryId) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+
+            const dots = gallery.querySelectorAll('.gallery-dot');
+            const currentSlide = galleryData[galleryId].currentSlide;
+            
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function updateProgress(galleryId) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+
+            const progress = gallery.querySelector('.gallery-progress');
+            if (progress) {
+                progress.style.width = '0%';
+                // Force reflow
+                progress.offsetHeight;
+                progress.style.width = '100%';
+            }
+        }
+
+        // Auto-play functions
+        function startAutoPlay(galleryId) {
+            stopAutoPlay(galleryId); // Clear any existing interval
+            
+            galleryData[galleryId].interval = setInterval(() => {
+                nextSlide(galleryId);
+                updateProgress(galleryId);
+            }, 4000);
+            
+            updateProgress(galleryId);
+        }
+
+        function stopAutoPlay(galleryId) {
+            if (galleryData[galleryId].interval) {
+                clearInterval(galleryData[galleryId].interval);
+                galleryData[galleryId].interval = null;
+            }
+        }
 
         // ENHANCED AUDIO SYSTEM WITH SPLASH PAGE START
         let audioPlaying = false;
@@ -2546,7 +3222,8 @@
                 
                 // Initialize main site features with delay for DOM
                 setTimeout(() => {
-                    console.log('🎬 Main site loaded...');
+                    console.log('🎬 Main site loaded - initializing galleries...');
+                    initializeGalleries();
                     showSection('landing');
                 }, 100);
                 
@@ -2731,15 +3408,25 @@
             console.log('✅ Door 64 initialization complete');
         });
 
-        // Page visibility change handler to manage audio
+        // Page visibility change handler to manage audio and galleries
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
-                // Audio handling only
+                // Pause all galleries when page is hidden
+                Object.keys(galleryData).forEach(galleryId => {
+                    stopAutoPlay(galleryId);
+                });
             } else {
                 // Resume audio if it was playing
                 if (audioPlaying && backgroundAudio && backgroundAudio.paused) {
                     backgroundAudio.play().catch(console.error);
                 }
+                
+                // Resume galleries when page is visible
+                Object.keys(galleryData).forEach(galleryId => {
+                    if (galleryData[galleryId].autoPlay) {
+                        startAutoPlay(galleryId);
+                    }
+                });
             }
         });
     </script>
