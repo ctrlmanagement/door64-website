@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Space - Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+
+    <!-- MAIN SITE -->
+    <div class="main-site active" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="64.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Space Section -->
+        <section class="section active">
+            <div class="container">
+                <a href="64.html" class="page-logo" data-text="DOOR 64">Door 64</a>
+                <h2 class="section-title">space</h2>
+                
+                <!-- Space Gallery -->
+                <div class="css-gallery" id="space-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="space-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>elegant venue</h3>
+                                    <p>sophisticated atmosphere for every occasion</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>cocktails cellar</h3>
+                                    <p>exclusive space for intimate gatherings</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>chef's counter</h3>
+                                    <p>interactive dining at its finest</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>open kitchen view</h3>
+                                    <p>witness culinary artistry in action</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1576867757603-05b134ebc379?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>intimate seating</h3>
+                                    <p>perfect for special celebrations</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('space-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('space-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('space-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('space-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('space-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('space-gallery', 3)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('space-gallery', 4)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
+                    </div>
+                </div>
+
+                <!-- Space Grid -->
+                <div class="space-grid">
+                    <div class="space-item">
+                        <h3>cocktails cellar</h3>
+                        <p>exclusive space for up to 12 guests. perfect for special occasions, business dinners, or intimate celebrations.</p>
+                    </div>
+                    <div class="space-item">
+                        <h3>chef's delights</h3>
+                        <p>six seats directly at the kitchen counter. the ultimate interactive dining experience with direct chef interaction.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
