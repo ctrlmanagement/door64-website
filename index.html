@@ -2131,6 +2131,57 @@
                         <div class="gallery-progress"></div>
                     </div>
                 </div>
+
+                <!-- Landing Gallery -->
+                <div class="css-gallery" id="landing-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="landing-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>intimate dining experience</h3>
+                                    <p>where every meal becomes a memory</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>craft cocktails</h3>
+                                    <p>handcrafted with passion and precision</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>culinary artistry</h3>
+                                    <p>seasonal ingredients, chef's creativity</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>wine selection</h3>
+                                    <p>curated collection of exceptional wines</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>elegant atmosphere</h3>
+                                    <p>designed for unforgettable experiences</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('landing-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('landing-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('landing-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 3)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 4)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2905,6 +2956,7 @@
 
         // =============== CSS3 GALLERY SYSTEM ===============
         const galleryData = {
+            'landing-gallery': { currentSlide: 0, totalSlides: 5, autoPlay: true, interval: null },
             'space-gallery': { currentSlide: 0, totalSlides: 5, autoPlay: true, interval: null },
             'gallery-main': { currentSlide: 0, totalSlides: 5, autoPlay: true, interval: null },
             'kitchen-gallery': { currentSlide: 0, totalSlides: 4, autoPlay: true, interval: null },
