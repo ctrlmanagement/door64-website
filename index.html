@@ -23,12 +23,6 @@
     <div class="splash-page" id="splashPage">
         <div class="splash-overlay"></div>
         
-        <!-- Splash Content (fallback if image doesn't load) -->
-        <div class="splash-content">
-            <h1 style="color: white; font-size: 4rem; text-transform: uppercase; letter-spacing: 6px; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); margin-bottom: 20px;">Door 64</h1>
-            <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; text-align: center;">Click anywhere to enter</p>
-        </div>
-        
         <!-- Splash Audio Controls -->
         <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
     </div>
@@ -65,7 +59,9 @@
             <div class="gallery-slider"></div>
             
             <div class="landing-content">
-                <h1><a href="space.html" style="color: inherit; text-decoration: none; cursor: pointer;">Door 64</a></h1>
+                <a href="space.html" style="text-decoration: none;">
+                    <h1 style="color: inherit; cursor: pointer;">Door 64</h1>
+                </a>
                 
                 <div class="landing-links">
                     <div class="landing-link">
@@ -147,87 +143,6 @@
         </section>
     </div>
 
-    <!-- Enhanced JavaScript for Splash Page -->
-    <script>
-        // Simple splash page functionality (fallback if main script fails)
-        document.addEventListener('DOMContentLoaded', function() {
-            const splashPage = document.getElementById('splashPage');
-            const mainSite = document.getElementById('mainSite');
-            
-            // Ensure splash page is visible initially
-            console.log('Splash page loaded');
-            
-            // Click anywhere on splash to enter
-            if (splashPage) {
-                splashPage.addEventListener('click', function(event) {
-                    // Don't trigger if clicking audio button
-                    if (event.target.closest('.splash-audio-toggle')) return;
-                    
-                    console.log('Entering main site...');
-                    enterMainSite();
-                });
-                
-                // Touch support for mobile
-                splashPage.addEventListener('touchend', function(event) {
-                    if (event.target.closest('.splash-audio-toggle')) return;
-                    
-                    event.preventDefault();
-                    console.log('Touch: Entering main site...');
-                    enterMainSite();
-                });
-                
-                // Keyboard support for accessibility
-                splashPage.addEventListener('keydown', function(event) {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        console.log('Keyboard: Entering main site...');
-                        enterMainSite();
-                    }
-                });
-            }
-            
-            // Simple function to enter main site
-            function enterMainSite() {
-                if (splashPage && mainSite) {
-                    splashPage.style.opacity = '0';
-                    splashPage.style.transform = 'scale(1.1)';
-                    
-                    setTimeout(() => {
-                        splashPage.style.display = 'none';
-                        mainSite.style.opacity = '1';
-                        console.log('Main site activated');
-                        
-                        // Initialize galleries after transition
-                        if (window.initializeGalleries) {
-                            window.initializeGalleries();
-                        }
-                    }, 1000);
-                }
-            }
-            
-            // Basic audio toggle (if main script fails)
-            window.toggleAudio = function(event) {
-                event.stopPropagation();
-                const audio = document.getElementById('backgroundAudio');
-                const button = event.target;
-                
-                if (audio) {
-                    if (audio.paused) {
-                        audio.play().catch(console.error);
-                        button.innerHTML = '⏸';
-                        button.classList.add('playing');
-                        console.log('Audio started');
-                    } else {
-                        audio.pause();
-                        button.innerHTML = '♪';
-                        button.classList.remove('playing');
-                        console.log('Audio paused');
-                    }
-                }
-            }
-        });
-    </script>
-    
     <!-- Main JavaScript File -->
     <script src="assets/js/script.js"></script>
 </body>
