@@ -39,10 +39,21 @@ body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     scroll-behavior: smooth;
-    /* iPhone specific optimizations */
+    /* iPhone specific optimizations - FIXED FOR NAVIGATION */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+}
+
+/* Override body restrictions for navigation links */
+.nav-logo,
+.nav-links a,
+.landing-content a {
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: auto !important;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
 }
 
 /* iPhone specific styles */
@@ -139,7 +150,7 @@ body {
     opacity: 1;
 }
 
-/* Navigation - Fixed sizing */
+/* Navigation - Fixed sizing - NAVIGATION VISIBILITY IMPROVED */
 .nav {
     position: fixed;
     top: 0;
@@ -159,11 +170,11 @@ body {
     padding-right: var(--safe-area-right);
 }
 
-/* Desktop hover behavior - RESTORED */
+/* Desktop hover behavior - IMPROVED FOR NAVIGATION ACCESS */
 @media (min-width: 769px) {
     .nav {
-        opacity: 0;
-        transform: translateY(-100%);
+        opacity: 0.3; /* Semi-visible instead of completely hidden */
+        transform: translateY(0); /* Don't hide off-screen */
         transition: all 0.3s ease;
     }
 
@@ -179,6 +190,13 @@ body {
     .main-site.active:hover .nav {
         opacity: 1;
         transform: translateY(0);
+    }
+    
+    /* Ensure navigation elements are always clickable */
+    .nav .nav-logo,
+    .nav .nav-links a {
+        pointer-events: auto !important;
+        opacity: 1 !important;
     }
 }
 
@@ -204,7 +222,9 @@ body {
     transition: opacity 0.3s ease;
     font-family: 'Georgia', serif;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    -webkit-tap-highlight-color: transparent;
+    /* NAVIGATION FIXES */
+    -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
+    pointer-events: auto !important;
 }
 
 .nav-logo:hover {
@@ -326,7 +346,10 @@ body {
     font-size: 14px;
     letter-spacing: 1px;
     transition: color 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
+    /* NAVIGATION FIXES */
+    -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
 }
 
 .nav-links a:hover {
@@ -506,6 +529,14 @@ p, .sub-links a, .menu-item p {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     color: #fff;
     line-height: 1.2;
+}
+
+/* NAVIGATION LINKS IN CONTENT - ENSURE CLICKABILITY */
+.landing-content a {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
 }
 
 /* Mobile page 64 logo - white embossed like other pages */
@@ -807,7 +838,7 @@ p, .sub-links a, .menu-item p {
     display: block;
 }
 
-/* Page Logo (above section titles) - White Embossed Style */
+/* Page Logo (above section titles) - White Embossed Style - NAVIGATION FIXES */
 .page-logo {
     font-size: clamp(2rem, 6vw, 3.5rem);
     text-align: center;
@@ -828,7 +859,9 @@ p, .sub-links a, .menu-item p {
     cursor: pointer;
     transition: opacity 0.3s ease;
     display: block;
-    -webkit-tap-highlight-color: transparent;
+    /* NAVIGATION FIXES */
+    -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
+    pointer-events: auto !important;
 }
 
 .page-logo:hover {
@@ -1345,8 +1378,8 @@ p, .sub-links a, .menu-item p {
     .nav {
         padding: 15px 0;
         height: var(--mobile-nav-height);
-        opacity: 1;
-        transform: translateY(0);
+        opacity: 1 !important; /* Always visible on mobile */
+        transform: translateY(0) !important;
         position: fixed;
         top: 0;
         padding-top: max(15px, calc(var(--safe-area-top) + 8px));
@@ -1370,6 +1403,9 @@ p, .sub-links a, .menu-item p {
         text-shadow: none;
         flex-shrink: 0;
         order: 1;
+        /* MOBILE NAVIGATION FIXES */
+        pointer-events: auto !important;
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
     }
 
     .nav-left-section {
@@ -1439,6 +1475,9 @@ p, .sub-links a, .menu-item p {
         display: flex;
         align-items: center;
         justify-content: center;
+        /* MOBILE NAVIGATION FIXES */
+        pointer-events: auto !important;
+        -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
     }
 
     .mobile-menu:active {
@@ -1483,6 +1522,12 @@ p, .sub-links a, .menu-item p {
             3px 3px 0px #aaa,
             4px 4px 0px #999,
             5px 5px 10px rgba(0,0,0,0.2) !important;
+    }
+
+    /* MOBILE LANDING CONTENT NAVIGATION FIXES */
+    .landing-content a {
+        pointer-events: auto !important;
+        -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
     }
 
     .landing-links {
@@ -1539,6 +1584,9 @@ p, .sub-links a, .menu-item p {
             2px 2px 0px #ccc,
             3px 3px 0px #bbb,
             4px 4px 5px rgba(0,0,0,0.3);
+        /* MOBILE NAVIGATION FIXES */
+        pointer-events: auto !important;
+        -webkit-tap-highlight-color: rgba(255,255,255,0.1) !important;
     }
 
     .section-title {
