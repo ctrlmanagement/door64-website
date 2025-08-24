@@ -53,13 +53,13 @@
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
-                <!-- Logo with toggle functionality -->
-                <a href="#" class="nav-logo toggle-nav" onclick="handleToggleNavigation(event)">DOOR 64</a>
+                <!-- Logo - Always goes to space.html -->
+                <a href="space.html" class="nav-logo">DOOR 64</a>
                 <div class="nav-left-section">
                     <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
                     <ul class="nav-links" id="navLinks">
-                        <!-- 64 with toggle functionality -->
-                        <li><a href="#" class="toggle-nav" onclick="handleToggleNavigation(event)">64</a></li>
+                        <!-- 64 - Always goes to space.html -->
+                        <li><a href="space.html">64</a></li>
                         <li><a href="space.html">space</a></li>
                         <li><a href="in.the.kitchen.html">in the kitchen</a></li>
                         <li><a href="at.the.bar.html">at the bar</a></li>
@@ -82,8 +82,8 @@
             <div class="gallery-slider"></div>
             
             <div class="landing-content">
-                <!-- Main logo with white-on-white embossed styling and toggle functionality -->
-                <a href="#" style="text-decoration: none;" class="toggle-nav" onclick="handleToggleNavigation(event)">
+                <!-- Main logo - Always goes to space.html -->
+                <a href="space.html" style="text-decoration: none;">
                     <h1 class="embossed-logo" style="cursor: pointer;">DOOR 64</h1>
                 </a>
                 
@@ -169,12 +169,6 @@
 
     <!-- JavaScript -->
     <script>
-        // Navigation function - always goes to space.html
-        function handleToggleNavigation(event) {
-            event.preventDefault();
-            window.location.href = 'space.html';
-        }
-        
         // Simple splash page click to enter
         document.addEventListener('DOMContentLoaded', function() {
             const splash = document.getElementById('splashPage');
