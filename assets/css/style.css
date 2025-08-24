@@ -81,7 +81,7 @@ body {
     top: 0;
     left: 0;
     z-index: 9999;
-    background: url('assets/audio/splash.png') center/contain no-repeat;
+    background: url('../audio/splash.png') center/contain no-repeat;
     background-color: #000;
     background-size: contain;
     background-position: center center;
