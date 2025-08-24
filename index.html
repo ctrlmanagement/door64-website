@@ -32,10 +32,12 @@
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
+                <!-- Logo - Links to space.html -->
                 <a href="space.html" class="nav-logo">DOOR 64</a>
                 <div class="nav-left-section">
                     <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
                     <ul class="nav-links" id="navLinks">
+                        <!-- 64 - Also links to space.html -->
                         <li><a href="space.html">64</a></li>
                         <li><a href="space.html">space</a></li>
                         <li><a href="in.the.kitchen.html">in the kitchen</a></li>
@@ -143,7 +145,7 @@
         </section>
     </div>
 
-    <!-- Simple Splash Page Functionality -->
+    <!-- JavaScript -->
     <script>
         // Simple splash page click to enter
         document.addEventListener('DOMContentLoaded', function() {
@@ -182,7 +184,7 @@
             }
         });
         
-        // Simple audio toggle function
+        // Audio toggle function
         function toggleAudio(event) {
             event.stopPropagation();
             const audio = document.getElementById('backgroundAudio');
@@ -198,9 +200,55 @@
                 button.classList.remove('playing');
             }
         }
+        
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            navLinks.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        }
+        
+        // Gallery functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.gallery-slide');
+        const dots = document.querySelectorAll('.gallery-dot');
+        const totalSlides = slides.length;
+        
+        function updateGallery() {
+            const track = document.getElementById('landing-track');
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+            
+            // Update progress bar
+            const progress = document.querySelector('.gallery-progress');
+            progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+        }
+        
+        function nextSlide(galleryId) {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateGallery();
+        }
+        
+        function previousSlide(galleryId) {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateGallery();
+        }
+        
+        function goToSlide(galleryId, slideIndex) {
+            currentSlide = slideIndex;
+            updateGallery();
+        }
+        
+        // Auto-advance gallery
+        setInterval(() => {
+            nextSlide('landing-gallery');
+        }, 5000);
     </script>
-
-    <!-- Main JavaScript File -->
-    <script src="assets/js/script.js"></script>
 </body>
 </html>
