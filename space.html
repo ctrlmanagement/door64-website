@@ -25,11 +25,13 @@
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
-                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <!-- Logo - Always goes to space.html -->
+                <a href="space.html" class="nav-logo">DOOR 64</a>
                 <div class="nav-left-section">
                     <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
                     <ul class="nav-links" id="navLinks">
-                        <li><a href="64.html">64</a></li>
+                        <!-- 64 - Always goes to space.html -->
+                        <li><a href="space.html">64</a></li>
                         <li><a href="space.html">space</a></li>
                         <li><a href="in.the.kitchen.html">in the kitchen</a></li>
                         <li><a href="at.the.bar.html">at the bar</a></li>
@@ -50,7 +52,8 @@
         <!-- Space Section -->
         <section class="section active">
             <div class="container">
-                <a href="64.html" class="page-logo" data-text="DOOR 64">Door 64</a>
+                <!-- Page Logo - Always goes to space.html -->
+                <a href="space.html" class="page-logo" data-text="DOOR 64">Door 64</a>
                 <h2 class="section-title">space</h2>
                 
                 <!-- Space Gallery -->
@@ -119,7 +122,82 @@
         </section>
     </div>
 
-    <!-- Main JavaScript File -->
-    <script src="assets/js/script.js"></script>
+    <!-- JavaScript -->
+    <script>
+        // Audio toggle function
+        function toggleAudio(event) {
+            event.stopPropagation();
+            const audio = document.getElementById('backgroundAudio');
+            const button = event.target;
+            
+            if (audio.paused) {
+                audio.play().catch(console.error);
+                button.innerHTML = '⏸';
+                button.classList.add('playing');
+            } else {
+                audio.pause();
+                button.innerHTML = '♪';
+                button.classList.remove('playing');
+            }
+        }
+        
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            
+            navLinks.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        }
+        
+        // Gallery functionality
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.gallery-slide');
+        const dots = document.querySelectorAll('.gallery-dot');
+        const totalSlides = slides.length;
+        
+        function updateGallery() {
+            const track = document.getElementById('space-track');
+            if (track) {
+                track.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                // Update dots
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+                
+                // Update progress bar
+                const progress = document.querySelector('.gallery-progress');
+                if (progress) {
+                    progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+                }
+            }
+        }
+        
+        function nextSlide(galleryId) {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateGallery();
+        }
+        
+        function previousSlide(galleryId) {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateGallery();
+        }
+        
+        function goToSlide(galleryId, slideIndex) {
+            currentSlide = slideIndex;
+            updateGallery();
+        }
+        
+        // Auto-advance gallery
+        setInterval(() => {
+            if (slides.length > 0) {
+                nextSlide('space-gallery');
+            }
+        }, 5000);
+    </script>
+
+    <!-- Removed external script that was causing navigation interference -->
+    <!-- <script src="assets/js/script.js"></script> -->
 </body>
 </html>
