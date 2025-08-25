@@ -545,7 +545,7 @@
             }
         }
 
-        /* Print Styles - Optimized for 2-page PDF to match cocktail menu style */
+        /* Print Styles - Optimized for 1-page PDF */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -556,8 +556,8 @@
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                font-size: 10px !important;
-                line-height: 1.2 !important;
+                font-size: 8px !important;
+                line-height: 1.1 !important;
                 -webkit-font-smoothing: antialiased !important;
                 -moz-osx-font-smoothing: grayscale !important;
             }
@@ -577,224 +577,219 @@
             .menu-header {
                 background: #BE5103 !important;
                 color: white !important;
-                padding: 20px 15px 12px !important;
+                padding: 15px 12px 8px !important;
                 page-break-after: avoid !important;
                 margin: 0 !important;
             }
 
             .restaurant-name {
-                font-size: 2rem !important;
-                letter-spacing: 3px !important;
-                margin-bottom: 3px !important;
+                font-size: 1.6rem !important;
+                letter-spacing: 2px !important;
+                margin-bottom: 2px !important;
                 text-shadow: none !important;
             }
 
             .menu-subtitle {
-                font-size: 0.8rem !important;
-                letter-spacing: 1px !important;
+                font-size: 0.7rem !important;
+                letter-spacing: 0.5px !important;
             }
 
             .menu-body {
-                padding: 15px 12px !important;
+                padding: 10px 8px !important;
                 margin: 0 !important;
             }
 
             .experience-intro {
-                margin-bottom: 15px !important;
-                padding: 12px !important;
+                margin-bottom: 8px !important;
+                padding: 8px !important;
                 page-break-after: avoid !important;
             }
 
             .experience-intro h2 {
-                font-size: 1rem !important;
-                margin-bottom: 5px !important;
-                letter-spacing: 1px !important;
+                font-size: 0.8rem !important;
+                margin-bottom: 3px !important;
+                letter-spacing: 0.5px !important;
             }
 
             .experience-intro p {
-                font-size: 0.7rem !important;
-                line-height: 1.1 !important;
+                font-size: 0.55rem !important;
+                line-height: 1.0 !important;
             }
 
             .chef-note {
                 background: #BE5103 !important;
-                padding: 15px !important;
-                margin: 15px 0 !important;
+                padding: 8px !important;
+                margin: 8px 0 !important;
                 page-break-inside: avoid !important;
-                page-break-after: avoid !important;
                 break-inside: avoid !important;
             }
 
             .chef-note p {
-                font-size: 0.75rem !important;
-                line-height: 1.2 !important;
+                font-size: 0.6rem !important;
+                line-height: 1.1 !important;
                 color: white !important;
             }
 
             .chef-signature {
-                font-size: 0.7rem !important;
-                margin-top: 8px !important;
+                font-size: 0.55rem !important;
+                margin-top: 4px !important;
                 color: white !important;
             }
 
-            /* Menu options - compact side by side */
+            /* Menu options - very compact side by side */
             .menu-options {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 15px !important;
-                margin: 15px 0 !important;
+                gap: 8px !important;
+                margin: 8px 0 !important;
                 page-break-inside: avoid !important;
-                page-break-after: avoid !important;
             }
 
             .option-card {
-                padding: 15px !important;
+                padding: 8px !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
 
             .option-title {
-                font-size: 0.9rem !important;
-                margin-bottom: 6px !important;
-                letter-spacing: 0.5px !important;
+                font-size: 0.7rem !important;
+                margin-bottom: 3px !important;
+                letter-spacing: 0.3px !important;
             }
 
             .option-price {
-                font-size: 1.4rem !important;
-                margin-bottom: 6px !important;
+                font-size: 1rem !important;
+                margin-bottom: 3px !important;
             }
 
             .option-description {
-                font-size: 0.65rem !important;
-                line-height: 1.1 !important;
-                margin-bottom: 8px !important;
+                font-size: 0.5rem !important;
+                line-height: 1.0 !important;
+                margin-bottom: 4px !important;
             }
 
             .option-includes {
-                font-size: 0.6rem !important;
+                font-size: 0.45rem !important;
             }
 
-            /* Force page break before tasting menu - Page 2 */
+            /* Tasting menu - ultra compact */
             .tasting-menu {
-                page-break-before: always !important;
-                padding: 15px !important;
-                margin: 0 !important;
+                padding: 8px !important;
+                margin: 8px 0 !important;
+                page-break-inside: avoid !important;
             }
 
             .section-title {
-                font-size: 1.1rem !important;
-                margin-bottom: 4px !important;
-                letter-spacing: 1px !important;
-                padding-bottom: 4px !important;
+                font-size: 0.8rem !important;
+                margin-bottom: 2px !important;
+                letter-spacing: 0.5px !important;
+                padding-bottom: 2px !important;
             }
 
             .section-description {
-                font-size: 0.7rem !important;
-                margin-bottom: 10px !important;
+                font-size: 0.5rem !important;
+                margin-bottom: 6px !important;
+            }
+
+            /* Courses in 2-column layout to save space */
+            .tasting-menu .menu-section {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
             }
 
             .course-item {
-                margin-bottom: 12px !important;
-                padding: 10px !important;
+                margin-bottom: 6px !important;
+                padding: 6px !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
 
             .course-number {
-                width: 20px !important;
-                height: 20px !important;
-                line-height: 20px !important;
-                font-size: 0.65rem !important;
-                margin-bottom: 6px !important;
+                width: 15px !important;
+                height: 15px !important;
+                line-height: 15px !important;
+                font-size: 0.5rem !important;
+                margin-bottom: 3px !important;
             }
 
             .course-name {
-                font-size: 0.8rem !important;
-                margin-bottom: 4px !important;
-                letter-spacing: 0.5px !important;
+                font-size: 0.6rem !important;
+                margin-bottom: 2px !important;
+                letter-spacing: 0.3px !important;
             }
 
             .course-description {
-                font-size: 0.65rem !important;
-                line-height: 1.1 !important;
-                margin-bottom: 6px !important;
+                font-size: 0.5rem !important;
+                line-height: 1.0 !important;
+                margin-bottom: 3px !important;
             }
 
             .course-wine-pairing {
-                padding: 6px !important;
-                font-size: 0.6rem !important;
-                border-left: 2px solid #BE5103 !important;
+                padding: 3px !important;
+                font-size: 0.45rem !important;
+                border-left: 1px solid #BE5103 !important;
             }
 
             .pairing-label {
-                font-size: 0.6rem !important;
+                font-size: 0.45rem !important;
             }
 
             .reservation-note {
-                padding: 12px !important;
-                margin: 15px 0 !important;
+                padding: 6px !important;
+                margin: 8px 0 !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
 
             .reservation-note h3 {
-                font-size: 0.85rem !important;
-                margin-bottom: 6px !important;
-                letter-spacing: 0.5px !important;
+                font-size: 0.65rem !important;
+                margin-bottom: 3px !important;
+                letter-spacing: 0.3px !important;
             }
 
             .reservation-note p {
-                font-size: 0.65rem !important;
-                line-height: 1.1 !important;
+                font-size: 0.5rem !important;
+                line-height: 1.0 !important;
             }
 
             .menu-footer {
                 background: #BE5103 !important;
                 color: white !important;
-                padding: 10px !important;
-                margin-top: 10px !important;
+                padding: 6px !important;
+                margin-top: 6px !important;
                 page-break-inside: avoid !important;
             }
             
             .footer-text {
                 color: #000 !important;
-                font-size: 0.65rem !important;
+                font-size: 0.5rem !important;
             }
 
-            /* Page settings for 2-page layout like cocktail menu */
+            /* Page settings for 1-page layout */
             @page {
                 size: A4 !important;
-                margin: 0.3in !important;
+                margin: 0.25in !important;
             }
 
-            /* Explicit page breaks for 2-page layout */
-            
-            /* Page 1: Header + Intro + Chef's Note + Menu Options */
-            .chef-note {
-                page-break-after: avoid !important;
-            }
-            
-            .menu-options {
-                page-break-after: avoid !important;
-            }
-            
-            /* Page 2: Tasting Menu + Reservation + Footer (forced break) */
-            .tasting-menu {
-                page-break-before: always !important;
-            }
-            
-            /* Keep reservation and footer with tasting menu on page 2 */
-            .reservation-note {
+            /* Force everything on one page */
+            * {
                 page-break-before: avoid !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
             }
-            
-            .menu-footer {
-                page-break-before: avoid !important;
+
+            .menu-container {
+                page-break-inside: avoid !important;
             }
 
             /* Override mobile styles during print */
             @media (max-width: 768px) {
                 .menu-options {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+                
+                .tasting-menu .menu-section {
                     grid-template-columns: 1fr 1fr !important;
                 }
             }
