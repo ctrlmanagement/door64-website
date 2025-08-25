@@ -1,6 +1,6 @@
-/* Door 64 Restaurant - Complete Fixed JavaScript - No Audio Interference */
+/* Door 64 Restaurant - Complete Fixed JavaScript - AUTO RESUME AUDIO */
 
-// =============== CORRECTED DOOR 64 AUDIO SYSTEM ===============
+// =============== CORRECTED DOOR 64 AUDIO SYSTEM - AUTO RESUME FIX ===============
 class Door64Audio {
     constructor() {
         this.audio = null;
@@ -15,7 +15,7 @@ class Door64Audio {
         this.isInitialized = false;
         this.audioStartPromise = null;
         this.isMobile = this.detectMobile();
-        this.interactionListenersActive = false; // ✅ ADDED: Track listener state
+        this.interactionListenersActive = false;
         
         this.init();
     }
@@ -52,39 +52,101 @@ class Door64Audio {
         this.setupAudioEventListeners();
         this.setupPageUnloadHandler();
         
-        // ✅ FIXED: Only set up interaction listeners if needed
+        // ✅ CRITICAL FIX: Always try to restore audio state
         this.restoreAudioState();
         
         this.isInitialized = true;
     }
     
+    // ✅ COMPLETELY REWRITTEN: Auto-resume logic
     restoreAudioState() {
         const storedState = localStorage.getItem(this.storageKey);
         const storedTime = localStorage.getItem(this.timeKey);
         
-        console.log('🎵 Stored audio state:', storedState);
+        console.log('🎵 Restoring audio state:', storedState);
         console.log('🎵 Stored audio time:', storedTime);
         
-        if (storedState !== 'paused') {
+        // ✅ CRITICAL FIX: Auto-start if should be playing
+        if (storedState === 'playing') {
+            console.log('🎵 Audio should be playing - starting automatically');
+            
             // Set time BEFORE starting audio
             if (storedTime && parseFloat(storedTime) > 0) {
                 this.setAudioTime(parseFloat(storedTime));
             }
             
+            // ✅ FIXED: Always try to start, regardless of mobile/desktop
             if (this.isMobile) {
-                console.log('📱 Mobile: Setting up interaction listener for first audio start');
+                // Mobile: Set up listener but also try to start immediately
                 this.setupUserInteractionListeners();
+                console.log('📱 Mobile: Setting up interaction listener AND trying immediate start');
+                this.attemptAudioStart();
             } else {
-                // ✅ FIXED: Desktop should start immediately, muted
-                this.startAudioWithTimeRestore();
+                // Desktop: Start immediately
+                console.log('🖥️ Desktop: Starting audio immediately');
+                this.attemptAudioStart();
             }
-        } else {
+        } else if (storedState === 'paused') {
             console.log('🎵 Audio was paused by user, respecting choice');
+            // Still set the time for when user resumes
             if (storedTime && parseFloat(storedTime) > 0) {
                 this.setAudioTime(parseFloat(storedTime));
             }
             this.updateButtons();
+        } else {
+            // First time visitor or no stored state
+            console.log('🎵 No stored state - setting up for first interaction');
+            if (this.isMobile) {
+                this.setupUserInteractionListeners();
+            } else {
+                // Desktop: Start muted on first visit
+                this.attemptAudioStart();
+            }
+            this.updateButtons();
         }
+    }
+    
+    // ✅ NEW: Attempt to start audio with proper error handling
+    attemptAudioStart() {
+        if (!this.audio || this.audioStartPromise) {
+            return this.audioStartPromise || Promise.resolve();
+        }
+        
+        console.log('🎵 Attempting to start audio...');
+        
+        // Start muted for autoplay compliance
+        this.audio.muted = true;
+        
+        this.audioStartPromise = this.audio.play()
+            .then(() => {
+                console.log('✅ Audio started successfully (muted for autoplay compliance)');
+                this.isPlaying = true;
+                localStorage.setItem(this.storageKey, 'playing');
+                this.updateButtons();
+                this.audioStartPromise = null;
+                
+                // ✅ CRITICAL: Unmute immediately if user has interacted before
+                const hasInteracted = localStorage.getItem('door64_user_interacted') === 'true';
+                if (hasInteracted) {
+                    this.audio.muted = false;
+                    console.log('🔊 User has interacted before - unmuting audio');
+                    this.hasUserInteracted = true;
+                } else if (!this.isMobile) {
+                    // Desktop: unmute on any interaction
+                    this.setupUserInteractionListeners();
+                }
+            })
+            .catch(error => {
+                console.log('⚠️ Audio autoplay prevented:', error.message);
+                this.audioStartPromise = null;
+                // Set up interaction listeners if autoplay failed
+                if (!this.interactionListenersActive) {
+                    this.setupUserInteractionListeners();
+                }
+                this.updateButtons();
+            });
+            
+        return this.audioStartPromise;
     }
     
     setAudioTime(time) {
@@ -113,38 +175,6 @@ class Door64Audio {
             };
             this.audio.addEventListener('loadedmetadata', onLoadedMetadata);
         }
-    }
-    
-    startAudioWithTimeRestore() {
-        if (!this.audio || this.audioStartPromise) {
-            return this.audioStartPromise || Promise.resolve();
-        }
-        
-        console.log('🎵 Starting audio with time restoration...');
-        
-        if (this.isMobile) {
-            console.log('📱 Mobile: Audio ready but waiting for touch interaction');
-            return Promise.resolve();
-        } else {
-            // Desktop: start muted for autoplay compliance
-            this.audio.muted = true;
-        }
-        
-        this.audioStartPromise = this.audio.play()
-            .then(() => {
-                console.log('✅ Audio started successfully' + (this.audio.muted ? ' (muted)' : ''));
-                this.isPlaying = true;
-                localStorage.setItem(this.storageKey, 'playing');
-                this.updateButtons();
-                this.audioStartPromise = null;
-            })
-            .catch(error => {
-                console.log('⚠️ Audio autoplay prevented:', error.message);
-                this.audioStartPromise = null;
-                this.updateButtons();
-            });
-            
-        return this.audioStartPromise;
     }
     
     setupAudioEventListeners() {
@@ -200,7 +230,7 @@ class Door64Audio {
         }
     }
     
-    // ✅ COMPLETELY REWRITTEN: Only for initial audio start, then removes itself
+    // ✅ FIXED: Only for initial user interaction, then removes itself
     setupUserInteractionListeners() {
         if (this.interactionListenersActive || this.hasUserInteracted) {
             console.log('🎵 Interaction listeners already set up or not needed');
@@ -210,19 +240,20 @@ class Door64Audio {
         console.log('🎵 Setting up ONE-TIME user interaction listeners for audio start');
         this.interactionListenersActive = true;
         
-        // ✅ FIXED: Only use click events to avoid interference
         const events = ['click', 'touchstart'];
         
         const handleFirstInteraction = (e) => {
             // ✅ CRITICAL: Don't interfere if user clicked audio button
             if (e.target.closest('.audio-toggle, .splash-audio-toggle')) {
                 console.log('🎵 Audio button clicked - letting button handler manage audio');
-                return; // Let the button handler deal with this
+                return;
             }
             
             if (!this.hasUserInteracted) {
                 this.hasUserInteracted = true;
-                console.log('🔊 First user interaction detected:', e.type, '- Starting audio');
+                // ✅ STORE that user has interacted for future page loads
+                localStorage.setItem('door64_user_interacted', 'true');
+                console.log('🔊 First user interaction detected:', e.type, '- Unmuting/starting audio');
                 
                 if (this.audio) {
                     // Unmute audio if muted
@@ -239,16 +270,16 @@ class Door64Audio {
                     }
                 }
                 
-                // ✅ CRITICAL: Remove listeners immediately after first use
+                // Remove listeners immediately after first use
                 this.removeInteractionListeners();
             }
         };
         
-        // Add listeners
+        // Add listeners with capture to catch events early
         events.forEach(event => {
             document.addEventListener(event, handleFirstInteraction, { 
                 passive: true,
-                capture: true // ✅ ADDED: Capture phase to catch events early
+                capture: true
             });
         });
         
@@ -259,7 +290,6 @@ class Door64Audio {
         console.log('👆 One-time interaction listeners set for audio start');
     }
     
-    // ✅ IMPROVED: Clean removal of interaction listeners
     removeInteractionListeners() {
         if (this.interactionHandler && this.interactionEvents) {
             this.interactionEvents.forEach(event => {
@@ -289,7 +319,7 @@ class Door64Audio {
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 this.storeCurrentTime();
-            } else if (!document.hidden && this.audio && this.hasUserInteracted) {
+            } else if (!document.hidden && this.audio) {
                 const storedState = localStorage.getItem(this.storageKey);
                 if (storedState === 'playing' && this.audio.paused) {
                     console.log('🎵 Page visible - resuming audio at stored time');
@@ -320,7 +350,7 @@ class Door64Audio {
     resumeAudio() {
         if (!this.audio || this.audioStartPromise) return;
         
-        console.log('▶️ User requested audio resume');
+        console.log('▶️ User requested audio resume (or auto-resume)');
         
         // Restore time position before resuming
         const storedTime = localStorage.getItem(this.timeKey);
@@ -329,9 +359,10 @@ class Door64Audio {
             this.setAudioTime(parseFloat(storedTime));
         }
         
-        // Unmute if muted
-        if (this.audio.muted) {
+        // Unmute if muted and user has interacted
+        if (this.audio.muted && (this.hasUserInteracted || localStorage.getItem('door64_user_interacted') === 'true')) {
             this.audio.muted = false;
+            console.log('🔊 Audio unmuted for resume');
         }
         
         this.audioStartPromise = this.audio.play()
@@ -345,6 +376,10 @@ class Door64Audio {
             .catch(error => {
                 console.error('🚨 Failed to resume audio:', error);
                 this.audioStartPromise = null;
+                // Set up interaction listeners if resume failed
+                if (!this.hasUserInteracted && !this.interactionListenersActive) {
+                    this.setupUserInteractionListeners();
+                }
                 this.updateButtons();
             });
             
@@ -418,7 +453,6 @@ class Door64Gallery {
     }
     
     setupEventListeners() {
-        // Dot navigation with keyboard support
         this.dots.forEach((dot, index) => {
             dot.addEventListener('click', () => this.goToSlide(index));
             dot.addEventListener('keydown', (e) => {
@@ -443,17 +477,14 @@ class Door64Gallery {
             });
         });
         
-        // Button navigation
         const prevButton = document.querySelector(`#${this.galleryId} .gallery-nav.prev`);
         const nextButton = document.querySelector(`#${this.galleryId} .gallery-nav.next`);
         
         if (prevButton) prevButton.addEventListener('click', () => this.previousSlide());
         if (nextButton) nextButton.addEventListener('click', () => this.nextSlide());
         
-        // Better hover behavior that doesn't interfere with audio
         const container = document.querySelector(`#${this.galleryId}`);
         if (container) {
-            // Use throttled hover events to prevent excessive calls
             container.addEventListener('mouseenter', this.throttle(() => {
                 this.pauseAutoPlay();
             }, 100));
@@ -462,14 +493,12 @@ class Door64Gallery {
                 this.resumeAutoPlay();
             }, 100));
             
-            // Focus events for keyboard navigation
             container.addEventListener('focusin', () => this.pauseAutoPlay());
             container.addEventListener('focusout', () => {
                 setTimeout(() => this.resumeAutoPlay(), 100);
             });
         }
         
-        // Touch/swipe support
         this.setupTouchEvents();
     }
     
@@ -629,7 +658,7 @@ window.door64Galleries = {};
 
 // =============== DOCUMENT READY & INITIALIZATION ===============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚪 Door 64 - Initializing fixed systems...');
+    console.log('🚪 Door 64 - Initializing FIXED AUTO-RESUME audio system...');
     
     // Initialize FIXED audio system
     window.door64Audio = new Door64Audio();
@@ -644,12 +673,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initKeyboardNavigation();
     initAccessibilityFeatures();
     
-    // Initialize lazy loading if supported
     if ('IntersectionObserver' in window) {
         initLazyLoading();
     }
     
-    console.log('✅ Door 64 - All systems ready!');
+    console.log('✅ Door 64 - AUTO-RESUME audio system ready!');
 });
 
 // =============== GALLERY INITIALIZATION ===============
@@ -663,7 +691,6 @@ function initGalleries() {
         }
     });
     
-    // Backward compatibility - initialize landing gallery if no ID found
     const landingTrack = document.getElementById('landing-track');
     if (landingTrack && !window.door64Galleries['landing-gallery']) {
         const landingGallery = landingTrack.closest('.css-gallery');
@@ -677,7 +704,6 @@ function initGalleries() {
 // =============== GLOBAL FUNCTIONS ===============
 // ✅ FIXED GLOBAL TOGGLE FUNCTION
 function toggleAudio(event) {
-    // ✅ CRITICAL: Always prevent event bubbling for audio buttons
     if (event) {
         event.stopPropagation();
         event.preventDefault();
@@ -737,7 +763,6 @@ function initSplashPage() {
     const handleNavigation = (targetUrl = '64.html') => {
         console.log('🚪 Navigating to:', targetUrl);
         
-        // Better audio state preservation
         if (window.door64Audio && window.door64Audio.audio) {
             window.door64Audio.storeCurrentTime();
             
@@ -763,7 +788,6 @@ function initSplashPage() {
         }, 50);
     };
     
-    // Make entire splash page clickable (except audio button)
     splashPage.addEventListener('click', function(e) {
         if (e.target.closest('.splash-audio-toggle')) {
             return;
@@ -771,7 +795,6 @@ function initSplashPage() {
         handleNavigation();
     });
     
-    // Individual door links
     const doorLinks = splashPage.querySelectorAll('.door-gallery a');
     doorLinks.forEach((link, index) => {
         link.addEventListener('click', function(e) {
@@ -781,7 +804,6 @@ function initSplashPage() {
         });
     });
     
-    // Keyboard navigation
     document.addEventListener('keydown', function(event) {
         if (splashPage.style.display !== 'none') {
             if (event.key === 'Enter' || event.key === ' ') {
@@ -1105,6 +1127,7 @@ if (window.location.hostname === 'localhost' ||
                     e.preventDefault();
                     localStorage.removeItem('door64_audio_state');
                     localStorage.removeItem('door64_audio_time');
+                    localStorage.removeItem('door64_user_interacted');
                     console.log('🔄 Dev: Audio state reset');
                     break;
                 case 'i':
@@ -1112,6 +1135,7 @@ if (window.location.hostname === 'localhost' ||
                     console.log('📊 Dev: System info:', {
                         audioState: localStorage.getItem('door64_audio_state'),
                         audioTime: localStorage.getItem('door64_audio_time'),
+                        userInteracted: localStorage.getItem('door64_user_interacted'),
                         galleries: Object.keys(window.door64Galleries),
                         isAudioPlaying: window.door64Audio?.isPlaying,
                         currentAudioTime: window.door64Audio?.audio?.currentTime,
@@ -1130,6 +1154,7 @@ if (window.location.hostname === 'localhost' ||
         resetAudio: () => {
             localStorage.removeItem('door64_audio_state');
             localStorage.removeItem('door64_audio_time');
+            localStorage.removeItem('door64_user_interacted');
             location.reload();
         },
         forceAudioStart: () => {
@@ -1137,6 +1162,11 @@ if (window.location.hostname === 'localhost' ||
                 window.door64Audio.audio.muted = false;
                 window.door64Audio.resumeAudio();
             }
+        },
+        testAutoResume: () => {
+            localStorage.setItem('door64_audio_state', 'playing');
+            localStorage.setItem('door64_user_interacted', 'true');
+            location.reload();
         }
     };
     
@@ -1145,13 +1175,14 @@ if (window.location.hostname === 'localhost' ||
 
 // =============== CONSOLE BRANDING ===============
 console.log(`
-🚪 Door 64 Restaurant - FIXED AUDIO SYSTEM
-🎵 No more interaction interference
-📱 Mobile: Touch to start, then continuous play
-🖥️ Desktop: Automatic start, continuous play
+🚪 Door 64 Restaurant - FINAL FIXED AUDIO SYSTEM
+🎵 AUTO-RESUME: Music continues across all pages  
+📱 Mobile: Touch once, then continuous play
+🖥️ Desktop: Automatic start and continuous play
 ⏸️ Only audio buttons control playback
+🔄 Seamless page transitions
 
-Ready to serve uninterrupted musical experiences.
+Ready to serve UNINTERRUPTED musical experiences.
 `);
 
 // Export for testing
