@@ -1,25 +1,184 @@
-<!-- Landing Page Content - Replace your existing landing-content section -->
-<div class="landing-content">
-    <ul>
-        <li>
-            <a href="in.the.kitchen.html">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=600&fit=crop" alt="Intimate dining experience">
-            </a>
-        </li>
-        <li>
-            <a href="at.the.bar.html">
-                <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=600&fit=crop" alt="Craft cocktails">
-            </a>
-        </li>
-        <li>
-            <a href="what.to.do.html">
-                <img src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&h=600&fit=crop" alt="Culinary artistry">
-            </a>
-        </li>
-        <li>
-            <a href="come.see.us.html">
-                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=600&fit=crop" alt="Elegant atmosphere">
-            </a>
-        </li>
-    </ul>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Door 64</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</head>
+<body>
+
+    <!-- DOOR PLUGIN SPLASH PAGE -->
+    <div class="splash-page" id="splashPage">
+        <ul class="splash-geometric">
+            <li>
+                <a href="#">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop" alt="Elegant wooden door">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=600&fit=crop" alt="Modern glass door">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=600&fit=crop" alt="Vintage red door">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aaa4cab7?w=400&h=600&fit=crop" alt="Industrial metal door">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="https://images.unsplash.com/photo-1520637836862-4d197d17c50a?w=400&h=600&fit=crop" alt="Classic blue door">
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="https://images.unsplash.com/photo-1571123618511-a7aa5b74ff42?w=400&h=600&fit=crop" alt="Rustic barn door">
+                </a>
+            </li>
+        </ul>
+        
+        <div class="splash-content">
+            <h1>DOOR 64</h1>
+            <p>click to enter</p>
+        </div>
+        
+        <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
+    </div>
+
+    <!-- MAIN SITE -->
+    <div class="main-site" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="64.html">64</a></li>
+                        <li><a href="space.html">space</a></li>
+                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="at.the.bar.html">at the bar</a></li>
+                        <li><a href="who.was.here.html">who was here</a></li>
+                        <li><a href="what.to.do.html">what to do</a></li>
+                        <li><a href="come.see.us.html">come see us</a></li>
+                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Original Landing Page -->
+        <section class="landing-page section active">
+            <div class="gallery-slider"></div>
+            
+            <div class="landing-content">
+                <a href="64.html" style="text-decoration: none;">
+                    <h1 class="embossed-logo" style="cursor: pointer;">DOOR 64</h1>
+                </a>
+                
+                <div class="landing-links">
+                    <div class="landing-link">
+                        <h3>space</h3>
+                        <div class="sub-links">
+                            <a href="in.the.kitchen.html">in the kitchen</a>
+                            <a href="at.the.bar.html">at the bar</a>
+                        </div>
+                    </div>
+                    
+                    <div class="landing-link">
+                        <h3>what to do</h3>
+                        <div class="sub-links">
+                            <a href="come.see.us.html">make reservation</a>
+                            <a href="what.to.do.html">upcoming events</a>
+                        </div>
+                    </div>
+                    
+                    <div class="landing-link">
+                        <h3>connect</h3>
+                        <div class="sub-links">
+                            <a href="who.was.here.html">who was here</a>
+                            <a href="come.see.us.html">come see us</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Landing Gallery -->
+                <div class="css-gallery" id="landing-gallery">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="landing-track">
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>intimate dining experience</h3>
+                                    <p>where every meal becomes a memory</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>craft cocktails</h3>
+                                    <p>handcrafted with passion and precision</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>culinary artistry</h3>
+                                    <p>seasonal ingredients, chef's creativity</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>wine selection</h3>
+                                    <p>curated collection of exceptional wines</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                                <div class="gallery-content">
+                                    <h3>elegant atmosphere</h3>
+                                    <p>designed for unforgettable experiences</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="gallery-nav prev" onclick="previousSlide('landing-gallery')">‹</button>
+                        <button class="gallery-nav next" onclick="nextSlide('landing-gallery')">›</button>
+                        
+                        <div class="gallery-dots">
+                            <span class="gallery-dot active" onclick="goToSlide('landing-gallery', 0)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 1)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 2)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 3)"></span>
+                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 4)"></span>
+                        </div>
+                        
+                        <div class="gallery-progress"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
