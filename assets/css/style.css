@@ -1,4 +1,4 @@
-/* Door 64 Restaurant - Main Stylesheet with Audio & Mobile Fixes */
+/* Door 64 Restaurant - Main Stylesheet - COMPLETE WITH ALL FIXES */
 
 * {
     margin: 0;
@@ -571,7 +571,7 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* =============== ENHANCED AUDIO BUTTON STYLES =============== */
+/* =============== ENHANCED AUDIO BUTTON STYLES WITH ALL FIXES =============== */
 
 /* Audio Toggle Button - Enhanced with new animations */
 .audio-toggle {
@@ -595,7 +595,7 @@ body {
     will-change: transform;
     backface-visibility: hidden;
     perspective: 1000px;
-    /* ✅ MOBILE FIXES ADDED */
+    /* ✅ MOBILE FIXES */
     min-width: 44px;
     min-height: 44px;
     touch-action: manipulation;
@@ -683,7 +683,7 @@ body {
     backface-visibility: hidden !important;
     perspective: 1000px !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-    /* ✅ MOBILE FIXES ADDED */
+    /* ✅ MOBILE FIXES */
     min-width: 44px;
     min-height: 44px;
     touch-action: manipulation;
@@ -735,15 +735,56 @@ body {
     100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
 }
 
+/* ✅ MOBILE AUDIO HINTS */
+@media (max-width: 768px) {
+    .splash-audio-toggle:not(.playing)::after {
+        content: attr(data-mobile-hint);
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8em;
+        opacity: 0.7;
+        white-space: nowrap;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: 'Georgia', serif;
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .audio-toggle:not(.playing)::after {
+        content: "Tap to start";
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.7em;
+        opacity: 0.7;
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Georgia', serif;
+        pointer-events: none;
+        z-index: 1;
+    }
+}
+
 /* Audio loading indicator */
 .audio-toggle[data-loading="true"], 
 .splash-audio-toggle[data-loading="true"] {
-    animation: audioLoading 1s linear infinite;
+    animation: audioLoading 1.5s linear infinite;
+    opacity: 0.7;
 }
 
 @keyframes audioLoading {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
 }
 
 .mobile-menu {
@@ -867,13 +908,6 @@ p, .sub-links a, .menu-item p {
         background: #fff !important;
         background-image: none !important;
         z-index: -2; /* Ensure it stays behind content */
-    }
-}
-
-/* Mobile page 64 - white background like other pages */
-@media (max-width: 768px) {
-    .gallery-slider {
-        background: #fff;
     }
 }
 
@@ -1244,6 +1278,8 @@ p, .sub-links a, .menu-item p {
         width: 44px;
         height: 44px;
         font-size: 16px;
+        min-width: 48px;
+        min-height: 48px;
     }
 
     .gallery-nav.prev {
@@ -1262,9 +1298,9 @@ p, .sub-links a, .menu-item p {
     .gallery-dot {
         width: 10px;
         height: 10px;
-        min-width: 12px;
-        min-height: 12px;
-        margin: 0 6px;
+        min-width: 16px;
+        min-height: 16px;
+        margin: 0 8px;
     }
 }
 
@@ -1802,45 +1838,16 @@ select:focus {
     outline-offset: 2px;
 }
 
-/* =============== AUDIO & MOBILE INTERACTION FIXES =============== */
-
-/* ✅ MOBILE AUDIO HINT - Visual feedback for mobile users */
-@media (max-width: 768px) {
-    .splash-audio-toggle:not(.playing)::after {
-        content: attr(data-mobile-hint);
-        position: absolute;
-        bottom: -35px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8em;
-        opacity: 0.7;
-        white-space: nowrap;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-family: 'Georgia', serif;
-        pointer-events: none;
-        z-index: 1;
-    }
-    
-    .audio-toggle:not(.playing)::after {
-        content: "Tap to start";
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.7em;
-        opacity: 0.7;
-        white-space: nowrap;
-        background: rgba(255, 255, 255, 0.9);
-        color: #000;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-family: 'Georgia', serif;
-        pointer-events: none;
-        z-index: 1;
-    }
+/* ✅ ENHANCED FOCUS INDICATORS */
+.audio-toggle:focus-visible,
+.splash-audio-toggle:focus-visible,
+.mobile-menu:focus-visible,
+.nav-links a:focus-visible,
+.gallery-nav:focus-visible,
+.gallery-dot:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 3px;
+    z-index: 10;
 }
 
 /* ✅ PREVENT HOVER EFFECTS ON MOBILE DEVICES */
@@ -1880,66 +1887,6 @@ select:focus {
     .door-gallery:hover li:hover {
         clip-path: initial !important;
         z-index: initial !important;
-    }
-}
-
-/* ✅ ENHANCED MOBILE TOUCH TARGETS */
-@media (max-width: 768px) {
-    /* Ensure all interactive elements meet accessibility standards */
-    .nav-links a,
-    .sub-links a,
-    .sub-nav-link,
-    .breadcrumb-link,
-    .social-links a,
-    .gallery-nav,
-    .gallery-dot,
-    .mobile-menu,
-    .audio-toggle,
-    .splash-audio-toggle,
-    .landing-link,
-    .space-item,
-    .menu-item,
-    .submit-btn,
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        min-width: 44px;
-        min-height: 44px;
-        /* Improve touch responsiveness */
-        touch-action: manipulation;
-    }
-    
-    /* Larger gallery dots for mobile */
-    .gallery-dot {
-        width: 14px;
-        height: 14px;
-        min-width: 16px;
-        min-height: 16px;
-        margin: 0 8px;
-    }
-    
-    /* Better gallery navigation on mobile */
-    .gallery-nav {
-        width: 48px;
-        height: 48px;
-        font-size: 18px;
-        min-width: 48px;
-        min-height: 48px;
-    }
-    
-    /* Improved mobile menu button */
-    .mobile-menu {
-        min-width: 48px;
-        min-height: 48px;
-        padding: 12px;
-        border-radius: 8px;
-        transition: background 0.2s ease;
-    }
-    
-    .mobile-menu:active {
-        background: rgba(255, 255, 255, 0.1);
-        transform: scale(0.95);
-        transition: all 0.1s ease;
     }
 }
 
@@ -1995,65 +1942,6 @@ select:focus {
     }
 }
 
-/* ✅ ENHANCED FOCUS INDICATORS */
-.audio-toggle:focus-visible,
-.splash-audio-toggle:focus-visible,
-.mobile-menu:focus-visible,
-.nav-links a:focus-visible,
-.gallery-nav:focus-visible,
-.gallery-dot:focus-visible {
-    outline: 3px solid rgba(255, 255, 255, 0.8);
-    outline-offset: 3px;
-    z-index: 10;
-}
-
-/* Mobile focus states */
-@media (max-width: 768px) {
-    .audio-toggle:focus-visible,
-    .splash-audio-toggle:focus-visible,
-    .mobile-menu:focus-visible {
-        outline: 2px solid rgba(0, 0, 0, 0.8);
-        outline-offset: 2px;
-    }
-}
-
-/* ✅ BETTER LOADING INDICATORS */
-.audio-toggle[data-loading="true"], 
-.splash-audio-toggle[data-loading="true"] {
-    animation: audioLoading 1.5s linear infinite;
-    opacity: 0.7;
-}
-
-@keyframes audioLoading {
-    0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.05); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-
-/* ✅ SAFE AREA IMPROVEMENTS FOR NOTCHED DEVICES */
-@supports (padding-top: env(safe-area-inset-top)) {
-    .splash-audio-toggle {
-        top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
-        right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
-    }
-    
-    .nav {
-        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
-    }
-    
-    @media (max-width: 768px) {
-        .nav-links.active {
-            padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
-        }
-        
-        .section {
-            padding-bottom: max(70px, calc(env(safe-area-inset-bottom) + 40px));
-        }
-    }
-}
-
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -2085,15 +1973,27 @@ select:focus {
     }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .audio-toggle, 
+/* ✅ SAFE AREA IMPROVEMENTS FOR NOTCHED DEVICES */
+@supports (padding-top: env(safe-area-inset-top)) {
     .splash-audio-toggle {
-        border: 2px solid currentColor;
+        top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
+        right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
     }
     
-    .gallery-nav {
-        border: 2px solid rgba(255, 255, 255, 0.8);
+    .nav {
+        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+    
+    @media (max-width: 768px) {
+        .nav-links.active {
+            padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
+        }
+        
+        .section {
+            padding-bottom: max(70px, calc(env(safe-area-inset-bottom) + 40px));
+        }
     }
 }
 
@@ -2103,8 +2003,30 @@ select:focus {
         --nav-height: var(--mobile-nav-height);
     }
 
-/* Mobile splash audio button positioning */
-@media (max-width: 768px) {
+    /* ✅ ENHANCED MOBILE TOUCH TARGETS */
+    .nav-links a,
+    .sub-links a,
+    .sub-nav-link,
+    .breadcrumb-link,
+    .social-links a,
+    .gallery-nav,
+    .gallery-dot,
+    .mobile-menu,
+    .audio-toggle,
+    .splash-audio-toggle,
+    .landing-link,
+    .space-item,
+    .menu-item,
+    .submit-btn,
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        min-width: 44px;
+        min-height: 44px;
+        /* Improve touch responsiveness */
+        touch-action: manipulation;
+    }
+
     .splash-audio-toggle {
         top: 15px !important;
         top: max(15px, calc(var(--safe-area-top) + 10px)) !important;
@@ -2188,8 +2110,14 @@ select:focus {
         align-items: center;
         border-radius: 8px;
         transition: background 0.3s ease;
-        min-width: 44px;
-        min-height: 44px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .mobile-menu:active {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(0.95);
+        transition: all 0.1s ease;
     }
 
     .nav-links {
@@ -2238,10 +2166,6 @@ select:focus {
     .nav-links a:active {
         background: rgba(255,255,255,0.1);
         color: #fff;
-    }
-
-    .mobile-menu:active {
-        background: rgba(255,255,255,0.1);
     }
 
     .mobile-menu span {
@@ -2489,6 +2413,14 @@ select:focus {
 
     .spirit-category h3 {
         font-size: clamp(1.4rem, 6vw, 1.8rem);
+    }
+
+    /* Mobile focus states */
+    .audio-toggle:focus-visible,
+    .splash-audio-toggle:focus-visible,
+    .mobile-menu:focus-visible {
+        outline: 2px solid rgba(0, 0, 0, 0.8);
+        outline-offset: 2px;
     }
 }
 
@@ -2746,4 +2678,4 @@ select:focus {
     }
 }
 
-/* End Door 64 Restaurant Stylesheet */
+/* End Door 64 Restaurant Stylesheet - Complete with All Fixes */
