@@ -25,8 +25,8 @@
 <body>
     <!-- DOOR PLUGIN SPLASH PAGE -->
     <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door 64">
-        <!-- Door Gallery with YOUR uploaded images -->
-        <ul class="door-gallery" role="presentation" aria-hidden="true">
+        <!-- Door Gallery with YOUR uploaded images - MOVED UP -->
+        <ul class="door-gallery door-gallery-raised" role="presentation" aria-hidden="true">
             <li>
                 <a href="64.html" tabindex="-1" aria-hidden="true">
                     <img src="assets/images/splash/door1.jpg" 
@@ -57,7 +57,8 @@
             </li>
         </ul>
         
-        <div class="splash-content">
+        <!-- Logo content - MOVED BELOW IMAGES -->
+        <div class="splash-content splash-content-below">
             <h1 aria-label="Door 64 Restaurant">DOOR 64</h1>
             <p role="text">click to enter</p>
         </div>
@@ -246,16 +247,5 @@
 
     <!-- JavaScript -->
     <script src="assets/js/script.js"></script>
-    
-    <!-- Make splash page clickable to go to main site -->
-    <script>
-    // Make entire splash page clickable to go to 64.html
-    document.getElementById('splashPage').addEventListener('click', function(e) {
-        // Don't interfere with audio button clicks
-        if (!e.target.closest('.splash-audio-toggle')) {
-            window.location.href = '64.html';
-        }
-    });
-    </script>
 </body>
 </html>
