@@ -12,13 +12,17 @@
     <link rel="stylesheet" href="assets/css/style.css">
     
     <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline>
-    <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
-</audio>
+    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline webkit-playsinline="true">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="assets/audio/QUIETSTORM.ogg" type="audio/ogg">
+        <!-- Fallback message for browsers that don't support audio -->
+        Your browser does not support the audio element.
+    </audio>
+    
     <!-- SEO Meta Tags -->
     <meta name="description" content="Door 64 - An intimate dining experience where every meal becomes a memory. Discover our elegant atmosphere and culinary artistry.">
     <meta name="keywords" content="restaurant, fine dining, Door 64, culinary experience, intimate dining">
-    <meta name="author" content="Door 64 ">
+    <meta name="author" content="Door 64">
 </head>
 <body>
     <!-- DOOR PLUGIN SPLASH PAGE -->
@@ -57,15 +61,16 @@
         
         <!-- Logo content - MOVED BELOW IMAGES -->
         <div class="splash-content splash-content-below">
-            <h1 aria-label="Door 64 ">DOOR 64</h1>
-           
+            <h1 aria-label="Door 64">DOOR 64</h1>
         </div>
         
+        <!-- ✅ UPDATED: Added mobile hint and improved accessibility -->
         <button class="splash-audio-toggle" 
                 onclick="toggleAudio(event)" 
-                title="Toggle background music" 
+                data-mobile-hint="Tap to start music"
+                title="Play Background Music" 
                 id="splashAudioToggle"
-                aria-label="Toggle background music">♪</button>
+                aria-label="Play background music">♪</button>
     </div>
 
     <!-- MAIN SITE -->
@@ -76,10 +81,11 @@
                 <a href="index.html" class="nav-logo" aria-label="Door 64 Home">DOOR 64</a>
                 
                 <div class="nav-left-section">
+                    <!-- ✅ UPDATED: Improved accessibility attributes -->
                     <button class="audio-toggle" 
                             onclick="toggleAudio(event)" 
-                            title="Toggle Background Music"
-                            aria-label="Toggle background music">♪</button>
+                            title="Play Background Music"
+                            aria-label="Play background music">♪</button>
                     
                     <ul class="nav-links" id="navLinks" role="menubar">
                         <li role="none"><a href="index.html" role="menuitem">64</a></li>
@@ -109,7 +115,7 @@
             <div class="gallery-slider" role="presentation" aria-hidden="true"></div>
             
             <div class="landing-content">
-                <a href="index.html" style="text-decoration: none;" aria-label="Door 64 ">
+                <a href="index.html" style="text-decoration: none;" aria-label="Door 64">
                     <h1 class="embossed-logo" style="cursor: pointer;">DOOR 64</h1>
                 </a>
                 
