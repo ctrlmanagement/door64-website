@@ -1,132 +1,560 @@
-/* Door 64 Restaurant - Main JavaScript */
+/* Door 64 Restaurant - Enhanced Main JavaScript with Continuous Audio System */
 
-// Global variables
+// =============== ENHANCED CONTINUOUS AUDIO SYSTEM ===============
+class Door64Audio {
+    constructor() {
+        this.audio = null;
+        this.isPlaying = false;
+        this.currentTime = 0;
+        this.volume = 0.3;
+        this.storageKey = 'door64_audio_state';
+        this.timeKey = 'door64_audio_time';
+        this.lastUpdateTime = 0;
+        this.updateInterval = 2000; // Update storage every 2 seconds
+        
+        this.init();
+    }
+    
+    init() {
+        console.log('🎵 Door 64 Audio System - Initializing...');
+        
+        const storedState = localStorage.getItem(this.storageKey);
+        const storedTime = localStorage.getItem(this.timeKey);
+        
+        this.audio = document.getElementById('backgroundAudio');
+        if (!this.audio) {
+            console.warn('⚠️ Background audio element not found');
+            return;
+        }
+        
+        // Set optimal volume
+        this.audio.volume = this.volume;
+        
+        // Determine auto-start behavior based on page and stored state
+        const isIndexPage = this.isIndexPage();
+        
+        if (storedState === null && isIndexPage) {
+            // First visit to splash page - set up for user interaction
+            this.setupSplashAutoStart();
+        } else if (storedState === 'playing') {
+            // Continue playing from stored position
+            if (storedTime) {
+                this.audio.currentTime = parseFloat(storedTime);
+            }
+            this.startAudio();
+        } else {
+            // Audio was paused - respect user choice
+            this.updateButtons();
+        }
+        
+        this.setupAudioEventListeners();
+        this.setupPageUnloadHandler();
+    }
+    
+    isIndexPage() {
+        return window.location.pathname.includes('index.html') || 
+               window.location.pathname === '/' ||
+               window.location.pathname.endsWith('/') ||
+               window.location.pathname === '';
+    }
+    
+    setupSplashAutoStart() {
+        console.log('🎵 Setting up splash auto-start...');
+        const splashPage = document.getElementById('splashPage');
+        
+        if (splashPage) {
+            const startAudioOnInteraction = (event) => {
+                // Don't start if clicking audio button
+                if (event.target.closest('.splash-audio-toggle')) {
+                    return;
+                }
+                
+                this.startAudio();
+                // Remove listeners after first interaction
+                splashPage.removeEventListener('click', startAudioOnInteraction);
+                document.removeEventListener('keydown', startAudioOnKeyPress);
+            };
+            
+            const startAudioOnKeyPress = (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    this.startAudio();
+                    splashPage.removeEventListener('click', startAudioOnInteraction);
+                    document.removeEventListener('keydown', startAudioOnKeyPress);
+                }
+            };
+            
+            splashPage.addEventListener('click', startAudioOnInteraction);
+            document.addEventListener('keydown', startAudioOnKeyPress);
+        } else {
+            // Not splash page but first visit - try to start
+            setTimeout(() => this.startAudio(), 500);
+        }
+        
+        this.updateButtons();
+    }
+    
+    setupAudioEventListeners() {
+        if (!this.audio) return;
+        
+        // Periodic time storage
+        this.audio.addEventListener('timeupdate', () => {
+            if (this.isPlaying) {
+                const now = Date.now();
+                if (now - this.lastUpdateTime > this.updateInterval) {
+                    localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
+                    this.lastUpdateTime = now;
+                }
+            }
+        });
+        
+        // Audio state change handlers
+        this.audio.addEventListener('play', () => {
+            this.isPlaying = true;
+            this.updateButtons();
+            console.log('🎵 Audio playing');
+        });
+        
+        this.audio.addEventListener('pause', () => {
+            this.isPlaying = false;
+            this.updateButtons();
+            console.log('⏸️ Audio paused');
+        });
+        
+        // Handle audio loop (just in case)
+        this.audio.addEventListener('ended', () => {
+            if (this.isPlaying) {
+                this.audio.currentTime = 0;
+                this.audio.play().catch(console.log);
+            }
+        });
+        
+        // Handle audio errors gracefully
+        this.audio.addEventListener('error', (e) => {
+            console.error('Audio error:', e);
+            this.isPlaying = false;
+            this.updateButtons();
+        });
+        
+        // Handle audio loading states
+        this.audio.addEventListener('loadstart', () => {
+            this.setLoadingState(true);
+        });
+        
+        this.audio.addEventListener('canplay', () => {
+            this.setLoadingState(false);
+        });
+    }
+    
+    setupPageUnloadHandler() {
+        // Store final position on page unload
+        window.addEventListener('beforeunload', () => {
+            if (this.audio && this.isPlaying) {
+                localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
+                console.log('💾 Audio position saved on page unload');
+            }
+        });
+        
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Page hidden - could pause if desired
+                // Uncomment next line if you want to pause when tab is hidden
+                // if (this.isPlaying) this.pauseAudio();
+            } else if (!this.audio.paused && localStorage.getItem(this.storageKey) === 'playing') {
+                // Page visible again - ensure audio is playing if it should be
+                if (!this.isPlaying) {
+                    this.startAudio();
+                }
+            }
+        });
+    }
+    
+    startAudio() {
+        if (!this.audio) return;
+        
+        // Unmute if muted (for autoplay compatibility)
+        if (this.audio.muted) {
+            this.audio.muted = false;
+        }
+        
+        const playPromise = this.audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    this.isPlaying = true;
+                    localStorage.setItem(this.storageKey, 'playing');
+                    this.updateButtons();
+                    console.log('✅ Audio started successfully');
+                })
+                .catch(error => {
+                    console.log('⚠️ Audio autoplay prevented:', error);
+                    // Update buttons anyway for manual control
+                    this.updateButtons();
+                });
+        }
+    }
+    
+    pauseAudio() {
+        if (!this.audio) return;
+        
+        this.audio.pause();
+        this.isPlaying = false;
+        localStorage.setItem(this.storageKey, 'paused');
+        // Store final position immediately
+        localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
+        this.updateButtons();
+        console.log('⏸️ Audio paused by user');
+    }
+    
+    toggle() {
+        if (this.isPlaying) {
+            this.pauseAudio();
+        } else {
+            this.startAudio();
+        }
+    }
+    
+    setLoadingState(loading) {
+        const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
+        buttons.forEach(button => {
+            if (loading) {
+                button.setAttribute('data-loading', 'true');
+            } else {
+                button.removeAttribute('data-loading');
+            }
+        });
+    }
+    
+    updateButtons() {
+        const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
+        buttons.forEach(button => {
+            if (this.isPlaying) {
+                button.innerHTML = '⏸';
+                button.classList.add('playing');
+                button.title = 'Pause Background Music';
+                button.setAttribute('aria-label', 'Pause background music');
+            } else {
+                button.innerHTML = '♪';
+                button.classList.remove('playing');
+                button.title = 'Play Background Music';
+                button.setAttribute('aria-label', 'Play background music');
+            }
+        });
+    }
+}
+
+// =============== ENHANCED GALLERY SYSTEM ===============
+class Door64Gallery {
+    constructor(galleryId) {
+        this.galleryId = galleryId;
+        this.currentSlide = 0;
+        this.slides = document.querySelectorAll(`#${galleryId} .gallery-slide`);
+        this.dots = document.querySelectorAll(`#${galleryId} .gallery-dot`);
+        this.track = document.querySelector(`#${galleryId} .gallery-track`);
+        this.progress = document.querySelector(`#${galleryId} .gallery-progress`);
+        this.totalSlides = this.slides.length;
+        this.autoPlayInterval = null;
+        this.isPlaying = false;
+        this.autoPlayDelay = 5000; // 5 seconds
+        
+        if (this.totalSlides > 0) {
+            this.init();
+        }
+    }
+    
+    init() {
+        console.log(`🖼️ Gallery ${this.galleryId} - Initializing with ${this.totalSlides} slides`);
+        
+        this.setupEventListeners();
+        this.updateGallery();
+        this.startAutoPlay();
+    }
+    
+    setupEventListeners() {
+        // Dot navigation with keyboard support
+        this.dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => this.goToSlide(index));
+            dot.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        this.goToSlide(Math.max(0, index - 1));
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        this.goToSlide(Math.min(this.totalSlides - 1, index + 1));
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        this.goToSlide(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        this.goToSlide(this.totalSlides - 1);
+                        break;
+                }
+            });
+        });
+        
+        // Button navigation
+        const prevButton = document.querySelector(`#${this.galleryId} .gallery-nav.prev`);
+        const nextButton = document.querySelector(`#${this.galleryId} .gallery-nav.next`);
+        
+        if (prevButton) prevButton.addEventListener('click', () => this.previousSlide());
+        if (nextButton) nextButton.addEventListener('click', () => this.nextSlide());
+        
+        // Hover/focus pause behavior
+        const container = document.querySelector(`#${this.galleryId}`);
+        if (container) {
+            container.addEventListener('mouseenter', () => this.pauseAutoPlay());
+            container.addEventListener('mouseleave', () => this.resumeAutoPlay());
+            container.addEventListener('focusin', () => this.pauseAutoPlay());
+            container.addEventListener('focusout', () => this.resumeAutoPlay());
+        }
+        
+        // Touch/swipe support
+        this.setupTouchEvents();
+    }
+    
+    setupTouchEvents() {
+        const container = document.querySelector(`#${this.galleryId}`);
+        if (!container) return;
+        
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        
+        container.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            
+            container.classList.add('swiping');
+            this.pauseAutoPlay();
+        });
+        
+        container.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.touches[0].clientX - startX;
+            const deltaY = e.touches[0].clientY - startY;
+            
+            // Prevent vertical scrolling if horizontal swipe is dominant
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+                e.preventDefault();
+            }
+        });
+        
+        container.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const deltaX = endX - startX;
+            
+            container.classList.remove('swiping');
+            isDragging = false;
+            
+            // Swipe threshold
+            if (Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    this.previousSlide();
+                } else {
+                    this.nextSlide();
+                }
+            }
+            
+            this.resumeAutoPlay();
+        });
+    }
+    
+    updateGallery() {
+        if (!this.track) return;
+        
+        // Update track position with smooth transition
+        this.track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
+        
+        // Update dots with accessibility attributes
+        this.dots.forEach((dot, index) => {
+            const isActive = index === this.currentSlide;
+            dot.classList.toggle('active', isActive);
+            dot.setAttribute('aria-selected', isActive.toString());
+            dot.setAttribute('tabindex', isActive ? '0' : '-1');
+        });
+        
+        // Update progress bar
+        this.updateProgress();
+        
+        // Update slide visibility for screen readers
+        this.slides.forEach((slide, index) => {
+            slide.setAttribute('aria-hidden', (index !== this.currentSlide).toString());
+            if (index === this.currentSlide) {
+                slide.classList.add('fade-in');
+                setTimeout(() => slide.classList.remove('fade-in'), 600);
+            }
+        });
+    }
+    
+    updateProgress() {
+        if (!this.progress) return;
+        
+        const progressWidth = ((this.currentSlide + 1) / this.totalSlides) * 100;
+        this.progress.style.width = `${progressWidth}%`;
+    }
+    
+    nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        this.updateGallery();
+        console.log(`🖼️ Gallery ${this.galleryId} - Next slide: ${this.currentSlide + 1}/${this.totalSlides}`);
+    }
+    
+    previousSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.updateGallery();
+        console.log(`🖼️ Gallery ${this.galleryId} - Previous slide: ${this.currentSlide + 1}/${this.totalSlides}`);
+    }
+    
+    goToSlide(slideIndex) {
+        if (slideIndex >= 0 && slideIndex < this.totalSlides) {
+            this.currentSlide = slideIndex;
+            this.updateGallery();
+            this.restartAutoPlay();
+            console.log(`🖼️ Gallery ${this.galleryId} - Go to slide: ${slideIndex + 1}/${this.totalSlides}`);
+        }
+    }
+    
+    startAutoPlay() {
+        this.pauseAutoPlay();
+        if (this.totalSlides > 1) {
+            this.autoPlayInterval = setInterval(() => {
+                this.nextSlide();
+            }, this.autoPlayDelay);
+            this.isPlaying = true;
+            console.log(`▶️ Gallery ${this.galleryId} - Auto-play started`);
+        }
+    }
+    
+    pauseAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+        this.isPlaying = false;
+    }
+    
+    resumeAutoPlay() {
+        if (!this.isPlaying && this.totalSlides > 1) {
+            this.startAutoPlay();
+        }
+    }
+    
+    restartAutoPlay() {
+        this.startAutoPlay();
+    }
+}
+
+// =============== GLOBAL VARIABLES ===============
 let currentSlide = 0;
 let slideInterval = null;
 let isAudioPlaying = false;
 
+// Global instances
+window.door64Audio = null;
+window.door64Galleries = {};
+
 // =============== DOCUMENT READY & INITIALIZATION ===============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Door 64 - Initializing...');
+    console.log('🚪 Door 64 - Initializing enhanced systems...');
     
-    // Initialize all functionality
-    initAudio();
+    // Initialize enhanced audio system
+    window.door64Audio = new Door64Audio();
+    
+    // Initialize enhanced galleries
+    initGalleries();
+    
+    // Initialize other functionality
     initSplashPage();
-    initGallery();
     initMobileMenu();
     initViewportHeight();
+    initKeyboardNavigation();
+    initAccessibilityFeatures();
     
-    console.log('Door 64 - Ready!');
+    // Initialize lazy loading if supported
+    if ('IntersectionObserver' in window) {
+        initLazyLoading();
+    }
+    
+    console.log('✅ Door 64 - All systems ready!');
 });
 
-// =============== AUTO-PLAY AUDIO FUNCTIONALITY ===============
-function initAudio() {
-    const audio = document.getElementById('backgroundAudio');
-    const splashAudioToggle = document.getElementById('splashAudioToggle');
-    const audioToggle = document.querySelector('.audio-toggle');
+// =============== ENHANCED GALLERY INITIALIZATION ===============
+function initGalleries() {
+    const galleries = document.querySelectorAll('.css-gallery');
     
-    if (!audio) {
-        console.warn('Background audio element not found');
-        return;
-    }
-    
-    // Attempt auto-play on page load
-    setTimeout(() => {
-        audio.play().then(() => {
-            console.log('✅ QUIETSTORM auto-play started');
-            isAudioPlaying = true;
-            updateAudioButtons(true);
-        }).catch((error) => {
-            console.log('⚠️ Audio auto-play blocked by browser:', error);
-            // Auto-play was blocked, will try on first user interaction
-        });
-    }, 500); // Small delay to ensure everything is loaded
-    
-    // Try to play on first user click if auto-play failed
-    document.addEventListener('click', function playOnFirstClick() {
-        if (audio.paused) {
-            audio.play().then(() => {
-                console.log('✅ QUIETSTORM started on first click');
-                isAudioPlaying = true;
-                updateAudioButtons(true);
-            }).catch(console.log);
+    galleries.forEach(gallery => {
+        const galleryId = gallery.id;
+        if (galleryId) {
+            window.door64Galleries[galleryId] = new Door64Gallery(galleryId);
         }
-        // Remove this listener after first click
-        document.removeEventListener('click', playOnFirstClick);
-    }, { once: true });
-    
-    // Audio event listeners
-    audio.addEventListener('play', () => {
-        isAudioPlaying = true;
-        updateAudioButtons(true);
-        console.log('🎵 Audio playing');
     });
     
-    audio.addEventListener('pause', () => {
-        isAudioPlaying = false;
-        updateAudioButtons(false);
-        console.log('⏸️ Audio paused');
-    });
-    
-    // Handle audio errors
-    audio.addEventListener('error', (e) => {
-        console.error('Audio error:', e);
-        isAudioPlaying = false;
-        updateAudioButtons(false);
-    });
+    // Backward compatibility - initialize landing gallery if no ID found
+    const landingTrack = document.getElementById('landing-track');
+    if (landingTrack && !window.door64Galleries['landing-gallery']) {
+        const landingGallery = landingTrack.closest('.css-gallery');
+        if (landingGallery) {
+            landingGallery.id = 'landing-gallery';
+            window.door64Galleries['landing-gallery'] = new Door64Gallery('landing-gallery');
+        }
+    }
 }
 
+// =============== GLOBAL FUNCTIONS (for backward compatibility) ===============
 function toggleAudio(event) {
     if (event) {
-        event.stopPropagation(); // Prevent splash page click
+        event.stopPropagation();
+        event.preventDefault();
     }
     
-    const audio = document.getElementById('backgroundAudio');
-    if (!audio) return;
-    
-    if (audio.paused) {
-        audio.play().then(() => {
-            isAudioPlaying = true;
-            updateAudioButtons(true);
-            console.log('🎵 Audio started');
-        }).catch((error) => {
-            console.error('Failed to play audio:', error);
-        });
+    if (window.door64Audio) {
+        window.door64Audio.toggle();
     } else {
-        audio.pause();
-        isAudioPlaying = false;
-        updateAudioButtons(false);
-        console.log('⏸️ Audio stopped');
+        console.warn('⚠️ Audio system not initialized');
     }
 }
 
-function updateAudioButtons(playing) {
-    const splashAudioToggle = document.getElementById('splashAudioToggle');
-    const audioToggle = document.querySelector('.audio-toggle');
-    
-    if (splashAudioToggle) {
-        if (playing) {
-            splashAudioToggle.classList.add('playing');
-        } else {
-            splashAudioToggle.classList.remove('playing');
-        }
-    }
-    
-    if (audioToggle) {
-        if (playing) {
-            audioToggle.classList.add('playing');
-        } else {
-            audioToggle.classList.remove('playing');
-        }
+function nextSlide(galleryId) {
+    if (window.door64Galleries && window.door64Galleries[galleryId]) {
+        window.door64Galleries[galleryId].nextSlide();
+    } else {
+        console.warn(`⚠️ Gallery ${galleryId} not found`);
     }
 }
 
-// =============== SPLASH PAGE FUNCTIONALITY ===============
+function previousSlide(galleryId) {
+    if (window.door64Galleries && window.door64Galleries[galleryId]) {
+        window.door64Galleries[galleryId].previousSlide();
+    } else {
+        console.warn(`⚠️ Gallery ${galleryId} not found`);
+    }
+}
+
+function goToSlide(galleryId, slideIndex) {
+    if (window.door64Galleries && window.door64Galleries[galleryId]) {
+        window.door64Galleries[galleryId].goToSlide(slideIndex);
+    } else {
+        console.warn(`⚠️ Gallery ${galleryId} not found`);
+    }
+}
+
+// =============== ENHANCED SPLASH PAGE FUNCTIONALITY ===============
 function initSplashPage() {
     const splashPage = document.getElementById('splashPage');
     const mainSite = document.getElementById('mainSite');
     
     if (!splashPage) return;
+    
+    console.log('🚪 Initializing splash page...');
     
     // Make entire splash page clickable (except audio button)
     splashPage.addEventListener('click', function(e) {
@@ -135,26 +563,51 @@ function initSplashPage() {
             return;
         }
         
-        console.log('🚪 Entering main site...');
+        console.log('🚪 Entering main site from splash...');
         
-        // Navigate to main site
-        if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-            // If we're on index.html, go to 64.html
+        // Ensure audio starts when entering
+        if (window.door64Audio) {
+            window.door64Audio.startAudio();
+        }
+        
+        // Navigate based on current page
+        if (window.location.pathname.includes('index.html') || 
+            window.location.pathname === '/' || 
+            window.location.pathname === '') {
             window.location.href = '64.html';
         } else {
-            // Hide splash and show main site (for single page setup)
             hideSplash();
         }
     });
     
-    // Individual door clicks for backup
+    // Individual door links for backup navigation
     const doorLinks = splashPage.querySelectorAll('.door-gallery a');
-    doorLinks.forEach(link => {
+    doorLinks.forEach((link, index) => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('🚪 Door clicked - entering main site...');
-            window.location.href = '64.html';
+            console.log(`🚪 Door ${index + 1} clicked - entering main site...`);
+            
+            // Start audio before navigation
+            if (window.door64Audio) {
+                window.door64Audio.startAudio();
+            }
+            
+            setTimeout(() => {
+                window.location.href = '64.html';
+            }, 100);
         });
+    });
+    
+    // Keyboard navigation for splash page
+    document.addEventListener('keydown', function(event) {
+        if (splashPage.style.display !== 'none') {
+            if (event.key === 'Enter' || event.key === ' ') {
+                if (!event.target.closest('.splash-audio-toggle')) {
+                    event.preventDefault();
+                    splashPage.click();
+                }
+            }
+        }
     });
 }
 
@@ -175,213 +628,14 @@ function hideSplash() {
     }
 }
 
-// =============== GALLERY FUNCTIONALITY ===============
-function initGallery() {
-    const galleryTrack = document.getElementById('landing-track');
-    const galleryDots = document.querySelectorAll('.gallery-dot');
-    const prevButton = document.querySelector('.gallery-nav.prev');
-    const nextButton = document.querySelector('.gallery-nav.next');
-    
-    if (!galleryTrack) return;
-    
-    const slides = galleryTrack.children;
-    const totalSlides = slides.length;
-    
-    if (totalSlides === 0) return;
-    
-    // Initialize gallery
-    updateGalleryPosition();
-    updateGalleryDots();
-    
-    // Auto-play gallery
-    startGalleryAutoPlay();
-    
-    // Dot navigation
-    galleryDots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            goToSlide(index);
-        });
-    });
-    
-    // Button navigation
-    if (prevButton) {
-        prevButton.addEventListener('click', previousSlide);
-    }
-    
-    if (nextButton) {
-        nextButton.addEventListener('click', nextSlide);
-    }
-    
-    // Pause auto-play on hover
-    const gallery = document.querySelector('.css-gallery');
-    if (gallery) {
-        gallery.addEventListener('mouseenter', stopGalleryAutoPlay);
-        gallery.addEventListener('mouseleave', startGalleryAutoPlay);
-    }
-    
-    // Touch/swipe support
-    initGalleryTouch();
-}
-
-function goToSlide(slideIndex) {
-    const galleryTrack = document.getElementById('landing-track');
-    if (!galleryTrack) return;
-    
-    const totalSlides = galleryTrack.children.length;
-    currentSlide = Math.max(0, Math.min(slideIndex, totalSlides - 1));
-    
-    updateGalleryPosition();
-    updateGalleryDots();
-    updateGalleryProgress();
-    
-    // Restart auto-play timer
-    startGalleryAutoPlay();
-}
-
-function nextSlide() {
-    const galleryTrack = document.getElementById('landing-track');
-    if (!galleryTrack) return;
-    
-    const totalSlides = galleryTrack.children.length;
-    currentSlide = (currentSlide + 1) % totalSlides;
-    
-    updateGalleryPosition();
-    updateGalleryDots();
-    updateGalleryProgress();
-}
-
-function previousSlide() {
-    const galleryTrack = document.getElementById('landing-track');
-    if (!galleryTrack) return;
-    
-    const totalSlides = galleryTrack.children.length;
-    currentSlide = currentSlide === 0 ? totalSlides - 1 : currentSlide - 1;
-    
-    updateGalleryPosition();
-    updateGalleryDots();
-    updateGalleryProgress();
-}
-
-function updateGalleryPosition() {
-    const galleryTrack = document.getElementById('landing-track');
-    if (!galleryTrack) return;
-    
-    const translateX = -currentSlide * 100;
-    galleryTrack.style.transform = `translateX(${translateX}%)`;
-}
-
-function updateGalleryDots() {
-    const galleryDots = document.querySelectorAll('.gallery-dot');
-    
-    galleryDots.forEach((dot, index) => {
-        if (index === currentSlide) {
-            dot.classList.add('active');
-            dot.setAttribute('aria-selected', 'true');
-            dot.setAttribute('tabindex', '0');
-        } else {
-            dot.classList.remove('active');
-            dot.setAttribute('aria-selected', 'false');
-            dot.setAttribute('tabindex', '-1');
-        }
-    });
-}
-
-function updateGalleryProgress() {
-    const progressBar = document.querySelector('.gallery-progress');
-    if (progressBar) {
-        // Reset animation
-        progressBar.style.transition = 'none';
-        progressBar.style.width = '0%';
-        
-        // Force reflow
-        progressBar.offsetHeight;
-        
-        // Start animation
-        progressBar.style.transition = 'width 4s linear';
-        progressBar.style.width = '100%';
-    }
-}
-
-function startGalleryAutoPlay() {
-    stopGalleryAutoPlay();
-    
-    slideInterval = setInterval(() => {
-        nextSlide();
-    }, 4000);
-    
-    updateGalleryProgress();
-}
-
-function stopGalleryAutoPlay() {
-    if (slideInterval) {
-        clearInterval(slideInterval);
-        slideInterval = null;
-    }
-    
-    const progressBar = document.querySelector('.gallery-progress');
-    if (progressBar) {
-        progressBar.style.width = '0%';
-    }
-}
-
-// =============== TOUCH/SWIPE SUPPORT FOR GALLERY ===============
-function initGalleryTouch() {
-    const galleryContainer = document.querySelector('.gallery-container');
-    if (!galleryContainer) return;
-    
-    let startX = 0;
-    let startY = 0;
-    let isDragging = false;
-    
-    galleryContainer.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-        isDragging = true;
-        
-        galleryContainer.classList.add('swiping');
-        stopGalleryAutoPlay();
-    });
-    
-    galleryContainer.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        
-        const deltaX = e.touches[0].clientX - startX;
-        const deltaY = e.touches[0].clientY - startY;
-        
-        // Prevent vertical scrolling if horizontal swipe is dominant
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            e.preventDefault();
-        }
-    });
-    
-    galleryContainer.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        
-        const endX = e.changedTouches[0].clientX;
-        const deltaX = endX - startX;
-        
-        galleryContainer.classList.remove('swiping');
-        isDragging = false;
-        
-        // Swipe threshold
-        if (Math.abs(deltaX) > 50) {
-            if (deltaX > 0) {
-                previousSlide();
-            } else {
-                nextSlide();
-            }
-        }
-        
-        startGalleryAutoPlay();
-    });
-}
-
-// =============== MOBILE MENU FUNCTIONALITY ===============
+// =============== ENHANCED MOBILE MENU FUNCTIONALITY ===============
 function initMobileMenu() {
     const mobileMenuButton = document.querySelector('.mobile-menu');
     const navLinks = document.getElementById('navLinks');
     
     if (!mobileMenuButton || !navLinks) return;
+    
+    console.log('📱 Initializing mobile menu...');
     
     mobileMenuButton.addEventListener('click', toggleMobileMenu);
     
@@ -395,8 +649,16 @@ function initMobileMenu() {
     
     // Close mobile menu when clicking outside
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.nav-container')) {
+        if (!e.target.closest('.nav-container') && navLinks.classList.contains('active')) {
             closeMobileMenu();
+        }
+    });
+    
+    // Close mobile menu on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            closeMobileMenu();
+            mobileMenuButton.focus();
         }
     });
 }
@@ -423,15 +685,14 @@ function openMobileMenu() {
     if (!navLinks || !mobileMenuButton) return;
     
     navLinks.classList.add('active');
+    mobileMenuButton.classList.add('active');
     mobileMenuButton.setAttribute('aria-expanded', 'true');
     
-    // Animate hamburger to X
-    const spans = mobileMenuButton.querySelectorAll('span');
-    spans.forEach((span, index) => {
-        if (index === 0) span.style.transform = 'rotate(45deg) translate(6px, 6px)';
-        if (index === 1) span.style.opacity = '0';
-        if (index === 2) span.style.transform = 'rotate(-45deg) translate(6px, -6px)';
-    });
+    // Focus first link for accessibility
+    const firstLink = navLinks.querySelector('a');
+    if (firstLink) {
+        setTimeout(() => firstLink.focus(), 100);
+    }
     
     console.log('📱 Mobile menu opened');
 }
@@ -443,19 +704,14 @@ function closeMobileMenu() {
     if (!navLinks || !mobileMenuButton) return;
     
     navLinks.classList.remove('active');
+    mobileMenuButton.classList.remove('active');
     mobileMenuButton.setAttribute('aria-expanded', 'false');
     
-    // Reset hamburger animation
-    const spans = mobileMenuButton.querySelectorAll('span');
-    spans.forEach((span) => {
-        span.style.transform = '';
-        span.style.opacity = '';
-    });
+    console.log('📱 Mobile menu closed');
 }
 
 // =============== VIEWPORT HEIGHT FIX FOR MOBILE ===============
 function initViewportHeight() {
-    // Fix viewport height on mobile devices
     function setViewportHeight() {
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -464,107 +720,110 @@ function initViewportHeight() {
     // Set on load
     setViewportHeight();
     
-    // Update on resize
-    window.addEventListener('resize', setViewportHeight);
+    // Update on resize (debounced)
+    const debouncedSetViewportHeight = debounce(setViewportHeight, 100);
+    window.addEventListener('resize', debouncedSetViewportHeight);
     
     // Update on orientation change
     window.addEventListener('orientationchange', () => {
         setTimeout(setViewportHeight, 100);
     });
-}
-
-// =============== UTILITY FUNCTIONS ===============
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// =============== PAGE VISIBILITY API FOR AUDIO ===============
-document.addEventListener('visibilitychange', () => {
-    const audio = document.getElementById('backgroundAudio');
-    if (!audio) return;
     
-    if (document.hidden) {
-        // Page is not visible, optionally pause audio
-        // Uncomment the line below if you want to pause audio when tab is not visible
-        // if (isAudioPlaying) audio.pause();
-    } else {
-        // Page is visible again, resume audio if it was playing
-        if (isAudioPlaying && audio.paused) {
-            audio.play().catch(console.log);
-        }
-    }
-});
+    console.log('📱 Viewport height optimization initialized');
+}
 
 // =============== KEYBOARD NAVIGATION SUPPORT ===============
-document.addEventListener('keydown', (e) => {
-    // Gallery keyboard navigation
-    const gallery = document.querySelector('.css-gallery');
-    if (gallery && document.activeElement.closest('.css-gallery')) {
-        switch (e.key) {
-            case 'ArrowLeft':
-                e.preventDefault();
-                previousSlide();
-                break;
-            case 'ArrowRight':
-                e.preventDefault();
-                nextSlide();
-                break;
-            case 'Home':
-                e.preventDefault();
-                goToSlide(0);
-                break;
-            case 'End':
-                e.preventDefault();
-                const galleryTrack = document.getElementById('landing-track');
-                if (galleryTrack) {
-                    goToSlide(galleryTrack.children.length - 1);
-                }
-                break;
+function initKeyboardNavigation() {
+    document.addEventListener('keydown', (e) => {
+        // Audio toggle with spacebar (when focus is on body)
+        if (e.key === ' ' && e.target === document.body) {
+            e.preventDefault();
+            toggleAudio();
         }
-    }
-    
-    // Audio toggle with spacebar
-    if (e.key === ' ' && e.target === document.body) {
-        e.preventDefault();
-        toggleAudio();
-    }
-    
-    // Mobile menu toggle with Enter/Space
-    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mobile-menu')) {
-        e.preventDefault();
-        toggleMobileMenu();
-    }
-});
-
-// =============== SMOOTH SCROLLING ENHANCEMENT ===============
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href === '#') return;
         
-        e.preventDefault();
-        const target = document.querySelector(href);
+        // Mobile menu toggle with Enter/Space when focused
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mobile-menu')) {
+            e.preventDefault();
+            toggleMobileMenu();
+        }
         
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+        // Gallery keyboard navigation when focused
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.closest('.css-gallery')) {
+            const gallery = activeElement.closest('.css-gallery');
+            const galleryId = gallery.id;
+            
+            switch (e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    previousSlide(galleryId);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    nextSlide(galleryId);
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(galleryId, 0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    if (window.door64Galleries[galleryId]) {
+                        const lastSlide = window.door64Galleries[galleryId].totalSlides - 1;
+                        goToSlide(galleryId, lastSlide);
+                    }
+                    break;
+            }
         }
     });
-});
+    
+    console.log('⌨️ Keyboard navigation initialized');
+}
 
-// =============== PERFORMANCE OPTIMIZATIONS ===============
-// Lazy load images when they come into view
-if ('IntersectionObserver' in window) {
+// =============== ACCESSIBILITY FEATURES ===============
+function initAccessibilityFeatures() {
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === '') return;
+            
+            e.preventDefault();
+            const target = document.querySelector(href);
+            
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Focus target for screen readers
+                if (target.tabIndex === -1) {
+                    target.tabIndex = -1;
+                }
+                target.focus();
+            }
+        });
+    });
+    
+    // Skip link functionality (if present)
+    const skipLink = document.querySelector('.skip-link');
+    if (skipLink) {
+        skipLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector('#main-content') || document.querySelector('main');
+            if (target) {
+                target.focus();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+    
+    console.log('♿ Accessibility features initialized');
+}
+
+// =============== LAZY LOADING IMAGES ===============
+function initLazyLoading() {
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -572,59 +831,186 @@ if ('IntersectionObserver' in window) {
                 if (img.dataset.src) {
                     img.src = img.dataset.src;
                     img.removeAttribute('data-src');
+                    img.setAttribute('data-loading', 'false');
                     observer.unobserve(img);
+                    console.log('🖼️ Lazy loaded:', img.alt || img.src);
                 }
             }
         });
+    }, {
+        rootMargin: '50px'
     });
     
     // Observe all images with data-src attribute
     document.querySelectorAll('img[data-src]').forEach(img => {
+        img.setAttribute('data-loading', 'true');
         imageObserver.observe(img);
     });
+    
+    console.log('🖼️ Lazy loading initialized');
+}
+
+// =============== UTILITY FUNCTIONS ===============
+function debounce(func, wait, immediate) {
+    let timeout;
+    return function executedFunction(...args) {
+        const context = this;
+        const later = () => {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
 }
 
 // =============== ERROR HANDLING ===============
 window.addEventListener('error', (e) => {
-    console.error('Door 64 - JavaScript error:', e.error);
+    console.error('🚨 Door 64 - JavaScript error:', e.error);
+    
+    // Attempt to maintain basic functionality
+    if (e.error.message.includes('audio') && window.door64Audio) {
+        console.log('🔧 Attempting audio system recovery...');
+        setTimeout(() => {
+            try {
+                window.door64Audio.updateButtons();
+            } catch (recoveryError) {
+                console.error('🚨 Audio recovery failed:', recoveryError);
+            }
+        }, 1000);
+    }
 });
 
-// Unhandled promise rejections
 window.addEventListener('unhandledrejection', (e) => {
-    console.error('Door 64 - Unhandled promise rejection:', e.reason);
+    console.error('🚨 Door 64 - Unhandled promise rejection:', e.reason);
 });
+
+// =============== PERFORMANCE MONITORING ===============
+if ('performance' in window) {
+    window.addEventListener('load', () => {
+        const loadTime = Math.round(performance.now());
+        console.log(`⚡ Door 64 - Page loaded in ${loadTime}ms`);
+        
+        // Log navigation timing if available
+        if (performance.navigation) {
+            const navType = performance.navigation.type;
+            const navTypes = ['navigate', 'reload', 'back_forward', 'reserved'];
+            console.log(`📊 Navigation type: ${navTypes[navType] || 'unknown'}`);
+        }
+    });
+}
 
 // =============== DEVELOPMENT HELPERS ===============
-if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+if (window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1' || 
+    window.location.hostname.includes('dev')) {
+    
     console.log('🏠 Door 64 - Development mode active');
     
     // Development keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey) {
-            switch (e.key) {
-                case 'A':
+            switch (e.key.toLowerCase()) {
+                case 'a':
                     e.preventDefault();
                     toggleAudio();
                     console.log('🎵 Dev: Audio toggled');
                     break;
-                case 'S':
+                case 's':
                     e.preventDefault();
                     hideSplash();
                     console.log('🚪 Dev: Splash hidden');
                     break;
-                case 'G':
+                case 'g':
                     e.preventDefault();
-                    if (slideInterval) {
-                        stopGalleryAutoPlay();
-                        console.log('⏸️ Dev: Gallery auto-play stopped');
-                    } else {
-                        startGalleryAutoPlay();
-                        console.log('▶️ Dev: Gallery auto-play started');
-                    }
+                    Object.values(window.door64Galleries).forEach(gallery => {
+                        if (gallery.isPlaying) {
+                            gallery.pauseAutoPlay();
+                        } else {
+                            gallery.startAutoPlay();
+                        }
+                    });
+                    console.log('🖼️ Dev: Gallery auto-play toggled');
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    localStorage.removeItem('door64_audio_state');
+                    localStorage.removeItem('door64_audio_time');
+                    console.log('🔄 Dev: Audio state reset');
+                    break;
+                case 'i':
+                    e.preventDefault();
+                    console.log('📊 Dev: System info:', {
+                        audioState: localStorage.getItem('door64_audio_state'),
+                        audioTime: localStorage.getItem('door64_audio_time'),
+                        galleries: Object.keys(window.door64Galleries),
+                        isAudioPlaying: window.door64Audio?.isPlaying,
+                        currentAudioTime: window.door64Audio?.audio?.currentTime
+                    });
                     break;
             }
         }
     });
+    
+    // Expose global debugging functions
+    window.door64Debug = {
+        audio: () => window.door64Audio,
+        galleries: () => window.door64Galleries,
+        resetAudio: () => {
+            localStorage.removeItem('door64_audio_state');
+            localStorage.removeItem('door64_audio_time');
+            location.reload();
+        },
+        toggleGalleries: () => {
+            Object.values(window.door64Galleries).forEach(gallery => {
+                if (gallery.isPlaying) {
+                    gallery.pauseAutoPlay();
+                } else {
+                    gallery.startAutoPlay();
+                }
+            });
+        }
+    };
+    
+    console.log('🔧 Dev tools available: window.door64Debug');
 }
 
-console.log('🎵 Door 64 - Script loaded successfully');
+// =============== CONSOLE BRANDING ===============
+console.log(`
+🚪 Door 64 Restaurant
+🎵 Enhanced Audio System Active
+🖼️ Gallery System Ready
+📱 Mobile Optimized
+♿ Accessibility Features Enabled
+⚡ Performance Optimized
+
+Ready to serve exceptional experiences.
+`);
+
+// Export for testing (if in module environment)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        Door64Audio,
+        Door64Gallery,
+        toggleAudio,
+        nextSlide,
+        previousSlide,
+        goToSlide,
+        toggleMobileMenu
+    };
+}
