@@ -23,38 +23,35 @@
     <meta name="author" content="Door 64 Restaurant">
 </head>
 <body>
-    <div style="position: fixed; top: 10px; left: 10px; background: red; color: white; padding: 10px; z-index: 99999;">
-    SPLASH TEST - If you see this, HTML is loading
-</div>
     <!-- DOOR PLUGIN SPLASH PAGE -->
     <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door 64">
-        <!-- New Door Design Structure -->
+        <!-- Door Gallery with YOUR uploaded images -->
         <ul class="door-gallery" role="presentation" aria-hidden="true">
             <li>
-                <a href="#" tabindex="-1" aria-hidden="true">
-                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop" 
-                         alt="Elegant wooden door" 
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door1.jpg" 
+                         alt="Door 64 entrance door 1" 
                          loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#" tabindex="-1" aria-hidden="true">
-                    <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=600&fit=crop" 
-                         alt="Modern glass door" 
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door2.jpg" 
+                         alt="Door 64 entrance door 2" 
                          loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#" tabindex="-1" aria-hidden="true">
-                    <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=600&fit=crop" 
-                         alt="Vintage red door" 
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door3.jpg" 
+                         alt="Door 64 entrance door 3" 
                          loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#" tabindex="-1" aria-hidden="true">
-                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aaa4cab7?w=400&h=600&fit=crop" 
-                         alt="Industrial metal door" 
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door4.jpg" 
+                         alt="Door 64 entrance door 4" 
                          loading="eager">
                 </a>
             </li>
@@ -249,5 +246,16 @@
 
     <!-- JavaScript -->
     <script src="assets/js/script.js"></script>
+    
+    <!-- Make splash page clickable to go to main site -->
+    <script>
+    // Make entire splash page clickable to go to 64.html
+    document.getElementById('splashPage').addEventListener('click', function(e) {
+        // Don't interfere with audio button clicks
+        if (!e.target.closest('.splash-audio-toggle')) {
+            window.location.href = '64.html';
+        }
+    });
+    </script>
 </body>
 </html>
