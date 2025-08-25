@@ -3,98 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Door 64</title>
+    <title>Door 64 - Restaurant Experience</title>
     
-    <!-- OPUI CSS Framework -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    <!-- Favicon (add your favicon files) -->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://images.unsplash.com">
     
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
     
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="assets/css/style.css" as="style">
+    
     <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto">
+    <audio id="backgroundAudio" loop preload="metadata">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="assets/audio/QUIETSTORM.ogg" type="audio/ogg">
         Your browser does not support the audio element.
     </audio>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Door 64 - An intimate dining experience where every meal becomes a memory. Discover our elegant atmosphere and culinary artistry.">
+    <meta name="keywords" content="restaurant, fine dining, Door 64, culinary experience, intimate dining">
+    <meta name="author" content="Door 64 Restaurant">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Door 64 - Restaurant Experience">
+    <meta property="og:description" content="An intimate dining experience where every meal becomes a memory">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsite.com">
+    <meta property="og:image" content="https://yourwebsite.com/assets/images/og-image.jpg">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Door 64 - Restaurant Experience">
+    <meta name="twitter:description" content="An intimate dining experience where every meal becomes a memory">
+    <meta name="twitter:image" content="https://yourwebsite.com/assets/images/twitter-image.jpg">
 </head>
 <body>
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="skip-link" style="position: absolute; left: -9999px; z-index: 999999; padding: 8px 16px; background: #000; color: #fff; text-decoration: none; font-size: 14px;">Skip to main content</a>
 
     <!-- DOOR PLUGIN SPLASH PAGE -->
-    <div class="splash-page" id="splashPage">
-        <ul class="splash-geometric">
+    <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door 64">
+        <ul class="splash-geometric" role="presentation" aria-hidden="true">
             <li>
-                <a href="#">
-                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop" alt="Elegant wooden door">
+                <a href="#" tabindex="-1" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop" 
+                         alt="Elegant wooden door with intricate details" 
+                         loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=600&fit=crop" alt="Modern glass door">
+                <a href="#" tabindex="-1" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=600&fit=crop" 
+                         alt="Modern glass door with sleek design" 
+                         loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=600&fit=crop" alt="Vintage red door">
+                <a href="#" tabindex="-1" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=600&fit=crop" 
+                         alt="Vintage red door with classic charm" 
+                         loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aaa4cab7?w=400&h=600&fit=crop" alt="Industrial metal door">
+                <a href="#" tabindex="-1" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aaa4cab7?w=400&h=600&fit=crop" 
+                         alt="Industrial metal door with urban style" 
+                         loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <img src="https://images.unsplash.com/photo-1520637836862-4d197d17c50a?w=400&h=600&fit=crop" alt="Classic blue door">
+                <a href="#" tabindex="-1" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1520637836862-4d197d17c50a?w=400&h=600&fit=crop" 
+                         alt="Classic blue door with timeless appeal" 
+                         loading="eager">
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <img src="https://images.unsplash.com/photo-1571123618511-a7aa5b74ff42?w=400&h=600&fit=crop" alt="Rustic barn door">
+                <a href="#" tabindex="-1" aria-hidden="true">
+                    <img src="https://images.unsplash.com/photo-1571123618511-a7aa5b74ff42?w=400&h=600&fit=crop" 
+                         alt="Rustic barn door with weathered character" 
+                         loading="eager">
                 </a>
             </li>
         </ul>
         
         <div class="splash-content">
-            <h1>DOOR 64</h1>
-            <p>click to enter</p>
+            <h1 aria-label="Door 64 Restaurant">DOOR 64</h1>
+            <p role="text">click to enter</p>
         </div>
         
-        <button class="splash-audio-toggle" onclick="toggleAudio(event)" title="background music" id="splashAudioToggle">♪</button>
+        <button class="splash-audio-toggle" 
+                onclick="toggleAudio(event)" 
+                title="Toggle background music" 
+                id="splashAudioToggle"
+                aria-label="Toggle background music">♪</button>
     </div>
 
     <!-- MAIN SITE -->
-    <div class="main-site" id="mainSite">
+    <div class="main-site" id="mainSite" role="main">
         <!-- Navigation -->
-        <nav class="nav">
+        <nav class="nav" role="navigation" aria-label="Main navigation">
             <div class="nav-container">
-                <a href="index.html" class="nav-logo">DOOR 64</a>
+                <a href="index.html" class="nav-logo" aria-label="Door 64 Home">DOOR 64</a>
+                
                 <div class="nav-left-section">
-                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
-                    <ul class="nav-links" id="navLinks">
-                        <li><a href="index.html">64</a></li>
-                        <li><a href="space.html">space</a></li>
-                        <li><a href="in.the.kitchen.html">in the kitchen</a></li>
-                        <li><a href="at.the.bar.html">at the bar</a></li>
-                        <li><a href="who.was.here.html">who was here</a></li>
-                        <li><a href="what.to.do.html">what to do</a></li>
-                        <li><a href="come.see.us.html">come see us</a></li>
-                        <li><a href="hit.us.up.html">hit us up</a></li>
+                    <button class="audio-toggle" 
+                            onclick="toggleAudio(event)" 
+                            title="Toggle Background Music"
+                            aria-label="Toggle background music">♪</button>
+                    
+                    <ul class="nav-links" id="navLinks" role="menubar">
+                        <li role="none"><a href="index.html" role="menuitem">64</a></li>
+                        <li role="none"><a href="space.html" role="menuitem">space</a></li>
+                        <li role="none"><a href="in.the.kitchen.html" role="menuitem">in the kitchen</a></li>
+                        <li role="none"><a href="at.the.bar.html" role="menuitem">at the bar</a></li>
+                        <li role="none"><a href="who.was.here.html" role="menuitem">who was here</a></li>
+                        <li role="none"><a href="what.to.do.html" role="menuitem">what to do</a></li>
+                        <li role="none"><a href="come.see.us.html" role="menuitem">come see us</a></li>
+                        <li role="none"><a href="hit.us.up.html" role="menuitem">hit us up</a></li>
                     </ul>
                 </div>
-                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                
+                <button class="mobile-menu" 
+                        onclick="toggleMobileMenu()" 
+                        aria-label="Toggle mobile menu"
+                        aria-expanded="false">
                     <span></span>
                     <span></span>
                     <span></span>
-                </div>
+                </button>
             </div>
         </nav>
 
         <!-- Landing Page -->
-        <section class="landing-page section active">
-            <div class="gallery-slider"></div>
+        <main class="landing-page section active" id="main-content">
+            <div class="gallery-slider" role="presentation" aria-hidden="true"></div>
             
             <div class="landing-content">
-                <a href="index.html" style="text-decoration: none;">
+                <a href="index.html" style="text-decoration: none;" aria-label="Door 64 Restaurant">
                     <h1 class="embossed-logo" style="cursor: pointer;">DOOR 64</h1>
                 </a>
                 
@@ -125,34 +177,53 @@
                 </div>
 
                 <!-- Landing Gallery -->
-                <div class="css-gallery" id="landing-gallery">
+                <section class="css-gallery" 
+                         id="landing-gallery" 
+                         role="region" 
+                         aria-label="Restaurant showcase gallery"
+                         aria-live="polite">
                     <div class="gallery-container">
-                        <div class="gallery-track" id="landing-track">
-                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')">
+                        <div class="gallery-track" id="landing-track" role="presentation">
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Intimate dining experience">
                                 <div class="gallery-content">
                                     <h3>intimate dining experience</h3>
                                     <p>where every meal becomes a memory</p>
                                 </div>
                             </div>
-                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')">
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Craft cocktails">
                                 <div class="gallery-content">
                                     <h3>craft cocktails</h3>
                                     <p>handcrafted with passion and precision</p>
                                 </div>
                             </div>
-                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')">
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Culinary artistry">
                                 <div class="gallery-content">
                                     <h3>culinary artistry</h3>
                                     <p>seasonal ingredients, chef's creativity</p>
                                 </div>
                             </div>
-                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')">
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Wine selection">
                                 <div class="gallery-content">
                                     <h3>wine selection</h3>
                                     <p>curated collection of exceptional wines</p>
                                 </div>
                             </div>
-                            <div class="gallery-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')">
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Elegant atmosphere">
                                 <div class="gallery-content">
                                     <h3>elegant atmosphere</h3>
                                     <p>designed for unforgettable experiences</p>
@@ -160,25 +231,107 @@
                             </div>
                         </div>
                         
-                        <button class="gallery-nav prev" onclick="previousSlide('landing-gallery')">‹</button>
-                        <button class="gallery-nav next" onclick="nextSlide('landing-gallery')">›</button>
+                        <button class="gallery-nav prev" 
+                                onclick="previousSlide()" 
+                                aria-label="Previous image"
+                                title="Previous">‹</button>
+                        <button class="gallery-nav next" 
+                                onclick="nextSlide()" 
+                                aria-label="Next image"
+                                title="Next">›</button>
                         
-                        <div class="gallery-dots">
-                            <span class="gallery-dot active" onclick="goToSlide('landing-gallery', 0)"></span>
-                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 1)"></span>
-                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 2)"></span>
-                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 3)"></span>
-                            <span class="gallery-dot" onclick="goToSlide('landing-gallery', 4)"></span>
+                        <div class="gallery-dots" role="tablist" aria-label="Gallery navigation">
+                            <span class="gallery-dot active" 
+                                  onclick="goToSlide(0)" 
+                                  role="tab"
+                                  aria-label="Go to slide 1"
+                                  aria-selected="true"
+                                  tabindex="0"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(1)" 
+                                  role="tab"
+                                  aria-label="Go to slide 2"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(2)" 
+                                  role="tab"
+                                  aria-label="Go to slide 3"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(3)" 
+                                  role="tab"
+                                  aria-label="Go to slide 4"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(4)" 
+                                  role="tab"
+                                  aria-label="Go to slide 5"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
                         </div>
                         
-                        <div class="gallery-progress"></div>
+                        <div class="gallery-progress" role="progressbar" aria-label="Gallery progress" aria-hidden="true"></div>
                     </div>
-                </div>
+                </section>
             </div>
-        </section>
+        </main>
     </div>
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "Door 64",
+        "description": "An intimate dining experience where every meal becomes a memory",
+        "url": "https://yourwebsite.com",
+        "telephone": "+1-555-0123",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 Restaurant Street",
+            "addressLocality": "Your City",
+            "addressRegion": "Your State",
+            "postalCode": "12345",
+            "addressCountry": "US"
+        },
+        "openingHours": [
+            "Mo-Su 17:00-23:00"
+        ],
+        "servesCuisine": "Fine Dining",
+        "priceRange": "$$$",
+        "hasMenu": "https://yourwebsite.com/menu",
+        "acceptsReservations": true
+    }
+    </script>
 
     <!-- JavaScript -->
     <script src="assets/js/script.js"></script>
+    
+    <!-- Optional: Service Worker for PWA (uncomment when ready) -->
+    <!--
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed'));
+        });
+    }
+    </script>
+    -->
+    
+    <!-- Optional: Google Analytics (replace GA_MEASUREMENT_ID with your actual ID) -->
+    <!--
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    -->
 </body>
 </html>
