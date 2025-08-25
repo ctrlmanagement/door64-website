@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="assets/css/style.css">
     
     <!-- Background Audio -->
-<audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline>
-    <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
+    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline>
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 </head>
 <body>
 
@@ -121,82 +121,7 @@
         </section>
     </div>
 
-    <!-- JavaScript -->
-    <script>
-        // Audio toggle function
-        function toggleAudio(event) {
-            event.stopPropagation();
-            const audio = document.getElementById('backgroundAudio');
-            const button = event.target;
-            
-            if (audio.paused) {
-                audio.play().catch(console.error);
-                button.innerHTML = '⏸';
-                button.classList.add('playing');
-            } else {
-                audio.pause();
-                button.innerHTML = '♪';
-                button.classList.remove('playing');
-            }
-        }
-        
-        // Mobile menu toggle function
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('navLinks');
-            const mobileMenu = document.querySelector('.mobile-menu');
-            
-            navLinks.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
-        }
-        
-        // Gallery functionality
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.gallery-slide');
-        const dots = document.querySelectorAll('.gallery-dot');
-        const totalSlides = slides.length;
-        
-        function updateGallery() {
-            const track = document.getElementById('space-track');
-            if (track) {
-                track.style.transform = `translateX(-${currentSlide * 100}%)`;
-                
-                // Update dots
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentSlide);
-                });
-                
-                // Update progress bar
-                const progress = document.querySelector('.gallery-progress');
-                if (progress) {
-                    progress.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
-                }
-            }
-        }
-        
-        function nextSlide(galleryId) {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateGallery();
-        }
-        
-        function previousSlide(galleryId) {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            updateGallery();
-        }
-        
-        function goToSlide(galleryId, slideIndex) {
-            currentSlide = slideIndex;
-            updateGallery();
-        }
-        
-        // Auto-advance gallery
-        setInterval(() => {
-            if (slides.length > 0) {
-                nextSlide('space-gallery');
-            }
-        }, 5000);
-    </script>
-
-    <!-- Removed external script that was causing navigation interference -->
-    <!-- <script src="assets/js/script.js"></script> -->
+    <!-- Enhanced JavaScript System - Enables continuous audio across all pages -->
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
