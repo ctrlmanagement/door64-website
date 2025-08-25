@@ -1304,6 +1304,155 @@ p, .sub-links a, .menu-item p {
     }
 }
 
+/* =============== COMING SOON PAGE STYLES =============== */
+.coming-soon-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    padding: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.coming-soon-title {
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    color: #333;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: slideInFromTop 1s ease-out;
+}
+
+.coming-soon-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #666;
+    max-width: 600px;
+    line-height: 1.6;
+    text-transform: lowercase;
+    animation: slideInFromBottom 1s ease-out 0.3s both;
+}
+
+.coming-soon-message {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 3rem;
+    font-style: italic;
+    text-transform: lowercase;
+    animation: fadeIn 1s ease-out 0.6s both;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: transparent;
+    color: #333;
+    text-decoration: none;
+    border: 2px solid #333;
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    animation: slideInFromBottom 1s ease-out 0.9s both;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.back-button:hover {
+    background-color: #333;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Coming Soon Animation Keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Mobile Coming Soon Styles */
+@media (max-width: 768px) {
+    .coming-soon-content {
+        padding: 1.5rem;
+        min-height: 50vh;
+    }
+
+    .coming-soon-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: 1px;
+    }
+    
+    .coming-soon-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .coming-soon-message {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+    
+    .back-button {
+        padding: 15px 25px;
+        font-size: 0.9rem;
+        min-height: 48px;
+        min-width: 150px;
+    }
+}
+
 /* Section Styles */
 .section {
     padding: 100px 0;
@@ -2020,7 +2169,8 @@ select:focus {
     .submit-btn,
     .form-group input,
     .form-group select,
-    .form-group textarea {
+    .form-group textarea,
+    .back-button {
         min-width: 44px;
         min-height: 44px;
         /* Improve touch responsiveness */
