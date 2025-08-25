@@ -37,6 +37,85 @@
             text-rendering: optimizeLegibility;
         }
 
+        /* Navigation Styles */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #333;
+            letter-spacing: 2px;
+        }
+
+        .nav-left-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .audio-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            padding: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 400;
+            transition: color 0.3s ease;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            color: #BE5103;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            transition: all 0.3s ease;
+        }
+
         .menu-container {
             max-width: 900px;
             margin: 0 auto;
@@ -395,6 +474,39 @@
                 padding-top: 100px;
             }
 
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s ease;
+                pointer-events: none;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .nav-left-section {
+                gap: 1rem;
+            }
+
             .menu-container {
                 margin: 0;
             }
@@ -433,7 +545,7 @@
             }
         }
 
-        /* Print Styles */
+        /* Print Styles - Optimized for 3-page PDF */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -444,8 +556,10 @@
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                font-size: 10px !important;
-                line-height: 1.2 !important;
+                font-size: 12px !important;
+                line-height: 1.4 !important;
+                -webkit-font-smoothing: antialiased !important;
+                -moz-osx-font-smoothing: grayscale !important;
             }
 
             .nav, .pdf-download-btn {
@@ -457,17 +571,208 @@
                 max-width: none !important;
                 margin: 0 !important;
                 border-radius: 0 !important;
+                width: 100% !important;
             }
 
             .menu-header {
                 background: #BE5103 !important;
                 color: white !important;
-                padding: 20px 15px 12px !important;
+                padding: 30px 20px 20px !important;
+                page-break-after: avoid !important;
+                margin: 0 !important;
             }
 
+            .restaurant-name {
+                font-size: 2.5rem !important;
+                letter-spacing: 4px !important;
+                margin-bottom: 8px !important;
+                text-shadow: none !important;
+            }
+
+            .menu-subtitle {
+                font-size: 1rem !important;
+                letter-spacing: 2px !important;
+            }
+
+            .menu-body {
+                padding: 25px 20px !important;
+                margin: 0 !important;
+            }
+
+            .experience-intro {
+                margin-bottom: 30px !important;
+                padding: 20px !important;
+                page-break-after: avoid !important;
+            }
+
+            .experience-intro h2 {
+                font-size: 1.3rem !important;
+                margin-bottom: 10px !important;
+                letter-spacing: 2px !important;
+            }
+
+            .experience-intro p {
+                font-size: 0.95rem !important;
+                line-height: 1.4 !important;
+            }
+
+            .chef-note {
+                background: #BE5103 !important;
+                padding: 25px !important;
+                margin: 25px 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .chef-note p {
+                font-size: 1rem !important;
+                line-height: 1.4 !important;
+                color: white !important;
+            }
+
+            .chef-signature {
+                font-size: 0.9rem !important;
+                margin-top: 15px !important;
+                color: white !important;
+            }
+
+            /* Menu options - page 2 */
+            .menu-options {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 25px !important;
+                margin: 30px 0 !important;
+                page-break-before: auto !important;
+                page-break-after: avoid !important;
+            }
+
+            .option-card {
+                padding: 25px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .option-title {
+                font-size: 1.2rem !important;
+                margin-bottom: 10px !important;
+                letter-spacing: 1px !important;
+            }
+
+            .option-price {
+                font-size: 1.8rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            .option-description {
+                font-size: 0.85rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 15px !important;
+            }
+
+            .option-includes {
+                font-size: 0.75rem !important;
+            }
+
+            /* Tasting menu section - likely starts page 2/3 */
+            .tasting-menu {
+                padding: 25px !important;
+                margin: 25px 0 !important;
+                page-break-before: auto !important;
+            }
+
+            .section-title {
+                font-size: 1.4rem !important;
+                margin-bottom: 8px !important;
+                letter-spacing: 2px !important;
+                padding-bottom: 6px !important;
+            }
+
+            .section-description {
+                font-size: 0.85rem !important;
+                margin-bottom: 20px !important;
+            }
+
+            .course-item {
+                margin-bottom: 20px !important;
+                padding: 15px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .course-number {
+                width: 25px !important;
+                height: 25px !important;
+                line-height: 25px !important;
+                font-size: 0.8rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            .course-name {
+                font-size: 1.1rem !important;
+                margin-bottom: 8px !important;
+                letter-spacing: 1px !important;
+            }
+
+            .course-description {
+                font-size: 0.85rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 10px !important;
+            }
+
+            .course-wine-pairing {
+                padding: 10px !important;
+                font-size: 0.75rem !important;
+                border-left: 2px solid #BE5103 !important;
+            }
+
+            .pairing-label {
+                font-size: 0.75rem !important;
+            }
+
+            .reservation-note {
+                padding: 20px !important;
+                margin: 25px 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .reservation-note h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 10px !important;
+                letter-spacing: 1px !important;
+            }
+
+            .reservation-note p {
+                font-size: 0.8rem !important;
+                line-height: 1.3 !important;
+            }
+
+            .menu-footer {
+                background: #BE5103 !important;
+                color: white !important;
+                padding: 15px !important;
+                margin-top: 20px !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .footer-text {
+                color: #000 !important;
+                font-size: 0.8rem !important;
+            }
+
+            /* Page settings for better 3-page layout */
             @page {
                 size: A4 !important;
-                margin: 0.3in !important;
+                margin: 0.5in !important;
+            }
+
+            /* Allow natural page breaks */
+            .menu-options {
+                page-break-before: auto !important;
+            }
+
+            .tasting-menu {
+                page-break-before: auto !important;
             }
         }
     </style>
@@ -602,6 +907,9 @@
         </div>
     </div>
 
+    <!-- Main JavaScript File -->
+    <script src="../assets/js/script.js"></script>
+    
     <!-- Main JavaScript File -->
     <script src="../assets/js/script.js"></script>
     
