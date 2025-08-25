@@ -26,7 +26,7 @@
 
         body {
             font-family: 'Georgia', serif;
-            background: #f5f5f5;
+            background: #ffffff !important;
             color: #2c2c2c;
             line-height: 1.6;
             padding: 40px 20px;
@@ -325,6 +325,13 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .pdf-download-btn {
+                top: 80px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+
             body {
                 padding: 20px 10px;
                 padding-top: 100px;
@@ -387,16 +394,51 @@
             }
         }
 
-        /* Print Styles */
+        /* PDF Download Button */
+        .pdf-download-btn {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            background: rgb(95, 179, 211);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            box-shadow: 0 4px 15px rgba(95, 179, 211, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .pdf-download-btn:hover {
+            background: rgb(75, 159, 191);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(95, 179, 211, 0.4);
+        }
+
+        /* Print Styles - Optimized for 2-page PDF */
         @media print {
             body {
-                background: white;
-                padding: 0;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            .nav, .pdf-download-btn {
+                display: none !important;
             }
 
             .menu-container {
-                box-shadow: none;
-                max-width: none;
+                box-shadow: none !important;
+                max-width: none !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
             }
 
             .menu-header {
@@ -404,6 +446,121 @@
                 color: white !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                padding: 30px 20px 20px !important;
+                page-break-after: avoid;
+            }
+
+            .restaurant-name {
+                font-size: 2.5rem !important;
+                letter-spacing: 6px !important;
+                margin-bottom: 5px !important;
+            }
+
+            .menu-body {
+                padding: 30px 20px !important;
+            }
+
+            .experience-intro {
+                margin-bottom: 30px !important;
+                padding: 20px !important;
+                page-break-after: avoid;
+            }
+
+            .experience-intro h2 {
+                font-size: 1.3rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            .experience-intro p {
+                font-size: 0.9rem !important;
+            }
+
+            .menu-section {
+                margin-bottom: 25px !important;
+                page-break-after: avoid;
+            }
+
+            .section-title {
+                font-size: 1.4rem !important;
+                margin-bottom: 8px !important;
+                letter-spacing: 2px !important;
+            }
+
+            .section-description {
+                font-size: 0.8rem !important;
+                margin-bottom: 20px !important;
+            }
+
+            .cocktail-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+                margin-top: 15px !important;
+                page-break-inside: avoid;
+            }
+
+            .cocktail-item {
+                padding: 15px !important;
+                margin-bottom: 0 !important;
+                page-break-inside: avoid;
+            }
+
+            .cocktail-name {
+                font-size: 0.9rem !important;
+                margin-bottom: 5px !important;
+            }
+
+            .cocktail-description {
+                font-size: 0.75rem !important;
+                line-height: 1.3 !important;
+            }
+
+            /* Force wine section to start on page 2 */
+            .wine-selection {
+                page-break-before: always !important;
+                margin: 0 !important;
+                padding: 20px !important;
+            }
+
+            .wine-selection .section-title {
+                margin-top: 0 !important;
+            }
+
+            .wine-category {
+                margin-bottom: 20px !important;
+                page-break-inside: avoid;
+            }
+
+            .wine-category h4 {
+                font-size: 1rem !important;
+                margin-bottom: 8px !important;
+            }
+
+            .wine-item {
+                padding: 6px 0 !important;
+                font-size: 0.8rem !important;
+            }
+
+            .wine-name {
+                font-size: 0.8rem !important;
+            }
+
+            .wine-region {
+                font-size: 0.7rem !important;
+            }
+
+            .wine-price {
+                font-size: 0.8rem !important;
+            }
+
+            .allergen-note {
+                margin: 15px 0 !important;
+                padding: 10px !important;
+                page-break-inside: avoid;
+            }
+
+            .allergen-note p {
+                font-size: 0.7rem !important;
             }
 
             .menu-footer {
@@ -411,14 +568,19 @@
                 color: white !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                padding: 15px !important;
+                margin-top: 20px !important;
             }
             
             .footer-text {
                 color: #000 !important;
+                font-size: 0.8rem !important;
             }
 
-            .nav {
-                display: none !important;
+            /* Ensure proper page sizing */
+            @page {
+                size: A4;
+                margin: 0.5in;
             }
         }
     </style>
@@ -427,6 +589,9 @@
 
     <!-- MAIN SITE -->
     <div class="main-site active" id="mainSite">
+        <!-- PDF Download Button -->
+        <button class="pdf-download-btn" onclick="downloadPDF()">download pdf menu</button>
+        
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
@@ -636,6 +801,31 @@
         function toggleMobileMenu() {
             const navLinks = document.getElementById('navLinks');
             navLinks.classList.toggle('active');
+        }
+
+        // PDF Download functionality
+        function downloadPDF() {
+            // Change title for PDF
+            const originalTitle = document.title;
+            document.title = 'DOOR 64 - Signature Cocktails Menu';
+            
+            // Print the page (this will use the print styles optimized for PDF)
+            window.print();
+            
+            // Restore original title
+            document.title = originalTitle;
+        }
+
+        // Alternative PDF download using browser's built-in PDF generation
+        function downloadPDFAlternative() {
+            const element = document.querySelector('.menu-container');
+            const opt = {
+                margin: 0.5,
+                filename: 'door64-signature-cocktails-menu.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
         }
     </script>
 </body>
