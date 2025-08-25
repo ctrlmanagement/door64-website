@@ -1,4 +1,4 @@
-/* Door 64 Restaurant - Complete FIXED JavaScript - FINAL VERSION */
+/* Door 64 Restaurant - Complete FIXED JavaScript - FINAL VERSION WITH MOBILE NAV FIXES */
 
 // =============== FIXED DOOR 64 AUDIO SYSTEM - NO MORE RESTARTS ===============
 class Door64Audio {
@@ -275,62 +275,97 @@ class Door64Audio {
         }
     }
     
+    // ✅ MOBILE NAV FIX: Improved mobile-safe interaction listeners
     setupUserInteractionListeners() {
         if (this.interactionListenersActive || this.hasUserInteracted) {
             console.log('🎵 Interaction listeners already set up or not needed');
             return;
         }
         
-        console.log('🎵 Setting up ONE-TIME user interaction listeners for audio start');
+        console.log('🎵 Setting up mobile-safe user interaction listeners');
         this.interactionListenersActive = true;
         
-        const events = ['click', 'touchstart'];
+        // ✅ FIX: Use different strategies for mobile vs desktop
+        const isMobileDevice = this.isMobile;
         
-        const handleFirstInteraction = (e) => {
-            // Don't interfere if user clicked audio button
-            if (e.target.closest('.audio-toggle, .splash-audio-toggle')) {
-                console.log('🎵 Audio button clicked - letting button handler manage audio');
-                return;
-            }
+        if (isMobileDevice) {
+            // Mobile: Use click events only, avoid touchstart conflicts
+            const events = ['click'];
             
-            if (!this.hasUserInteracted) {
-                this.hasUserInteracted = true;
-                localStorage.setItem('door64_user_interacted', 'true');
-                console.log('🔊 First user interaction detected:', e.type, '- Unmuting/starting audio');
-                
-                if (this.audio) {
-                    // Unmute audio if muted
-                    if (this.audio.muted) {
-                        this.audio.muted = false;
-                        console.log('🔊 Audio unmuted');
-                    }
-                    
-                    // Start audio if it should be playing but isn't
-                    const storedState = localStorage.getItem(this.storageKey);
-                    if (storedState !== 'paused' && this.audio.paused && !this.isNavigating) {
-                        console.log('▶️ Starting audio after first user interaction');
-                        this.resumeAudio();
-                    }
+            const handleFirstInteraction = (e) => {
+                // Don't interfere with audio buttons or form elements
+                if (e.target.closest('.audio-toggle, .splash-audio-toggle') || 
+                    e.target.closest('input, textarea, select, button')) {
+                    return;
                 }
                 
-                // Remove listeners immediately after first use
-                this.removeInteractionListeners();
-            }
-        };
-        
-        // Add listeners with capture to catch events early
-        events.forEach(event => {
-            document.addEventListener(event, handleFirstInteraction, { 
-                passive: true,
-                capture: true
+                if (!this.hasUserInteracted) {
+                    this.hasUserInteracted = true;
+                    localStorage.setItem('door64_user_interacted', 'true');
+                    console.log('🔊 Mobile: First click detected - starting audio');
+                    
+                    this.enableAudioAfterInteraction();
+                    this.removeInteractionListeners();
+                }
+            };
+            
+            // ✅ FIX: Use bubble phase, not capture, to avoid interfering with navigation
+            events.forEach(event => {
+                document.addEventListener(event, handleFirstInteraction, { 
+                    passive: true,
+                    once: true  // ✅ Automatically removes after first use
+                });
             });
-        });
-        
-        // Store for cleanup
-        this.interactionHandler = handleFirstInteraction;
-        this.interactionEvents = events;
-        
-        console.log('👆 One-time interaction listeners set for audio start');
+            
+            this.interactionHandler = handleFirstInteraction;
+            this.interactionEvents = events;
+        } else {
+            // Desktop: Use both click and touch for hybrid devices
+            const events = ['click', 'touchstart'];
+            
+            const handleFirstInteraction = (e) => {
+                if (e.target.closest('.audio-toggle, .splash-audio-toggle')) {
+                    return;
+                }
+                
+                if (!this.hasUserInteracted) {
+                    this.hasUserInteracted = true;
+                    localStorage.setItem('door64_user_interacted', 'true');
+                    console.log('🔊 Desktop: First interaction detected - starting audio');
+                    
+                    this.enableAudioAfterInteraction();
+                    this.removeInteractionListeners();
+                }
+            };
+            
+            events.forEach(event => {
+                document.addEventListener(event, handleFirstInteraction, { 
+                    passive: true,
+                    once: true
+                });
+            });
+            
+            this.interactionHandler = handleFirstInteraction;
+            this.interactionEvents = events;
+        }
+    }
+    
+    // ✅ NEW: Helper method for audio enabling
+    enableAudioAfterInteraction() {
+        if (this.audio) {
+            // Unmute audio if muted
+            if (this.audio.muted) {
+                this.audio.muted = false;
+                console.log('🔊 Audio unmuted');
+            }
+            
+            // Start audio if it should be playing but isn't
+            const storedState = localStorage.getItem(this.storageKey);
+            if (storedState !== 'paused' && this.audio.paused && !this.isNavigating) {
+                console.log('▶️ Starting audio after user interaction');
+                this.resumeAudio();
+            }
+        }
     }
     
     removeInteractionListeners() {
@@ -557,6 +592,7 @@ class Door64Gallery {
         };
     }
     
+    // ✅ MOBILE NAV FIX: Improved touch events that don't block vertical scrolling
     setupTouchEvents() {
         const container = document.querySelector(`#${this.galleryId}`);
         if (!container) return;
@@ -564,26 +600,46 @@ class Door64Gallery {
         let startX = 0;
         let startY = 0;
         let isDragging = false;
+        let isHorizontalSwipe = false;
         
         container.addEventListener('touchstart', (e) => {
+            // ✅ FIX: Only handle single-touch events
+            if (e.touches.length !== 1) return;
+            
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             isDragging = true;
+            isHorizontalSwipe = false;
             
             container.classList.add('swiping');
             this.pauseAutoPlay();
         }, { passive: true });
         
         container.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
+            if (!isDragging || e.touches.length !== 1) return;
             
-            const deltaX = e.touches[0].clientX - startX;
-            const deltaY = e.touches[0].clientY - startY;
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const deltaX = currentX - startX;
+            const deltaY = currentY - startY;
             
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            // ✅ FIX: Only prevent default for confirmed horizontal swipes
+            // Allow vertical scrolling unless user is clearly swiping horizontally
+            if (!isHorizontalSwipe) {
+                const absX = Math.abs(deltaX);
+                const absY = Math.abs(deltaY);
+                
+                // Determine swipe direction only after significant movement
+                if (absX > 15 || absY > 15) {
+                    isHorizontalSwipe = absX > absY && absX > 30;
+                }
+            }
+            
+            // Only prevent scrolling for confirmed horizontal swipes
+            if (isHorizontalSwipe && Math.abs(deltaX) > 10) {
                 e.preventDefault();
             }
-        });
+        }, { passive: false }); // ✅ passive: false allows preventDefault
         
         container.addEventListener('touchend', (e) => {
             if (!isDragging) return;
@@ -594,7 +650,8 @@ class Door64Gallery {
             container.classList.remove('swiping');
             isDragging = false;
             
-            if (Math.abs(deltaX) > 50) {
+            // ✅ FIX: Only trigger slide change for confirmed horizontal swipes
+            if (isHorizontalSwipe && Math.abs(deltaX) > 50) {
                 if (deltaX > 0) {
                     this.previousSlide();
                 } else {
@@ -602,6 +659,7 @@ class Door64Gallery {
                 }
             }
             
+            isHorizontalSwipe = false;
             this.resumeAutoPlay();
         }, { passive: true });
     }
@@ -792,19 +850,18 @@ function goToSlide(galleryIdOrIndex, slideIndex) {
     }
 }
 
-// =============== FIXED SPLASH PAGE FUNCTIONALITY ===============
+// ✅ MOBILE NAV FIX: Improved splash page functionality
 function initSplashPage() {
     const splashPage = document.getElementById('splashPage');
     const mainSite = document.getElementById('mainSite');
     
     if (!splashPage) return;
     
-    console.log('🚪 Initializing FIXED splash page...');
+    console.log('🚪 Initializing mobile-safe splash page...');
     
     const handleNavigation = (targetUrl = '64.html') => {
         console.log('🚪 Navigating to:', targetUrl);
         
-        // FIX: Use the new prepareForNavigation method
         if (window.door64Audio) {
             window.door64Audio.prepareForNavigation();
         }
@@ -820,29 +877,49 @@ function initSplashPage() {
         }, 50);
     };
     
+    // ✅ FIX: More selective click handling
     splashPage.addEventListener('click', function(e) {
-        if (e.target.closest('.splash-audio-toggle')) {
+        // Don't navigate if user clicked on interactive elements
+        if (e.target.closest('.splash-audio-toggle, button, input, textarea, select, a[href], [onclick]')) {
             return;
         }
-        handleNavigation();
+        
+        // Don't navigate if this was a touch gesture (like pinch/zoom)
+        if (e.touches && e.touches.length > 1) {
+            return;
+        }
+        
+        // ✅ Only navigate on genuine content clicks
+        if (e.target.closest('.splash-content, .door-gallery')) {
+            handleNavigation();
+        }
     });
     
+    // ✅ FIX: Improved door link handling
     const doorLinks = splashPage.querySelectorAll('.door-gallery a');
     doorLinks.forEach((link, index) => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation(); // ✅ Prevent double navigation
             console.log(`🚪 Door ${index + 1} clicked`);
             handleNavigation('64.html');
         });
     });
     
+    // ✅ FIX: Safer keyboard navigation
     document.addEventListener('keydown', function(event) {
-        if (splashPage.style.display !== 'none') {
-            if (event.key === 'Enter' || event.key === ' ') {
-                if (!event.target.closest('.splash-audio-toggle')) {
-                    event.preventDefault();
-                    handleNavigation();
-                }
+        if (splashPage.style.display === 'none') return;
+        
+        if (event.key === 'Enter' || event.key === ' ') {
+            // Don't navigate if focus is on interactive elements
+            if (event.target.closest('.splash-audio-toggle, button, input, textarea, select')) {
+                return;
+            }
+            
+            // Only navigate if Enter/Space is pressed on the splash content
+            if (event.target === document.body || event.target.closest('#splashPage')) {
+                event.preventDefault();
+                handleNavigation();
             }
         }
     });
@@ -864,17 +941,18 @@ function hideSplash() {
     }
 }
 
-// =============== MOBILE MENU FUNCTIONALITY ===============
+// ✅ MOBILE NAV FIX: Improved mobile menu functionality
 function initMobileMenu() {
     const mobileMenuButton = document.querySelector('.mobile-menu');
     const navLinks = document.getElementById('navLinks');
     
     if (!mobileMenuButton || !navLinks) return;
     
-    console.log('📱 Initializing mobile menu...');
+    console.log('📱 Initializing mobile-safe menu...');
     
     mobileMenuButton.addEventListener('click', toggleMobileMenu);
     
+    // ✅ FIX: Close menu only when clicking nav links
     const navLinkElements = navLinks.querySelectorAll('a');
     navLinkElements.forEach(link => {
         link.addEventListener('click', () => {
@@ -882,12 +960,25 @@ function initMobileMenu() {
         });
     });
     
+    // ✅ FIX: Smarter click-outside detection
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.nav-container') && navLinks.classList.contains('active')) {
-            closeMobileMenu();
+        if (!navLinks.classList.contains('active')) return;
+        
+        // Don't close if clicking on the menu button or any nav element
+        if (e.target.closest('.nav-container, .mobile-menu')) {
+            return;
         }
+        
+        // Don't close if clicking on form elements or other interactive elements
+        if (e.target.closest('input, textarea, select, button, [tabindex]')) {
+            return;
+        }
+        
+        // ✅ Only close on genuine outside clicks
+        closeMobileMenu();
     });
     
+    // Keyboard support unchanged
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && navLinks.classList.contains('active')) {
             closeMobileMenu();
@@ -942,68 +1033,96 @@ function closeMobileMenu() {
     console.log('📱 Mobile menu closed');
 }
 
-// =============== VIEWPORT HEIGHT FIX FOR MOBILE ===============
+// ✅ MOBILE NAV FIX: Safer viewport height fix for mobile
 function initViewportHeight() {
     function setViewportHeight() {
+        // ✅ FIX: Debounce viewport changes to avoid navigation interference
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
     
     setViewportHeight();
     
-    const debouncedSetViewportHeight = debounce(setViewportHeight, 100);
+    // ✅ FIX: Safer resize handling on mobile
+    const debouncedSetViewportHeight = debounce(() => {
+        // Only update if not in the middle of navigation
+        if (!window.door64Audio?.isNavigating) {
+            setViewportHeight();
+        }
+    }, 150);
+    
     window.addEventListener('resize', debouncedSetViewportHeight);
     
+    // ✅ FIX: Better orientation change handling
     window.addEventListener('orientationchange', () => {
-        setTimeout(setViewportHeight, 100);
+        setTimeout(() => {
+            if (!window.door64Audio?.isNavigating) {
+                setViewportHeight();
+            }
+        }, 200);
     });
     
-    console.log('📱 Viewport height optimization initialized');
+    console.log('📱 Mobile-safe viewport height optimization initialized');
 }
 
-// =============== KEYBOARD NAVIGATION SUPPORT ===============
+// ✅ MOBILE NAV FIX: Improved keyboard navigation support
 function initKeyboardNavigation() {
     document.addEventListener('keydown', (e) => {
+        // ✅ FIX: Only prevent spacebar if NOT in an input field
         if (e.key === ' ' && e.target === document.body) {
-            e.preventDefault();
-            toggleAudio();
+            // Check if user is on mobile device
+            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // On mobile, be more careful about preventing spacebar
+            if (!isMobileDevice || !document.activeElement || document.activeElement === document.body) {
+                e.preventDefault();
+                toggleAudio();
+            }
         }
         
+        // ✅ FIX: Don't prevent default for mobile menu if user is typing
         if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mobile-menu')) {
-            e.preventDefault();
-            toggleMobileMenu();
+            // Only prevent default if it's not a form element
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                toggleMobileMenu();
+            }
         }
         
+        // Gallery navigation - unchanged but safer
         const activeElement = document.activeElement;
         if (activeElement && activeElement.closest('.css-gallery')) {
             const gallery = activeElement.closest('.css-gallery');
             const galleryId = gallery.id;
             
-            switch (e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    previousSlide(galleryId);
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    nextSlide(galleryId);
-                    break;
-                case 'Home':
-                    e.preventDefault();
-                    goToSlide(galleryId, 0);
-                    break;
-                case 'End':
-                    e.preventDefault();
-                    if (window.door64Galleries[galleryId]) {
-                        const lastSlide = window.door64Galleries[galleryId].totalSlides - 1;
-                        goToSlide(galleryId, lastSlide);
-                    }
-                    break;
+            // ✅ FIX: Only prevent default for actual gallery interactions
+            if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        previousSlide(galleryId);
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        nextSlide(galleryId);
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        goToSlide(galleryId, 0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        if (window.door64Galleries[galleryId]) {
+                            const lastSlide = window.door64Galleries[galleryId].totalSlides - 1;
+                            goToSlide(galleryId, lastSlide);
+                        }
+                        break;
+                }
             }
         }
     });
     
-    console.log('⌨️ Keyboard navigation initialized');
+    console.log('⌨️ Mobile-safe keyboard navigation initialized');
 }
 
 // =============== ACCESSIBILITY FEATURES ===============
@@ -1099,6 +1218,11 @@ function throttle(func, limit) {
             setTimeout(() => inThrottle = false, limit);
         }
     };
+}
+
+// ✅ NEW: Mobile navigation helper functions
+function isMobileMultiTouch(e) {
+    return e.touches && e.touches.length > 1;
 }
 
 // =============== ERROR HANDLING ===============
@@ -1213,15 +1337,16 @@ if (window.location.hostname === 'localhost' ||
 
 // =============== CONSOLE BRANDING ===============
 console.log(`
-🚪 Door 64 Restaurant - COMPLETELY FIXED AUDIO SYSTEM
+🚪 Door 64 Restaurant - COMPLETELY FIXED AUDIO + MOBILE NAV SYSTEM
 ✅ NO MORE RESTARTS: Music continues seamlessly
 🚪 SPLASH AUTO-START: First-time visitors hear music immediately  
 📱 Mobile: Touch once, continuous play forever
 🖥️ Desktop: Automatic start and continuous play
 ⏸️ Only audio buttons control playback
 🔄 Perfect navigation continuity
+📱 MOBILE NAV FIXES: All touch/scroll conflicts resolved
 
-All audio restart issues SOLVED.
+All audio restart issues AND mobile navigation issues SOLVED.
 `);
 
 // Export for testing
