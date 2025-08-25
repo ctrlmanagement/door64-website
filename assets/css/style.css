@@ -1,5 +1,6 @@
-/* Door 64 Restaurant - Main Stylesheet with White Splash Background */
+/* Door 64 Restaurant - Corrected Main Stylesheet */
 
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -9,9 +10,10 @@
 html {
     width: 100%;
     height: 100%;
+    font-size: 16px;
 }
 
-/* CSS Custom Properties for dynamic height calculations */
+/* CSS Custom Properties */
 :root {
     --vh: 1vh;
     --nav-height: 80px;
@@ -32,6 +34,7 @@ body {
     background-color: #0a0a0a;
     overflow-x: hidden;
     width: 100%;
+    height: 100%;
     margin: 0;
     padding: 0;
     -webkit-text-size-adjust: 100%;
@@ -39,16 +42,22 @@ body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     scroll-behavior: smooth;
-    /* iPhone specific optimizations - FIXED FOR NAVIGATION */
+    /* iPhone specific optimizations */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Override body restrictions for navigation links */
+/* Override body restrictions for navigation and interactive elements */
 .nav-logo,
 .nav-links a,
-.landing-content a {
+.landing-content a,
+.splash-geometric a,
+.splash-audio-toggle,
+.audio-toggle,
+.mobile-menu {
     -webkit-touch-callout: default !important;
     -webkit-user-select: auto !important;
     -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
@@ -56,15 +65,7 @@ body {
     cursor: pointer !important;
 }
 
-/* iPhone specific styles */
-@supports (-webkit-touch-callout: none) {
-    body {
-        /* Additional iPhone optimizations */
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-}
-
+/* Container */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -72,27 +73,31 @@ body {
     width: 100%;
 }
 
-/* =============== DOOR PLUGIN SPLASH PAGE =============== */
+/* =============== DOOR PLUGIN SPLASH PAGE - FIXED =============== */
 .splash-page {
-    width: 100%;
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
     position: fixed;
     top: 0;
     left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     z-index: 9999;
     background: #ffffff;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 1.2s ease;
-    min-height: 100vh;
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
     /* iPhone safe areas */
     padding-top: var(--safe-area-top);
     padding-bottom: var(--safe-area-bottom);
     padding-left: var(--safe-area-left);
     padding-right: var(--safe-area-right);
+    /* Ensure it's always on top */
+    visibility: visible;
 }
 
 .splash-page.hidden {
@@ -111,14 +116,18 @@ body {
     pointer-events: none;
 }
 
-/* Door Plugin Design */
+/* Door Plugin Design - Fixed Grid */
 .splash-geometric {
     height: 60vh;
     width: 20vh;
+    min-height: 400px;
+    min-width: 200px;
     display: grid;
     grid-template-rows: repeat(6, 1fr 2fr 1fr);
     overflow: hidden;
     list-style: none;
+    position: relative;
+    z-index: 1;
 }
 
 .splash-geometric li {
@@ -126,12 +135,17 @@ body {
     height: 100%;
     grid-column: 1/span 1;
     --offsetX: 50%;
+    transition: opacity 0.3s ease;
+    position: relative;
 }
 
 .splash-geometric li a {
     display: block;
     width: 100%;
     height: 100%;
+    overflow: hidden;
+    transition: all 0.15s ease;
+    pointer-events: auto;
 }
 
 .splash-geometric li img {
@@ -139,8 +153,15 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    animation: blr 2s ease-out;
+    filter: blur(10px);
+    transition: filter 0.7s ease;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
+/* Door shapes with proper clip-path */
 .splash-geometric li:first-of-type {
     grid-row: 1/span 4;
     clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20%*3));
@@ -176,17 +197,22 @@ body {
     from { transform: translate(0); }
 }
 
+@keyframes blr {
+    from { filter: blur(0); }
+    to { filter: blur(10px); }
+}
+
 .splash-geometric li:nth-of-type(odd) a {
     transform: translate(var(--offsetX), calc(var(--offsetX) * 0.166 * -2));
-    animation: o 2s;
+    animation: o 2s ease-out;
 }
 
 .splash-geometric li:nth-of-type(even) a {
     transform: translate(calc(var(--offsetX)*-1), calc(var(--offsetX) * 0.166 * 2));
-    animation: o 2s;
+    animation: o 2s ease-out;
 }
 
-/* First and last have different slope */
+/* First and last have different slopes */
 .splash-geometric li:first-of-type a {
     transform: translate(var(--offsetX), calc(var(--offsetX) * 0.200 * -2));
 }
@@ -195,26 +221,13 @@ body {
     transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.200 * 2));
 }
 
-.splash-geometric li img {
-    animation: blr 2s;
-    filter: blur(10px);
-}
-
-@keyframes blr {
-    from { filter: blur(0); }
-}
-
 /* Door Plugin Hover Effects */
-.splash-geometric li {
-    transition: opacity 0.3s;
-}
-
 .splash-geometric li a {
-    transition: all 0.15s;
+    transition: transform 0.15s ease;
 }
 
 .splash-geometric li:hover a {
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
     transform: translate(0);
 }
 
@@ -224,14 +237,9 @@ body {
 
 .splash-geometric:hover li:hover {
     opacity: 1;
-    transition: clip-path 0.4s 0.3s;
+    transition: all 0.4s ease 0.3s;
     clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
     z-index: 10;
-}
-
-.splash-geometric li img {
-    filter: blur(10px);
-    transition: filter 0.7s;
 }
 
 .splash-geometric li:hover img {
@@ -247,6 +255,7 @@ body {
     text-align: center;
     color: #333;
     z-index: 20;
+    pointer-events: none;
 }
 
 .splash-content h1 {
@@ -254,15 +263,18 @@ body {
     font-weight: bold;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    animation: pulse 2s infinite;
+    animation: pulse 2s infinite ease-in-out;
     color: #333;
+    letter-spacing: 0.2em;
 }
 
 .splash-content p {
     font-size: 1rem;
     opacity: 0.7;
-    animation: fadeInOut 3s infinite;
+    animation: fadeInOut 3s infinite ease-in-out;
     color: #666;
+    text-transform: lowercase;
+    letter-spacing: 0.1em;
 }
 
 /* Splash Audio Button */
@@ -287,6 +299,7 @@ body {
     backdrop-filter: blur(10px);
     z-index: 10000;
     font-family: 'Georgia', serif;
+    pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -294,6 +307,10 @@ body {
     background: rgba(0, 0, 0, 0.9);
     border-color: rgba(0, 0, 0, 0.6);
     transform: scale(1.1);
+}
+
+.splash-audio-toggle:active {
+    transform: scale(0.95);
 }
 
 .splash-audio-toggle.playing {
@@ -312,18 +329,21 @@ body {
 /* =============== MAIN SITE STYLES =============== */
 .main-site {
     opacity: 0;
+    display: none;
     transition: opacity 1s ease 0.5s;
     min-height: 100vh;
     min-height: calc(var(--vh, 1vh) * 100);
     background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
     color: #333;
+    position: relative;
 }
 
 .main-site.active {
     opacity: 1;
+    display: block;
 }
 
-/* Navigation - Fixed sizing - NAVIGATION VISIBILITY IMPROVED */
+/* Navigation - Enhanced for Accessibility */
 .nav {
     position: fixed;
     top: 0;
@@ -343,24 +363,17 @@ body {
     padding-right: var(--safe-area-right);
 }
 
-/* Desktop hover behavior - IMPROVED FOR NAVIGATION ACCESS */
+/* Desktop navigation behavior - IMPROVED */
 @media (min-width: 769px) {
     .nav {
-        opacity: 0.3; /* Semi-visible instead of completely hidden */
-        transform: translateY(0); /* Don't hide off-screen */
+        opacity: 0.3;
+        transform: translateY(0);
         transition: all 0.3s ease;
     }
 
     .nav:hover,
     .nav.show-nav,
-    body:hover .nav,
     .main-site:hover .nav {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    /* Ensure nav shows when hovering over any main site content */
-    .main-site.active:hover .nav {
         opacity: 1;
         transform: translateY(0);
     }
@@ -394,9 +407,8 @@ body {
     cursor: pointer;
     transition: opacity 0.3s ease;
     font-family: 'Georgia', serif;
-    /* NAVIGATION FIXES */
-    -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
-    pointer-events: auto !important;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
 }
 
 .nav-logo:hover {
@@ -429,12 +441,28 @@ body {
     margin-left: auto;
 }
 
-/* Audio Toggle Button - Updated colors */
+.nav-links a {
+    color: #666;
+    text-decoration: none;
+    text-transform: lowercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.nav-links a:hover {
+    color: #333;
+}
+
+/* Audio Toggle Button */
 .audio-toggle {
     background: transparent;
     border: 1px solid #333;
     color: #333;
-    padding: 5px 10px;
+    padding: 8px 12px;
     cursor: pointer;
     border-radius: 3px;
     font-size: 18px;
@@ -442,12 +470,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
     -webkit-tap-highlight-color: transparent;
 }
 
 .audio-toggle:hover {
     background: rgba(0,0,0,0.1);
-    transform: scale(1.1);
+    transform: scale(1.05);
+}
+
+.audio-toggle:active {
+    transform: scale(0.95);
 }
 
 .audio-toggle.playing {
@@ -463,27 +497,16 @@ body {
     100% { box-shadow: 0 0 0 0 rgba(198, 81, 2, 0); }
 }
 
-.nav-links a {
-    color: #666;
-    text-decoration: none;
-    text-transform: lowercase;
-    font-size: 14px;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-    /* NAVIGATION FIXES */
-    -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
-    pointer-events: auto !important;
-    cursor: pointer !important;
-}
-
-.nav-links a:hover {
-    color: #333;
-}
-
+/* Mobile Menu */
 .mobile-menu {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    padding: 10px;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    align-items: center;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -492,13 +515,15 @@ body {
     height: 3px;
     background: #333;
     margin: 3px 0;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    transform-origin: center;
 }
 
 /* Global Text Styling */
 h1, h2, h3, h4, h5, h6 {
     text-transform: lowercase;
     color: #000;
+    font-weight: 300;
 }
 
 p, .sub-links a, .menu-item p {
@@ -510,7 +535,7 @@ p, .sub-links a, .menu-item p {
     background: #fff;
 }
 
-/* =============== ORIGINAL LANDING PAGE =============== */
+/* =============== LANDING PAGE STYLES =============== */
 .landing-page {
     padding-top: 80px;
     min-height: 100vh;
@@ -518,6 +543,7 @@ p, .sub-links a, .menu-item p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 /* Desktop specific */
@@ -530,7 +556,7 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* Mobile landing page - force white background in ALL orientations */
+/* Mobile landing page - force white background */
 @media (max-width: 768px) {
     .landing-page {
         background: #fff !important;
@@ -544,7 +570,6 @@ p, .sub-links a, .menu-item p {
         background-color: #fff !important;
     }
 
-    /* Remove gradients on all child elements */
     .landing-page *,
     .landing-content *,
     .landing-links * {
@@ -562,18 +587,17 @@ p, .sub-links a, .menu-item p {
     background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Force white background on mobile for page 64 */
+/* Force white background on mobile */
 @media (max-width: 768px) {
     .gallery-slider {
         background: #fff !important;
-        z-index: -2; /* Lower z-index to prevent layering issues */
+        z-index: -2;
     }
 
-    /* Additional mobile landscape override */
     .landing-page .gallery-slider {
         background: #fff !important;
         background-image: none !important;
-        z-index: -2; /* Ensure it stays behind content */
+        z-index: -2;
     }
 }
 
@@ -608,7 +632,6 @@ p, .sub-links a, .menu-item p {
     justify-content: center;
 }
 
-/* NAVIGATION LINKS IN CONTENT - ENSURE CLICKABILITY */
 .landing-content a {
     pointer-events: auto !important;
     cursor: pointer !important;
@@ -628,6 +651,7 @@ p, .sub-links a, .menu-item p {
     transition: all 0.3s ease;
     font-size: 3rem;
     margin-bottom: 2rem;
+    text-transform: uppercase;
 }
 
 .embossed-logo:hover {
@@ -637,14 +661,14 @@ p, .sub-links a, .menu-item p {
         3px 3px 6px rgba(0,0,0,0.08);
 }
 
-/* Mobile page 64 logo - white embossed like other pages */
+/* Mobile embossed logo */
 @media (max-width: 768px) {
     .embossed-logo {
         font-size: clamp(2.5rem, 12vw, 4rem);
         letter-spacing: clamp(2px, 3vw, 6px);
         margin-bottom: 30px;
         line-height: 1.1;
-        color: #fff !important; /* White embossed logo on mobile */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
             2px 2px 0px #bbb,
@@ -701,11 +725,15 @@ p, .sub-links a, .menu-item p {
     text-decoration: none;
     padding: 0.5rem;
     border-radius: 5px;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     text-transform: lowercase;
     font-size: clamp(0.9rem, 3vw, 1.1rem);
     letter-spacing: 1px;
     -webkit-tap-highlight-color: transparent;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sub-links a:hover {
@@ -770,9 +798,8 @@ p, .sub-links a, .menu-item p {
     z-index: 2;
     text-align: center;
     color: white;
-    bottom: 30px;
-    left: 30px;
-    right: 30px;
+    padding: 30px;
+    max-width: 80%;
 }
 
 .gallery-content h3 {
@@ -781,6 +808,7 @@ p, .sub-links a, .menu-item p {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     text-transform: lowercase;
     color: #fff;
+    font-weight: 300;
 }
 
 .gallery-content p {
@@ -788,6 +816,7 @@ p, .sub-links a, .menu-item p {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     color: #fff;
     opacity: 0.9;
+    line-height: 1.4;
 }
 
 /* Gallery Controls */
@@ -807,14 +836,20 @@ p, .sub-links a, .menu-item p {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     color: #333;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 .gallery-nav:hover {
     background: rgba(255,255,255,0.9);
     transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-nav:active {
+    transform: translateY(-50%) scale(0.95);
 }
 
 .gallery-nav.prev {
@@ -842,12 +877,19 @@ p, .sub-links a, .menu-item p {
     border-radius: 50%;
     background: rgba(255,255,255,0.5);
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    min-width: 12px;
+    min-height: 12px;
 }
 
 .gallery-dot.active {
     background: white;
     transform: scale(1.2);
+}
+
+.gallery-dot:hover {
+    background: rgba(255,255,255,0.8);
+    transform: scale(1.1);
 }
 
 /* Auto-play indicator */
@@ -873,7 +915,17 @@ p, .sub-links a, .menu-item p {
     50% { opacity: 1; }
 }
 
-/* =============== MOBILE RESPONSIVE - OPTIMIZED FOR IPHONE 14/15 SERIES =============== */
+/* Image loading states */
+.image-loaded {
+    opacity: 1;
+}
+
+.image-error {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+/* =============== MOBILE RESPONSIVE - OPTIMIZED =============== */
 @media (max-width: 768px) {
     :root {
         --nav-height: var(--mobile-nav-height);
@@ -882,11 +934,17 @@ p, .sub-links a, .menu-item p {
     .splash-geometric {
         height: 50vh;
         width: 30vw;
+        min-height: 300px;
+        min-width: 150px;
         grid-template-rows: repeat(6, 1fr 1.5fr 1fr);
     }
 
     .splash-content h1 {
         font-size: 2rem;
+    }
+
+    .splash-content p {
+        font-size: 0.9rem;
     }
 
     .splash-audio-toggle {
@@ -900,14 +958,13 @@ p, .sub-links a, .menu-item p {
     .nav {
         padding: 15px 0;
         height: var(--mobile-nav-height);
-        opacity: 1 !important; /* Always visible on mobile */
+        opacity: 1 !important;
         transform: translateY(0) !important;
         position: fixed;
         top: 0;
         padding-top: max(15px, calc(var(--safe-area-top) + 8px));
     }
 
-    /* Ensure logo is visible and properly positioned on mobile */
     .nav-container {
         display: flex;
         align-items: center;
@@ -925,7 +982,6 @@ p, .sub-links a, .menu-item p {
         text-shadow: none;
         flex-shrink: 0;
         order: 1;
-        /* MOBILE NAVIGATION FIXES */
         pointer-events: auto !important;
         -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
     }
@@ -964,7 +1020,6 @@ p, .sub-links a, .menu-item p {
         transform-origin: center;
     }
 
-    /* Audio toggle - minimum 44×44px touch target */
     .audio-toggle {
         width: 44px;
         height: 44px;
@@ -995,8 +1050,8 @@ p, .sub-links a, .menu-item p {
     }
 
     .nav-links a {
-        font-size: 18px; /* Minimum readable size */
-        padding: 15px 0; /* Minimum 44px touch target */
+        font-size: 18px;
+        padding: 15px 0;
         border-bottom: 1px solid rgba(0,0,0,0.1);
         text-align: center;
         min-height: 44px;
@@ -1004,7 +1059,6 @@ p, .sub-links a, .menu-item p {
         align-items: center;
         justify-content: center;
         color: #333;
-        /* MOBILE NAVIGATION FIXES */
         pointer-events: auto !important;
         -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
     }
@@ -1015,12 +1069,12 @@ p, .sub-links a, .menu-item p {
         color: #000;
     }
 
-    /* Mobile landing page specific styles */
+    /* Mobile landing page styles */
     .landing-page {
         padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
         justify-content: flex-start;
         box-sizing: border-box;
-        color: #000; /* Black text on mobile */
+        color: #000;
         background: #fff !important;
     }
 
@@ -1053,22 +1107,22 @@ p, .sub-links a, .menu-item p {
         font-size: clamp(1.4rem, 6vw, 1.8rem);
         letter-spacing: clamp(1px, 3vw, 4px);
         margin-bottom: 20px;
-        color: #000; /* Black headings on mobile */
+        color: #000;
     }
 
     .sub-links a {
-        font-size: 18px; /* Minimum readable size */
-        padding: 12px 0; /* Minimum 44px touch target */
+        font-size: 18px;
+        padding: 12px 0;
         min-height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #666; /* Dark gray links on mobile */
+        color: #666;
     }
 
     .sub-links a:hover,
     .sub-links a:active {
-        color: #000; /* Black on interaction */
+        color: #000;
     }
 
     /* Gallery mobile optimizations */
@@ -1082,6 +1136,7 @@ p, .sub-links a, .menu-item p {
         bottom: 20px;
         left: 20px;
         right: 20px;
+        padding: 20px;
     }
 
     .gallery-content h3 {
@@ -1097,6 +1152,8 @@ p, .sub-links a, .menu-item p {
         width: 40px;
         height: 40px;
         font-size: 1.5rem;
+        min-width: 40px;
+        min-height: 40px;
     }
 
     .gallery-nav.prev {
@@ -1115,17 +1172,18 @@ p, .sub-links a, .menu-item p {
     .gallery-dot {
         width: 10px;
         height: 10px;
+        min-width: 10px;
+        min-height: 10px;
     }
 }
 
-/* iPhone 14/15 Standard (393px) optimizations */
+/* iPhone specific optimizations */
 @media only screen and (max-width: 393px) and (-webkit-min-device-pixel-ratio: 2) {
     .nav {
         padding: 12px 0;
         padding-top: max(12px, calc(var(--safe-area-top) + 6px));
     }
 
-    /* iPhone specific audio button positioning */
     .splash-audio-toggle {
         top: max(20px, calc(var(--safe-area-top) + 8px));
         right: max(20px, calc(var(--safe-area-right) + 8px));
@@ -1135,12 +1193,12 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* iPhone 14/15 Plus/Pro Max (430px) optimizations */
+/* iPhone Plus/Pro Max optimizations */
 @media (min-width: 394px) and (max-width: 430px) {
     .embossed-logo {
         font-size: clamp(2.8rem, 10vw, 4.2rem);
         letter-spacing: clamp(3px, 3vw, 7px);
-        color: #fff !important; /* White embossed logo */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
             2px 2px 0px #bbb,
@@ -1149,7 +1207,7 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* Mobile landscape orientation fixes */
+/* Mobile landscape fixes */
 @media (max-width: 768px) and (orientation: landscape) {
     body,
     .main-site,
@@ -1158,7 +1216,6 @@ p, .sub-links a, .menu-item p {
         background: #fff !important;
     }
 
-    /* Force white background for page 64 in landscape */
     .landing-page,
     .landing-page .gallery-slider {
         background: #fff !important;
@@ -1174,16 +1231,14 @@ p, .sub-links a, .menu-item p {
         backdrop-filter: blur(10px);
     }
 
-    /* Landing page content white background in landscape */
     .landing-content,
     .landing-links,
     .landing-link {
         background: #fff !important;
     }
 
-    /* Ensure main title is white embossed in landscape */
     .embossed-logo {
-        color: #fff !important; /* White embossed logo */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
             2px 2px 0px #bbb,
@@ -1192,7 +1247,6 @@ p, .sub-links a, .menu-item p {
             5px 5px 10px rgba(0,0,0,0.2) !important;
     }
 
-    /* Ensure section headings are black in landscape */
     .landing-link h3 {
         color: #000 !important;
     }
@@ -1201,7 +1255,6 @@ p, .sub-links a, .menu-item p {
         color: #666 !important;
     }
 
-    /* Kill any gradients in landscape mobile */
     * {
         background-image: none !important;
     }
@@ -1219,7 +1272,19 @@ p, .sub-links a, .menu-item p {
 /* Disable hover effects on touch devices */
 @media (hover: none) and (pointer: coarse) {
     .landing-link:hover,
-    .gallery-nav:hover {
+    .gallery-nav:hover,
+    .gallery-dot:hover {
         transform: none;
+    }
+    
+    .nav-logo:hover,
+    .audio-toggle:hover,
+    .splash-audio-toggle:hover {
+        transform: none;
+    }
+    
+    .sub-links a:hover {
+        background: none;
+        color: inherit;
     }
 }
