@@ -1,6 +1,6 @@
-/* Door 64 Restaurant - Corrected Main Stylesheet */
+/* Door 64 Restaurant - Updated Stylesheet with New Door Design */
 
-/* Reset and Base Styles */
+/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -10,7 +10,6 @@
 html {
     width: 100%;
     height: 100%;
-    font-size: 16px;
 }
 
 /* CSS Custom Properties */
@@ -34,7 +33,6 @@ body {
     background-color: #0a0a0a;
     overflow-x: hidden;
     width: 100%;
-    height: 100%;
     margin: 0;
     padding: 0;
     -webkit-text-size-adjust: 100%;
@@ -42,22 +40,17 @@ body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     scroll-behavior: smooth;
-    /* iPhone specific optimizations */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
 }
 
-/* Override body restrictions for navigation and interactive elements */
+/* Override body restrictions for navigation links */
 .nav-logo,
 .nav-links a,
-.landing-content a,
-.splash-geometric a,
-.splash-audio-toggle,
-.audio-toggle,
-.mobile-menu {
+.landing-content a {
     -webkit-touch-callout: default !important;
     -webkit-user-select: auto !important;
     -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
@@ -65,7 +58,14 @@ body {
     cursor: pointer !important;
 }
 
-/* Container */
+/* iPhone specific styles */
+@supports (-webkit-touch-callout: none) {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -73,176 +73,153 @@ body {
     width: 100%;
 }
 
-/* =============== DOOR PLUGIN SPLASH PAGE - FIXED =============== */
+/* =============== NEW DOOR PLUGIN SPLASH PAGE =============== */
 .splash-page {
+    /* CRITICAL: Ensure splash page is visible by default */
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    min-height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
     z-index: 9999;
     background: #ffffff;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
-    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
+    transition: all 1.2s ease;
     /* iPhone safe areas */
     padding-top: var(--safe-area-top);
     padding-bottom: var(--safe-area-bottom);
     padding-left: var(--safe-area-left);
     padding-right: var(--safe-area-right);
-    /* Ensure it's always on top */
-    visibility: visible;
+    /* Ensure it's on top */
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
 }
 
 .splash-page.hidden {
     opacity: 0;
     transform: scale(1.1);
     pointer-events: none;
+    transition: all 1.2s ease;
 }
 
-.splash-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    pointer-events: none;
-}
-
-/* Door Plugin Design - Fixed Grid */
-.splash-geometric {
+/* New Door Gallery Design */
+.door-gallery {
     height: 60vh;
     width: 20vh;
-    min-height: 400px;
-    min-width: 200px;
     display: grid;
-    grid-template-rows: repeat(6, 1fr 2fr 1fr);
+    grid-template-rows: repeat(4, 1fr 2fr 1fr);
     overflow: hidden;
     list-style: none;
     position: relative;
     z-index: 1;
 }
 
-.splash-geometric li {
+.door-gallery li {
     width: 100%;
     height: 100%;
     grid-column: 1/span 1;
     --offsetX: 50%;
-    transition: opacity 0.3s ease;
-    position: relative;
+    transition: opacity 0.3s;
 }
 
-.splash-geometric li a {
+.door-gallery li a {
     display: block;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    transition: all 0.15s ease;
-    pointer-events: auto;
+    transition: all 0.15s;
 }
 
-.splash-geometric li img {
+.door-gallery li img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    animation: blr 2s ease-out;
+    animation: blr 2s;
     filter: blur(10px);
-    transition: filter 0.7s ease;
-    backface-visibility: hidden;
-    transform: translateZ(0);
+    transition: filter 0.7s;
 }
 
-/* Door shapes with proper clip-path */
-.splash-geometric li:first-of-type {
+/* Door Clip Paths for New 4-Door Design */
+.door-gallery li:first-of-type {
     grid-row: 1/span 4;
-    clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20%*3));
+    /* total=5fr */
+    clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20% * 3));
 }
 
-.splash-geometric li:nth-of-type(2) {
+.door-gallery li:nth-of-type(2) {
     grid-row: 3/span 5;
-    clip-path: polygon(100% 0, 0 calc(16.6%*2), 0 100%, 100% calc(16.6%*4));
+    /* total=6fr */
+    clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
 }
 
-.splash-geometric li:nth-of-type(3) {
+.door-gallery li:nth-of-type(3) {
     grid-row: 6/span 5;
-    clip-path: polygon(100% 0, 0 calc(16.6%*2), 0 100%, 100% calc(16.6%*4));
+    /* total=6fr */
+    clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
 }
 
-.splash-geometric li:nth-of-type(4) {
-    grid-row: 8/span 4;
-    clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20%*3));
-}
-
-.splash-geometric li:nth-of-type(5) {
-    grid-row: 10/span 5;
-    clip-path: polygon(100% 0, 0 calc(16.6%*2), 0 100%, 100% calc(16.6%*4));
-}
-
-.splash-geometric li:last-of-type {
+.door-gallery li:last-of-type {
     grid-row: -5/span 4;
-    clip-path: polygon(100% 0, 0 calc(20%*2), 0 calc(20%*6), 100% calc(20%*4));
+    /* total=5fr */
+    clip-path: polygon(100% 0, 0 calc(20% * 2), 0 calc(20% * 6), 100% calc(20% * 4));
 }
 
-/* Door Plugin Animations */
+/* Door Animations */
 @keyframes o {
     from { transform: translate(0); }
 }
 
-@keyframes blr {
-    from { filter: blur(0); }
-    to { filter: blur(10px); }
-}
-
-.splash-geometric li:nth-of-type(odd) a {
+.door-gallery li:nth-of-type(odd) a {
     transform: translate(var(--offsetX), calc(var(--offsetX) * 0.166 * -2));
-    animation: o 2s ease-out;
+    animation: o 2s;
 }
 
-.splash-geometric li:nth-of-type(even) a {
-    transform: translate(calc(var(--offsetX)*-1), calc(var(--offsetX) * 0.166 * 2));
-    animation: o 2s ease-out;
+.door-gallery li:nth-of-type(even) a {
+    transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.166 * 2));
+    animation: o 2s;
 }
 
-/* First and last have different slopes */
-.splash-geometric li:first-of-type a {
+/* First and last have different slope; first=last=2/5fr regular=2/6fr */
+.door-gallery li:first-of-type a {
     transform: translate(var(--offsetX), calc(var(--offsetX) * 0.200 * -2));
 }
 
-.splash-geometric li:last-of-type a {
+.door-gallery li:last-of-type a {
     transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.200 * 2));
 }
 
-/* Door Plugin Hover Effects */
-.splash-geometric li a {
-    transition: transform 0.15s ease;
+@keyframes blr {
+    from { filter: blur(0); }
 }
 
-.splash-geometric li:hover a {
-    transition: transform 0.3s ease;
+/* Door Hover & VFX */
+.door-gallery li a {
+    transition: all 0.15s;
+}
+
+.door-gallery li:hover a {
+    transition: transform 0.3s;
     transform: translate(0);
 }
 
-.splash-geometric:hover li {
+.door-gallery:hover li {
     opacity: 0.1;
 }
 
-.splash-geometric:hover li:hover {
+.door-gallery:hover li:hover {
     opacity: 1;
-    transition: all 0.4s ease 0.3s;
+    transition: clip-path 0.4s 0.3s;
     clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
     z-index: 10;
 }
 
-.splash-geometric li:hover img {
+.door-gallery li:hover img {
     filter: blur(0);
 }
 
@@ -255,7 +232,6 @@ body {
     text-align: center;
     color: #333;
     z-index: 20;
-    pointer-events: none;
 }
 
 .splash-content h1 {
@@ -263,18 +239,15 @@ body {
     font-weight: bold;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    animation: pulse 2s infinite ease-in-out;
+    animation: pulse 2s infinite;
     color: #333;
-    letter-spacing: 0.2em;
 }
 
 .splash-content p {
     font-size: 1rem;
     opacity: 0.7;
-    animation: fadeInOut 3s infinite ease-in-out;
+    animation: fadeInOut 3s infinite;
     color: #666;
-    text-transform: lowercase;
-    letter-spacing: 0.1em;
 }
 
 /* Splash Audio Button */
@@ -299,7 +272,6 @@ body {
     backdrop-filter: blur(10px);
     z-index: 10000;
     font-family: 'Georgia', serif;
-    pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -307,10 +279,6 @@ body {
     background: rgba(0, 0, 0, 0.9);
     border-color: rgba(0, 0, 0, 0.6);
     transform: scale(1.1);
-}
-
-.splash-audio-toggle:active {
-    transform: scale(0.95);
 }
 
 .splash-audio-toggle.playing {
@@ -328,22 +296,22 @@ body {
 
 /* =============== MAIN SITE STYLES =============== */
 .main-site {
+    /* CRITICAL: Ensure main site is hidden by default */
     opacity: 0;
-    display: none;
+    display: none !important;
     transition: opacity 1s ease 0.5s;
     min-height: 100vh;
     min-height: calc(var(--vh, 1vh) * 100);
     background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
     color: #333;
-    position: relative;
 }
 
 .main-site.active {
     opacity: 1;
-    display: block;
+    display: block !important;
 }
 
-/* Navigation - Enhanced for Accessibility */
+/* Navigation */
 .nav {
     position: fixed;
     top: 0;
@@ -363,7 +331,7 @@ body {
     padding-right: var(--safe-area-right);
 }
 
-/* Desktop navigation behavior - IMPROVED */
+/* Desktop hover behavior */
 @media (min-width: 769px) {
     .nav {
         opacity: 0.3;
@@ -373,12 +341,17 @@ body {
 
     .nav:hover,
     .nav.show-nav,
+    body:hover .nav,
     .main-site:hover .nav {
         opacity: 1;
         transform: translateY(0);
     }
     
-    /* Ensure navigation elements are always clickable */
+    .main-site.active:hover .nav {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
     .nav .nav-logo,
     .nav .nav-links a {
         pointer-events: auto !important;
@@ -407,8 +380,8 @@ body {
     cursor: pointer;
     transition: opacity 0.3s ease;
     font-family: 'Georgia', serif;
-    pointer-events: auto;
-    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
+    pointer-events: auto !important;
 }
 
 .nav-logo:hover {
@@ -441,28 +414,12 @@ body {
     margin-left: auto;
 }
 
-.nav-links a {
-    color: #666;
-    text-decoration: none;
-    text-transform: lowercase;
-    font-size: 14px;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-    pointer-events: auto;
-    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
-    cursor: pointer;
-}
-
-.nav-links a:hover {
-    color: #333;
-}
-
 /* Audio Toggle Button */
 .audio-toggle {
     background: transparent;
     border: 1px solid #333;
     color: #333;
-    padding: 8px 12px;
+    padding: 5px 10px;
     cursor: pointer;
     border-radius: 3px;
     font-size: 18px;
@@ -470,18 +427,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
     -webkit-tap-highlight-color: transparent;
 }
 
 .audio-toggle:hover {
     background: rgba(0,0,0,0.1);
-    transform: scale(1.05);
-}
-
-.audio-toggle:active {
-    transform: scale(0.95);
+    transform: scale(1.1);
 }
 
 .audio-toggle.playing {
@@ -497,16 +448,26 @@ body {
     100% { box-shadow: 0 0 0 0 rgba(198, 81, 2, 0); }
 }
 
-/* Mobile Menu */
+.nav-links a {
+    color: #666;
+    text-decoration: none;
+    text-transform: lowercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.nav-links a:hover {
+    color: #333;
+}
+
 .mobile-menu {
     display: none;
     flex-direction: column;
     cursor: pointer;
-    padding: 10px;
-    min-width: 44px;
-    min-height: 44px;
-    justify-content: center;
-    align-items: center;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -515,15 +476,13 @@ body {
     height: 3px;
     background: #333;
     margin: 3px 0;
-    transition: all 0.3s ease;
-    transform-origin: center;
+    transition: 0.3s;
 }
 
 /* Global Text Styling */
 h1, h2, h3, h4, h5, h6 {
     text-transform: lowercase;
     color: #000;
-    font-weight: 300;
 }
 
 p, .sub-links a, .menu-item p {
@@ -535,7 +494,7 @@ p, .sub-links a, .menu-item p {
     background: #fff;
 }
 
-/* =============== LANDING PAGE STYLES =============== */
+/* =============== LANDING PAGE =============== */
 .landing-page {
     padding-top: 80px;
     min-height: 100vh;
@@ -543,7 +502,6 @@ p, .sub-links a, .menu-item p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
 }
 
 /* Desktop specific */
@@ -651,7 +609,6 @@ p, .sub-links a, .menu-item p {
     transition: all 0.3s ease;
     font-size: 3rem;
     margin-bottom: 2rem;
-    text-transform: uppercase;
 }
 
 .embossed-logo:hover {
@@ -661,7 +618,7 @@ p, .sub-links a, .menu-item p {
         3px 3px 6px rgba(0,0,0,0.08);
 }
 
-/* Mobile embossed logo */
+/* Mobile page 64 logo - white embossed */
 @media (max-width: 768px) {
     .embossed-logo {
         font-size: clamp(2.5rem, 12vw, 4rem);
@@ -725,15 +682,11 @@ p, .sub-links a, .menu-item p {
     text-decoration: none;
     padding: 0.5rem;
     border-radius: 5px;
-    transition: all 0.3s ease;
+    transition: all 0.3s;
     text-transform: lowercase;
     font-size: clamp(0.9rem, 3vw, 1.1rem);
     letter-spacing: 1px;
     -webkit-tap-highlight-color: transparent;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .sub-links a:hover {
@@ -798,8 +751,9 @@ p, .sub-links a, .menu-item p {
     z-index: 2;
     text-align: center;
     color: white;
-    padding: 30px;
-    max-width: 80%;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
 }
 
 .gallery-content h3 {
@@ -808,7 +762,6 @@ p, .sub-links a, .menu-item p {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     text-transform: lowercase;
     color: #fff;
-    font-weight: 300;
 }
 
 .gallery-content p {
@@ -816,7 +769,6 @@ p, .sub-links a, .menu-item p {
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     color: #fff;
     opacity: 0.9;
-    line-height: 1.4;
 }
 
 /* Gallery Controls */
@@ -836,20 +788,14 @@ p, .sub-links a, .menu-item p {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.3s;
     backdrop-filter: blur(10px);
     color: #333;
-    min-width: 44px;
-    min-height: 44px;
 }
 
 .gallery-nav:hover {
     background: rgba(255,255,255,0.9);
     transform: translateY(-50%) scale(1.1);
-}
-
-.gallery-nav:active {
-    transform: translateY(-50%) scale(0.95);
 }
 
 .gallery-nav.prev {
@@ -877,19 +823,12 @@ p, .sub-links a, .menu-item p {
     border-radius: 50%;
     background: rgba(255,255,255,0.5);
     cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 12px;
-    min-height: 12px;
+    transition: all 0.3s;
 }
 
 .gallery-dot.active {
     background: white;
     transform: scale(1.2);
-}
-
-.gallery-dot:hover {
-    background: rgba(255,255,255,0.8);
-    transform: scale(1.1);
 }
 
 /* Auto-play indicator */
@@ -915,36 +854,21 @@ p, .sub-links a, .menu-item p {
     50% { opacity: 1; }
 }
 
-/* Image loading states */
-.image-loaded {
-    opacity: 1;
-}
-
-.image-error {
-    opacity: 0.5;
-    filter: grayscale(100%);
-}
-
-/* =============== MOBILE RESPONSIVE - OPTIMIZED =============== */
+/* =============== MOBILE RESPONSIVE =============== */
 @media (max-width: 768px) {
     :root {
         --nav-height: var(--mobile-nav-height);
     }
 
-    .splash-geometric {
+    /* Mobile Door Gallery */
+    .door-gallery {
         height: 50vh;
         width: 30vw;
-        min-height: 300px;
-        min-width: 150px;
-        grid-template-rows: repeat(6, 1fr 1.5fr 1fr);
+        grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
     }
 
     .splash-content h1 {
         font-size: 2rem;
-    }
-
-    .splash-content p {
-        font-size: 0.9rem;
     }
 
     .splash-audio-toggle {
@@ -1069,7 +993,7 @@ p, .sub-links a, .menu-item p {
         color: #000;
     }
 
-    /* Mobile landing page styles */
+    /* Mobile landing page specific styles */
     .landing-page {
         padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
         justify-content: flex-start;
@@ -1136,7 +1060,6 @@ p, .sub-links a, .menu-item p {
         bottom: 20px;
         left: 20px;
         right: 20px;
-        padding: 20px;
     }
 
     .gallery-content h3 {
@@ -1152,8 +1075,6 @@ p, .sub-links a, .menu-item p {
         width: 40px;
         height: 40px;
         font-size: 1.5rem;
-        min-width: 40px;
-        min-height: 40px;
     }
 
     .gallery-nav.prev {
@@ -1172,8 +1093,6 @@ p, .sub-links a, .menu-item p {
     .gallery-dot {
         width: 10px;
         height: 10px;
-        min-width: 10px;
-        min-height: 10px;
     }
 }
 
@@ -1193,7 +1112,7 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* iPhone Plus/Pro Max optimizations */
+/* iPhone 14/15 Plus/Pro Max optimizations */
 @media (min-width: 394px) and (max-width: 430px) {
     .embossed-logo {
         font-size: clamp(2.8rem, 10vw, 4.2rem);
@@ -1207,7 +1126,7 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* Mobile landscape fixes */
+/* Mobile landscape orientation fixes */
 @media (max-width: 768px) and (orientation: landscape) {
     body,
     .main-site,
@@ -1272,19 +1191,7 @@ p, .sub-links a, .menu-item p {
 /* Disable hover effects on touch devices */
 @media (hover: none) and (pointer: coarse) {
     .landing-link:hover,
-    .gallery-nav:hover,
-    .gallery-dot:hover {
+    .gallery-nav:hover {
         transform: none;
-    }
-    
-    .nav-logo:hover,
-    .audio-toggle:hover,
-    .splash-audio-toggle:hover {
-        transform: none;
-    }
-    
-    .sub-links a:hover {
-        background: none;
-        color: inherit;
     }
 }
