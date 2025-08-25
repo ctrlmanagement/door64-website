@@ -1,6 +1,6 @@
-/* Door 64 Restaurant - Complete Enhanced JavaScript with Continuous Audio System */
+/* Door 64 Restaurant - Complete Enhanced JavaScript with Fixed Audio System */
 
-// =============== ENHANCED CONTINUOUS AUDIO SYSTEM ===============
+// =============== FIXED CONTINUOUS AUDIO SYSTEM ===============
 class Door64Audio {
     constructor() {
         this.audio = null;
@@ -11,6 +11,7 @@ class Door64Audio {
         this.timeKey = 'door64_audio_time';
         this.lastUpdateTime = 0;
         this.updateInterval = 2000; // Update storage every 2 seconds
+        this.hasUserInteracted = false;
         
         this.init();
     }
@@ -18,16 +19,13 @@ class Door64Audio {
     init() {
         console.log('🎵 Door 64 Audio System - Initializing...');
         
-        const storedState = localStorage.getItem(this.storageKey);
-        const storedTime = localStorage.getItem(this.timeKey);
-        
         this.audio = document.getElementById('backgroundAudio');
         if (!this.audio) {
             console.warn('⚠️ Background audio element not found');
             return;
         }
         
-        // Set optimal volume and ensure audio is ready to play
+        // Set up audio properties
         this.audio.volume = this.volume;
         this.audio.preload = 'auto';
         this.audio.loop = true;
@@ -35,28 +33,29 @@ class Door64Audio {
         // Force load the audio
         this.audio.load();
         
-        console.log('🎵 Current page:', window.location.pathname);
-        console.log('🎵 Stored audio state:', storedState);
-        console.log('🎵 Has splash page:', !!document.getElementById('splashPage'));
-        
-        // Set up event listeners first
+        // Set up event listeners
         this.setupAudioEventListeners();
         this.setupPageUnloadHandler();
+        this.setupUserInteractionListeners();
         
-        // Simple logic: If no stored state OR stored state is 'playing', try to start audio
-        if (!storedState || storedState === 'playing') {
+        // Check stored state
+        const storedState = localStorage.getItem(this.storageKey);
+        const storedTime = localStorage.getItem(this.timeKey);
+        
+        console.log('🎵 Stored audio state:', storedState);
+        console.log('🎵 Stored audio time:', storedTime);
+        
+        // Start audio automatically unless user previously paused it
+        if (storedState !== 'paused') {
             // Restore time position if available
             if (storedTime && parseFloat(storedTime) > 0) {
                 this.audio.currentTime = parseFloat(storedTime);
                 console.log('🎵 Resuming from time:', storedTime);
             }
             
-            // Try to start audio after a short delay
-            setTimeout(() => {
-                this.startAudio();
-            }, 500);
+            // Try to start audio immediately
+            this.startAudio();
         } else {
-            // Audio was explicitly paused by user
             console.log('🎵 Audio was paused by user, respecting choice');
             this.updateButtons();
         }
@@ -64,17 +63,6 @@ class Door64Audio {
     
     setupAudioEventListeners() {
         if (!this.audio) return;
-        
-        // Check if audio file exists
-        fetch(this.audio.currentSrc || this.audio.src).then(response => {
-            if (response.ok) {
-                console.log('✅ Audio file found and accessible:', this.audio.currentSrc || this.audio.src);
-            } else {
-                console.error('🚨 Audio file not found:', response.status, this.audio.currentSrc || this.audio.src);
-            }
-        }).catch(error => {
-            console.error('🚨 Audio file check failed:', error);
-        });
         
         // Periodic time storage
         this.audio.addEventListener('timeupdate', () => {
@@ -90,8 +78,9 @@ class Door64Audio {
         // Audio state change handlers
         this.audio.addEventListener('play', () => {
             this.isPlaying = true;
+            localStorage.setItem(this.storageKey, 'playing');
             this.updateButtons();
-            console.log('🎵 Audio playing - Duration:', this.audio.duration, 'Current time:', this.audio.currentTime);
+            console.log('🎵 Audio playing - Current time:', this.audio.currentTime);
         });
         
         this.audio.addEventListener('pause', () => {
@@ -100,40 +89,57 @@ class Door64Audio {
             console.log('⏸️ Audio paused - Current time:', this.audio.currentTime);
         });
         
-        // Audio loading states
-        this.audio.addEventListener('loadstart', () => {
-            console.log('🎵 Audio loading started');
-            this.setLoadingState(true);
-        });
-        
-        this.audio.addEventListener('loadeddata', () => {
-            console.log('🎵 Audio data loaded');
-        });
-        
+        // Handle audio loading
         this.audio.addEventListener('canplay', () => {
-            console.log('🎵 Audio can start playing');
-            this.setLoadingState(false);
+            console.log('🎵 Audio can play - Duration:', this.audio.duration);
         });
         
-        this.audio.addEventListener('canplaythrough', () => {
-            console.log('🎵 Audio can play through without interruption');
-            this.setLoadingState(false);
+        // Handle audio errors
+        this.audio.addEventListener('error', (e) => {
+            console.error('🚨 Audio error:', e, 'Error code:', this.audio.error?.code);
+            this.isPlaying = false;
+            this.updateButtons();
         });
         
-        // Handle audio loop (just in case)
+        // Handle audio end (backup for loop)
         this.audio.addEventListener('ended', () => {
-            console.log('🎵 Audio ended - restarting if should be playing');
+            console.log('🎵 Audio ended - restarting...');
             if (this.isPlaying) {
                 this.audio.currentTime = 0;
                 this.audio.play().catch(console.log);
             }
         });
+    }
+    
+    setupUserInteractionListeners() {
+        // Listen for ANY user interaction to unmute audio
+        const events = ['click', 'touchstart', 'keydown', 'scroll', 'mousemove'];
+        const handleInteraction = () => {
+            if (!this.hasUserInteracted) {
+                this.hasUserInteracted = true;
+                console.log('🔊 User interaction detected - unmuting audio');
+                
+                if (this.audio && this.audio.muted) {
+                    this.audio.muted = false;
+                    console.log('🔊 Audio unmuted');
+                }
+                
+                // Try to ensure audio is playing if it should be
+                const storedState = localStorage.getItem(this.storageKey);
+                if (storedState !== 'paused' && this.audio && this.audio.paused) {
+                    console.log('▶️ Starting paused audio after user interaction');
+                    this.audio.play().catch(console.log);
+                }
+                
+                // Remove listeners after first interaction
+                events.forEach(event => {
+                    document.removeEventListener(event, handleInteraction);
+                });
+            }
+        };
         
-        // Handle audio errors gracefully
-        this.audio.addEventListener('error', (e) => {
-            console.error('🚨 Audio error:', e, 'Error code:', this.audio.error?.code);
-            this.isPlaying = false;
-            this.updateButtons();
+        events.forEach(event => {
+            document.addEventListener(event, handleInteraction, { passive: true });
         });
     }
     
@@ -142,20 +148,19 @@ class Door64Audio {
         window.addEventListener('beforeunload', () => {
             if (this.audio && this.isPlaying) {
                 localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
-                console.log('💾 Audio position saved on page unload');
+                localStorage.setItem(this.storageKey, 'playing');
+                console.log('💾 Audio state saved on page unload');
             }
         });
         
         // Handle page visibility changes
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                // Page hidden - could pause if desired
-                // Uncomment next line if you want to pause when tab is hidden
-                // if (this.isPlaying) this.pauseAudio();
-            } else if (!this.audio.paused && localStorage.getItem(this.storageKey) === 'playing') {
+            if (!document.hidden && this.audio) {
                 // Page visible again - ensure audio is playing if it should be
-                if (!this.isPlaying) {
-                    this.startAudio();
+                const storedState = localStorage.getItem(this.storageKey);
+                if (storedState === 'playing' && this.audio.paused) {
+                    console.log('🎵 Page visible - resuming audio');
+                    this.audio.play().catch(console.log);
                 }
             }
         });
@@ -166,7 +171,7 @@ class Door64Audio {
         
         console.log('🎵 Attempting to start audio...');
         
-        // Try muted autoplay first (most likely to succeed)
+        // Start muted to comply with autoplay policies
         this.audio.muted = true;
         
         const playPromise = this.audio.play();
@@ -179,61 +184,14 @@ class Door64Audio {
                     localStorage.setItem(this.storageKey, 'playing');
                     this.updateButtons();
                     
-                    // Set up listeners to unmute on user interaction
-                    this.setupUnmuteListeners();
+                    // Audio will be unmuted on first user interaction
                 })
                 .catch(error => {
-                    console.log('⚠️ Audio autoplay prevented:', error);
-                    // Set up listeners to start on user interaction
-                    this.setupStartListeners();
+                    console.log('⚠️ Audio autoplay prevented:', error.message);
+                    // Audio will start on first user interaction
                     this.updateButtons();
                 });
         }
-    }
-    
-    setupUnmuteListeners() {
-        const events = ['click', 'touchstart', 'keydown'];
-        const unmute = () => {
-            if (this.audio && this.audio.muted) {
-                console.log('🔊 Unmuting audio on user interaction');
-                this.audio.muted = false;
-                this.isPlaying = true;
-                localStorage.setItem(this.storageKey, 'playing');
-                this.updateButtons();
-                
-                // Remove listeners after unmuting
-                events.forEach(event => {
-                    document.removeEventListener(event, unmute);
-                });
-            }
-        };
-        
-        events.forEach(event => {
-            document.addEventListener(event, unmute, { once: true });
-        });
-    }
-    
-    setupStartListeners() {
-        const events = ['click', 'touchstart', 'keydown', 'scroll'];
-        const start = () => {
-            if (this.audio && this.audio.paused) {
-                console.log('▶️ Starting audio on user interaction');
-                this.audio.play().then(() => {
-                    this.isPlaying = true;
-                    localStorage.setItem(this.storageKey, 'playing');
-                    this.updateButtons();
-                    
-                    // Remove listeners after starting
-                    events.forEach(event => {
-                        document.removeEventListener(event, start);
-                    });
-                }).catch(console.log);
-            }
-        };
-        
-        events.forEach(event => {
-            document.addEventListener(event, start, { once: true });
-        });
     }
     
     pauseAudio() {
@@ -242,42 +200,50 @@ class Door64Audio {
         this.audio.pause();
         this.isPlaying = false;
         localStorage.setItem(this.storageKey, 'paused');
-        // Store final position immediately
         localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
         this.updateButtons();
         console.log('⏸️ Audio paused by user');
     }
     
-    toggle() {
-        if (this.isPlaying && this.audio && !this.audio.paused) {
-            this.pauseAudio();
-        } else {
-            // If audio is muted, unmute it
-            if (this.audio && this.audio.muted) {
-                this.audio.muted = false;
-            }
-            this.startAudio();
+    resumeAudio() {
+        if (!this.audio) return;
+        
+        // Unmute if muted
+        if (this.audio.muted) {
+            this.audio.muted = false;
+        }
+        
+        const playPromise = this.audio.play();
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    this.isPlaying = true;
+                    localStorage.setItem(this.storageKey, 'playing');
+                    this.updateButtons();
+                    console.log('▶️ Audio resumed by user');
+                })
+                .catch(error => {
+                    console.error('🚨 Failed to resume audio:', error);
+                    this.updateButtons();
+                });
         }
     }
     
-    setLoadingState(loading) {
-        const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
-        buttons.forEach(button => {
-            if (loading) {
-                button.setAttribute('data-loading', 'true');
-            } else {
-                button.removeAttribute('data-loading');
-            }
-        });
+    toggle() {
+        console.log('🎵 Audio toggle requested');
+        
+        if (this.isPlaying && this.audio && !this.audio.paused) {
+            this.pauseAudio();
+        } else {
+            this.resumeAudio();
+        }
     }
     
     updateButtons() {
         const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
-        const shouldBePlaying = localStorage.getItem(this.storageKey) === 'playing';
         
         buttons.forEach(button => {
-            // Show playing state if audio is actually playing OR if it should be playing (even if muted)
-            if (this.isPlaying || (shouldBePlaying && this.audio && !this.audio.paused)) {
+            if (this.isPlaying && this.audio && !this.audio.paused) {
                 button.innerHTML = '⏸';
                 button.classList.add('playing');
                 button.title = 'Pause Background Music';
@@ -289,6 +255,8 @@ class Door64Audio {
                 button.setAttribute('aria-label', 'Play background music');
             }
         });
+        
+        console.log('🎵 Audio buttons updated - Playing:', this.isPlaying);
     }
 }
 
@@ -514,7 +482,7 @@ window.door64Galleries = {};
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚪 Door 64 - Initializing enhanced systems...');
     
-    // Initialize enhanced audio system - SIMPLIFIED
+    // Initialize enhanced audio system
     window.door64Audio = new Door64Audio();
     
     // Initialize enhanced galleries
@@ -572,26 +540,40 @@ function toggleAudio(event) {
 }
 
 function nextSlide(galleryId) {
-    if (window.door64Galleries && window.door64Galleries[galleryId]) {
+    if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
         window.door64Galleries[galleryId].nextSlide();
+    } else if (!galleryId && window.door64Galleries['landing-gallery']) {
+        // Backward compatibility for landing gallery
+        window.door64Galleries['landing-gallery'].nextSlide();
     } else {
-        console.warn(`⚠️ Gallery ${galleryId} not found`);
+        console.warn(`⚠️ Gallery ${galleryId || 'landing-gallery'} not found`);
     }
 }
 
 function previousSlide(galleryId) {
-    if (window.door64Galleries && window.door64Galleries[galleryId]) {
+    if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
         window.door64Galleries[galleryId].previousSlide();
+    } else if (!galleryId && window.door64Galleries['landing-gallery']) {
+        // Backward compatibility for landing gallery
+        window.door64Galleries['landing-gallery'].previousSlide();
     } else {
-        console.warn(`⚠️ Gallery ${galleryId} not found`);
+        console.warn(`⚠️ Gallery ${galleryId || 'landing-gallery'} not found`);
     }
 }
 
-function goToSlide(galleryId, slideIndex) {
-    if (window.door64Galleries && window.door64Galleries[galleryId]) {
-        window.door64Galleries[galleryId].goToSlide(slideIndex);
+function goToSlide(galleryIdOrIndex, slideIndex) {
+    // Handle both old and new calling patterns
+    if (typeof galleryIdOrIndex === 'string') {
+        // New pattern: goToSlide('gallery-id', slideIndex)
+        if (window.door64Galleries && window.door64Galleries[galleryIdOrIndex]) {
+            window.door64Galleries[galleryIdOrIndex].goToSlide(slideIndex);
+        }
     } else {
-        console.warn(`⚠️ Gallery ${galleryId} not found`);
+        // Old pattern: goToSlide(slideIndex) for landing gallery
+        const slideIdx = galleryIdOrIndex;
+        if (window.door64Galleries && window.door64Galleries['landing-gallery']) {
+            window.door64Galleries['landing-gallery'].goToSlide(slideIdx);
+        }
     }
 }
 
@@ -613,16 +595,16 @@ function initSplashPage() {
         
         console.log('🚪 Entering main site from splash...');
         
-        // Ensure audio is marked as playing before navigation
+        // Ensure audio continues playing
         if (window.door64Audio && window.door64Audio.audio) {
             // Unmute audio if it's muted and playing
             if (window.door64Audio.audio.muted && !window.door64Audio.audio.paused) {
                 window.door64Audio.audio.muted = false;
             }
             
-            // If audio is not playing, start it
-            if (window.door64Audio.audio.paused) {
-                window.door64Audio.startAudio();
+            // Ensure audio is playing
+            if (window.door64Audio.audio.paused && localStorage.getItem('door64_audio_state') !== 'paused') {
+                window.door64Audio.resumeAudio();
             }
             
             // Save state for next page
@@ -656,8 +638,8 @@ function initSplashPage() {
                 if (window.door64Audio.audio.muted && !window.door64Audio.audio.paused) {
                     window.door64Audio.audio.muted = false;
                 }
-                if (window.door64Audio.audio.paused) {
-                    window.door64Audio.startAudio();
+                if (window.door64Audio.audio.paused && localStorage.getItem('door64_audio_state') !== 'paused') {
+                    window.door64Audio.resumeAudio();
                 }
                 localStorage.setItem('door64_audio_state', 'playing');
                 if (window.door64Audio.audio.currentTime > 0) {
@@ -1009,17 +991,6 @@ if (window.location.hostname === 'localhost' ||
                     hideSplash();
                     console.log('🚪 Dev: Splash hidden');
                     break;
-                case 'g':
-                    e.preventDefault();
-                    Object.values(window.door64Galleries).forEach(gallery => {
-                        if (gallery.isPlaying) {
-                            gallery.pauseAutoPlay();
-                        } else {
-                            gallery.startAutoPlay();
-                        }
-                    });
-                    console.log('🖼️ Dev: Gallery auto-play toggled');
-                    break;
                 case 'r':
                     e.preventDefault();
                     localStorage.removeItem('door64_audio_state');
@@ -1033,7 +1004,8 @@ if (window.location.hostname === 'localhost' ||
                         audioTime: localStorage.getItem('door64_audio_time'),
                         galleries: Object.keys(window.door64Galleries),
                         isAudioPlaying: window.door64Audio?.isPlaying,
-                        currentAudioTime: window.door64Audio?.audio?.currentTime
+                        currentAudioTime: window.door64Audio?.audio?.currentTime,
+                        audioMuted: window.door64Audio?.audio?.muted
                     });
                     break;
             }
@@ -1049,14 +1021,11 @@ if (window.location.hostname === 'localhost' ||
             localStorage.removeItem('door64_audio_time');
             location.reload();
         },
-        toggleGalleries: () => {
-            Object.values(window.door64Galleries).forEach(gallery => {
-                if (gallery.isPlaying) {
-                    gallery.pauseAutoPlay();
-                } else {
-                    gallery.startAutoPlay();
-                }
-            });
+        forceAudioStart: () => {
+            if (window.door64Audio) {
+                window.door64Audio.audio.muted = false;
+                window.door64Audio.resumeAudio();
+            }
         }
     };
     
