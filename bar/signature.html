@@ -431,14 +431,21 @@
             box-shadow: 0 6px 20px rgba(95, 179, 211, 0.4);
         }
 
-        /* Print Styles - Optimized for 2-page PDF */
+        /* Print Styles - Optimized for 2-page PDF (Override mobile styles) */
         @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             body {
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                font-size: 12px;
-                line-height: 1.4;
+                font-size: 11px !important;
+                line-height: 1.3 !important;
+                -webkit-font-smoothing: antialiased !important;
+                -moz-osx-font-smoothing: grayscale !important;
             }
 
             .nav, .pdf-download-btn {
@@ -450,152 +457,184 @@
                 max-width: none !important;
                 margin: 0 !important;
                 border-radius: 0 !important;
+                width: 100% !important;
             }
 
             .menu-header {
                 background: rgb(95, 179, 211) !important;
                 color: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                padding: 30px 20px 20px !important;
-                page-break-after: avoid;
+                padding: 25px 15px 15px !important;
+                page-break-after: avoid !important;
+                margin: 0 !important;
             }
 
             .restaurant-name {
-                font-size: 2.5rem !important;
-                letter-spacing: 6px !important;
+                font-size: 2.2rem !important;
+                letter-spacing: 4px !important;
                 margin-bottom: 5px !important;
                 text-shadow: none !important;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                text-rendering: optimizeLegibility;
             }
 
             .menu-body {
-                padding: 30px 20px !important;
+                padding: 20px 15px !important;
+                margin: 0 !important;
             }
 
             .experience-intro {
-                margin-bottom: 30px !important;
-                padding: 20px !important;
-                page-break-after: avoid;
+                margin-bottom: 25px !important;
+                padding: 15px !important;
+                page-break-after: avoid !important;
             }
 
             .experience-intro h2 {
-                font-size: 1.3rem !important;
-                margin-bottom: 10px !important;
+                font-size: 1.1rem !important;
+                margin-bottom: 8px !important;
+                letter-spacing: 1px !important;
             }
 
             .experience-intro p {
-                font-size: 0.9rem !important;
+                font-size: 0.85rem !important;
+                line-height: 1.2 !important;
             }
 
             .menu-section {
-                margin-bottom: 25px !important;
-                page-break-after: avoid;
+                margin-bottom: 20px !important;
+                page-break-after: avoid !important;
             }
 
             .section-title {
-                font-size: 1.4rem !important;
-                margin-bottom: 8px !important;
-                letter-spacing: 2px !important;
+                font-size: 1.2rem !important;
+                margin-bottom: 6px !important;
+                letter-spacing: 1px !important;
+                padding-bottom: 6px !important;
             }
 
             .section-description {
-                font-size: 0.8rem !important;
-                margin-bottom: 20px !important;
+                font-size: 0.75rem !important;
+                margin-bottom: 15px !important;
             }
 
+            /* Cocktail grid - force 2 columns even on mobile print */
             .cocktail-grid {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 15px !important;
-                margin-top: 15px !important;
-                page-break-inside: avoid;
+                gap: 12px !important;
+                margin-top: 12px !important;
+                page-break-inside: avoid !important;
+                width: 100% !important;
             }
 
             .cocktail-item {
-                padding: 15px !important;
+                padding: 10px !important;
                 margin-bottom: 0 !important;
-                page-break-inside: avoid;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                display: block !important;
+                width: auto !important;
             }
 
             .cocktail-name {
-                font-size: 0.9rem !important;
-                margin-bottom: 5px !important;
+                font-size: 0.85rem !important;
+                margin-bottom: 4px !important;
+                letter-spacing: 0.5px !important;
             }
 
             .cocktail-description {
-                font-size: 0.75rem !important;
-                line-height: 1.3 !important;
+                font-size: 0.7rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0 !important;
             }
 
             /* Force wine section to start on page 2 */
             .wine-selection {
                 page-break-before: always !important;
                 margin: 0 !important;
-                padding: 20px !important;
+                padding: 15px !important;
+                width: 100% !important;
             }
 
             .wine-selection .section-title {
                 margin-top: 0 !important;
+                font-size: 1.2rem !important;
             }
 
             .wine-category {
-                margin-bottom: 20px !important;
-                page-break-inside: avoid;
+                margin-bottom: 15px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
 
             .wine-category h4 {
-                font-size: 1rem !important;
-                margin-bottom: 8px !important;
+                font-size: 0.9rem !important;
+                margin-bottom: 6px !important;
             }
 
             .wine-item {
-                padding: 6px 0 !important;
-                font-size: 0.8rem !important;
+                padding: 4px 0 !important;
+                font-size: 0.75rem !important;
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+            }
+
+            .wine-details {
+                flex: 1 !important;
             }
 
             .wine-name {
-                font-size: 0.8rem !important;
+                font-size: 0.75rem !important;
+                margin-bottom: 2px !important;
             }
 
             .wine-region {
-                font-size: 0.7rem !important;
+                font-size: 0.65rem !important;
             }
 
             .wine-price {
-                font-size: 0.8rem !important;
+                font-size: 0.75rem !important;
+                margin-left: 10px !important;
             }
 
             .allergen-note {
-                margin: 15px 0 !important;
-                padding: 10px !important;
-                page-break-inside: avoid;
+                margin: 12px 0 !important;
+                padding: 8px !important;
+                page-break-inside: avoid !important;
             }
 
             .allergen-note p {
-                font-size: 0.7rem !important;
+                font-size: 0.65rem !important;
+                line-height: 1.2 !important;
             }
 
             .menu-footer {
                 background: rgb(95, 179, 211) !important;
                 color: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                padding: 15px !important;
-                margin-top: 20px !important;
+                padding: 12px !important;
+                margin-top: 15px !important;
             }
             
             .footer-text {
                 color: #000 !important;
-                font-size: 0.8rem !important;
+                font-size: 0.75rem !important;
             }
 
-            /* Ensure proper page sizing */
+            /* Ensure proper page sizing for all devices */
             @page {
-                size: A4;
-                margin: 0.5in;
+                size: A4 !important;
+                margin: 0.4in !important;
+            }
+
+            /* Override any mobile-specific styles during print */
+            @media (max-width: 768px) {
+                .cocktail-grid {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+                
+                .wine-item {
+                    flex-direction: row !important;
+                    align-items: center !important;
+                }
             }
         }
     </style>
