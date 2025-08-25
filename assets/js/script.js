@@ -1,6 +1,6 @@
-/* Door 64 Restaurant - Complete Enhanced JavaScript with Fixed Audio & Mobile Issues */
+/* Door 64 Restaurant - Complete Fixed JavaScript - No Audio Interference */
 
-// =============== FIXED CONTINUOUS AUDIO SYSTEM ===============
+// =============== CORRECTED DOOR 64 AUDIO SYSTEM ===============
 class Door64Audio {
     constructor() {
         this.audio = null;
@@ -10,17 +10,16 @@ class Door64Audio {
         this.storageKey = 'door64_audio_state';
         this.timeKey = 'door64_audio_time';
         this.lastUpdateTime = 0;
-        this.updateInterval = 500; // ✅ REDUCED from 2000ms to 500ms
+        this.updateInterval = 500;
         this.hasUserInteracted = false;
-        this.isInitialized = false; // ✅ ADDED: Prevent multiple initializations
-        this.audioStartPromise = null; // ✅ ADDED: Track ongoing start operations
-        this.isMobile = this.detectMobile(); // ✅ ADDED: Mobile detection
-        this.interactionEvents = []; // ✅ ADDED: Track active event listeners
+        this.isInitialized = false;
+        this.audioStartPromise = null;
+        this.isMobile = this.detectMobile();
+        this.interactionListenersActive = false; // ✅ ADDED: Track listener state
         
         this.init();
     }
     
-    // ✅ NEW: Mobile detection
     detectMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                ('ontouchstart' in window) ||
@@ -52,15 +51,13 @@ class Door64Audio {
         // Set up event listeners
         this.setupAudioEventListeners();
         this.setupPageUnloadHandler();
-        this.setupUserInteractionListeners();
         
-        // ✅ FIXED: Better state restoration logic
+        // ✅ FIXED: Only set up interaction listeners if needed
         this.restoreAudioState();
         
         this.isInitialized = true;
     }
     
-    // ✅ NEW: Improved state restoration
     restoreAudioState() {
         const storedState = localStorage.getItem(this.storageKey);
         const storedTime = localStorage.getItem(this.timeKey);
@@ -68,23 +65,21 @@ class Door64Audio {
         console.log('🎵 Stored audio state:', storedState);
         console.log('🎵 Stored audio time:', storedTime);
         
-        // ✅ FIXED: Only start if not explicitly paused by user
         if (storedState !== 'paused') {
-            // ✅ FIXED: Set time BEFORE starting audio
+            // Set time BEFORE starting audio
             if (storedTime && parseFloat(storedTime) > 0) {
                 this.setAudioTime(parseFloat(storedTime));
             }
             
-            // ✅ IMPROVED: Different approach for mobile vs desktop
             if (this.isMobile) {
-                console.log('📱 Mobile: Waiting for user interaction to start audio');
-                this.updateButtons(); // Show play button
+                console.log('📱 Mobile: Setting up interaction listener for first audio start');
+                this.setupUserInteractionListeners();
             } else {
+                // ✅ FIXED: Desktop should start immediately, muted
                 this.startAudioWithTimeRestore();
             }
         } else {
             console.log('🎵 Audio was paused by user, respecting choice');
-            // Still set the time for when user resumes
             if (storedTime && parseFloat(storedTime) > 0) {
                 this.setAudioTime(parseFloat(storedTime));
             }
@@ -92,7 +87,6 @@ class Door64Audio {
         }
     }
     
-    // ✅ NEW: Safe time setting method
     setAudioTime(time) {
         if (!this.audio) return;
         
@@ -102,7 +96,6 @@ class Door64Audio {
                     this.audio.currentTime = time;
                     console.log('🎵 Audio time set to:', time);
                 } else if (!this.audio.duration) {
-                    // Try again when metadata loads
                     console.log('⏳ Audio metadata not ready, waiting...');
                     setTimeout(() => setTime(), 100);
                 }
@@ -111,11 +104,9 @@ class Door64Audio {
             }
         };
         
-        // If audio is ready, set time immediately
         if (this.audio.readyState >= 1) {
             setTime();
         } else {
-            // Wait for audio to be ready
             const onLoadedMetadata = () => {
                 setTime();
                 this.audio.removeEventListener('loadedmetadata', onLoadedMetadata);
@@ -124,7 +115,6 @@ class Door64Audio {
         }
     }
     
-    // ✅ IMPROVED: Better audio start with time restoration
     startAudioWithTimeRestore() {
         if (!this.audio || this.audioStartPromise) {
             return this.audioStartPromise || Promise.resolve();
@@ -132,13 +122,11 @@ class Door64Audio {
         
         console.log('🎵 Starting audio with time restoration...');
         
-        // ✅ IMPROVED: Different muting strategy for mobile
         if (this.isMobile) {
-            // On mobile, don't start until user interaction
             console.log('📱 Mobile: Audio ready but waiting for touch interaction');
             return Promise.resolve();
         } else {
-            // On desktop, start muted for autoplay compliance
+            // Desktop: start muted for autoplay compliance
             this.audio.muted = true;
         }
         
@@ -162,7 +150,6 @@ class Door64Audio {
     setupAudioEventListeners() {
         if (!this.audio) return;
         
-        // ✅ IMPROVED: More frequent time storage for better continuity
         this.audio.addEventListener('timeupdate', () => {
             if (this.isPlaying) {
                 const now = Date.now();
@@ -173,7 +160,6 @@ class Door64Audio {
             }
         });
         
-        // Audio state change handlers
         this.audio.addEventListener('play', () => {
             this.isPlaying = true;
             localStorage.setItem(this.storageKey, 'playing');
@@ -183,103 +169,110 @@ class Door64Audio {
         
         this.audio.addEventListener('pause', () => {
             this.isPlaying = false;
-            this.storeCurrentTime(); // ✅ Store time immediately on pause
+            this.storeCurrentTime();
             this.updateButtons();
             console.log('⏸️ Audio paused - Current time:', this.audio.currentTime);
         });
         
-        // Handle audio loading
         this.audio.addEventListener('canplay', () => {
             console.log('🎵 Audio can play - Duration:', this.audio.duration);
         });
         
-        // Handle audio errors
         this.audio.addEventListener('error', (e) => {
             console.error('🚨 Audio error:', e, 'Error code:', this.audio.error?.code);
             this.isPlaying = false;
             this.updateButtons();
         });
         
-        // ✅ IMPROVED: Better loop handling
         this.audio.addEventListener('ended', () => {
             console.log('🎵 Audio ended - restarting...');
             if (this.isPlaying) {
                 this.audio.currentTime = 0;
-                localStorage.setItem(this.timeKey, '0'); // Reset stored time
+                localStorage.setItem(this.timeKey, '0');
                 this.audio.play().catch(console.log);
             }
         });
     }
     
-    // ✅ NEW: Dedicated method for storing time
     storeCurrentTime() {
         if (this.audio && this.audio.currentTime > 0) {
             localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
         }
     }
     
-    // ✅ COMPLETELY REWRITTEN: User interaction handling
+    // ✅ COMPLETELY REWRITTEN: Only for initial audio start, then removes itself
     setupUserInteractionListeners() {
-        // ✅ FIXED: Removed mousemove to prevent hover glitches
-        const events = this.isMobile 
-            ? ['touchstart', 'touchend', 'click'] // Mobile: focus on touch events
-            : ['click', 'keydown']; // Desktop: avoid mousemove and scroll
+        if (this.interactionListenersActive || this.hasUserInteracted) {
+            console.log('🎵 Interaction listeners already set up or not needed');
+            return;
+        }
         
-        const handleInteraction = (e) => {
+        console.log('🎵 Setting up ONE-TIME user interaction listeners for audio start');
+        this.interactionListenersActive = true;
+        
+        // ✅ FIXED: Only use click events to avoid interference
+        const events = ['click', 'touchstart'];
+        
+        const handleFirstInteraction = (e) => {
+            // ✅ CRITICAL: Don't interfere if user clicked audio button
+            if (e.target.closest('.audio-toggle, .splash-audio-toggle')) {
+                console.log('🎵 Audio button clicked - letting button handler manage audio');
+                return; // Let the button handler deal with this
+            }
+            
             if (!this.hasUserInteracted) {
                 this.hasUserInteracted = true;
-                console.log('🔊 User interaction detected:', e.type, this.isMobile ? '📱' : '🖥️');
+                console.log('🔊 First user interaction detected:', e.type, '- Starting audio');
                 
-                // ✅ IMPROVED: Better mobile handling
                 if (this.audio) {
-                    // Unmute audio
+                    // Unmute audio if muted
                     if (this.audio.muted) {
                         this.audio.muted = false;
                         console.log('🔊 Audio unmuted');
                     }
                     
-                    // Start audio if it should be playing
+                    // Start audio if it should be playing but isn't
                     const storedState = localStorage.getItem(this.storageKey);
-                    if (storedState !== 'paused') {
-                        if (this.audio.paused) {
-                            console.log('▶️ Starting audio after user interaction');
-                            this.resumeAudio();
-                        } else {
-                            // Already playing but was muted
-                            console.log('🔊 Audio already playing, just unmuted');
-                        }
+                    if (storedState !== 'paused' && this.audio.paused) {
+                        console.log('▶️ Starting audio after first user interaction');
+                        this.resumeAudio();
                     }
                 }
                 
-                // ✅ IMPROVED: Clean removal of event listeners
+                // ✅ CRITICAL: Remove listeners immediately after first use
                 this.removeInteractionListeners();
             }
         };
         
-        // ✅ IMPROVED: Store references for clean removal
+        // Add listeners
         events.forEach(event => {
-            const listener = (e) => handleInteraction(e);
-            this.interactionEvents.push({ event, listener });
-            document.addEventListener(event, listener, { 
+            document.addEventListener(event, handleFirstInteraction, { 
                 passive: true,
-                once: false // Don't use once, we'll remove manually
+                capture: true // ✅ ADDED: Capture phase to catch events early
             });
         });
         
-        console.log('👆 User interaction listeners set:', events.join(', '));
+        // Store for cleanup
+        this.interactionHandler = handleFirstInteraction;
+        this.interactionEvents = events;
+        
+        console.log('👆 One-time interaction listeners set for audio start');
     }
     
-    // ✅ NEW: Clean removal of interaction listeners
+    // ✅ IMPROVED: Clean removal of interaction listeners
     removeInteractionListeners() {
-        this.interactionEvents.forEach(({ event, listener }) => {
-            document.removeEventListener(event, listener);
-        });
-        this.interactionEvents = [];
-        console.log('🧹 Interaction listeners removed');
+        if (this.interactionHandler && this.interactionEvents) {
+            this.interactionEvents.forEach(event => {
+                document.removeEventListener(event, this.interactionHandler, { capture: true });
+            });
+            this.interactionHandler = null;
+            this.interactionEvents = null;
+            this.interactionListenersActive = false;
+            console.log('🧹 User interaction listeners removed - audio system ready');
+        }
     }
     
     setupPageUnloadHandler() {
-        // ✅ IMPROVED: Store state immediately on unload
         const storeState = () => {
             if (this.audio) {
                 this.storeCurrentTime();
@@ -291,26 +284,21 @@ class Door64Audio {
         };
         
         window.addEventListener('beforeunload', storeState);
-        window.addEventListener('pagehide', storeState); // ✅ ADDED: Better mobile support
+        window.addEventListener('pagehide', storeState);
         
-        // ✅ IMPROVED: Better visibility change handling with mobile considerations
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                // Page hidden - store current state
                 this.storeCurrentTime();
             } else if (!document.hidden && this.audio && this.hasUserInteracted) {
-                // ✅ FIXED: Page visible again - only resume if should be playing
                 const storedState = localStorage.getItem(this.storageKey);
                 if (storedState === 'playing' && this.audio.paused) {
                     console.log('🎵 Page visible - resuming audio at stored time');
                     
-                    // ✅ FIXED: Restore time before resuming
                     const storedTime = localStorage.getItem(this.timeKey);
                     if (storedTime && parseFloat(storedTime) > 0) {
                         this.setAudioTime(parseFloat(storedTime));
                     }
                     
-                    // ✅ FIXED: Use resumeAudio method for consistency
                     this.resumeAudio();
                 }
             }
@@ -320,7 +308,8 @@ class Door64Audio {
     pauseAudio() {
         if (!this.audio) return;
         
-        this.storeCurrentTime(); // Store time before pausing
+        console.log('⏸️ User requested audio pause');
+        this.storeCurrentTime();
         this.audio.pause();
         this.isPlaying = false;
         localStorage.setItem(this.storageKey, 'paused');
@@ -331,7 +320,9 @@ class Door64Audio {
     resumeAudio() {
         if (!this.audio || this.audioStartPromise) return;
         
-        // ✅ FIXED: Restore time position before resuming
+        console.log('▶️ User requested audio resume');
+        
+        // Restore time position before resuming
         const storedTime = localStorage.getItem(this.timeKey);
         if (storedTime && parseFloat(storedTime) > 0 && 
             Math.abs(this.audio.currentTime - parseFloat(storedTime)) > 1) {
@@ -360,8 +351,9 @@ class Door64Audio {
         return this.audioStartPromise;
     }
     
+    // ✅ FIXED: Only responds to explicit button clicks
     toggle() {
-        console.log('🎵 Audio toggle requested - Current state:', this.isPlaying, 'Paused:', this.audio?.paused);
+        console.log('🎵 Audio toggle button clicked - Current state:', this.isPlaying, 'Paused:', this.audio?.paused);
         
         if (this.isPlaying && this.audio && !this.audio.paused) {
             this.pauseAudio();
@@ -387,7 +379,6 @@ class Door64Audio {
                 button.title = 'Play Background Music';
                 button.setAttribute('aria-label', 'Play background music');
                 
-                // ✅ ADDED: Show hint for mobile users
                 if (this.isMobile && !this.hasUserInteracted) {
                     button.title = 'Tap anywhere to start music';
                 }
@@ -410,8 +401,8 @@ class Door64Gallery {
         this.totalSlides = this.slides.length;
         this.autoPlayInterval = null;
         this.isPlaying = false;
-        this.autoPlayDelay = 5000; // 5 seconds
-        this.isPaused = false; // ✅ ADDED: Track pause state
+        this.autoPlayDelay = 5000;
+        this.isPaused = false;
         
         if (this.totalSlides > 0) {
             this.init();
@@ -459,7 +450,7 @@ class Door64Gallery {
         if (prevButton) prevButton.addEventListener('click', () => this.previousSlide());
         if (nextButton) nextButton.addEventListener('click', () => this.nextSlide());
         
-        // ✅ IMPROVED: Better hover behavior that doesn't interfere with audio
+        // Better hover behavior that doesn't interfere with audio
         const container = document.querySelector(`#${this.galleryId}`);
         if (container) {
             // Use throttled hover events to prevent excessive calls
@@ -474,7 +465,6 @@ class Door64Gallery {
             // Focus events for keyboard navigation
             container.addEventListener('focusin', () => this.pauseAutoPlay());
             container.addEventListener('focusout', () => {
-                // Small delay to prevent rapid focus changes
                 setTimeout(() => this.resumeAutoPlay(), 100);
             });
         }
@@ -483,7 +473,6 @@ class Door64Gallery {
         this.setupTouchEvents();
     }
     
-    // ✅ ADDED: Throttle utility for gallery events
     throttle(func, limit) {
         let inThrottle;
         return function() {
@@ -512,7 +501,7 @@ class Door64Gallery {
             
             container.classList.add('swiping');
             this.pauseAutoPlay();
-        }, { passive: true }); // ✅ ADDED: Passive listener
+        }, { passive: true });
         
         container.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
@@ -520,7 +509,6 @@ class Door64Gallery {
             const deltaX = e.touches[0].clientX - startX;
             const deltaY = e.touches[0].clientY - startY;
             
-            // Prevent vertical scrolling if horizontal swipe is dominant
             if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
                 e.preventDefault();
             }
@@ -535,7 +523,6 @@ class Door64Gallery {
             container.classList.remove('swiping');
             isDragging = false;
             
-            // Swipe threshold
             if (Math.abs(deltaX) > 50) {
                 if (deltaX > 0) {
                     this.previousSlide();
@@ -545,16 +532,14 @@ class Door64Gallery {
             }
             
             this.resumeAutoPlay();
-        }, { passive: true }); // ✅ ADDED: Passive listener
+        }, { passive: true });
     }
     
     updateGallery() {
         if (!this.track) return;
         
-        // Update track position with smooth transition
         this.track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
         
-        // Update dots with accessibility attributes
         this.dots.forEach((dot, index) => {
             const isActive = index === this.currentSlide;
             dot.classList.toggle('active', isActive);
@@ -562,10 +547,8 @@ class Door64Gallery {
             dot.setAttribute('tabindex', isActive ? '0' : '-1');
         });
         
-        // Update progress bar
         this.updateProgress();
         
-        // Update slide visibility for screen readers
         this.slides.forEach((slide, index) => {
             slide.setAttribute('aria-hidden', (index !== this.currentSlide).toString());
             if (index === this.currentSlide) {
@@ -646,9 +629,9 @@ window.door64Galleries = {};
 
 // =============== DOCUMENT READY & INITIALIZATION ===============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚪 Door 64 - Initializing enhanced systems...');
+    console.log('🚪 Door 64 - Initializing fixed systems...');
     
-    // Initialize enhanced audio system
+    // Initialize FIXED audio system
     window.door64Audio = new Door64Audio();
     
     // Initialize enhanced galleries
@@ -669,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Door 64 - All systems ready!');
 });
 
-// =============== ENHANCED GALLERY INITIALIZATION ===============
+// =============== GALLERY INITIALIZATION ===============
 function initGalleries() {
     const galleries = document.querySelectorAll('.css-gallery');
     
@@ -691,12 +674,16 @@ function initGalleries() {
     }
 }
 
-// =============== GLOBAL FUNCTIONS (for backward compatibility) ===============
+// =============== GLOBAL FUNCTIONS ===============
+// ✅ FIXED GLOBAL TOGGLE FUNCTION
 function toggleAudio(event) {
+    // ✅ CRITICAL: Always prevent event bubbling for audio buttons
     if (event) {
         event.stopPropagation();
         event.preventDefault();
     }
+    
+    console.log('🎵 Audio toggle function called');
     
     if (window.door64Audio) {
         window.door64Audio.toggle();
@@ -709,7 +696,6 @@ function nextSlide(galleryId) {
     if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
         window.door64Galleries[galleryId].nextSlide();
     } else if (!galleryId && window.door64Galleries['landing-gallery']) {
-        // Backward compatibility for landing gallery
         window.door64Galleries['landing-gallery'].nextSlide();
     } else {
         console.warn(`⚠️ Gallery ${galleryId || 'landing-gallery'} not found`);
@@ -720,7 +706,6 @@ function previousSlide(galleryId) {
     if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
         window.door64Galleries[galleryId].previousSlide();
     } else if (!galleryId && window.door64Galleries['landing-gallery']) {
-        // Backward compatibility for landing gallery
         window.door64Galleries['landing-gallery'].previousSlide();
     } else {
         console.warn(`⚠️ Gallery ${galleryId || 'landing-gallery'} not found`);
@@ -728,14 +713,11 @@ function previousSlide(galleryId) {
 }
 
 function goToSlide(galleryIdOrIndex, slideIndex) {
-    // Handle both old and new calling patterns
     if (typeof galleryIdOrIndex === 'string') {
-        // New pattern: goToSlide('gallery-id', slideIndex)
         if (window.door64Galleries && window.door64Galleries[galleryIdOrIndex]) {
             window.door64Galleries[galleryIdOrIndex].goToSlide(slideIndex);
         }
     } else {
-        // Old pattern: goToSlide(slideIndex) for landing gallery
         const slideIdx = galleryIdOrIndex;
         if (window.door64Galleries && window.door64Galleries['landing-gallery']) {
             window.door64Galleries['landing-gallery'].goToSlide(slideIdx);
@@ -743,7 +725,7 @@ function goToSlide(galleryIdOrIndex, slideIndex) {
     }
 }
 
-// =============== ENHANCED SPLASH PAGE FUNCTIONALITY ===============
+// =============== SPLASH PAGE FUNCTIONALITY ===============
 function initSplashPage() {
     const splashPage = document.getElementById('splashPage');
     const mainSite = document.getElementById('mainSite');
@@ -752,21 +734,17 @@ function initSplashPage() {
     
     console.log('🚪 Initializing splash page...');
     
-    // ✅ IMPROVED: Better splash page navigation
     const handleNavigation = (targetUrl = '64.html') => {
         console.log('🚪 Navigating to:', targetUrl);
         
-        // ✅ IMPROVED: Better audio state preservation
+        // Better audio state preservation
         if (window.door64Audio && window.door64Audio.audio) {
-            // Store current state immediately
             window.door64Audio.storeCurrentTime();
             
-            // Unmute if muted and playing
             if (window.door64Audio.audio.muted && !window.door64Audio.audio.paused) {
                 window.door64Audio.audio.muted = false;
             }
             
-            // Ensure audio continues if it should be playing
             if (window.door64Audio.audio.paused && localStorage.getItem('door64_audio_state') !== 'paused') {
                 window.door64Audio.resumeAudio();
             }
@@ -774,7 +752,6 @@ function initSplashPage() {
             localStorage.setItem('door64_audio_state', 'playing');
         }
         
-        // ✅ REDUCED delay and improved navigation
         setTimeout(() => {
             if (window.location.pathname.includes('index.html') || 
                 window.location.pathname === '/' || 
@@ -783,12 +760,11 @@ function initSplashPage() {
             } else {
                 hideSplash();
             }
-        }, 50); // ✅ REDUCED from 100ms to 50ms
+        }, 50);
     };
     
     // Make entire splash page clickable (except audio button)
     splashPage.addEventListener('click', function(e) {
-        // Don't navigate if clicking audio button
         if (e.target.closest('.splash-audio-toggle')) {
             return;
         }
@@ -826,7 +802,6 @@ function hideSplash() {
         splashPage.classList.add('hidden');
         mainSite.classList.add('active');
         
-        // Remove splash page after animation
         setTimeout(() => {
             splashPage.style.display = 'none';
         }, 1200);
@@ -835,7 +810,7 @@ function hideSplash() {
     }
 }
 
-// =============== ENHANCED MOBILE MENU FUNCTIONALITY ===============
+// =============== MOBILE MENU FUNCTIONALITY ===============
 function initMobileMenu() {
     const mobileMenuButton = document.querySelector('.mobile-menu');
     const navLinks = document.getElementById('navLinks');
@@ -846,7 +821,6 @@ function initMobileMenu() {
     
     mobileMenuButton.addEventListener('click', toggleMobileMenu);
     
-    // Close mobile menu when clicking nav links
     const navLinkElements = navLinks.querySelectorAll('a');
     navLinkElements.forEach(link => {
         link.addEventListener('click', () => {
@@ -854,14 +828,12 @@ function initMobileMenu() {
         });
     });
     
-    // Close mobile menu when clicking outside
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.nav-container') && navLinks.classList.contains('active')) {
             closeMobileMenu();
         }
     });
     
-    // Close mobile menu on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && navLinks.classList.contains('active')) {
             closeMobileMenu();
@@ -895,7 +867,6 @@ function openMobileMenu() {
     mobileMenuButton.classList.add('active');
     mobileMenuButton.setAttribute('aria-expanded', 'true');
     
-    // Focus first link for accessibility
     const firstLink = navLinks.querySelector('a');
     if (firstLink) {
         setTimeout(() => firstLink.focus(), 100);
@@ -924,14 +895,11 @@ function initViewportHeight() {
         document.documentElement.style.setProperty('--vh', `${vh}px`);
     }
     
-    // Set on load
     setViewportHeight();
     
-    // Update on resize (debounced)
     const debouncedSetViewportHeight = debounce(setViewportHeight, 100);
     window.addEventListener('resize', debouncedSetViewportHeight);
     
-    // Update on orientation change
     window.addEventListener('orientationchange', () => {
         setTimeout(setViewportHeight, 100);
     });
@@ -942,19 +910,16 @@ function initViewportHeight() {
 // =============== KEYBOARD NAVIGATION SUPPORT ===============
 function initKeyboardNavigation() {
     document.addEventListener('keydown', (e) => {
-        // Audio toggle with spacebar (when focus is on body)
         if (e.key === ' ' && e.target === document.body) {
             e.preventDefault();
             toggleAudio();
         }
         
-        // Mobile menu toggle with Enter/Space when focused
         if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mobile-menu')) {
             e.preventDefault();
             toggleMobileMenu();
         }
         
-        // Gallery keyboard navigation when focused
         const activeElement = document.activeElement;
         if (activeElement && activeElement.closest('.css-gallery')) {
             const gallery = activeElement.closest('.css-gallery');
@@ -989,7 +954,6 @@ function initKeyboardNavigation() {
 
 // =============== ACCESSIBILITY FEATURES ===============
 function initAccessibilityFeatures() {
-    // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -1004,7 +968,6 @@ function initAccessibilityFeatures() {
                     block: 'start'
                 });
                 
-                // Focus target for screen readers
                 if (target.tabIndex === -1) {
                     target.tabIndex = -1;
                 }
@@ -1013,7 +976,6 @@ function initAccessibilityFeatures() {
         });
     });
     
-    // Skip link functionality (if present)
     const skipLink = document.querySelector('.skip-link');
     if (skipLink) {
         skipLink.addEventListener('click', (e) => {
@@ -1048,7 +1010,6 @@ function initLazyLoading() {
         rootMargin: '50px'
     });
     
-    // Observe all images with data-src attribute
     document.querySelectorAll('img[data-src]').forEach(img => {
         img.setAttribute('data-loading', 'true');
         imageObserver.observe(img);
@@ -1090,7 +1051,6 @@ function throttle(func, limit) {
 window.addEventListener('error', (e) => {
     console.error('🚨 Door 64 - JavaScript error:', e.error);
     
-    // Attempt to maintain basic functionality
     if (e.error.message.includes('audio') && window.door64Audio) {
         console.log('🔧 Attempting audio system recovery...');
         setTimeout(() => {
@@ -1113,7 +1073,6 @@ if ('performance' in window) {
         const loadTime = Math.round(performance.now());
         console.log(`⚡ Door 64 - Page loaded in ${loadTime}ms`);
         
-        // Log navigation timing if available
         if (performance.navigation) {
             const navType = performance.navigation.type;
             const navTypes = ['navigate', 'reload', 'back_forward', 'reserved'];
@@ -1129,7 +1088,6 @@ if (window.location.hostname === 'localhost' ||
     
     console.log('🏠 Door 64 - Development mode active');
     
-    // Development keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey) {
             switch (e.key.toLowerCase()) {
@@ -1166,7 +1124,6 @@ if (window.location.hostname === 'localhost' ||
         }
     });
     
-    // Expose global debugging functions
     window.door64Debug = {
         audio: () => window.door64Audio,
         galleries: () => window.door64Galleries,
@@ -1188,17 +1145,16 @@ if (window.location.hostname === 'localhost' ||
 
 // =============== CONSOLE BRANDING ===============
 console.log(`
-🚪 Door 64 Restaurant
-🎵 Enhanced Audio System Active ${window.door64Audio?.isMobile ? '📱' : '🖥️'}
-🖼️ Gallery System Ready
-📱 Mobile Optimized
-♿ Accessibility Features Enabled
-⚡ Performance Optimized
+🚪 Door 64 Restaurant - FIXED AUDIO SYSTEM
+🎵 No more interaction interference
+📱 Mobile: Touch to start, then continuous play
+🖥️ Desktop: Automatic start, continuous play
+⏸️ Only audio buttons control playback
 
-Ready to serve exceptional experiences.
+Ready to serve uninterrupted musical experiences.
 `);
 
-// Export for testing (if in module environment)
+// Export for testing
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         Door64Audio,
