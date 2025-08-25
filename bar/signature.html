@@ -2,8 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOOR 64 - Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>DOOR 64 - Signature Cocktails</title>
+    
+    <!-- OPUI CSS Framework -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline>
+        <source src="../assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
     <style>
         * {
             margin: 0;
@@ -18,6 +31,7 @@
             line-height: 1.6;
             padding: 40px 20px;
             min-height: 100vh;
+            padding-top: 120px; /* Account for navigation */
         }
 
         .menu-container {
@@ -313,6 +327,7 @@
         @media (max-width: 768px) {
             body {
                 padding: 20px 10px;
+                padding-top: 100px;
             }
 
             .menu-container {
@@ -401,169 +416,227 @@
             .footer-text {
                 color: #000 !important;
             }
+
+            .nav {
+                display: none !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="menu-container">
-        <div class="menu-header">
-            <h1 class="restaurant-name">DOOR 64</h1>
-        </div>
 
-        <div class="menu-body">
-            <div class="experience-intro">
-                <h2>the art of the cocktail</h2>
-                <p>at DOOR 64, we believe the essential cocktail emerges from the harmony of premium spirits, masterful mixology, and the genuine connections formed between bartender and guest at our bar.</p>
-            </div>
-
-
-
-            <div class="menu-section">
-                <h3 class="section-title">at the bar</h3>
-                <p class="section-description">signature cocktails</p>
-                
-                <div class="cocktail-grid">
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">peach 75</h5>
-                        <p class="cocktail-description">our twist on the classic french 75. gin, peach puree, agave, and a splash of peach schnapps topped off with prosecco. served in a champagne flute.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">midtown spritz</h5>
-                        <p class="cocktail-description">elderflower liqueur, fresh lime juice, club soda and prosecco. served over ice in a wine glass.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">velvet room</h5>
-                        <p class="cocktail-description">smooth velvety cognac, orange liqueur, lemon and honey, shaken and poured over a big rock. served in a rocks glass.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">walk it out</h5>
-                        <p class="cocktail-description">vodka, gin, rum, tequila, triple sec and blue curaçao with pineapple juice and a splash of sour. served in a tall glass.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">otp water</h5>
-                        <p class="cocktail-description">tequila, fresh lime juice, splash of triple sec and sprite. served in a tall glass.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">hartsfield in the am</h5>
-                        <p class="cocktail-description">for the folks with the early flights. sour and peach schnapps over ice topped with club soda. served in a tall glass.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">lenox lemondrop</h5>
-                        <p class="cocktail-description">tequila, simple syrup, lemon juice and triple sec, shaken and served in a martini glass with a sugar rim.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">stone mountain punch</h5>
-                        <p class="cocktail-description">dark rum or spiced rum with orange juice, pineapple juice and grenadine. served in a tall glass with lime garnish.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">the 285'tini</h5>
-                        <p class="cocktail-description">citrus vodka, pomegranate juice, triple sec, fresh lime juice and a couple of dashes of orange bitters. shaken and served in a martini glass with a lemon twist.</p>
-                    </div>
-                    
-                    <div class="cocktail-item">
-                        <h5 class="cocktail-name">old atlanta</h5>
-                        <p class="cocktail-description">our atl twist on the classic old fashion cocktail...a sweet tea old fashion. sweet tea, bourbon, splash of limoncello, peach bitters, agave. stirred in the rocks glass and served with a big rock. garnish with lemon twist and luxardo cherry.</p>
-                    </div>
+    <!-- MAIN SITE -->
+    <div class="main-site active" id="mainSite">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="../64.html" class="nav-logo">DOOR 64</a>
+                <div class="nav-left-section">
+                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
+                    <ul class="nav-links" id="navLinks">
+                        <li><a href="../64.html">64</a></li>
+                        <li><a href="../space.html">space</a></li>
+                        <li><a href="../in.the.kitchen.html">in the kitchen</a></li>
+                        <li><a href="../at.the.bar.html">at the bar</a></li>
+                        <li><a href="../who.was.here.html">who was here</a></li>
+                        <li><a href="../what.to.do.html">what to do</a></li>
+                        <li><a href="../come.see.us.html">come see us</a></li>
+                        <li><a href="../hit.us.up.html">hit us up</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             </div>
+        </nav>
 
-            <div class="wine-selection">
-                <h3 class="section-title">wine program</h3>
-                <p class="section-description">carefully curated selections to complement our culinary offerings</p>
-                
-                <div class="wine-category">
-                    <h4>sparkling & champagne</h4>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">armand de brignac (ace of spades)</div>
-                            <div class="wine-region">champagne, france</div>
+        <!-- Menu Content -->
+        <div class="menu-container">
+            <div class="menu-header">
+                <h1 class="restaurant-name">DOOR 64</h1>
+            </div>
+
+            <div class="menu-body">
+                <div class="experience-intro">
+                    <h2>the art of the cocktail</h2>
+                    <p>at DOOR 64, we believe the essential cocktail emerges from the harmony of premium spirits, masterful mixology, and the genuine connections formed between bartender and guest at our bar.</p>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="section-title">at the bar</h3>
+                    <p class="section-description">signature cocktails</p>
+                    
+                    <div class="cocktail-grid">
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">peach 75</h5>
+                            <p class="cocktail-description">our twist on the classic french 75. gin, peach puree, agave, and a splash of peach schnapps topped off with prosecco. served in a champagne flute.</p>
                         </div>
-                    </div>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">dom pérignon vintage champagne</div>
-                            <div class="wine-region">champagne, france</div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">midtown spritz</h5>
+                            <p class="cocktail-description">elderflower liqueur, fresh lime juice, club soda and prosecco. served over ice in a wine glass.</p>
                         </div>
-                    </div>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">moet & chandon nectar imperial rose</div>
-                            <div class="wine-region">champagne, france</div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">velvet room</h5>
+                            <p class="cocktail-description">smooth velvety cognac, orange liqueur, lemon and honey, shaken and poured over a big rock. served in a rocks glass.</p>
                         </div>
-                    </div>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">veuve clicquot rosé n.v.</div>
-                            <div class="wine-region">champagne, france</div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">walk it out</h5>
+                            <p class="cocktail-description">vodka, gin, rum, tequila, triple sec and blue curaçao with pineapple juice and a splash of sour. served in a tall glass.</p>
                         </div>
-                    </div>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">veuve clicquot yellow label brut</div>
-                            <div class="wine-region">champagne, france</div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">otp water</h5>
+                            <p class="cocktail-description">tequila, fresh lime juice, splash of triple sec and sprite. served in a tall glass.</p>
                         </div>
-                    </div>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">la marca prosecco</div>
-                            <div class="wine-region">veneto, italy</div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">hartsfield in the am</h5>
+                            <p class="cocktail-description">for the folks with the early flights. sour and peach schnapps over ice topped with club soda. served in a tall glass.</p>
+                        </div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">lenox lemondrop</h5>
+                            <p class="cocktail-description">tequila, simple syrup, lemon juice and triple sec, shaken and served in a martini glass with a sugar rim.</p>
+                        </div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">stone mountain punch</h5>
+                            <p class="cocktail-description">dark rum or spiced rum with orange juice, pineapple juice and grenadine. served in a tall glass with lime garnish.</p>
+                        </div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">the 285'tini</h5>
+                            <p class="cocktail-description">citrus vodka, pomegranate juice, triple sec, fresh lime juice and a couple of dashes of orange bitters. shaken and served in a martini glass with a lemon twist.</p>
+                        </div>
+                        
+                        <div class="cocktail-item">
+                            <h5 class="cocktail-name">old atlanta</h5>
+                            <p class="cocktail-description">our atl twist on the classic old fashion cocktail...a sweet tea old fashion. sweet tea, bourbon, splash of limoncello, peach bitters, agave. stirred in the rocks glass and served with a big rock. garnish with lemon twist and luxardo cherry.</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="wine-category">
-                    <h4>white wines</h4>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">chablis les montmains</div>
-                            <div class="wine-region">burgundy, france</div>
+                <div class="wine-selection">
+                    <h3 class="section-title">wine program</h3>
+                    <p class="section-description">carefully curated selections to complement our culinary offerings</p>
+                    
+                    <div class="wine-category">
+                        <h4>sparkling & champagne</h4>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">armand de brignac (ace of spades)</div>
+                                <div class="wine-region">champagne, france</div>
+                            </div>
                         </div>
-                        <div class="wine-price">22</div>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">dom pérignon vintage champagne</div>
+                                <div class="wine-region">champagne, france</div>
+                            </div>
+                        </div>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">moet & chandon nectar imperial rose</div>
+                                <div class="wine-region">champagne, france</div>
+                            </div>
+                        </div>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">veuve clicquot rosé n.v.</div>
+                                <div class="wine-region">champagne, france</div>
+                            </div>
+                        </div>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">veuve clicquot yellow label brut</div>
+                                <div class="wine-region">champagne, france</div>
+                            </div>
+                        </div>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">la marca prosecco</div>
+                                <div class="wine-region">veneto, italy</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">grüner veltliner federspiel</div>
-                            <div class="wine-region">wachau, austria</div>
+
+                    <div class="wine-category">
+                        <h4>white wines</h4>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">chablis les montmains</div>
+                                <div class="wine-region">burgundy, france</div>
+                            </div>
+                            <div class="wine-price">22</div>
                         </div>
-                        <div class="wine-price">16</div>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">grüner veltliner federspiel</div>
+                                <div class="wine-region">wachau, austria</div>
+                            </div>
+                            <div class="wine-price">16</div>
+                        </div>
+                    </div>
+
+                    <div class="wine-category">
+                        <h4>red wines</h4>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">côtes du rhône villages</div>
+                                <div class="wine-region">rhône valley, france</div>
+                            </div>
+                            <div class="wine-price">19</div>
+                        </div>
+                        <div class="wine-item">
+                            <div class="wine-details">
+                                <div class="wine-name">pinot noir willamette valley</div>
+                                <div class="wine-region">oregon, usa</div>
+                            </div>
+                            <div class="wine-price">24</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="wine-category">
-                    <h4>red wines</h4>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">côtes du rhône villages</div>
-                            <div class="wine-region">rhône valley, france</div>
-                        </div>
-                        <div class="wine-price">19</div>
-                    </div>
-                    <div class="wine-item">
-                        <div class="wine-details">
-                            <div class="wine-name">pinot noir willamette valley</div>
-                            <div class="wine-region">oregon, usa</div>
-                        </div>
-                        <div class="wine-price">24</div>
-                    </div>
+                <div class="allergen-note">
+                    <p>please inform your server of any dietary restrictions or allergies. our kitchen can accommodate most dietary needs with advance notice. all prices exclude tax and gratuity.</p>
                 </div>
-            </div>
 
-            <div class="allergen-note">
-                <p>please inform your server of any dietary restrictions or allergies. our kitchen can accommodate most dietary needs with advance notice. all prices exclude tax and gratuity.</p>
-            </div>
-
-            <div class="menu-footer">
-                <p class="footer-text">64 third st nw, atlanta, ga 30308 • (773) 640-7789 • DOOR64ATL.com</p>
+                <div class="menu-footer">
+                    <p class="footer-text">64 third st nw, atlanta, ga 30308 • (773) 640-7789 • DOOR64ATL.com</p>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Main JavaScript File -->
+    <script src="../assets/js/script.js"></script>
+    
+    <script>
+        // Audio toggle functionality
+        function toggleAudio(event) {
+            event.preventDefault();
+            const audio = document.getElementById('backgroundAudio');
+            const button = event.target;
+            
+            if (audio.muted) {
+                audio.muted = false;
+                button.style.opacity = '1';
+            } else {
+                audio.muted = true;
+                button.style.opacity = '0.5';
+            }
+        }
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
