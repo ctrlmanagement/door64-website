@@ -27,24 +27,32 @@ class Door64Audio {
             return;
         }
         
-        // Set optimal volume
+        // Set optimal volume and ensure audio is ready to play
         this.audio.volume = this.volume;
+        this.audio.preload = 'auto';
+        this.audio.loop = true;
+        
+        // Force load the audio
+        this.audio.load();
         
         // Determine auto-start behavior based on page and stored state
         const isIndexPage = this.isIndexPage();
         const hasSplashPage = document.getElementById('splashPage');
-        const storedState = localStorage.getItem(this.storageKey);
         
         console.log('🎵 Audio init - Page:', window.location.pathname, 'Stored state:', storedState, 'Has splash:', !!hasSplashPage);
+        
+        // Always set up event listeners first
+        this.setupAudioEventListeners();
+        this.setupPageUnloadHandler();
         
         if (storedState === null) {
             // First visit - set up auto-start
             if (hasSplashPage) {
-                // Has splash page - wait for user interaction
+                // Has splash page - set up for immediate start
                 this.setupSplashAutoStart();
             } else {
                 // No splash page - try auto-start after delay
-                setTimeout(() => this.startAudio(), 800);
+                setTimeout(() => this.attemptAutostart(), 500);
             }
         } else if (storedState === 'playing') {
             // Audio should be playing - continue from stored position
@@ -54,15 +62,12 @@ class Door64Audio {
                 console.log('🎵 Resuming from time:', storedTime);
             }
             // Start with a delay to ensure page is ready
-            setTimeout(() => this.startAudio(), 300);
+            setTimeout(() => this.attemptAutostart(), 300);
         } else {
             // Audio was paused - respect user choice but still update buttons
             console.log('🎵 Audio was paused, respecting user choice');
             this.updateButtons();
         }
-        
-        this.setupAudioEventListeners();
-        this.setupPageUnloadHandler();
     }
     
     isIndexPage() {
@@ -81,27 +86,45 @@ class Door64Audio {
         console.log('🎵 Setting up splash auto-start...');
         const splashPage = document.getElementById('splashPage');
         
-        // Try immediate audio start for browsers that allow it
+        // Try immediate muted autoplay (most likely to succeed)
         setTimeout(() => {
-            this.audio.muted = true; // Start muted to allow autoplay
-            this.audio.play().then(() => {
-                console.log('🎵 Audio started muted on page load');
-                // Will be unmuted when user interacts
-            }).catch(() => {
-                console.log('🎵 Muted autoplay also blocked, waiting for interaction');
-            });
+            if (this.audio) {
+                console.log('🎵 Attempting immediate muted autoplay on splash...');
+                this.audio.muted = true;
+                this.audio.play().then(() => {
+                    console.log('✅ Splash audio started (muted)');
+                    this.isPlaying = true;
+                    localStorage.setItem(this.storageKey, 'playing');
+                    this.updateButtons();
+                }).catch(error => {
+                    console.log('⚠️ Immediate muted autoplay failed:', error);
+                    // Will be handled by interaction listeners below
+                });
+            }
         }, 100);
         
         if (splashPage) {
+            // Set up interaction handlers to unmute and ensure playing
             const startAudioOnInteraction = (event) => {
                 // Don't start if clicking audio button
                 if (event.target.closest('.splash-audio-toggle')) {
                     return;
                 }
                 
+                console.log('🎵 User interaction detected, ensuring audio plays...');
+                
                 // Unmute and ensure audio plays
-                this.audio.muted = false;
-                this.startAudio();
+                if (this.audio) {
+                    this.audio.muted = false;
+                    if (this.audio.paused) {
+                        this.startAudio();
+                    } else {
+                        // Already playing but was muted
+                        this.isPlaying = true;
+                        localStorage.setItem(this.storageKey, 'playing');
+                        this.updateButtons();
+                    }
+                }
                 
                 // Remove listeners after first interaction
                 splashPage.removeEventListener('click', startAudioOnInteraction);
@@ -110,8 +133,17 @@ class Door64Audio {
             
             const startAudioOnKeyPress = (event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
-                    this.audio.muted = false;
-                    this.startAudio();
+                    console.log('🎵 Key interaction detected, ensuring audio plays...');
+                    if (this.audio) {
+                        this.audio.muted = false;
+                        if (this.audio.paused) {
+                            this.startAudio();
+                        } else {
+                            this.isPlaying = true;
+                            localStorage.setItem(this.storageKey, 'playing');
+                            this.updateButtons();
+                        }
+                    }
                     splashPage.removeEventListener('click', startAudioOnInteraction);
                     document.removeEventListener('keydown', startAudioOnKeyPress);
                 }
@@ -119,12 +151,29 @@ class Door64Audio {
             
             splashPage.addEventListener('click', startAudioOnInteraction);
             document.addEventListener('keydown', startAudioOnKeyPress);
+            
+            // Also try to start on any mouse movement over splash (very likely to work)
+            const startOnMouseMove = () => {
+                if (this.audio && this.audio.paused) {
+                    console.log('🎵 Mouse movement detected, trying audio start...');
+                    this.audio.muted = true;
+                    this.audio.play().then(() => {
+                        console.log('✅ Audio started on mouse movement');
+                        this.isPlaying = true;
+                        localStorage.setItem(this.storageKey, 'playing');
+                        this.updateButtons();
+                    }).catch(console.log);
+                }
+                splashPage.removeEventListener('mousemove', startOnMouseMove);
+            };
+            
+            splashPage.addEventListener('mousemove', startOnMouseMove, { once: true });
         } else {
-            // Not splash page but first visit - try to start after short delay
+            // Not splash page but first visit - try aggressive autostart
+            console.log('🎵 No splash page, trying aggressive autostart...');
             setTimeout(() => {
-                this.audio.muted = false;
-                this.startAudio();
-            }, 1000);
+                this.attemptAutostart();
+            }, 200);
         }
         
         this.updateButtons();
@@ -132,6 +181,17 @@ class Door64Audio {
     
     setupAudioEventListeners() {
         if (!this.audio) return;
+        
+        // Check if audio file exists
+        fetch(this.audio.currentSrc || this.audio.src).then(response => {
+            if (response.ok) {
+                console.log('✅ Audio file found and accessible:', this.audio.currentSrc || this.audio.src);
+            } else {
+                console.error('🚨 Audio file not found:', response.status, this.audio.currentSrc || this.audio.src);
+            }
+        }).catch(error => {
+            console.error('🚨 Audio file check failed:', error);
+        });
         
         // Periodic time storage
         this.audio.addEventListener('timeupdate', () => {
@@ -148,17 +208,38 @@ class Door64Audio {
         this.audio.addEventListener('play', () => {
             this.isPlaying = true;
             this.updateButtons();
-            console.log('🎵 Audio playing');
+            console.log('🎵 Audio playing - Duration:', this.audio.duration, 'Current time:', this.audio.currentTime);
         });
         
         this.audio.addEventListener('pause', () => {
             this.isPlaying = false;
             this.updateButtons();
-            console.log('⏸️ Audio paused');
+            console.log('⏸️ Audio paused - Current time:', this.audio.currentTime);
+        });
+        
+        // Audio loading states
+        this.audio.addEventListener('loadstart', () => {
+            console.log('🎵 Audio loading started');
+            this.setLoadingState(true);
+        });
+        
+        this.audio.addEventListener('loadeddata', () => {
+            console.log('🎵 Audio data loaded');
+        });
+        
+        this.audio.addEventListener('canplay', () => {
+            console.log('🎵 Audio can start playing');
+            this.setLoadingState(false);
+        });
+        
+        this.audio.addEventListener('canplaythrough', () => {
+            console.log('🎵 Audio can play through without interruption');
+            this.setLoadingState(false);
         });
         
         // Handle audio loop (just in case)
         this.audio.addEventListener('ended', () => {
+            console.log('🎵 Audio ended - restarting if should be playing');
             if (this.isPlaying) {
                 this.audio.currentTime = 0;
                 this.audio.play().catch(console.log);
@@ -167,18 +248,9 @@ class Door64Audio {
         
         // Handle audio errors gracefully
         this.audio.addEventListener('error', (e) => {
-            console.error('Audio error:', e);
+            console.error('🚨 Audio error:', e, 'Error code:', this.audio.error?.code);
             this.isPlaying = false;
             this.updateButtons();
-        });
-        
-        // Handle audio loading states
-        this.audio.addEventListener('loadstart', () => {
-            this.setLoadingState(true);
-        });
-        
-        this.audio.addEventListener('canplay', () => {
-            this.setLoadingState(false);
         });
     }
     
@@ -243,7 +315,31 @@ class Door64Audio {
         }
     }
     
-    setupFallbackAutoPlay() {
+    attemptAutostart() {
+        if (!this.audio) return;
+        
+        console.log('🎵 Attempting autostart...');
+        
+        // Try multiple approaches for autostart
+        // Approach 1: Direct play
+        this.startAudio();
+        
+        // Approach 2: Muted autoplay (more likely to work)
+        if (this.audio.paused) {
+            console.log('🎵 Direct play failed, trying muted autoplay...');
+            this.audio.muted = true;
+            this.audio.play().then(() => {
+                console.log('🎵 Muted autoplay successful');
+                // Keep it muted until user interaction
+                this.isPlaying = true;
+                localStorage.setItem(this.storageKey, 'playing');
+                this.updateButtons();
+            }).catch(error => {
+                console.log('🎵 Muted autoplay also failed:', error);
+                this.setupFallbackAutoPlay();
+            });
+        }
+    }
         console.log('🎵 Setting up fallback autoplay...');
         // Try to start audio on various user interactions
         const events = ['click', 'touchstart', 'keydown', 'scroll'];
@@ -566,8 +662,8 @@ window.door64Galleries = {};
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚪 Door 64 - Initializing enhanced systems...');
     
-    // Initialize enhanced audio system
-    window.door64Audio = new Door64Audio();
+    // Initialize enhanced audio system with aggressive loading
+    initAudioSystem();
     
     // Initialize enhanced galleries
     initGalleries();
@@ -586,6 +682,53 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('✅ Door 64 - All systems ready!');
 });
+
+// Enhanced audio system initialization
+function initAudioSystem() {
+    // Create audio system
+    window.door64Audio = new Door64Audio();
+    
+    // Additional aggressive audio loading
+    const audio = document.getElementById('backgroundAudio');
+    if (audio) {
+        // Force audio to load immediately
+        audio.load();
+        
+        // Try multiple initialization approaches
+        setTimeout(() => {
+            if (audio.readyState < 3) { // If not loaded enough
+                console.log('🎵 Audio not ready, forcing reload...');
+                audio.load();
+            }
+        }, 500);
+        
+        // Listen for when audio can play
+        audio.addEventListener('canplaythrough', () => {
+            console.log('🎵 Audio can play through - ready for playback');
+            if (window.door64Audio && localStorage.getItem('door64_audio_state') === 'playing') {
+                setTimeout(() => {
+                    window.door64Audio.attemptAutostart();
+                }, 200);
+            }
+        });
+        
+        // Handle loading errors
+        audio.addEventListener('error', (e) => {
+            console.error('🚨 Audio loading error:', e);
+            // Try alternative source
+            const sources = audio.querySelectorAll('source');
+            sources.forEach((source, index) => {
+                if (index === 0 && source.src.includes('assets/')) {
+                    // Try without assets path
+                    const altSrc = source.src.replace('assets/audio/', '');
+                    console.log('🎵 Trying alternative audio source:', altSrc);
+                    source.src = altSrc;
+                    audio.load();
+                }
+            });
+        });
+    }
+}
 
 // =============== ENHANCED GALLERY INITIALIZATION ===============
 function initGalleries() {
