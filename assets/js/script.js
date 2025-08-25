@@ -32,16 +32,23 @@ class Door64Audio {
         
         // Determine auto-start behavior based on page and stored state
         const isIndexPage = this.isIndexPage();
+        const hasSplashPage = document.getElementById('splashPage');
         
-        if (storedState === null && isIndexPage) {
-            // First visit to splash page - set up for user interaction
-            this.setupSplashAutoStart();
+        if (storedState === null) {
+            // First visit - set up auto-start
+            if (hasSplashPage) {
+                // Has splash page - wait for user interaction
+                this.setupSplashAutoStart();
+            } else {
+                // No splash page - try auto-start after delay
+                setTimeout(() => this.startAudio(), 800);
+            }
         } else if (storedState === 'playing') {
             // Continue playing from stored position
             if (storedTime) {
                 this.audio.currentTime = parseFloat(storedTime);
             }
-            this.startAudio();
+            setTimeout(() => this.startAudio(), 500);
         } else {
             // Audio was paused - respect user choice
             this.updateButtons();
@@ -52,15 +59,31 @@ class Door64Audio {
     }
     
     isIndexPage() {
-        return window.location.pathname.includes('index.html') || 
-               window.location.pathname === '/' ||
-               window.location.pathname.endsWith('/') ||
-               window.location.pathname === '';
+        const path = window.location.pathname;
+        return path.includes('index.html') || 
+               path.includes('64.html') ||
+               path === '/' ||
+               path.endsWith('/') ||
+               path === '' ||
+               path.endsWith('64') ||
+               document.title.includes('Door 64 - Restaurant Experience') ||
+               document.title.includes('Door 64');
     }
     
     setupSplashAutoStart() {
         console.log('🎵 Setting up splash auto-start...');
         const splashPage = document.getElementById('splashPage');
+        
+        // Try immediate audio start for browsers that allow it
+        setTimeout(() => {
+            this.audio.muted = true; // Start muted to allow autoplay
+            this.audio.play().then(() => {
+                console.log('🎵 Audio started muted on page load');
+                // Will be unmuted when user interacts
+            }).catch(() => {
+                console.log('🎵 Muted autoplay also blocked, waiting for interaction');
+            });
+        }, 100);
         
         if (splashPage) {
             const startAudioOnInteraction = (event) => {
@@ -69,7 +92,10 @@ class Door64Audio {
                     return;
                 }
                 
+                // Unmute and ensure audio plays
+                this.audio.muted = false;
                 this.startAudio();
+                
                 // Remove listeners after first interaction
                 splashPage.removeEventListener('click', startAudioOnInteraction);
                 document.removeEventListener('keydown', startAudioOnKeyPress);
@@ -77,6 +103,7 @@ class Door64Audio {
             
             const startAudioOnKeyPress = (event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
+                    this.audio.muted = false;
                     this.startAudio();
                     splashPage.removeEventListener('click', startAudioOnInteraction);
                     document.removeEventListener('keydown', startAudioOnKeyPress);
@@ -86,8 +113,11 @@ class Door64Audio {
             splashPage.addEventListener('click', startAudioOnInteraction);
             document.addEventListener('keydown', startAudioOnKeyPress);
         } else {
-            // Not splash page but first visit - try to start
-            setTimeout(() => this.startAudio(), 500);
+            // Not splash page but first visit - try to start after short delay
+            setTimeout(() => {
+                this.audio.muted = false;
+                this.startAudio();
+            }, 1000);
         }
         
         this.updateButtons();
@@ -177,6 +207,10 @@ class Door64Audio {
             this.audio.muted = false;
         }
         
+        // Set up audio for autoplay
+        this.audio.setAttribute('autoplay', '');
+        this.audio.setAttribute('preload', 'auto');
+        
         const playPromise = this.audio.play();
         
         if (playPromise !== undefined) {
@@ -189,10 +223,36 @@ class Door64Audio {
                 })
                 .catch(error => {
                     console.log('⚠️ Audio autoplay prevented:', error);
-                    // Update buttons anyway for manual control
+                    // Try alternative approaches
+                    this.setupFallbackAutoPlay();
                     this.updateButtons();
                 });
         }
+    }
+    
+    setupFallbackAutoPlay() {
+        // Try to start audio on various user interactions
+        const events = ['click', 'touchstart', 'keydown', 'scroll'];
+        const startOnInteraction = () => {
+            if (this.audio && this.audio.paused && !this.isPlaying) {
+                this.audio.play().then(() => {
+                    this.isPlaying = true;
+                    localStorage.setItem(this.storageKey, 'playing');
+                    this.updateButtons();
+                    console.log('✅ Audio started on user interaction');
+                    
+                    // Remove listeners after successful start
+                    events.forEach(event => {
+                        document.removeEventListener(event, startOnInteraction);
+                    });
+                }).catch(console.log);
+            }
+        };
+        
+        // Add listeners for first user interaction
+        events.forEach(event => {
+            document.addEventListener(event, startOnInteraction, { once: true });
+        });
     }
     
     pauseAudio() {
