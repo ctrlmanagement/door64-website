@@ -766,13 +766,33 @@
                 margin: 0.5in !important;
             }
 
-            /* Allow natural page breaks */
-            .menu-options {
-                page-break-before: auto !important;
+            /* Explicit page breaks for 3-page layout */
+            
+            /* Page 1: Header + Intro + Chef's Note */
+            .chef-note {
+                page-break-after: avoid !important;
             }
-
+            
+            /* Force Page 2: Start Menu Options */
+            .menu-options {
+                page-break-before: always !important;
+                page-break-after: avoid !important;
+            }
+            
+            /* Force Page 3: Start Tasting Menu */
             .tasting-menu {
-                page-break-before: auto !important;
+                page-break-before: always !important;
+                page-break-after: avoid !important;
+            }
+            
+            /* Keep reservation note and footer with tasting menu on page 3 */
+            .reservation-note {
+                page-break-before: avoid !important;
+                page-break-after: avoid !important;
+            }
+            
+            .menu-footer {
+                page-break-before: avoid !important;
             }
         }
     </style>
