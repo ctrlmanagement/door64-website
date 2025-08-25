@@ -1,4 +1,4 @@
-/* Door 64 Restaurant - Main Stylesheet */
+/* Door 64 Restaurant - Main Stylesheet with Audio & Mobile Fixes */
 
 * {
     margin: 0;
@@ -434,8 +434,6 @@ body {
     }
 }
 
-/* =============== EVERYTHING BELOW IS UNCHANGED FROM ORIGINAL =============== */
-
 /* =============== MAIN SITE STYLES =============== */
 .main-site {
     opacity: 0;
@@ -597,6 +595,12 @@ body {
     will-change: transform;
     backface-visibility: hidden;
     perspective: 1000px;
+    /* ✅ MOBILE FIXES ADDED */
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    contain: layout style;
 }
 
 .audio-toggle:hover {
@@ -679,6 +683,12 @@ body {
     backface-visibility: hidden !important;
     perspective: 1000px !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    /* ✅ MOBILE FIXES ADDED */
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    contain: layout style;
 }
 
 .splash-audio-toggle:hover {
@@ -1016,6 +1026,15 @@ p, .sub-links a, .menu-item p {
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     background: #f8f8f8;
+    /* ✅ GALLERY HOVER INTERFERENCE FIX */
+    will-change: auto;
+}
+
+/* ✅ ISOLATE GALLERY CONTROLS */
+.css-gallery .gallery-nav,
+.css-gallery .gallery-dots,
+.css-gallery .gallery-dot {
+    isolation: isolate;
 }
 
 .gallery-container {
@@ -1783,6 +1802,258 @@ select:focus {
     outline-offset: 2px;
 }
 
+/* =============== AUDIO & MOBILE INTERACTION FIXES =============== */
+
+/* ✅ MOBILE AUDIO HINT - Visual feedback for mobile users */
+@media (max-width: 768px) {
+    .splash-audio-toggle:not(.playing)::after {
+        content: attr(data-mobile-hint);
+        position: absolute;
+        bottom: -35px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8em;
+        opacity: 0.7;
+        white-space: nowrap;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-family: 'Georgia', serif;
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .audio-toggle:not(.playing)::after {
+        content: "Tap to start";
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.7em;
+        opacity: 0.7;
+        white-space: nowrap;
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Georgia', serif;
+        pointer-events: none;
+        z-index: 1;
+    }
+}
+
+/* ✅ PREVENT HOVER EFFECTS ON MOBILE DEVICES */
+@media (hover: none) and (pointer: coarse) {
+    /* Disable problematic hover effects on touch devices */
+    .gallery-nav:hover,
+    .audio-toggle:hover,
+    .splash-audio-toggle:hover,
+    .nav-links a:hover,
+    .landing-link:hover,
+    .space-item:hover,
+    .menu-item:hover,
+    .door-gallery li:hover a,
+    .door-gallery li:hover img {
+        background-color: initial !important;
+        transform: initial !important;
+        filter: initial !important;
+        opacity: initial !important;
+        animation-play-state: running !important;
+        box-shadow: initial !important;
+    }
+    
+    /* Keep essential playing state animations */
+    .audio-toggle.playing {
+        animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
+    }
+    
+    .splash-audio-toggle.playing {
+        animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
+    }
+    
+    /* Prevent door gallery hover interference */
+    .door-gallery:hover li {
+        opacity: 1 !important;
+    }
+    
+    .door-gallery:hover li:hover {
+        clip-path: initial !important;
+        z-index: initial !important;
+    }
+}
+
+/* ✅ ENHANCED MOBILE TOUCH TARGETS */
+@media (max-width: 768px) {
+    /* Ensure all interactive elements meet accessibility standards */
+    .nav-links a,
+    .sub-links a,
+    .sub-nav-link,
+    .breadcrumb-link,
+    .social-links a,
+    .gallery-nav,
+    .gallery-dot,
+    .mobile-menu,
+    .audio-toggle,
+    .splash-audio-toggle,
+    .landing-link,
+    .space-item,
+    .menu-item,
+    .submit-btn,
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        min-width: 44px;
+        min-height: 44px;
+        /* Improve touch responsiveness */
+        touch-action: manipulation;
+    }
+    
+    /* Larger gallery dots for mobile */
+    .gallery-dot {
+        width: 14px;
+        height: 14px;
+        min-width: 16px;
+        min-height: 16px;
+        margin: 0 8px;
+    }
+    
+    /* Better gallery navigation on mobile */
+    .gallery-nav {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+    
+    /* Improved mobile menu button */
+    .mobile-menu {
+        min-width: 48px;
+        min-height: 48px;
+        padding: 12px;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+    }
+    
+    .mobile-menu:active {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(0.95);
+        transition: all 0.1s ease;
+    }
+}
+
+/* Throttled hover effects for desktop only */
+@media (min-width: 769px) and (hover: hover) {
+    .css-gallery:hover {
+        /* Only pause gallery auto-play, don't affect audio */
+        --gallery-paused: true;
+    }
+    
+    /* Smooth transitions for desktop hover */
+    .gallery-nav,
+    .audio-toggle,
+    .nav-links a,
+    .landing-link,
+    .space-item,
+    .menu-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* ✅ PERFORMANCE OPTIMIZATIONS */
+.audio-toggle,
+.splash-audio-toggle,
+.gallery-nav,
+.mobile-menu,
+.door-gallery li a,
+.door-gallery li img {
+    /* Optimize animations and transitions */
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* Reset will-change after animations complete */
+.audio-toggle:not(.playing),
+.splash-audio-toggle:not(.playing) {
+    will-change: auto;
+}
+
+/* ✅ ACCESSIBILITY IMPROVEMENTS */
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .audio-toggle, 
+    .splash-audio-toggle {
+        border: 3px solid currentColor !important;
+        background: transparent !important;
+    }
+    
+    .gallery-nav {
+        border: 2px solid rgba(255, 255, 255, 1) !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+    }
+}
+
+/* ✅ ENHANCED FOCUS INDICATORS */
+.audio-toggle:focus-visible,
+.splash-audio-toggle:focus-visible,
+.mobile-menu:focus-visible,
+.nav-links a:focus-visible,
+.gallery-nav:focus-visible,
+.gallery-dot:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 3px;
+    z-index: 10;
+}
+
+/* Mobile focus states */
+@media (max-width: 768px) {
+    .audio-toggle:focus-visible,
+    .splash-audio-toggle:focus-visible,
+    .mobile-menu:focus-visible {
+        outline: 2px solid rgba(0, 0, 0, 0.8);
+        outline-offset: 2px;
+    }
+}
+
+/* ✅ BETTER LOADING INDICATORS */
+.audio-toggle[data-loading="true"], 
+.splash-audio-toggle[data-loading="true"] {
+    animation: audioLoading 1.5s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes audioLoading {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* ✅ SAFE AREA IMPROVEMENTS FOR NOTCHED DEVICES */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .splash-audio-toggle {
+        top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
+        right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
+    }
+    
+    .nav {
+        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+    
+    @media (max-width: 768px) {
+        .nav-links.active {
+            padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
+        }
+        
+        .section {
+            padding-bottom: max(70px, calc(env(safe-area-inset-bottom) + 40px));
+        }
+    }
+}
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     *,
@@ -1794,14 +2065,23 @@ select:focus {
         scroll-behavior: auto !important;
     }
     
+    /* Disable all problematic animations */
     .audio-toggle.playing, 
-    .splash-audio-toggle.playing {
-        animation: none;
-    }
-    
+    .splash-audio-toggle.playing,
     .door-gallery li a,
     .door-gallery li img {
-        animation: none;
+        animation: none !important;
+    }
+    
+    /* Keep essential functionality with minimal motion */
+    .audio-toggle.playing {
+        background: var(--tuscan-orange-light) !important;
+        border-color: var(--tuscan-orange) !important;
+    }
+    
+    .splash-audio-toggle.playing {
+        background: rgba(95, 179, 211, 0.95) !important;
+        border-color: rgba(95, 179, 211, 1) !important;
     }
 }
 
@@ -2430,6 +2710,22 @@ select:focus {
     }
 }
 
+/* ✅ DARK MODE SUPPORT (if needed) */
+@media (prefers-color-scheme: dark) {
+    /* Adjust audio buttons for dark mode */
+    .audio-toggle:not(.playing) {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+        .audio-toggle:not(.playing)::after {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+        }
+    }
+}
+
 /* Disable hover effects on touch devices */
 @media (hover: none) and (pointer: coarse) {
     .space-item:hover,
@@ -2449,3 +2745,5 @@ select:focus {
         transform: scale(1.05);
     }
 }
+
+/* End Door 64 Restaurant Stylesheet */
