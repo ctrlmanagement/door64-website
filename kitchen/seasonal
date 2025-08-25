@@ -46,96 +46,18 @@
             </div>
         </nav>
 
-        <!-- Seasonal Menu Section -->
+        <!-- Main Content -->
         <section class="section active">
             <div class="container">
                 <a href="../in.the.kitchen.html" class="page-logo" data-text="DOOR 64">back to kitchen</a>
                 
-                <!-- Breadcrumb -->
-                <div class="breadcrumb">
-                    <a href="../in.the.kitchen.html" class="breadcrumb-link">in the kitchen</a>
-                    <span style="color: #666; margin: 0 10px;">/</span>
-                    <span style="color: #000;">seasonal tasting menu</span>
-                </div>
-                
-                <!-- Menu Description -->
-                <div class="menu-description">
-                    <h3>seasonal tasting menu</h3>
-                    <p>a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.</p>
-                    <div class="price-highlight">$125 per person</div>
-                </div>
-
-                <!-- Current Menu -->
-                <div class="tasting-menu-content">
-                    <h3 style="text-align: center; margin-bottom: 40px; color: #000;">current seasonal offerings</h3>
-                    
-                    <div class="menu-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
-                        <div class="menu-item">
-                            <h3>amuse-bouche</h3>
-                            <p>seasonal root vegetable mousse with herb oil and micro greens</p>
-                        </div>
-                        
-                        <div class="menu-item">
-                            <h3>first course</h3>
-                            <p>wild mushroom consommé with truffle essence and seasonal garnish</p>
-                        </div>
-                        
-                        <div class="menu-item">
-                            <h3>second course</h3>
-                            <p>seared scallops with cauliflower purée and crispy pancetta</p>
-                        </div>
-                        
-                        <div class="menu-item">
-                            <h3>third course</h3>
-                            <p>house-made pasta with seasonal vegetables and aged parmesan</p>
-                        </div>
-                        
-                        <div class="menu-item">
-                            <h3>fourth course</h3>
-                            <p>pan-roasted duck breast with cherry gastrique and root vegetables</p>
-                        </div>
-                        
-                        <div class="menu-item">
-                            <h3>fifth course</h3>
-                            <p>line-caught fish with seasonal citrus and herb beurre blanc</p>
-                        </div>
-                        
-                        <div class="menu-item">
-                            <h3>sixth course</h3>
-                            <p>artisanal cheese selection with seasonal fruit and honeycomb</p>
-                        </div>
-                        
-                        <div class="menu-item">
-                            <h3>dessert</h3>
-                            <p>seasonal fruit tart with vanilla bean custard and edible flowers</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chef's Philosophy -->
-                <div class="chef-philosophy">
-                    <h3>chef's philosophy</h3>
-                    <div class="philosophy-grid">
-                        <div class="philosophy-item">
-                            <h4>seasonal sourcing</h4>
-                            <p>we work directly with local farms and purveyors to source the finest ingredients at their peak season.</p>
-                        </div>
-                        <div class="philosophy-item">
-                            <h4>technique & creativity</h4>
-                            <p>classic techniques meet modern innovation to create dishes that surprise and delight.</p>
-                        </div>
-                        <div class="philosophy-item">
-                            <h4>sustainability</h4>
-                            <p>our commitment to sustainable practices ensures every dish supports our local ecosystem.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Wine Pairing Note -->
-                <div class="menu-item" style="max-width: 600px; margin: 60px auto 40px; text-align: center;">
-                    <h3>wine pairing</h3>
-                    <p>our sommelier has carefully selected wines to complement each course. wine pairing available for an additional $65 per person.</p>
-                    <div class="price">wine pairing +$65</div>
+                <div class="coming-soon-content">
+                    <h1 class="coming-soon-title">SEASONAL TASTING MENU</h1>
+                    <p class="coming-soon-subtitle">
+                        a journey through seasonal ingredients, featuring 8 courses that showcase our chef's creativity and technique.
+                    </p>
+                    <p class="coming-soon-message">coming soon</p>
+                    <a href="../in.the.kitchen.html" class="back-button">BACK TO KITCHEN</a>
                 </div>
             </div>
         </section>
