@@ -99,10 +99,20 @@ body {
     pointer-events: none;
 }
 
-/* Door Gallery Design */
+/* Door Gallery Design - ENLARGED */
 .door-gallery {
-    height: 60vh;
-    width: 20vh;
+    /* OPTION 1: Medium increase (currently active) */
+    height: 75vh;
+    width: 30vh;
+    
+    /* OPTION 2: Large increase (uncomment to use) */
+    /* height: 85vh;
+    width: 40vh; */
+    
+    /* OPTION 3: Extra large increase (uncomment to use) */
+    /* height: 95vh;
+    width: 50vh; */
+    
     display: grid;
     grid-template-rows: repeat(4, 1fr 2fr 1fr);
     overflow: hidden;
@@ -205,11 +215,21 @@ body {
     filter: blur(0);
 }
 
-/* Mobile door gallery */
+/* Mobile door gallery - ENLARGED */
 @media (max-width: 768px) {
     .door-gallery {
-        height: 50vh;
-        width: 30vw;
+        /* OPTION 1: Medium mobile increase (currently active) */
+        height: 60vh;
+        width: 40vw;
+        
+        /* OPTION 2: Large mobile increase (uncomment to use) */
+        /* height: 70vh;
+        width: 45vw; */
+        
+        /* OPTION 3: Extra large mobile increase (uncomment to use) */
+        /* height: 80vh;
+        width: 50vw; */
+        
         grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
     }
 }
