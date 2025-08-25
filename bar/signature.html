@@ -2,154 +2,568 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Signature Cocktails - Door 64</title>
-    
-    <!-- OPUI CSS Framework -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
-    
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="../assets/css/style.css">
-    
-    <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline>
-        <source src="../assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOOR 64 - Menu</title>
     <style>
-        .coming-soon-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 60vh;
-            text-align: center;
-            padding: 2rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .coming-soon-title {
-            font-size: 3rem;
-            font-weight: 300;
-            margin-bottom: 1rem;
-            color: #333;
-            letter-spacing: 2px;
-        }
-        
-        .coming-soon-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            color: #666;
-            max-width: 600px;
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #0a0a0a;
+            color: #2c2c2c;
             line-height: 1.6;
+            padding: 40px 20px;
+            min-height: 100vh;
         }
-        
-        .coming-soon-message {
+
+        .menu-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .menu-header {
+            background: rgb(95, 179, 211);
+            color: white;
+            padding: 60px 50px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .menu-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.02)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .restaurant-name {
+            font-size: 3.5rem;
+            font-weight: 400;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+            text-transform: none;
+            position: relative;
+            z-index: 1;
+            color: #fff;
+            text-shadow: 
+                0px 1px 0px #ddd,
+                0px 2px 0px #d0d0d0,
+                0px 3px 0px #bbb,
+                0px 4px 0px #b0b0b0,
+                0px 5px 0px #aaa,
+                0px 6px 1px rgba(0,0,0,.15),
+                0px 0px 5px rgba(0,0,0,.15),
+                0px 1px 3px rgba(0,0,0,.4),
+                0px 3px 5px rgba(0,0,0,.3),
+                0px 5px 10px rgba(0,0,0,.3);
+        }
+
+        .menu-subtitle {
             font-size: 1rem;
-            color: #888;
-            margin-bottom: 3rem;
-            font-style: italic;
+            letter-spacing: 3px;
+            opacity: 0.8;
+            text-transform: lowercase;
+            position: relative;
+            z-index: 1;
         }
-        
-        .back-button {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: transparent;
-            color: #333;
-            text-decoration: none;
-            border: 2px solid #333;
-            border-radius: 4px;
-            font-weight: 500;
+
+        .menu-body {
+            padding: 60px 50px;
+        }
+
+        .experience-intro {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px;
+            background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
+            border-radius: 6px;
+            border-left: 2px solid #333;
+        }
+
+        .experience-intro h2 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+            letter-spacing: 3px;
+        }
+
+        .experience-intro p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            text-transform: lowercase;
+        }
+
+        .menu-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            text-transform: lowercase;
+            letter-spacing: 4px;
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 1px;
+            background: #000;
+        }
+
+        .section-description {
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+            text-transform: lowercase;
             letter-spacing: 1px;
+        }
+
+        .menu-experience {
+            background: #fafafa;
+            padding: 30px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            border-left: 3px solid #000;
             transition: all 0.3s ease;
         }
-        
-        .back-button:hover {
-            background-color: #333;
-            color: white;
+
+        .menu-experience:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
-        
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .experience-name {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            flex: 1;
+        }
+
+        .experience-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000;
+            text-align: right;
+            white-space: nowrap;
+            margin-left: 20px;
+        }
+
+        .experience-description {
+            color: #666;
+            line-height: 1.6;
+            text-transform: lowercase;
+            font-size: 0.95rem;
+        }
+
+        .cocktail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .cocktail-item {
+            background: #f8f8f8;
+            padding: 25px;
+            border-radius: 6px;
+            border-left: 2px solid #333;
+        }
+
+        .cocktail-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .cocktail-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: lowercase;
+        }
+
+        .cocktail-price {
+            font-weight: 600;
+            color: #000;
+            font-size: 1rem;
+        }
+
+        .wine-selection {
+            background: linear-gradient(135deg, #fbfbfb 0%, #f5f5f5 100%);
+            padding: 40px;
+            border-radius: 6px;
+            margin: 40px 0;
+        }
+
+        .wine-category {
+            margin-bottom: 30px;
+        }
+
+        .wine-category h4 {
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+        }
+
+        .wine-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dotted #ddd;
+        }
+
+        .wine-item:last-child {
+            border-bottom: none;
+        }
+
+        .wine-details {
+            flex: 1;
+        }
+
+        .wine-name {
+            font-weight: 500;
+            color: #1a1a1a;
+            text-transform: lowercase;
+        }
+
+        .wine-region {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: lowercase;
+        }
+
+        .wine-price {
+            font-weight: 600;
+            color: #000;
+            margin-left: 15px;
+        }
+
+        .menu-footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 40px;
+            background: rgb(95, 179, 211);
+            color: white;
+            border-radius: 6px;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .allergen-note {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 30px 0;
+            border-left: 3px solid #ccc;
+        }
+
+        .allergen-note p {
+            color: #666;
+            font-size: 0.85rem;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .coming-soon-title {
-                font-size: 2rem;
+            body {
+                padding: 20px 10px;
+            }
+
+            .menu-container {
+                margin: 0;
+            }
+
+            .menu-header {
+                padding: 40px 30px 30px;
+            }
+
+            .restaurant-name {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+            .menu-body {
+                padding: 40px 30px;
+            }
+
+            .experience-intro {
+                padding: 25px;
+                margin-bottom: 40px;
+            }
+
+            .section-title {
+                font-size: 1.6rem;
+                letter-spacing: 2px;
+            }
+
+            .experience-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .experience-price {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .cocktail-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .wine-selection {
+                padding: 25px;
+            }
+
+            .wine-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .wine-price {
+                margin-left: 0;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .menu-container {
+                box-shadow: none;
+                max-width: none;
+            }
+
+            .menu-header {
+                background: rgb(95, 179, 211) !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .menu-footer {
+                background: rgb(95, 179, 211) !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
             
-            .coming-soon-subtitle {
-                font-size: 1rem;
+            .footer-text {
+                color: #000 !important;
             }
         }
     </style>
 </head>
 <body>
+    <div class="menu-container">
+        <div class="menu-header">
+            <h1 class="restaurant-name">DOOR 64</h1>
+        </div>
 
-    <!-- MAIN SITE -->
-    <div class="main-site active" id="mainSite">
-        <!-- Navigation -->
-        <nav class="nav">
-            <div class="nav-container">
-                <a href="../index.html" class="nav-logo">DOOR 64</a>
-                <div class="nav-left-section">
-                    <button class="audio-toggle" onclick="toggleAudio(event)" title="Toggle Background Music">♪</button>
-                    <ul class="nav-links" id="navLinks">
-                        <li><a href="../index.html">64</a></li>
-                        <li><a href="../space.html">space</a></li>
-                        <li><a href="../in.the.kitchen.html">in the kitchen</a></li>
-                        <li><a href="../at.the.bar.html">at the bar</a></li>
-                        <li><a href="../who.was.here.html">who was here</a></li>
-                        <li><a href="../what.to.do.html">what to do</a></li>
-                        <li><a href="../come.see.us.html">come see us</a></li>
-                        <li><a href="../hit.us.up.html">hit us up</a></li>
-                    </ul>
-                </div>
-                <div class="mobile-menu" onclick="toggleMobileMenu()">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+        <div class="menu-body">
+            <div class="experience-intro">
+                <h2>the art of the cocktail</h2>
+                <p>at DOOR 64, we believe the essential cocktail emerges from the harmony of premium spirits, masterful mixology, and the genuine connections formed between bartender and guest at our bar.</p>
             </div>
-        </nav>
 
-        <!-- Main Content -->
-        <section class="section active">
-            <div class="container">
-                <a href="../at.the.bar.html" class="page-logo" data-text="DOOR 64">Back to Bar</a>
+
+
+            <div class="menu-section">
+                <h3 class="section-title">at the bar</h3>
+                <p class="section-description">signature cocktails</p>
                 
-                <div class="coming-soon-content">
-                    <h1 class="coming-soon-title">SIGNATURE COCKTAILS</h1>
-                    <p class="coming-soon-subtitle">
-                        House-crafted cocktails featuring premium spirits, fresh ingredients, and innovative techniques.
-                    </p>
-                    <p class="coming-soon-message">Coming Soon</p>
-                    <a href="../at.the.bar.html" class="back-button">BACK TO BAR</a>
+                <div class="cocktail-grid">
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">peach 75</h5>
+                        <p class="cocktail-description">our twist on the classic french 75. gin, peach puree, agave, and a splash of peach schnapps topped off with prosecco. served in a champagne flute.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">midtown spritz</h5>
+                        <p class="cocktail-description">elderflower liqueur, fresh lime juice, club soda and prosecco. served over ice in a wine glass.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">velvet room</h5>
+                        <p class="cocktail-description">smooth velvety cognac, orange liqueur, lemon and honey, shaken and poured over a big rock. served in a rocks glass.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">walk it out</h5>
+                        <p class="cocktail-description">vodka, gin, rum, tequila, triple sec and blue curaçao with pineapple juice and a splash of sour. served in a tall glass.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">otp water</h5>
+                        <p class="cocktail-description">tequila, fresh lime juice, splash of triple sec and sprite. served in a tall glass.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">hartsfield in the am</h5>
+                        <p class="cocktail-description">for the folks with the early flights. sour and peach schnapps over ice topped with club soda. served in a tall glass.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">lenox lemondrop</h5>
+                        <p class="cocktail-description">tequila, simple syrup, lemon juice and triple sec, shaken and served in a martini glass with a sugar rim.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">stone mountain punch</h5>
+                        <p class="cocktail-description">dark rum or spiced rum with orange juice, pineapple juice and grenadine. served in a tall glass with lime garnish.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">the 285'tini</h5>
+                        <p class="cocktail-description">citrus vodka, pomegranate juice, triple sec, fresh lime juice and a couple of dashes of orange bitters. shaken and served in a martini glass with a lemon twist.</p>
+                    </div>
+                    
+                    <div class="cocktail-item">
+                        <h5 class="cocktail-name">old atlanta</h5>
+                        <p class="cocktail-description">our atl twist on the classic old fashion cocktail...a sweet tea old fashion. sweet tea, bourbon, splash of limoncello, peach bitters, agave. stirred in the rocks glass and served with a big rock. garnish with lemon twist and luxardo cherry.</p>
+                    </div>
                 </div>
             </div>
-        </section>
-    </div>
 
-    <!-- Main JavaScript File -->
-    <script src="../assets/js/script.js"></script>
-    
-    <script>
-        // Audio toggle functionality
-        function toggleAudio(event) {
-            event.preventDefault();
-            const audio = document.getElementById('backgroundAudio');
-            const button = event.target;
-            
-            if (audio.muted) {
-                audio.muted = false;
-                button.style.opacity = '1';
-            } else {
-                audio.muted = true;
-                button.style.opacity = '0.5';
-            }
-        }
-        
-        // Mobile menu toggle
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        }
-    </script>
+            <div class="wine-selection">
+                <h3 class="section-title">wine program</h3>
+                <p class="section-description">carefully curated selections to complement our culinary offerings</p>
+                
+                <div class="wine-category">
+                    <h4>sparkling & champagne</h4>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">armand de brignac (ace of spades)</div>
+                            <div class="wine-region">champagne, france</div>
+                        </div>
+                    </div>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">dom pérignon vintage champagne</div>
+                            <div class="wine-region">champagne, france</div>
+                        </div>
+                    </div>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">moet & chandon nectar imperial rose</div>
+                            <div class="wine-region">champagne, france</div>
+                        </div>
+                    </div>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">veuve clicquot rosé n.v.</div>
+                            <div class="wine-region">champagne, france</div>
+                        </div>
+                    </div>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">veuve clicquot yellow label brut</div>
+                            <div class="wine-region">champagne, france</div>
+                        </div>
+                    </div>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">la marca prosecco</div>
+                            <div class="wine-region">veneto, italy</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wine-category">
+                    <h4>white wines</h4>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">chablis les montmains</div>
+                            <div class="wine-region">burgundy, france</div>
+                        </div>
+                        <div class="wine-price">22</div>
+                    </div>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">grüner veltliner federspiel</div>
+                            <div class="wine-region">wachau, austria</div>
+                        </div>
+                        <div class="wine-price">16</div>
+                    </div>
+                </div>
+
+                <div class="wine-category">
+                    <h4>red wines</h4>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">côtes du rhône villages</div>
+                            <div class="wine-region">rhône valley, france</div>
+                        </div>
+                        <div class="wine-price">19</div>
+                    </div>
+                    <div class="wine-item">
+                        <div class="wine-details">
+                            <div class="wine-name">pinot noir willamette valley</div>
+                            <div class="wine-region">oregon, usa</div>
+                        </div>
+                        <div class="wine-price">24</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="allergen-note">
+                <p>please inform your server of any dietary restrictions or allergies. our kitchen can accommodate most dietary needs with advance notice. all prices exclude tax and gratuity.</p>
+            </div>
+
+            <div class="menu-footer">
+                <p class="footer-text">64 third st nw, atlanta, ga 30308 • (773) 640-7789 • DOOR64ATL.com</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
