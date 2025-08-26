@@ -25,6 +25,9 @@
     <meta name="author" content="Door 64">
 </head>
 <body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- DOOR PLUGIN SPLASH PAGE -->
     <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door 64">
         <!-- Door Gallery with YOUR uploaded images - MOVED UP -->
@@ -64,7 +67,7 @@
             <h1 aria-label="Door 64">DOOR 64</h1>
         </div>
         
-        <!-- ✅ UPDATED: Added mobile hint and improved accessibility -->
+        <!-- Audio toggle for splash page -->
         <button class="splash-audio-toggle" 
                 onclick="toggleAudio(event)" 
                 data-mobile-hint="Tap to start music"
@@ -75,38 +78,41 @@
 
     <!-- MAIN SITE -->
     <div class="main-site" id="mainSite" role="main">
-        <!-- Navigation -->
+        <!-- Mobile-Optimized Navigation -->
         <nav class="nav" role="navigation" aria-label="Main navigation">
             <div class="nav-container">
                 <a href="index.html" class="nav-logo" aria-label="Door 64 Home">DOOR 64</a>
                 
-                <div class="nav-left-section">
-                    <!-- ✅ UPDATED: Improved accessibility attributes -->
-                    <button class="audio-toggle" 
-                            onclick="toggleAudio(event)" 
-                            title="Play Background Music"
-                            aria-label="Play background music">♪</button>
-                    
-                    <ul class="nav-links" id="navLinks" role="menubar">
-                        <li role="none"><a href="index.html" role="menuitem">64</a></li>
-                        <li role="none"><a href="space.html" role="menuitem">space</a></li>
-                        <li role="none"><a href="in.the.kitchen.html" role="menuitem">in the kitchen</a></li>
-                        <li role="none"><a href="at.the.bar.html" role="menuitem">at the bar</a></li>
-                        <li role="none"><a href="who.was.here.html" role="menuitem">who was here</a></li>
-                        <li role="none"><a href="what.to.do.html" role="menuitem">what to do</a></li>
-                        <li role="none"><a href="come.see.us.html" role="menuitem">come see us</a></li>
-                        <li role="none"><a href="hit.us.up.html" role="menuitem">hit us up</a></li>
-                    </ul>
-                </div>
-                
+                <!-- Mobile hamburger menu button -->
                 <button class="mobile-menu" 
                         onclick="toggleMobileMenu()" 
                         aria-label="Toggle mobile menu"
-                        aria-expanded="false">
+                        aria-expanded="false"
+                        aria-controls="navLinks">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
+                
+                <!-- Navigation links -->
+                <ul class="nav-links" id="navLinks" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem">64</a></li>
+                    <li role="none"><a href="space.html" role="menuitem">space</a></li>
+                    <li role="none"><a href="in.the.kitchen.html" role="menuitem">in the kitchen</a></li>
+                    <li role="none"><a href="at.the.bar.html" role="menuitem">at the bar</a></li>
+                    <li role="none"><a href="who.was.here.html" role="menuitem">who was here</a></li>
+                    <li role="none"><a href="what.to.do.html" role="menuitem">what to do</a></li>
+                    <li role="none"><a href="come.see.us.html" role="menuitem">come see us</a></li>
+                    <li role="none"><a href="hit.us.up.html" role="menuitem">hit us up</a></li>
+                </ul>
+                
+                <!-- Audio toggle button -->
+                <div class="nav-left-section">
+                    <button class="audio-toggle" 
+                            onclick="toggleAudio(event)" 
+                            title="Play Background Music"
+                            aria-label="Play background music">♪</button>
+                </div>
             </div>
         </nav>
 
