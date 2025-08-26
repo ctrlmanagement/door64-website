@@ -763,10 +763,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize FIXED audio system
     window.door64Audio = new Door64Audio();
     
-    // Initialize enhanced galleries
-    initGalleries();
-    
     // Initialize other functionality
+    initGalleries();
     initSplashPage();
     initMobileMenu();
     initViewportHeight();
@@ -1012,6 +1010,9 @@ function openMobileMenu() {
     mobileMenuButton.classList.add('active');
     mobileMenuButton.setAttribute('aria-expanded', 'true');
     
+    // Prevent body scroll
+    document.body.classList.add('menu-open');
+    
     const firstLink = navLinks.querySelector('a');
     if (firstLink) {
         setTimeout(() => firstLink.focus(), 100);
@@ -1029,6 +1030,9 @@ function closeMobileMenu() {
     navLinks.classList.remove('active');
     mobileMenuButton.classList.remove('active');
     mobileMenuButton.setAttribute('aria-expanded', 'false');
+    
+    // Restore body scroll
+    document.body.classList.remove('menu-open');
     
     console.log('📱 Mobile menu closed');
 }
@@ -1301,6 +1305,11 @@ if (window.location.hostname === 'localhost' ||
                         isNavigating: window.door64Audio?.isNavigating
                     });
                     break;
+                case 'm':
+                    e.preventDefault();
+                    toggleMobileMenu();
+                    console.log('📱 Dev: Mobile menu toggled');
+                    break;
             }
         }
     });
@@ -1329,6 +1338,11 @@ if (window.location.hostname === 'localhost' ||
             if (window.door64Audio) {
                 window.door64Audio.prepareForNavigation();
             }
+        },
+        toggleMobileMenu: () => toggleMobileMenu(),
+        mobileMenuState: () => {
+            const navLinks = document.getElementById('navLinks');
+            return navLinks ? navLinks.classList.contains('active') : false;
         }
     };
     
@@ -1345,6 +1359,11 @@ console.log(`
 ⏸️ Only audio buttons control playback
 🔄 Perfect navigation continuity
 📱 MOBILE NAV FIXES: All touch/scroll conflicts resolved
+📱 HAMBURGER MENU: Full-screen mobile navigation
+🎯 TOUCH TARGETS: 44px minimum for accessibility
+🚫 SCROLL BLOCK: Prevents body scroll when menu open
+⌨️ KEYBOARD NAV: Full accessibility support
+🔧 DEV TOOLS: Available in development mode
 
 All audio restart issues AND mobile navigation issues SOLVED.
 `);
@@ -1358,6 +1377,8 @@ if (typeof module !== 'undefined' && module.exports) {
         nextSlide,
         previousSlide,
         goToSlide,
-        toggleMobileMenu
+        toggleMobileMenu,
+        openMobileMenu,
+        closeMobileMenu
     };
 }
