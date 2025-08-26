@@ -163,6 +163,7 @@
             text-transform: lowercase;
             position: relative;
             z-index: 1;
+            color: #fff;
         }
 
         .menu-body {
@@ -391,6 +392,7 @@
             z-index: 1;
             text-transform: lowercase;
             letter-spacing: 1px;
+            color: white;
         }
 
         .chef-signature {
@@ -398,6 +400,7 @@
             font-size: 1rem;
             font-style: italic;
             opacity: 0.8;
+            color: white;
         }
 
         .reservation-note {
@@ -439,12 +442,45 @@
             opacity: 0.8;
             text-transform: lowercase;
             letter-spacing: 1px;
-            color: #000;
+            color: white;
         }
 
-        .pdf-download-btn {
+        /* Back to Kitchen Button */
+        .back-to-kitchen-btn {
             position: fixed;
             top: 120px;
+            right: 20px;
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            box-shadow: 0 4px 15px rgba(44, 44, 44, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .back-to-kitchen-btn:hover {
+            background: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 44, 44, 0.4);
+        }
+
+        /* PDF Download Button - positioned below back to kitchen button */
+        .pdf-download-btn {
+            position: fixed;
+            top: 170px;
             right: 20px;
             background: #BE5103;
             color: white;
@@ -537,8 +573,17 @@
                 padding: 30px;
             }
 
-            .pdf-download-btn {
+            .back-to-kitchen-btn {
                 top: 80px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.8rem;
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .pdf-download-btn {
+                top: 130px;
                 right: 10px;
                 padding: 8px 16px;
                 font-size: 0.8rem;
@@ -562,7 +607,7 @@
                 -moz-osx-font-smoothing: grayscale !important;
             }
 
-            .nav, .pdf-download-btn {
+            .nav, .pdf-download-btn, .back-to-kitchen-btn {
                 display: none !important;
             }
 
@@ -771,7 +816,7 @@
             }
             
             .footer-text {
-                color: #000 !important;
+                color: white !important;
                 font-size: 0.6rem !important;
             }
 
@@ -811,6 +856,9 @@
 
     <!-- MAIN SITE -->
     <div class="main-site active" id="mainSite">
+        <!-- Back to Kitchen Button -->
+        <a href="../in.the.kitchen.html" class="back-to-kitchen-btn">back to kitchen</a>
+        
         <!-- PDF Download Button -->
         <button class="pdf-download-btn" onclick="downloadPDF()">download pdf menu</button>
         
@@ -937,9 +985,6 @@
         </div>
     </div>
 
-    <!-- Main JavaScript File -->
-    <script src="../assets/js/script.js"></script>
-    
     <!-- Main JavaScript File -->
     <script src="../assets/js/script.js"></script>
     
