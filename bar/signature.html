@@ -87,6 +87,7 @@
             text-transform: lowercase;
             position: relative;
             z-index: 1;
+            color: #fff;
         }
 
         .menu-body {
@@ -301,7 +302,7 @@
             opacity: 0.8;
             text-transform: lowercase;
             letter-spacing: 1px;
-            color: #000;
+            color: white;
         }
 
         .allergen-note {
@@ -331,10 +332,83 @@
             letter-spacing: 0.5px;
         }
 
+        /* Back to Bar Button */
+        .back-to-bar-btn {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            background: rgb(95, 179, 211);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            box-shadow: 0 4px 15px rgba(95, 179, 211, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            min-height: 44px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        .back-to-bar-btn:hover {
+            background: rgb(75, 159, 191);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(95, 179, 211, 0.4);
+        }
+
+        /* PDF Download Button - positioned below back to bar button */
+        .pdf-download-btn {
+            position: fixed;
+            top: 170px;
+            right: 20px;
+            background: rgb(95, 179, 211);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            box-shadow: 0 4px 15px rgba(95, 179, 211, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        .pdf-download-btn:hover {
+            background: rgb(75, 159, 191);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(95, 179, 211, 0.4);
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .pdf-download-btn {
+            .back-to-bar-btn {
                 top: 80px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.8rem;
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .pdf-download-btn {
+                top: 130px;
                 right: 10px;
                 padding: 8px 16px;
                 font-size: 0.8rem;
@@ -402,35 +476,6 @@
             }
         }
 
-        /* PDF Download Button */
-        .pdf-download-btn {
-            position: fixed;
-            top: 120px;
-            right: 20px;
-            background: rgb(95, 179, 211);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Georgia', serif;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            box-shadow: 0 4px 15px rgba(95, 179, 211, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
-
-        .pdf-download-btn:hover {
-            background: rgb(75, 159, 191);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(95, 179, 211, 0.4);
-        }
-
         /* Print Styles - Optimized for 2-page PDF (Override mobile styles) */
         @media print {
             * {
@@ -448,7 +493,7 @@
                 -moz-osx-font-smoothing: grayscale !important;
             }
 
-            .nav, .pdf-download-btn {
+            .nav, .pdf-download-btn, .back-to-bar-btn {
                 display: none !important;
             }
 
@@ -624,7 +669,7 @@
             }
             
             .footer-text {
-                color: #000 !important;
+                color: white !important;
                 font-size: 0.7rem !important;
             }
 
@@ -652,6 +697,9 @@
 
     <!-- MAIN SITE -->
     <div class="main-site active" id="mainSite">
+        <!-- Back to Bar Button -->
+        <a href="../at.the.bar.html" class="back-to-bar-btn">back to at the bar</a>
+        
         <!-- PDF Download Button -->
         <button class="pdf-download-btn" onclick="downloadPDF()">download pdf menu</button>
         
