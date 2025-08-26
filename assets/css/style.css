@@ -1,4 +1,4 @@
-/* Door 64 Restaurant - Main Stylesheet - COMPLETE WITH ALL FIXES + MOBILE NAV */
+/* Door 64 Restaurant - Main Stylesheet - COMPLETE WITH IPHONE ENHANCEMENTS */
 
 * {
     margin: 0;
@@ -109,21 +109,13 @@ body.menu-open {
     padding-right: var(--safe-area-right);
 }
 
-/* Enhanced splash page interaction */
+/* Enhanced splash page interaction - GREY WASH DISABLED */
 .splash-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0);
-    transition: background 0.3s ease;
-    z-index: -1;
+    display: none !important;
 }
 
 .splash-page:hover::before {
-    background: rgba(0, 0, 0, 0.1);
+    display: none !important;
 }
 
 .splash-page.hidden {
@@ -133,13 +125,7 @@ body.menu-open {
 }
 
 .splash-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    pointer-events: none;
+    display: none !important;
 }
 
 /* Door Gallery Design - ENLARGED */
@@ -193,10 +179,12 @@ body.menu-open {
     height: 100%;
     object-fit: cover;
     animation: blr 2s;
-    filter: blur(10px);
+    filter: blur(5px); /* Reduced from 10px for sharper letters */
     transition: filter 0.7s;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: optimize-contrast;
+    /* Better SVG rendering */
+    image-rendering: crisp-edges;
 }
 
 /* Door Clip Paths */
@@ -275,11 +263,18 @@ body.menu-open {
     }
 }
 
+/* Improved blur animation for letters */
 @keyframes blurPulse {
-    0%, 100% { filter: blur(10px) brightness(0.8); }
-    25% { filter: blur(12px) brightness(0.7); }
-    50% { filter: blur(8px) brightness(0.9); }
-    75% { filter: blur(11px) brightness(0.75); }
+    0%, 100% { filter: blur(4px) brightness(0.9); }
+    25% { filter: blur(6px) brightness(0.8); }
+    50% { filter: blur(2px) brightness(1); }
+    75% { filter: blur(5px) brightness(0.85); }
+}
+
+/* Initial blur animation - less aggressive */
+@keyframes blr {
+    0% { filter: blur(15px); }
+    100% { filter: blur(5px); }
 }
 
 /* Apply continuous animations to doors */
@@ -316,22 +311,31 @@ body.menu-open {
     animation: blurPulse 9s ease-in-out infinite 3s; /* Offset by 3s */
 }
 
-/* Door Hover Effects */
+/* Door Hover Effects - GREY WASH REMOVED */
 .door-gallery li:hover a {
     transition: transform 0.3s !important;
     transform: translate(0) scale(1.05) !important;
     animation-play-state: paused; /* Pause floating on hover */
 }
 
+/* REMOVE GREY WASH - DISABLED */
+/* .door-gallery:hover li {
+    opacity: 0.1;
+} */
 
+.door-gallery:hover li {
+    opacity: 1 !important; /* Force no dimming */
+}
 
 .door-gallery:hover li:hover {
-    opacity: 1;
+    opacity: 1 !important;
+    /* Keep the nice letter reveal on direct hover */
     transition: clip-path 0.4s 0.3s;
     clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
     z-index: 10;
 }
 
+/* Sharp letters on hover */
 .door-gallery li:hover img {
     filter: blur(0) brightness(1) !important;
     animation-play-state: paused; /* Pause blur animation on hover */
@@ -436,6 +440,134 @@ body.menu-open {
             2px 2px 0px #d0d0d0,
             3px 3px 0px #c0c0c0,
             4px 4px 5px rgba(0,0,0,0.3) !important;
+    }
+}
+
+/* ========== IPHONE SPLASH PAGE ENHANCEMENTS ========== */
+
+/* iPhone safe area improvements */
+@supports (-webkit-touch-callout: none) {
+    .splash-page {
+        /* Better iPhone X/11/12/13/14/15 support */
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        
+        /* Improve rendering on iPhone */
+        -webkit-font-smoothing: antialiased;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+}
+
+/* Enhanced iPhone door gallery */
+@media (max-width: 768px) {
+    .door-gallery {
+        /* Larger on iPhone for better touch targets */
+        height: 65vh;
+        width: 45vw;
+        
+        /* Better performance on iPhone */
+        will-change: transform;
+        transform: translateZ(0);
+        
+        /* Override previous mobile settings */
+        grid-template-rows: repeat(4, 1fr 2fr 1fr);
+    }
+    
+    .door-gallery-raised {
+        /* Better positioning for iPhone screens */
+        transform: translate(-50%, -58%) !important;
+    }
+    
+    /* iPhone letter image optimizations */
+    .door-gallery li img {
+        /* Sharper rendering on iPhone */
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+        
+        /* Reduced blur for iPhone clarity */
+        filter: blur(3px);
+        
+        /* Better touch response */
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+    }
+    
+    /* Clear letters on iPhone tap/touch */
+    .door-gallery li:active img,
+    .door-gallery li:focus img {
+        filter: blur(0) brightness(1) !important;
+        transform: scale(1.02);
+        transition: all 0.2s ease;
+    }
+    
+    /* iPhone logo positioning */
+    .splash-content-below {
+        bottom: max(12%, calc(env(safe-area-inset-bottom) + 8%)) !important;
+    }
+    
+    .splash-content-below h1 {
+        /* iPhone-optimized embossed text */
+        font-size: clamp(2.2rem, 10vw, 3.5rem);
+        text-shadow: 
+            1px 1px 0px #e8e8e8,
+            2px 2px 0px #d8d8d8,
+            3px 3px 0px #c8c8c8,
+            4px 4px 8px rgba(0,0,0,0.2) !important;
+    }
+}
+
+/* iPhone landscape orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+    .door-gallery {
+        height: 80vh;
+        width: 35vw;
+    }
+    
+    .door-gallery-raised {
+        transform: translate(-50%, -55%) !important;
+    }
+    
+    .splash-content-below {
+        bottom: 8% !important;
+    }
+    
+    .splash-content-below h1 {
+        font-size: clamp(1.8rem, 8vw, 2.8rem);
+    }
+}
+
+/* iPhone Pro Max optimizations - NO AUDIO BUTTON SIZE CHANGES */
+@media (min-width: 428px) and (max-width: 768px) {
+    .door-gallery {
+        height: 70vh;
+        width: 42vw;
+    }
+    
+    .splash-content-below h1 {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+    }
+}
+
+/* Disable problematic hover effects on iPhone */
+@media (hover: none) and (pointer: coarse) {
+    .door-gallery:hover li,
+    .door-gallery li:hover a,
+    .door-gallery li:hover img {
+        /* Reset all hover effects on touch devices */
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        clip-path: none !important;
+        animation-play-state: running !important;
+    }
+    
+    /* Keep touch feedback instead */
+    .door-gallery li:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
     }
 }
 
@@ -805,6 +937,19 @@ body.menu-open {
     0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
     70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
     100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
+}
+
+/* iPhone audio button improvements - POSITION ONLY, SAME SIZE */
+@media (max-width: 768px) {
+    .splash-audio-toggle {
+        /* Better iPhone positioning */
+        top: max(25px, calc(env(safe-area-inset-top) + 15px)) !important;
+        right: max(25px, calc(env(safe-area-inset-right) + 15px)) !important;
+        
+        /* Better iPhone interaction - SIZE UNCHANGED */
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
 }
 
 /* ✅ MOBILE AUDIO HINTS */
@@ -2168,16 +2313,6 @@ select:focus {
         touch-action: manipulation;
     }
 
-    .splash-audio-toggle {
-        top: 15px !important;
-        top: max(15px, calc(var(--safe-area-top) + 10px)) !important;
-        right: 15px !important;
-        right: max(15px, calc(var(--safe-area-right) + 10px)) !important;
-        width: 55px !important;
-        height: 55px !important;
-        font-size: 18px !important;
-    }
-
     .splash-hint {
         bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
         font-size: 16px; /* Minimum 16px for readability */
@@ -2891,4 +3026,4 @@ select:focus {
     }
 }
 
-/* End Door 64 Restaurant Stylesheet - Complete with All Fixes + Mobile Navigation */
+/* End Door 64 Restaurant Stylesheet - Complete with iPhone Enhancements */
