@@ -461,19 +461,32 @@ body.menu-open {
     }
 }
 
-/* Enhanced iPhone door gallery */
+/* Enhanced iPhone door gallery - MOBILE CLIP-PATH FIX */
 @media (max-width: 768px) {
+    /* Disable problematic clip-paths on mobile */
+    .door-gallery li:first-of-type,
+    .door-gallery li:nth-of-type(2),
+    .door-gallery li:nth-of-type(3),
+    .door-gallery li:last-of-type {
+        clip-path: none !important;
+    }
+    
+    /* Mobile door gallery - single column, simplified */
     .door-gallery {
-        /* Larger on iPhone for better touch targets */
-        height: 65vh;
-        width: 45vw;
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        height: 70vh;
+        width: 55vw;
+        background: transparent;
+        padding: 15px;
+        justify-content: center;
+        align-items: center;
+        grid-template-rows: unset;
         
         /* Better performance on iPhone */
         will-change: transform;
         transform: translateZ(0);
-        
-        /* Override previous mobile settings */
-        grid-template-rows: repeat(4, 1fr 2fr 1fr);
     }
     
     .door-gallery-raised {
@@ -481,22 +494,64 @@ body.menu-open {
         transform: translate(-50%, -58%) !important;
     }
     
+    /* Reset grid positioning - make each letter equal height */
+    .door-gallery li {
+        flex: 1;
+        width: 100%;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: 2px solid rgba(95, 179, 211, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        grid-row: unset;
+        grid-column: unset;
+        --offsetX: 50%;
+        transition: transform 0.1s ease;
+    }
+    
+    .door-gallery li a {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        animation: none !important;
+        transform: none !important;
+        transition: all 0.15s;
+    }
+    
     /* iPhone letter image optimizations */
     .door-gallery li img {
+        width: 70%;
+        height: 70%;
+        object-fit: contain;
+        filter: blur(0px) !important;
+        animation: none !important;
         /* Sharper rendering on iPhone */
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
-        
-        /* Reduced blur for iPhone clarity */
-        filter: blur(3px);
-        
         /* Better touch response */
         touch-action: manipulation;
         -webkit-touch-callout: none;
+        transition: transform 0.1s ease;
+    }
+    
+    /* Mobile touch feedback */
+    .door-gallery li:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+    
+    .door-gallery li:active img {
+        transform: scale(1.05);
+        transition: transform 0.1s ease;
     }
     
     /* Clear letters on iPhone tap/touch */
-    .door-gallery li:active img,
     .door-gallery li:focus img {
         filter: blur(0) brightness(1) !important;
         transform: scale(1.02);
