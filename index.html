@@ -3,110 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Door 64 - Splash Preview</title>
+    <title>Door 64 - Interactive Splash</title>
+    
+    <!-- Link to your external CSS and JS files -->
+    <link rel="stylesheet" href="styles.css">
     
     <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Additional styles specific to interactive splash page */
         body {
-            font-family: 'Georgia', serif;
-            background: #ffffff;
             overflow: hidden;
             height: 100vh;
             width: 100%;
         }
 
-        /* Splash page styles (from your CSS) */
-        .splash-page {
-            width: 100%;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 9999;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 1.2s ease;
-        }
-
-        /* Door Gallery Design */
-        .door-gallery {
-            height: 75vh;
-            width: 30vh;
-            display: grid;
-            grid-template-rows: repeat(4, 1fr 2fr 1fr);
-            overflow: hidden;
-            list-style: none;
-            position: relative;
-            z-index: 1;
-        }
-
-        .door-gallery-raised {
+        /* Status hint for testing - remove in production */
+        .status-hint {
             position: absolute;
-            top: 50%;
+            bottom: 30px;
             left: 50%;
-            transform: translate(-50%, -65%) !important;
+            transform: translateX(-50%);
+            color: #666;
+            font-size: 1rem;
+            text-align: center;
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-family: 'Georgia', serif;
         }
 
-        .door-gallery li {
-            width: 100%;
-            height: 100%;
-            grid-column: 1/span 1;
-            --offsetX: 50%;
-            transition: opacity 0.3s;
-            cursor: pointer;
+        .current-letter {
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 2px;
         }
 
-        .door-gallery li a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            transition: all 0.15s;
-        }
-
+        /* Ensure door gallery letters are completely visible */
         .door-gallery li img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            animation: blr 2s;
-            filter: blur(1px); /* Reduced for letter visibility */
-            transition: filter 0.7s;
+            filter: blur(0px) !important;
             image-rendering: -webkit-optimize-contrast;
-            image-rendering: optimize-contrast;
             image-rendering: crisp-edges;
         }
 
-        /* Door Clip Paths */
-        .door-gallery li:first-of-type {
-            grid-row: 1/span 4;
-            clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20% * 3));
+        /* Override any blur animations for interactivity */
+        .door-gallery li:nth-of-type(1) img,
+        .door-gallery li:nth-of-type(2) img,
+        .door-gallery li:nth-of-type(3) img,
+        .door-gallery li:nth-of-type(4) img {
+            animation: none !important;
+            filter: blur(0px) !important;
         }
 
-        .door-gallery li:nth-of-type(2) {
-            grid-row: 3/span 5;
-            clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
+        /* Keep floating animations for doors but not images */
+        .door-gallery li:nth-of-type(1) a {
+            animation: doorFloat3 8s ease-in-out infinite;
         }
 
-        .door-gallery li:nth-of-type(3) {
-            grid-row: 6/span 5;
-            clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
+        .door-gallery li:nth-of-type(2) a {
+            animation: doorFloat1 6s ease-in-out infinite;
         }
 
-        .door-gallery li:last-of-type {
-            grid-row: -5/span 4;
-            clip-path: polygon(100% 0, 0 calc(20% * 2), 0 calc(20% * 6), 100% calc(20% * 4));
+        .door-gallery li:nth-of-type(3) a {
+            animation: doorFloat2 7s ease-in-out infinite;
         }
 
-        /* Door Animations */
+        .door-gallery li:nth-of-type(4) a {
+            animation: doorFloat4 9s ease-in-out infinite;
+        }
+
+        /* Door floating animations */
         @keyframes doorFloat1 {
             0%, 100% { 
                 transform: translate(var(--offsetX), calc(var(--offsetX) * 0.166 * -2)) scale(1);
@@ -161,271 +127,8 @@
             }
         }
 
-        @keyframes blurPulse {
-            0%, 100% { filter: blur(1px) brightness(0.9); }
-            25% { filter: blur(2px) brightness(0.8); }
-            50% { filter: blur(0px) brightness(1); }
-            75% { filter: blur(1px) brightness(0.85); }
-        }
-
-        @keyframes blr {
-            0% { filter: blur(8px); }
-            100% { filter: blur(1px); }
-        }
-
-        /* Apply animations to doors */
-        .door-gallery li:nth-of-type(1) a {
-            animation: doorFloat3 8s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(2) a {
-            animation: doorFloat1 6s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(3) a {
-            animation: doorFloat2 7s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(4) a {
-            animation: doorFloat4 9s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(1) img {
-            animation: blurPulse 8s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(2) img {
-            animation: blurPulse 6s ease-in-out infinite 1s;
-        }
-
-        .door-gallery li:nth-of-type(3) img {
-            animation: blurPulse 7s ease-in-out infinite 2s;
-        }
-
-        .door-gallery li:nth-of-type(4) img {
-            animation: blurPulse 9s ease-in-out infinite 3s;
-        }
-
-        /* Hover effects */
-        .door-gallery li:hover a {
-            transition: transform 0.3s !important;
-            transform: translate(0) scale(1.05) !important;
-            animation-play-state: paused;
-        }
-
-        .door-gallery li:hover img {
-            filter: blur(0) brightness(1) !important;
-            animation-play-state: paused;
-            transform: scale(1.02);
-            transition: filter 0.3s ease, transform 0.3s ease;
-        }
-
-        .door-gallery:hover li:hover {
-            opacity: 1 !important;
-            transition: clip-path 0.4s 0.3s;
-            clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
-            z-index: 10;
-        }
-
-        /* Splash content */
-        .splash-content-below {
-            position: absolute !important;
-            bottom: 15% !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            text-align: center !important;
-            z-index: 20 !important;
-        }
-
-        .splash-content-below h1 {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: #fff !important;
-            text-shadow: 
-                1px 1px 0px #e0e0e0,
-                2px 2px 0px #d0d0d0,
-                3px 3px 0px #c0c0c0,
-                4px 4px 0px #b0b0b0,
-                5px 5px 0px #a0a0a0,
-                6px 6px 10px rgba(0,0,0,0.3) !important;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* Interactive letter success animation */
-        .door-gallery li.letter-success {
-            animation: letterSuccess 1.2s ease-out;
-        }
-
-        .door-gallery li.letter-success img {
-            filter: blur(0px) brightness(1.5) contrast(1.6) !important;
-        }
-
-        @keyframes letterSuccess {
-            0% { transform: translate(-50%, -65%) scale(1); }
-            25% { transform: translate(-50%, -65%) scale(1.15) rotate(2deg); }
-            50% { transform: translate(-50%, -65%) scale(1.1) rotate(-1deg); }
-            75% { transform: translate(-50%, -65%) scale(1.12) rotate(1deg); }
-            100% { transform: translate(-50%, -65%) scale(1) rotate(0deg); }
-        }
-
-        /* Status hint styling */
-        .status-hint {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #666;
-            font-size: 1rem;
-            text-align: center;
-            z-index: 30;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-        }
-
-        .current-letter {
-            font-weight: bold;
-            color: #333;
-            letter-spacing: 2px;
-        }
-
-        /* Wrong choice overlay */
-        .entry-wrong-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.98);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.8s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .entry-wrong-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Success overlay */
-        .entry-success-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.98);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.8s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .entry-success-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .success-content {
-            text-align: center;
-            animation: successFadeIn 1s ease-out;
-        }
-
-        .success-title {
-            font-size: 4em;
-            font-weight: 300;
-            letter-spacing: 8px;
-            color: #333;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
-
-        .success-subtitle {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 40px;
-            letter-spacing: 2px;
-        }
-
-        .enter-button {
-            padding: 20px 50px;
-            background: transparent;
-            border: 2px solid #333;
-            color: #333;
-            font-size: 1em;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 30px;
-            text-transform: uppercase;
-            font-weight: 300;
-            font-family: 'Georgia', serif;
-        }
-
-        .enter-button:hover {
-            background: #333;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        @keyframes successFadeIn {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Mobile responsive */
+        /* Mobile responsive adjustments */
         @media (max-width: 768px) {
-            .door-gallery {
-                height: 60vh;
-                width: 40vw;
-                grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
-            }
-            
-            .door-gallery-raised {
-                transform: translate(-50%, -60%) !important;
-            }
-
-            .splash-content-below h1 {
-                font-size: 2rem;
-                text-shadow: 
-                    1px 1px 0px #e0e0e0,
-                    2px 2px 0px #d0d0d0,
-                    3px 3px 0px #c0c0c0,
-                    4px 4px 5px rgba(0,0,0,0.3) !important;
-            }
-
-            .splash-content-below {
-                bottom: 18% !important;
-            }
-            
-            .success-title {
-                font-size: 2.5em;
-                letter-spacing: 4px;
-            }
-            
-            .enter-button {
-                padding: 18px 40px;
-                font-size: 0.9em;
-            }
-
             .status-hint {
                 bottom: 20px;
                 font-size: 0.9rem;
@@ -435,9 +138,23 @@
     </style>
 </head>
 <body>
-    <!-- DOOR 64 SPLASH PAGE PREVIEW -->
+    <!-- Audio element for background music -->
+    <audio id="backgroundAudio" preload="auto" loop>
+        <source src="audio/QUIETSTORM.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- DOOR 64 SPLASH PAGE -->
     <div class="splash-page" id="splashPage">
-        <!-- Interactive Door Gallery -->
+        <!-- Audio Toggle Button -->
+        <button class="splash-audio-toggle" 
+                onclick="toggleAudio(event)" 
+                title="Toggle Background Music"
+                aria-label="Toggle background music">
+            ♪
+        </button>
+
+        <!-- Interactive Door Gallery with Real SVG Images -->
         <ul class="door-gallery door-gallery-raised" id="interactiveDoorGallery">
             <li data-letter="D" data-index="0">
                 <a href="javascript:void(0)">
@@ -469,184 +186,162 @@
             </li>
         </ul>
         
+        <!-- Logo Content Below -->
+        <div class="splash-content-below">
+            <h1>DOOR 64</h1>
+            <p>click to enter</p>
+        </div>
+
         <!-- Status hint showing current correct letter for testing -->
         <div class="status-hint" id="statusHint">
             Click the correct letter: <span class="current-letter" id="currentLetter">?</span>
+            <br><small>(Changes every 10 seconds)</small>
         </div>
     </div>
 
-    <!-- Wrong Choice Overlay -->
+    <!-- Main Site Content (hidden initially) -->
+    <div class="main-site" id="mainSite">
+        <!-- Your main site content goes here -->
+        <nav class="nav" id="nav">
+            <div class="nav-container">
+                <a href="#" class="nav-logo" onclick="location.reload()">DOOR 64</a>
+                
+                <div class="nav-left-section">
+                    <!-- Audio Toggle Button -->
+                    <button class="audio-toggle" 
+                            onclick="toggleAudio(event)" 
+                            title="Toggle Background Music"
+                            aria-label="Toggle background music">
+                        ♪
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button class="mobile-menu" aria-label="Toggle mobile menu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#landing">home</a></li>
+                    <li><a href="#space">space</a></li>
+                    <li><a href="#menus">menus</a></li>
+                    <li><a href="#events">events</a></li>
+                    <li><a href="#gallery">gallery</a></li>
+                    <li><a href="#contact">contact</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Your existing sections -->
+        <section id="landing" class="section landing-page active">
+            <div class="landing-content">
+                <h1>DOOR 64</h1>
+                <!-- Your existing landing content -->
+            </div>
+        </section>
+
+        <!-- Add your other sections here -->
+    </div>
+
+    <!-- Entry Overlays -->
     <div class="entry-wrong-overlay" id="entryWrongOverlay">
         <div class="success-content">
             <div class="success-title">DOOR 64</div>
-            <button class="enter-button" onclick="resetPreview()">TRY AGAIN</button>
+            <div class="success-subtitle">Try Again</div>
+            <button class="enter-button" onclick="resetLetterSystem()">RESET</button>
         </div>
     </div>
 
-    <!-- Success Overlay -->
     <div class="entry-success-overlay" id="entrySuccessOverlay">
         <div class="success-content">
             <div class="success-title">DOOR 64</div>
             <div class="success-subtitle">Access Granted</div>
-            <button class="enter-button" onclick="resetPreview()">ENTER</button>
+            <button class="enter-button" onclick="enterMainSite()">ENTER</button>
         </div>
     </div>
 
-    <script>
-        // Door 64 Interactive Letters Preview
-        class Door64LettersPreview {
-            constructor() {
-                this.letters = ['D', 'O', 'O', 'R'];
-                this.letterElements = document.querySelectorAll('#interactiveDoorGallery li');
-                this.currentActiveIndex = 0;
-                this.rotationInterval = 8000; // 8 seconds for preview
-                this.rotationTimer = null;
-                this.isSystemActive = true;
-                
-                console.log('Door 64 Letters Preview - Starting...');
-                this.init();
-            }
-            
-            init() {
-                // Add click listeners
-                this.letterElements.forEach((element, index) => {
-                    element.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.handleLetterClick(index);
-                    });
-                });
-                
-                // Set initial active letter
-                this.setRandomActiveLetter();
-                this.startRotation();
-            }
-            
-            setRandomActiveLetter() {
-                this.currentActiveIndex = Math.floor(Math.random() * this.letters.length);
-                const letter = this.letters[this.currentActiveIndex];
-                
-                // Update status hint
-                const currentLetterElement = document.getElementById('currentLetter');
-                if (currentLetterElement) {
-                    currentLetterElement.textContent = letter;
-                }
-                
-                console.log(`Correct letter: ${letter} (index ${this.currentActiveIndex})`);
-            }
-            
-            handleLetterClick(clickedIndex) {
-                if (!this.isSystemActive) return;
-                
-                const clickedElement = this.letterElements[clickedIndex];
-                const clickedLetter = this.letters[clickedIndex];
-                
-                console.log(`Letter clicked: ${clickedLetter}`);
-                
-                if (clickedIndex === this.currentActiveIndex) {
-                    // Correct letter - ACCESS GRANTED
-                    console.log('Correct! Access granted');
-                    clickedElement.classList.add('letter-success');
-                    this.grantAccess();
-                } else {
-                    // Wrong letter - SHOW TRY AGAIN
-                    console.log('Wrong letter - try again');
-                    this.showTryAgain();
-                }
-            }
-            
-            grantAccess() {
-                this.isSystemActive = false;
-                this.stopRotation();
-                
-                // Hide status hint
-                const statusHint = document.getElementById('statusHint');
-                if (statusHint) {
-                    statusHint.style.display = 'none';
-                }
-                
-                setTimeout(() => {
-                    const successOverlay = document.getElementById('entrySuccessOverlay');
-                    if (successOverlay) {
-                        successOverlay.classList.add('show');
-                    }
-                }, 800);
-            }
-            
-            showTryAgain() {
-                this.isSystemActive = false;
-                this.stopRotation();
-                
-                // Hide status hint
-                const statusHint = document.getElementById('statusHint');
-                if (statusHint) {
-                    statusHint.style.display = 'none';
-                }
-                
-                setTimeout(() => {
-                    const wrongOverlay = document.getElementById('entryWrongOverlay');
-                    if (wrongOverlay) {
-                        wrongOverlay.classList.add('show');
-                    }
-                }, 300);
-            }
-            
-            startRotation() {
-                if (this.rotationTimer) {
-                    clearInterval(this.rotationTimer);
-                }
-                
-                this.rotationTimer = setInterval(() => {
-                    if (this.isSystemActive) {
-                        this.setRandomActiveLetter();
-                    }
-                }, this.rotationInterval);
-                
-                console.log('Letter rotation started - changes every 8 seconds');
-            }
-            
-            stopRotation() {
-                if (this.rotationTimer) {
-                    clearInterval(this.rotationTimer);
-                    this.rotationTimer = null;
-                }
-            }
-        }
+    <!-- Link to your external JavaScript file -->
+    <script src="script.js"></script>
 
-        // Reset preview function
-        function resetPreview() {
-            // Hide both overlays
+    <script>
+        // Additional functions specific to splash page
+        function resetLetterSystem() {
+            // Hide overlays
             const successOverlay = document.getElementById('entrySuccessOverlay');
             const wrongOverlay = document.getElementById('entryWrongOverlay');
             const statusHint = document.getElementById('statusHint');
             
-            if (successOverlay) {
-                successOverlay.classList.remove('show');
-            }
-            
-            if (wrongOverlay) {
-                wrongOverlay.classList.remove('show');
-            }
-            
-            if (statusHint) {
-                statusHint.style.display = 'block';
-            }
+            if (successOverlay) successOverlay.classList.remove('show');
+            if (wrongOverlay) wrongOverlay.classList.remove('show');
+            if (statusHint) statusHint.style.display = 'block';
             
             // Remove success animations
             document.querySelectorAll('.letter-success').forEach(el => {
                 el.classList.remove('letter-success');
             });
             
-            // Restart system
+            // Restart letter system
             setTimeout(() => {
-                window.letterSystem = new Door64LettersPreview();
+                if (window.door64LetterSystem) {
+                    window.door64LetterSystem.reset();
+                }
             }, 500);
         }
 
-        // Initialize when page loads
-        let letterSystem = null;
+        function enterMainSite() {
+            // Hide splash page and show main site
+            const splashPage = document.getElementById('splashPage');
+            const mainSite = document.getElementById('mainSite');
+            const statusHint = document.getElementById('statusHint');
+            
+            if (splashPage) {
+                splashPage.classList.add('hidden');
+                setTimeout(() => {
+                    splashPage.style.display = 'none';
+                }, 1200);
+            }
+            
+            if (mainSite) {
+                mainSite.classList.add('active');
+            }
+            
+            if (statusHint) {
+                statusHint.style.display = 'none';
+            }
+            
+            // Prepare audio for navigation
+            if (window.door64Audio) {
+                window.door64Audio.prepareForNavigation();
+            }
+            
+            console.log('Entered main site from interactive splash');
+        }
+
+        // Update status hint when letter changes
         document.addEventListener('DOMContentLoaded', function() {
-            letterSystem = new Door64LettersPreview();
+            // Wait for letter system to initialize
+            setTimeout(() => {
+                if (window.door64LetterSystem) {
+                    // Override setRandomActiveLetter to update hint
+                    const originalSetRandomActiveLetter = window.door64LetterSystem.setRandomActiveLetter.bind(window.door64LetterSystem);
+                    
+                    window.door64LetterSystem.setRandomActiveLetter = function() {
+                        originalSetRandomActiveLetter();
+                        
+                        const letter = this.letters[this.currentActiveIndex];
+                        const currentLetterElement = document.getElementById('currentLetter');
+                        if (currentLetterElement) {
+                            currentLetterElement.textContent = letter;
+                        }
+                    };
+                    
+                    // Set initial letter in hint
+                    window.door64LetterSystem.setRandomActiveLetter();
+                }
+            }, 100);
         });
     </script>
 </body>
