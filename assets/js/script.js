@@ -1,4 +1,4 @@
-/* Door 64 Restaurant - Complete FIXED JavaScript - FINAL VERSION WITH MOBILE NAV FIXES */
+/* Door 64 Restaurant - Complete FIXED JavaScript - FINAL VERSION WITH MOBILE NAV FIXES + INTERACTIVE LETTERS */
 
 // =============== FIXED DOOR 64 AUDIO SYSTEM - NO MORE RESTARTS ===============
 class Door64Audio {
@@ -747,6 +747,131 @@ class Door64Gallery {
     }
 }
 
+// =============== DOOR 64 INTERACTIVE LETTER SYSTEM ===============
+class Door64InteractiveLetters {
+    constructor() {
+        this.letters = ['D', 'O', 'O', 'R'];
+        this.letterElements = document.querySelectorAll('#interactiveDoorGallery li');
+        this.currentActiveIndex = 0;
+        this.rotationInterval = 10000; // 10 seconds
+        this.rotationTimer = null;
+        this.isSystemActive = true;
+        
+        console.log('🚪 Door 64 Interactive Letters - Initializing...');
+        this.init();
+    }
+    
+    init() {
+        if (this.letterElements.length === 0) {
+            console.warn('⚠️ No letter elements found');
+            return;
+        }
+        
+        this.letterElements.forEach((element, index) => {
+            element.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleLetterClick(index);
+            });
+        });
+        
+        this.setRandomActiveLetter();
+        this.startRotation();
+        console.log('✅ Interactive letter system ready');
+    }
+    
+    setRandomActiveLetter() {
+        this.currentActiveIndex = Math.floor(Math.random() * this.letters.length);
+        console.log(`🎯 Correct letter: ${this.letters[this.currentActiveIndex]} (index: ${this.currentActiveIndex})`);
+    }
+    
+    handleLetterClick(clickedIndex) {
+        if (!this.isSystemActive) return;
+        
+        const clickedElement = this.letterElements[clickedIndex];
+        const clickedLetter = this.letters[clickedIndex];
+        
+        console.log(`🖱️ User clicked: ${clickedLetter} (index: ${clickedIndex})`);
+        
+        if (clickedIndex === this.currentActiveIndex) {
+            console.log('✅ Correct letter clicked!');
+            clickedElement.classList.add('letter-success');
+            this.grantAccess();
+        } else {
+            console.log('❌ Wrong letter clicked');
+            this.showTryAgain();
+        }
+    }
+    
+    grantAccess() {
+        console.log('🎉 Access granted - showing success overlay');
+        this.isSystemActive = false;
+        this.stopRotation();
+        
+        setTimeout(() => {
+            const successOverlay = document.getElementById('entrySuccessOverlay');
+            if (successOverlay) {
+                successOverlay.classList.add('show');
+            } else {
+                console.warn('⚠️ Success overlay element not found');
+            }
+        }, 800);
+    }
+    
+    showTryAgain() {
+        console.log('🔄 Showing try again overlay');
+        this.isSystemActive = false;
+        this.stopRotation();
+        
+        setTimeout(() => {
+            const wrongOverlay = document.getElementById('entryWrongOverlay');
+            if (wrongOverlay) {
+                wrongOverlay.classList.add('show');
+            } else {
+                console.warn('⚠️ Wrong overlay element not found');
+            }
+        }, 300);
+    }
+    
+    startRotation() {
+        if (this.rotationTimer) clearInterval(this.rotationTimer);
+        
+        this.rotationTimer = setInterval(() => {
+            if (this.isSystemActive) {
+                this.setRandomActiveLetter();
+            }
+        }, this.rotationInterval);
+        
+        console.log(`🔄 Letter rotation started (${this.rotationInterval}ms interval)`);
+    }
+    
+    stopRotation() {
+        if (this.rotationTimer) {
+            clearInterval(this.rotationTimer);
+            this.rotationTimer = null;
+            console.log('⏹️ Letter rotation stopped');
+        }
+    }
+    
+    reset() {
+        console.log('🔄 Resetting interactive letter system');
+        this.isSystemActive = true;
+        this.letterElements.forEach(element => {
+            element.classList.remove('letter-success');
+        });
+        
+        // Hide overlays
+        const successOverlay = document.getElementById('entrySuccessOverlay');
+        const wrongOverlay = document.getElementById('entryWrongOverlay');
+        
+        if (successOverlay) successOverlay.classList.remove('show');
+        if (wrongOverlay) wrongOverlay.classList.remove('show');
+        
+        this.setRandomActiveLetter();
+        this.startRotation();
+    }
+}
+
 // =============== GLOBAL VARIABLES ===============
 let currentSlide = 0;
 let slideInterval = null;
@@ -755,13 +880,17 @@ let isAudioPlaying = false;
 // Global instances
 window.door64Audio = null;
 window.door64Galleries = {};
+window.door64LetterSystem = null;
 
 // =============== DOCUMENT READY & INITIALIZATION ===============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚪 Door 64 - Initializing FIXED audio system...');
+    console.log('🚪 Door 64 - Initializing FIXED audio system + Interactive Letters...');
     
     // Initialize FIXED audio system
     window.door64Audio = new Door64Audio();
+    
+    // Initialize interactive letter system
+    window.door64LetterSystem = new Door64InteractiveLetters();
     
     // Initialize other functionality
     initGalleries();
@@ -775,7 +904,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initLazyLoading();
     }
     
-    console.log('✅ Door 64 - FIXED audio system ready - no more restarts!');
+    console.log('✅ Door 64 - FIXED audio system + Interactive Letters ready!');
 });
 
 // =============== GALLERY INITIALIZATION ===============
@@ -878,7 +1007,7 @@ function initSplashPage() {
     // ✅ FIX: More selective click handling
     splashPage.addEventListener('click', function(e) {
         // Don't navigate if user clicked on interactive elements
-        if (e.target.closest('.splash-audio-toggle, button, input, textarea, select, a[href], [onclick]')) {
+        if (e.target.closest('.splash-audio-toggle, button, input, textarea, select, a[href], [onclick], .door-gallery li')) {
             return;
         }
         
@@ -887,20 +1016,20 @@ function initSplashPage() {
             return;
         }
         
-        // ✅ Only navigate on genuine content clicks
-        if (e.target.closest('.splash-content, .door-gallery')) {
+        // ✅ Only navigate on genuine content clicks (but not door letters)
+        if (e.target.closest('.splash-content') && !e.target.closest('.door-gallery')) {
             handleNavigation();
         }
     });
     
-    // ✅ FIX: Improved door link handling
+    // ✅ FIX: Improved door link handling - let letter system handle clicks
     const doorLinks = splashPage.querySelectorAll('.door-gallery a');
     doorLinks.forEach((link, index) => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            e.stopPropagation(); // ✅ Prevent double navigation
-            console.log(`🚪 Door ${index + 1} clicked`);
-            handleNavigation('64.html');
+            e.stopPropagation();
+            console.log(`🚪 Door ${index + 1} link clicked - handled by letter system`);
+            // Letter system will handle the actual interaction
         });
     });
     
@@ -910,7 +1039,7 @@ function initSplashPage() {
         
         if (event.key === 'Enter' || event.key === ' ') {
             // Don't navigate if focus is on interactive elements
-            if (event.target.closest('.splash-audio-toggle, button, input, textarea, select')) {
+            if (event.target.closest('.splash-audio-toggle, button, input, textarea, select, .door-gallery li')) {
                 return;
             }
             
@@ -1290,6 +1419,13 @@ if (window.location.hostname === 'localhost' ||
                     localStorage.removeItem('door64_user_interacted');
                     console.log('🔄 Dev: Audio state reset');
                     break;
+                case 'l':
+                    e.preventDefault();
+                    if (window.door64LetterSystem) {
+                        window.door64LetterSystem.reset();
+                        console.log('🔄 Dev: Letter system reset');
+                    }
+                    break;
                 case 'i':
                     e.preventDefault();
                     console.log('📊 Dev: System info:', {
@@ -1302,7 +1438,9 @@ if (window.location.hostname === 'localhost' ||
                         audioMuted: window.door64Audio?.audio?.muted,
                         isMobile: window.door64Audio?.isMobile,
                         hasUserInteracted: window.door64Audio?.hasUserInteracted,
-                        isNavigating: window.door64Audio?.isNavigating
+                        isNavigating: window.door64Audio?.isNavigating,
+                        letterSystemActive: window.door64LetterSystem?.isSystemActive,
+                        currentActiveLetter: window.door64LetterSystem?.currentActiveIndex
                     });
                     break;
                 case 'm':
@@ -1317,11 +1455,17 @@ if (window.location.hostname === 'localhost' ||
     window.door64Debug = {
         audio: () => window.door64Audio,
         galleries: () => window.door64Galleries,
+        letters: () => window.door64LetterSystem,
         resetAudio: () => {
             localStorage.removeItem('door64_audio_state');
             localStorage.removeItem('door64_audio_time');
             localStorage.removeItem('door64_user_interacted');
             location.reload();
+        },
+        resetLetters: () => {
+            if (window.door64LetterSystem) {
+                window.door64LetterSystem.reset();
+            }
         },
         forceAudioStart: () => {
             if (window.door64Audio) {
@@ -1343,6 +1487,18 @@ if (window.location.hostname === 'localhost' ||
         mobileMenuState: () => {
             const navLinks = document.getElementById('navLinks');
             return navLinks ? navLinks.classList.contains('active') : false;
+        },
+        triggerLetterSuccess: (index = 0) => {
+            if (window.door64LetterSystem) {
+                window.door64LetterSystem.currentActiveIndex = index;
+                window.door64LetterSystem.handleLetterClick(index);
+            }
+        },
+        triggerLetterWrong: (index = 1) => {
+            if (window.door64LetterSystem) {
+                window.door64LetterSystem.currentActiveIndex = 0;
+                window.door64LetterSystem.handleLetterClick(index);
+            }
         }
     };
     
@@ -1351,7 +1507,7 @@ if (window.location.hostname === 'localhost' ||
 
 // =============== CONSOLE BRANDING ===============
 console.log(`
-🚪 Door 64 Restaurant - COMPLETELY FIXED AUDIO + MOBILE NAV SYSTEM
+🚪 Door 64 Restaurant - COMPLETE SYSTEM WITH INTERACTIVE LETTERS
 ✅ NO MORE RESTARTS: Music continues seamlessly
 🚪 SPLASH AUTO-START: First-time visitors hear music immediately  
 📱 Mobile: Touch once, continuous play forever
@@ -1363,9 +1519,14 @@ console.log(`
 🎯 TOUCH TARGETS: 44px minimum for accessibility
 🚫 SCROLL BLOCK: Prevents body scroll when menu open
 ⌨️ KEYBOARD NAV: Full accessibility support
+🎮 INTERACTIVE LETTERS: Door clicking game system
+🎯 LETTER ROTATION: 10-second randomized active letter
+✅ SUCCESS OVERLAY: Correct letter feedback
+❌ WRONG OVERLAY: Try again feedback
+🎨 LETTER ANIMATIONS: Visual success effects
 🔧 DEV TOOLS: Available in development mode
 
-All audio restart issues AND mobile navigation issues SOLVED.
+Complete audio, navigation AND interactive letter system ready!
 `);
 
 // Export for testing
@@ -1373,6 +1534,7 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         Door64Audio,
         Door64Gallery,
+        Door64InteractiveLetters,
         toggleAudio,
         nextSlide,
         previousSlide,
