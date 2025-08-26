@@ -323,9 +323,7 @@ body.menu-open {
     animation-play-state: paused; /* Pause floating on hover */
 }
 
-.door-gallery:hover li {
-    opacity: 0.1;
-}
+
 
 .door-gallery:hover li:hover {
     opacity: 1;
