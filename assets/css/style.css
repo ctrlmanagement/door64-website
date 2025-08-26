@@ -179,7 +179,7 @@ body.menu-open {
     height: 100%;
     object-fit: cover;
     animation: blr 2s;
-    filter: blur(0px); /* No blur for clear letter visibility */
+    filter: blur(5px); /* Reduced from 10px for sharper letters */
     transition: filter 0.7s;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: optimize-contrast;
@@ -263,18 +263,18 @@ body.menu-open {
     }
 }
 
-/* Improved blur animation for letters - completely clear for interactivity */
+/* Improved blur animation for letters */
 @keyframes blurPulse {
-    0%, 100% { filter: blur(0px) brightness(0.9); }
-    25% { filter: blur(0px) brightness(0.8); }
-    50% { filter: blur(0px) brightness(1); }
-    75% { filter: blur(0px) brightness(0.85); }
+    0%, 100% { filter: blur(4px) brightness(0.9); }
+    25% { filter: blur(6px) brightness(0.8); }
+    50% { filter: blur(2px) brightness(1); }
+    75% { filter: blur(5px) brightness(0.85); }
 }
 
-/* Initial blur animation - no blur for clear letter visibility */
+/* Initial blur animation - less aggressive */
 @keyframes blr {
-    0% { filter: blur(0px); }
-    100% { filter: blur(0px); }
+    0% { filter: blur(15px); }
+    100% { filter: blur(5px); }
 }
 
 /* Apply continuous animations to doors */
@@ -487,8 +487,8 @@ body.menu-open {
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
         
-        /* Completely clear letters for interactive system */
-        filter: blur(0px);
+        /* Reduced blur for iPhone clarity */
+        filter: blur(3px);
         
         /* Better touch response */
         touch-action: manipulation;
@@ -569,73 +569,6 @@ body.menu-open {
         transform: scale(0.98);
         transition: transform 0.1s ease;
     }
-}
-
-/* =============== ENTRY OVERLAY STYLES =============== */
-
-/* Wrong choice overlay */
-.entry-wrong-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.8s ease;
-    backdrop-filter: blur(10px);
-}
-
-.entry-wrong-overlay.show {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* Success overlay */
-.entry-success-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.8s ease;
-    backdrop-filter: blur(10px);
-}
-
-.entry-success-overlay.show {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* Letter success animation */
-.door-gallery li.letter-success {
-    animation: letterSuccess 1.2s ease-out;
-}
-
-.door-gallery li.letter-success img {
-    filter: blur(0px) brightness(1.5) contrast(1.6) !important;
-}
-
-@keyframes letterSuccess {
-    0% { transform: translate(-50%, -65%) scale(1); }
-    25% { transform: translate(-50%, -65%) scale(1.15) rotate(2deg); }
-    50% { transform: translate(-50%, -65%) scale(1.1) rotate(-1deg); }
-    75% { transform: translate(-50%, -65%) scale(1.12) rotate(1deg); }
-    100% { transform: translate(-50%, -65%) scale(1) rotate(0deg); }
 }
 
 /* Skip link for accessibility */
