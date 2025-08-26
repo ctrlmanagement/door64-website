@@ -3,346 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Door 64 - Interactive Splash</title>
+    <title>Door 64</title>
     
-    <!-- Link to your external CSS and JS files -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://images.unsplash.com">
     
-    <style>
-        /* Additional styles specific to interactive splash page */
-        body {
-            overflow: hidden;
-            height: 100vh;
-            width: 100%;
-        }
-
-        /* Status hint for testing - remove in production */
-        .status-hint {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #666;
-            font-size: 1rem;
-            text-align: center;
-            z-index: 30;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            font-family: 'Georgia', serif;
-        }
-
-        .current-letter {
-            font-weight: bold;
-            color: #333;
-            letter-spacing: 2px;
-        }
-
-        /* Ensure door gallery letters are completely visible */
-        .door-gallery li img {
-            filter: blur(0px) !important;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-        }
-
-        /* Override any blur animations for interactivity */
-        .door-gallery li:nth-of-type(1) img,
-        .door-gallery li:nth-of-type(2) img,
-        .door-gallery li:nth-of-type(3) img,
-        .door-gallery li:nth-of-type(4) img {
-            animation: none !important;
-            filter: blur(0px) !important;
-        }
-
-        /* Keep floating animations for doors but not images */
-        .door-gallery li:nth-of-type(1) a {
-            animation: doorFloat3 8s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(2) a {
-            animation: doorFloat1 6s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(3) a {
-            animation: doorFloat2 7s ease-in-out infinite;
-        }
-
-        .door-gallery li:nth-of-type(4) a {
-            animation: doorFloat4 9s ease-in-out infinite;
-        }
-
-        /* Door floating animations */
-        @keyframes doorFloat1 {
-            0%, 100% { 
-                transform: translate(var(--offsetX), calc(var(--offsetX) * 0.166 * -2)) scale(1);
-            }
-            25% { 
-                transform: translate(calc(var(--offsetX) * 1.1), calc(var(--offsetX) * 0.166 * -2.2)) scale(1.02);
-            }
-            50% { 
-                transform: translate(calc(var(--offsetX) * 0.9), calc(var(--offsetX) * 0.166 * -1.8)) scale(0.98);
-            }
-            75% { 
-                transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.166 * -2.1)) scale(1.01);
-            }
-        }
-
-        @keyframes doorFloat2 {
-            0%, 100% { 
-                transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.166 * 2)) scale(1);
-            }
-            25% { 
-                transform: translate(calc(var(--offsetX) * -0.9), calc(var(--offsetX) * 0.166 * 1.8)) scale(1.01);
-            }
-            50% { 
-                transform: translate(calc(var(--offsetX) * -1.1), calc(var(--offsetX) * 0.166 * 2.2)) scale(0.99);
-            }
-            75% { 
-                transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.166 * 1.9)) scale(1.02);
-            }
-        }
-
-        @keyframes doorFloat3 {
-            0%, 100% { 
-                transform: translate(var(--offsetX), calc(var(--offsetX) * 0.200 * -2)) scale(1);
-            }
-            30% { 
-                transform: translate(calc(var(--offsetX) * 0.95), calc(var(--offsetX) * 0.200 * -1.9)) scale(1.01);
-            }
-            60% { 
-                transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.200 * -2.1)) scale(0.99);
-            }
-        }
-
-        @keyframes doorFloat4 {
-            0%, 100% { 
-                transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.200 * 2)) scale(1);
-            }
-            40% { 
-                transform: translate(calc(var(--offsetX) * -1.05), calc(var(--offsetX) * 0.200 * 2.1)) scale(1.02);
-            }
-            80% { 
-                transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.200 * 1.9)) scale(0.98);
-            }
-        }
-
-        /* Mobile responsive adjustments */
-        @media (max-width: 768px) {
-            .status-hint {
-                bottom: 20px;
-                font-size: 0.9rem;
-                padding: 8px 16px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Audio element for background music -->
-    <audio id="backgroundAudio" preload="auto" loop>
-        <source src="audio/QUIETSTORM.mp3" type="audio/mpeg">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Background Audio -->
+    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline webkit-playsinline="true">
+        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
+        <source src="assets/audio/QUIETSTORM.ogg" type="audio/ogg">
+        <!-- Fallback message for browsers that don't support audio -->
         Your browser does not support the audio element.
     </audio>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Door 64 - An intimate dining experience where every meal becomes a memory. Discover our elegant atmosphere and culinary artistry.">
+    <meta name="keywords" content="restaurant, fine dining, Door 64, culinary experience, intimate dining">
+    <meta name="author" content="Door 64">
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <!-- DOOR 64 SPLASH PAGE -->
-    <div class="splash-page" id="splashPage">
-        <!-- Audio Toggle Button -->
-        <button class="splash-audio-toggle" 
-                onclick="toggleAudio(event)" 
-                title="Toggle Background Music"
-                aria-label="Toggle background music">
-            ♪
-        </button>
-
-        <!-- Interactive Door Gallery with Real SVG Images -->
-        <ul class="door-gallery door-gallery-raised" id="interactiveDoorGallery">
-            <li data-letter="D" data-index="0">
-                <a href="javascript:void(0)">
-                    <img src="images/splash/door_letter_D_blue.svg" 
-                         alt="Letter D - Door 64" 
+    <!-- DOOR PLUGIN SPLASH PAGE WITH BLUE D-O-O-R LETTERS -->
+    <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door 64">
+        <!-- Door Gallery with BLUE D-O-O-R letter images - MOVED UP -->
+        <ul class="door-gallery door-gallery-raised" role="presentation" aria-hidden="true">
+            <li>
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door_letter_D_blue.svg" 
+                         alt="Letter D - Door 64 logo" 
                          loading="eager">
                 </a>
             </li>
-            <li data-letter="O" data-index="1">
-                <a href="javascript:void(0)">
-                    <img src="images/splash/door_letter_O1_blue.svg" 
-                         alt="Letter O - Door 64" 
+            <li>
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door_letter_O1_blue.svg" 
+                         alt="Letter O - Door 64 logo" 
                          loading="eager">
                 </a>
             </li>
-            <li data-letter="O" data-index="2">
-                <a href="javascript:void(0)">
-                    <img src="images/splash/door_letter_O2_blue.svg" 
-                         alt="Letter O - Door 64" 
+            <li>
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door_letter_O2_blue.svg" 
+                         alt="Letter O - Door 64 logo" 
                          loading="eager">
                 </a>
             </li>
-            <li data-letter="R" data-index="3">
-                <a href="javascript:void(0)">
-                    <img src="images/splash/door_letter_R_blue.svg" 
-                         alt="Letter R - Door 64" 
+            <li>
+                <a href="64.html" tabindex="-1" aria-hidden="true">
+                    <img src="assets/images/splash/door_letter_R_blue.svg" 
+                         alt="Letter R - Door 64 logo" 
                          loading="eager">
                 </a>
             </li>
         </ul>
         
-        <!-- Logo Content Below -->
-        <div class="splash-content-below">
-            <h1>DOOR 64</h1>
-            <p>click to enter</p>
+        <!-- Logo content - MOVED BELOW IMAGES -->
+        <div class="splash-content splash-content-below">
+            <h1 aria-label="Door 64">DOOR 64</h1>
         </div>
-
-        <!-- Status hint showing current correct letter for testing -->
-        <div class="status-hint" id="statusHint">
-            Click the correct letter: <span class="current-letter" id="currentLetter">?</span>
-            <br><small>(Changes every 10 seconds)</small>
-        </div>
+        
+        <!-- Audio toggle for splash page -->
+        <button class="splash-audio-toggle" 
+                onclick="toggleAudio(event)" 
+                data-mobile-hint="Tap to start music"
+                title="Play Background Music" 
+                id="splashAudioToggle"
+                aria-label="Play background music">♪</button>
     </div>
 
-    <!-- Main Site Content (hidden initially) -->
-    <div class="main-site" id="mainSite">
-        <!-- Your main site content goes here -->
-        <nav class="nav" id="nav">
+    <!-- MAIN SITE -->
+    <div class="main-site" id="mainSite" role="main">
+        <!-- Mobile-Optimized Navigation -->
+        <nav class="nav" role="navigation" aria-label="Main navigation">
             <div class="nav-container">
-                <a href="#" class="nav-logo" onclick="location.reload()">DOOR 64</a>
+                <a href="index.html" class="nav-logo" aria-label="Door 64 Home">DOOR 64</a>
                 
+                <!-- Mobile hamburger menu button -->
+                <button class="mobile-menu" 
+                        onclick="toggleMobileMenu()" 
+                        aria-label="Toggle mobile menu"
+                        aria-expanded="false"
+                        aria-controls="navLinks">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                
+                <!-- Navigation links -->
+                <ul class="nav-links" id="navLinks" role="menubar">
+                    <li role="none"><a href="index.html" role="menuitem">64</a></li>
+                    <li role="none"><a href="space.html" role="menuitem">space</a></li>
+                    <li role="none"><a href="in.the.kitchen.html" role="menuitem">in the kitchen</a></li>
+                    <li role="none"><a href="at.the.bar.html" role="menuitem">at the bar</a></li>
+                    <li role="none"><a href="who.was.here.html" role="menuitem">who was here</a></li>
+                    <li role="none"><a href="what.to.do.html" role="menuitem">what to do</a></li>
+                    <li role="none"><a href="come.see.us.html" role="menuitem">come see us</a></li>
+                    <li role="none"><a href="hit.us.up.html" role="menuitem">hit us up</a></li>
+                </ul>
+                
+                <!-- Audio toggle button -->
                 <div class="nav-left-section">
-                    <!-- Audio Toggle Button -->
                     <button class="audio-toggle" 
                             onclick="toggleAudio(event)" 
-                            title="Toggle Background Music"
-                            aria-label="Toggle background music">
-                        ♪
-                    </button>
-                    
-                    <!-- Mobile Menu Button -->
-                    <button class="mobile-menu" aria-label="Toggle mobile menu" aria-expanded="false">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
+                            title="Play Background Music"
+                            aria-label="Play background music">♪</button>
                 </div>
-
-                <!-- Navigation Links -->
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="#landing">home</a></li>
-                    <li><a href="#space">space</a></li>
-                    <li><a href="#menus">menus</a></li>
-                    <li><a href="#events">events</a></li>
-                    <li><a href="#gallery">gallery</a></li>
-                    <li><a href="#contact">contact</a></li>
-                </ul>
             </div>
         </nav>
 
-        <!-- Your existing sections -->
-        <section id="landing" class="section landing-page active">
+        <!-- Landing Page -->
+        <main class="landing-page section active" id="main-content">
+            <div class="gallery-slider" role="presentation" aria-hidden="true"></div>
+            
             <div class="landing-content">
-                <h1>DOOR 64</h1>
-                <!-- Your existing landing content -->
-            </div>
-        </section>
-
-        <!-- Add your other sections here -->
-    </div>
-
-    <!-- Entry Overlays -->
-    <div class="entry-wrong-overlay" id="entryWrongOverlay">
-        <div class="success-content">
-            <div class="success-title">DOOR 64</div>
-            <div class="success-subtitle">Try Again</div>
-            <button class="enter-button" onclick="resetLetterSystem()">RESET</button>
-        </div>
-    </div>
-
-    <div class="entry-success-overlay" id="entrySuccessOverlay">
-        <div class="success-content">
-            <div class="success-title">DOOR 64</div>
-            <div class="success-subtitle">Access Granted</div>
-            <button class="enter-button" onclick="enterMainSite()">ENTER</button>
-        </div>
-    </div>
-
-    <!-- Link to your external JavaScript file -->
-    <script src="script.js"></script>
-
-    <script>
-        // Additional functions specific to splash page
-        function resetLetterSystem() {
-            // Hide overlays
-            const successOverlay = document.getElementById('entrySuccessOverlay');
-            const wrongOverlay = document.getElementById('entryWrongOverlay');
-            const statusHint = document.getElementById('statusHint');
-            
-            if (successOverlay) successOverlay.classList.remove('show');
-            if (wrongOverlay) wrongOverlay.classList.remove('show');
-            if (statusHint) statusHint.style.display = 'block';
-            
-            // Remove success animations
-            document.querySelectorAll('.letter-success').forEach(el => {
-                el.classList.remove('letter-success');
-            });
-            
-            // Restart letter system
-            setTimeout(() => {
-                if (window.door64LetterSystem) {
-                    window.door64LetterSystem.reset();
-                }
-            }, 500);
-        }
-
-        function enterMainSite() {
-            // Hide splash page and show main site
-            const splashPage = document.getElementById('splashPage');
-            const mainSite = document.getElementById('mainSite');
-            const statusHint = document.getElementById('statusHint');
-            
-            if (splashPage) {
-                splashPage.classList.add('hidden');
-                setTimeout(() => {
-                    splashPage.style.display = 'none';
-                }, 1200);
-            }
-            
-            if (mainSite) {
-                mainSite.classList.add('active');
-            }
-            
-            if (statusHint) {
-                statusHint.style.display = 'none';
-            }
-            
-            // Prepare audio for navigation
-            if (window.door64Audio) {
-                window.door64Audio.prepareForNavigation();
-            }
-            
-            console.log('Entered main site from interactive splash');
-        }
-
-        // Update status hint when letter changes
-        document.addEventListener('DOMContentLoaded', function() {
-            // Wait for letter system to initialize
-            setTimeout(() => {
-                if (window.door64LetterSystem) {
-                    // Override setRandomActiveLetter to update hint
-                    const originalSetRandomActiveLetter = window.door64LetterSystem.setRandomActiveLetter.bind(window.door64LetterSystem);
+                <a href="index.html" style="text-decoration: none;" aria-label="Door 64">
+                    <h1 class="embossed-logo" style="cursor: pointer;">DOOR 64</h1>
+                </a>
+                
+                <div class="landing-links">
+                    <div class="landing-link">
+                        <h3>space</h3>
+                        <div class="sub-links">
+                            <a href="in.the.kitchen.html">in the kitchen</a>
+                            <a href="at.the.bar.html">at the bar</a>
+                        </div>
+                    </div>
                     
-                    window.door64LetterSystem.setRandomActiveLetter = function() {
-                        originalSetRandomActiveLetter();
+                    <div class="landing-link">
+                        <h3>what to do</h3>
+                        <div class="sub-links">
+                            <a href="come.see.us.html">make reservation</a>
+                            <a href="what.to.do.html">upcoming events</a>
+                        </div>
+                    </div>
+                    
+                    <div class="landing-link">
+                        <h3>connect</h3>
+                        <div class="sub-links">
+                            <a href="who.was.here.html">who was here</a>
+                            <a href="come.see.us.html">come see us</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Landing Gallery -->
+                <section class="css-gallery" 
+                         id="landing-gallery" 
+                         role="region" 
+                         aria-label="Restaurant showcase gallery"
+                         aria-live="polite">
+                    <div class="gallery-container">
+                        <div class="gallery-track" id="landing-track" role="presentation">
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Intimate dining experience">
+                                <div class="gallery-content">
+                                    <h3>intimate dining experience</h3>
+                                    <p>where every meal becomes a memory</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Craft cocktails">
+                                <div class="gallery-content">
+                                    <h3>craft cocktails</h3>
+                                    <p>handcrafted with passion and precision</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Culinary artistry">
+                                <div class="gallery-content">
+                                    <h3>culinary artistry</h3>
+                                    <p>seasonal ingredients, chef's creativity</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Wine selection">
+                                <div class="gallery-content">
+                                    <h3>wine selection</h3>
+                                    <p>curated collection of exceptional wines</p>
+                                </div>
+                            </div>
+                            <div class="gallery-slide" 
+                                 style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')"
+                                 role="img"
+                                 aria-label="Elegant atmosphere">
+                                <div class="gallery-content">
+                                    <h3>elegant atmosphere</h3>
+                                    <p>designed for unforgettable experiences</p>
+                                </div>
+                            </div>
+                        </div>
                         
-                        const letter = this.letters[this.currentActiveIndex];
-                        const currentLetterElement = document.getElementById('currentLetter');
-                        if (currentLetterElement) {
-                            currentLetterElement.textContent = letter;
-                        }
-                    };
-                    
-                    // Set initial letter in hint
-                    window.door64LetterSystem.setRandomActiveLetter();
-                }
-            }, 100);
-        });
-    </script>
+                        <button class="gallery-nav prev" 
+                                onclick="previousSlide()" 
+                                aria-label="Previous image"
+                                title="Previous">‹</button>
+                        <button class="gallery-nav next" 
+                                onclick="nextSlide()" 
+                                aria-label="Next image"
+                                title="Next">›</button>
+                        
+                        <div class="gallery-dots" role="tablist" aria-label="Gallery navigation">
+                            <span class="gallery-dot active" 
+                                  onclick="goToSlide(0)" 
+                                  role="tab"
+                                  aria-label="Go to slide 1"
+                                  aria-selected="true"
+                                  tabindex="0"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(1)" 
+                                  role="tab"
+                                  aria-label="Go to slide 2"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(2)" 
+                                  role="tab"
+                                  aria-label="Go to slide 3"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(3)" 
+                                  role="tab"
+                                  aria-label="Go to slide 4"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
+                            <span class="gallery-dot" 
+                                  onclick="goToSlide(4)" 
+                                  role="tab"
+                                  aria-label="Go to slide 5"
+                                  aria-selected="false"
+                                  tabindex="-1"></span>
+                        </div>
+                        
+                        <div class="gallery-progress" role="progressbar" aria-label="Gallery progress" aria-hidden="true"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="assets/js/script.js"></script>
 </body>
 </html>
