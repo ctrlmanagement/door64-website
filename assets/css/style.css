@@ -571,6 +571,73 @@ body.menu-open {
     }
 }
 
+/* =============== ENTRY OVERLAY STYLES =============== */
+
+/* Wrong choice overlay */
+.entry-wrong-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    backdrop-filter: blur(10px);
+}
+
+.entry-wrong-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Success overlay */
+.entry-success-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    backdrop-filter: blur(10px);
+}
+
+.entry-success-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Letter success animation */
+.door-gallery li.letter-success {
+    animation: letterSuccess 1.2s ease-out;
+}
+
+.door-gallery li.letter-success img {
+    filter: blur(0px) brightness(1.5) contrast(1.6) !important;
+}
+
+@keyframes letterSuccess {
+    0% { transform: translate(-50%, -65%) scale(1); }
+    25% { transform: translate(-50%, -65%) scale(1.15) rotate(2deg); }
+    50% { transform: translate(-50%, -65%) scale(1.1) rotate(-1deg); }
+    75% { transform: translate(-50%, -65%) scale(1.12) rotate(1deg); }
+    100% { transform: translate(-50%, -65%) scale(1) rotate(0deg); }
+}
+
 /* Skip link for accessibility */
 .skip-link {
     position: absolute;
