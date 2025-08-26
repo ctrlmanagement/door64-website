@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>DOOR 64 - Kitchen Menu</title>
+    <title>Chef's Selection - Door 64</title>
     
     <!-- OPUI CSS Framework -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/opui-css@2.2.2/dist/ui.css">
@@ -176,7 +176,7 @@
             padding: 40px;
             background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
             border-radius: 6px;
-            border-left: 2px solid #333;
+            border-left: 2px solid #BE5103;
         }
 
         .experience-intro h2 {
@@ -194,6 +194,26 @@
             max-width: 600px;
             margin: 0 auto;
             text-transform: lowercase;
+            line-height: 1.8;
+        }
+
+        .tasting-menu {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 50px;
+            border-radius: 8px;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .tasting-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #BE5103;
+            border-radius: 2px 0 0 2px;
         }
 
         .menu-section {
@@ -218,7 +238,7 @@
             left: 0;
             width: 60px;
             height: 1px;
-            background: #000;
+            background: #BE5103;
         }
 
         .section-description {
@@ -229,125 +249,183 @@
             letter-spacing: 1px;
         }
 
-        .menu-item {
-            background: #fafafa;
+        .course-item {
+            margin-bottom: 40px;
             padding: 30px;
+            background: white;
             border-radius: 6px;
-            margin-bottom: 25px;
-            border-left: 3px solid #000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
         }
 
-        .menu-item:hover {
+        .course-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
 
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        .course-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #BE5103;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
             margin-bottom: 15px;
         }
 
-        .item-name {
-            font-size: 1.4rem;
+        .course-name {
+            font-size: 1.5rem;
             font-weight: 500;
             color: #1a1a1a;
+            margin-bottom: 12px;
             text-transform: lowercase;
             letter-spacing: 2px;
-            flex: 1;
         }
 
-        .item-price {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #000;
-            text-align: right;
-            white-space: nowrap;
-            margin-left: 20px;
-        }
-
-        .item-description {
+        .course-description {
             color: #666;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 1rem;
             text-transform: lowercase;
-            font-size: 0.95rem;
+            margin-bottom: 15px;
         }
 
-        .appetizer-grid {
+        .course-wine-pairing {
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 4px;
+            border-left: 3px solid #BE5103;
+            font-size: 0.9rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        .pairing-label {
+            font-weight: 600;
+            color: #BE5103;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-top: 30px;
+            gap: 40px;
+            margin: 60px 0;
         }
 
-        .appetizer-item {
-            background: #f8f8f8;
-            padding: 25px;
-            border-radius: 6px;
-            border-left: 2px solid #333;
+        .option-card {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .appetizer-name {
-            font-size: 1.1rem;
+        .option-card:hover {
+            border-color: #BE5103;
+            transform: translateY(-5px);
+        }
+
+        .option-title {
+            font-size: 1.6rem;
             font-weight: 500;
             color: #1a1a1a;
-            margin-bottom: 8px;
+            margin-bottom: 15px;
+            text-transform: lowercase;
+            letter-spacing: 2px;
+        }
+
+        .option-price {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #BE5103;
+            margin-bottom: 15px;
+        }
+
+        .option-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            text-transform: lowercase;
+            line-height: 1.6;
+        }
+
+        .option-includes {
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: lowercase;
+            font-style: italic;
+        }
+
+        .chef-note {
+            background: linear-gradient(135deg, #BE5103 0%, #A04402 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 50px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chef-note::before {
+            content: '"';
+            font-size: 120px;
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            opacity: 0.1;
+            font-family: Georgia, serif;
+        }
+
+        .chef-note p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
             text-transform: lowercase;
             letter-spacing: 1px;
+            color: white;
         }
 
-        .appetizer-description {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            text-transform: lowercase;
-        }
-
-        .appetizer-price {
-            font-weight: 600;
-            color: #000;
+        .chef-signature {
+            margin-top: 20px;
             font-size: 1rem;
+            font-style: italic;
+            opacity: 0.8;
+            color: white;
         }
 
-        .sides-selection {
-            background: linear-gradient(135deg, #fbfbfb 0%, #f5f5f5 100%);
-            padding: 40px;
+        .reservation-note {
+            background: #f9f9f9;
+            padding: 30px;
             border-radius: 6px;
             margin: 40px 0;
+            border-left: 3px solid #BE5103;
+            text-align: center;
         }
 
-        .sides-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .side-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px dotted #ddd;
-            font-size: 0.9rem;
-        }
-
-        .side-item:last-child {
-            border-bottom: none;
-        }
-
-        .side-name {
-            font-weight: 500;
+        .reservation-note h3 {
+            font-size: 1.3rem;
             color: #1a1a1a;
+            margin-bottom: 15px;
             text-transform: lowercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
-        .side-price {
-            font-weight: 600;
-            color: #000;
-            margin-left: 15px;
+        .reservation-note p {
+            color: #666;
+            font-size: 0.95rem;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
         }
 
         .menu-footer {
@@ -365,21 +443,6 @@
             text-transform: lowercase;
             letter-spacing: 1px;
             color: white;
-        }
-
-        .allergen-note {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 6px;
-            margin: 30px 0;
-            border-left: 3px solid #ccc;
-        }
-
-        .allergen-note p {
-            color: #666;
-            font-size: 0.85rem;
-            text-transform: lowercase;
-            letter-spacing: 0.5px;
         }
 
         /* Back to Kitchen Button */
@@ -497,33 +560,17 @@
                 padding: 40px 30px;
             }
 
-            .experience-intro {
-                padding: 25px;
-                margin-bottom: 40px;
+            .tasting-menu {
+                padding: 30px 25px;
             }
 
-            .section-title {
-                font-size: 1.6rem;
-                letter-spacing: 2px;
-            }
-
-            .item-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .item-price {
-                margin-left: 0;
-                margin-top: 5px;
-            }
-
-            .appetizer-grid {
+            .menu-options {
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 30px;
             }
 
-            .sides-grid {
-                grid-template-columns: 1fr;
+            .option-card {
+                padding: 30px;
             }
 
             .back-to-kitchen-btn {
@@ -543,7 +590,7 @@
             }
         }
 
-        /* Print Styles */
+        /* Print Styles - Optimized for 1-page PDF (compressed from 2 pages) */
         @media print {
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -554,8 +601,10 @@
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                font-size: 10px !important;
+                font-size: 9px !important;
                 line-height: 1.2 !important;
+                -webkit-font-smoothing: antialiased !important;
+                -moz-osx-font-smoothing: grayscale !important;
             }
 
             .nav, .pdf-download-btn, .back-to-kitchen-btn {
@@ -567,38 +616,244 @@
                 max-width: none !important;
                 margin: 0 !important;
                 border-radius: 0 !important;
+                width: 100% !important;
+                min-height: 100vh !important;
+                display: flex !important;
+                flex-direction: column !important;
             }
 
             .menu-header {
                 background: #BE5103 !important;
                 color: white !important;
                 padding: 20px 15px 12px !important;
+                page-break-after: avoid !important;
+                margin: 0 !important;
             }
 
             .restaurant-name {
-                font-size: 2rem !important;
-                letter-spacing: 3px !important;
+                font-size: 1.8rem !important;
+                letter-spacing: 2px !important;
                 margin-bottom: 3px !important;
                 text-shadow: none !important;
             }
 
-            .menu-body {
-                padding: 15px 12px !important;
+            .menu-subtitle {
+                font-size: 0.8rem !important;
+                letter-spacing: 1px !important;
             }
 
+            .menu-body {
+                padding: 15px 12px !important;
+                margin: 0 !important;
+                flex: 1 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+            }
+
+            .experience-intro {
+                margin-bottom: 12px !important;
+                padding: 12px !important;
+                page-break-after: avoid !important;
+            }
+
+            .experience-intro h2 {
+                font-size: 0.9rem !important;
+                margin-bottom: 4px !important;
+                letter-spacing: 1px !important;
+            }
+
+            .experience-intro p {
+                font-size: 0.65rem !important;
+                line-height: 1.1 !important;
+            }
+
+            .chef-note {
+                background: #BE5103 !important;
+                padding: 12px !important;
+                margin: 12px 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .chef-note p {
+                font-size: 0.7rem !important;
+                line-height: 1.2 !important;
+                color: white !important;
+            }
+
+            .chef-signature {
+                font-size: 0.6rem !important;
+                margin-top: 6px !important;
+                color: white !important;
+            }
+
+            /* Menu options - compact side by side */
+            .menu-options {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 15px !important;
+                margin: 15px 0 !important;
+                page-break-inside: avoid !important;
+            }
+
+            .option-card {
+                padding: 12px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .option-title {
+                font-size: 0.8rem !important;
+                margin-bottom: 4px !important;
+                letter-spacing: 0.5px !important;
+            }
+
+            .option-price {
+                font-size: 1.4rem !important;
+                margin-bottom: 4px !important;
+            }
+
+            .option-description {
+                font-size: 0.6rem !important;
+                line-height: 1.1 !important;
+                margin-bottom: 6px !important;
+            }
+
+            .option-includes {
+                font-size: 0.55rem !important;
+            }
+
+            /* Tasting menu - compressed but readable */
+            .tasting-menu {
+                padding: 12px !important;
+                margin: 15px 0 !important;
+                page-break-inside: avoid !important;
+                flex: 1 !important;
+            }
+
+            .section-title {
+                font-size: 1rem !important;
+                margin-bottom: 4px !important;
+                letter-spacing: 1px !important;
+                padding-bottom: 4px !important;
+            }
+
+            .section-description {
+                font-size: 0.65rem !important;
+                margin-bottom: 10px !important;
+            }
+
+            /* Courses in 2-column layout - compressed */
+            .tasting-menu .menu-section {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+
+            .course-item {
+                margin-bottom: 8px !important;
+                padding: 8px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .course-number {
+                width: 18px !important;
+                height: 18px !important;
+                line-height: 18px !important;
+                font-size: 0.6rem !important;
+                margin-bottom: 4px !important;
+            }
+
+            .course-name {
+                font-size: 0.7rem !important;
+                margin-bottom: 3px !important;
+                letter-spacing: 0.3px !important;
+            }
+
+            .course-description {
+                font-size: 0.6rem !important;
+                line-height: 1.1 !important;
+                margin-bottom: 4px !important;
+            }
+
+            .course-wine-pairing {
+                padding: 4px !important;
+                font-size: 0.55rem !important;
+                border-left: 2px solid #BE5103 !important;
+            }
+
+            .pairing-label {
+                font-size: 0.55rem !important;
+            }
+
+            .reservation-note {
+                padding: 10px !important;
+                margin: 12px 0 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .reservation-note h3 {
+                font-size: 0.75rem !important;
+                margin-bottom: 4px !important;
+                letter-spacing: 0.3px !important;
+            }
+
+            .reservation-note p {
+                font-size: 0.6rem !important;
+                line-height: 1.1 !important;
+            }
+
+            .menu-footer {
+                background: #BE5103 !important;
+                color: white !important;
+                padding: 8px !important;
+                margin-top: 8px !important;
+                page-break-inside: avoid !important;
+                margin-top: auto !important;
+            }
+            
             .footer-text {
                 color: white !important;
                 font-size: 0.6rem !important;
             }
 
+            /* Page settings for 1-page layout */
             @page {
                 size: A4 !important;
-                margin: 0.3in !important;
+                margin: 0.25in !important;
+            }
+
+            /* Force everything on one page */
+            * {
+                page-break-before: avoid !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+            }
+
+            /* Use flexbox to distribute content across full page height */
+            .menu-container {
+                page-break-inside: avoid !important;
+                min-height: calc(100vh - 0.5in) !important;
+            }
+
+            /* Override mobile styles during print */
+            @media (max-width: 768px) {
+                .menu-options {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+                
+                .tasting-menu .menu-section {
+                    grid-template-columns: 1fr 1fr !important;
+                }
             }
         }
     </style>
 </head>
 <body>
+
     <!-- MAIN SITE -->
     <div class="main-site active" id="mainSite">
         <!-- Back to Kitchen Button -->
@@ -632,201 +887,100 @@
             </div>
         </nav>
 
-        <!-- Menu Content -->
+        <!-- Main Content -->
         <div class="menu-container">
-        <div class="menu-header">
-            <h1 class="restaurant-name">DOOR 64</h1>
-            <p class="menu-subtitle">in the kitchen</p>
-        </div>
-
-        <div class="menu-body">
-            <div class="experience-intro">
-                <h2>culinary excellence</h2>
-                <p>our kitchen crafts each dish with passion and precision, using the finest ingredients to create memorable dining experiences that celebrate flavor, creativity, and the art of cooking.</p>
+            <div class="menu-header">
+                <h1 class="restaurant-name">DOOR 64</h1>
+                <p class="menu-subtitle">chef's selection</p>
             </div>
 
-            <div class="menu-section">
-                <h3 class="section-title">appetizers</h3>
-                <p class="section-description">small plates to start your journey</p>
-                
-                <div class="appetizer-grid">
-                    <div class="appetizer-item">
-                        <h5 class="appetizer-name">spring rolls</h5>
-                        <p class="appetizer-description">crispy vegetable spring rolls served with our signature sweet thai chili sauce.</p>
-                        <div class="appetizer-price">15</div>
-                    </div>
-                    
-                    <div class="appetizer-item">
-                        <h5 class="appetizer-name">salmon bites</h5>
-                        <p class="appetizer-description">fresh atlantic salmon bites, perfectly seasoned and served with sweet thai chili sauce.</p>
-                        <div class="appetizer-price">20</div>
-                    </div>
-                    
-                    <div class="appetizer-item">
-                        <h5 class="appetizer-name">fried calamari</h5>
-                        <p class="appetizer-description">tender rings of calamari, lightly battered and fried, served with zesty chipotle aioli.</p>
-                        <div class="appetizer-price">23</div>
-                    </div>
-                    
-                    <div class="appetizer-item">
-                        <h5 class="appetizer-name">baja tacos</h5>
-                        <p class="appetizer-description">choice of chicken, shrimp, or salmon with red cabbage, red onions, cilantro & baja sauce.</p>
-                        <div class="appetizer-price">15</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <h3 class="section-title">entrees</h3>
-                <p class="section-description">signature dishes from our kitchen</p>
-                
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">double smash burger</h4>
-                        <span class="item-price">20</span>
-                    </div>
-                    <p class="item-description">choice of beef or turkey, american cheese, grilled onions, pickles, and our signature 64 sauce.</p>
+            <div class="menu-body">
+                <div class="experience-intro">
+                    <h2>a culinary journey</h2>
+                    <p>allow our chef to take you on an extraordinary culinary adventure, featuring the finest seasonal ingredients and innovative techniques. each dish is carefully crafted to showcase our kitchen's artistry and passion for exceptional dining.</p>
                 </div>
 
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">glazed salmon</h4>
-                        <span class="item-price">28</span>
-                    </div>
-                    <p class="item-description">fresh atlantic salmon with honey glaze, served with whipped potatoes and seasonal vegetable medley.</p>
+                <div class="chef-note">
+                    <p>every evening, i personally select the finest ingredients available to create a unique tasting experience. this menu changes based on seasonality, inspiration, and the exceptional products that cross my kitchen each day.</p>
+                    <div class="chef-signature">— chef</div>
                 </div>
 
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">glazed lamb chops</h4>
-                        <span class="item-price">42</span>
+                <div class="menu-options">
+                    <div class="option-card">
+                        <h3 class="option-title">5-course experience</h3>
+                        <div class="option-price">$85</div>
+                        <p class="option-description">a thoughtfully curated journey through five distinctive courses, showcasing seasonal ingredients and creative techniques.</p>
+                        <div class="option-includes">wine pairings available for additional $35</div>
                     </div>
-                    <p class="item-description">perfectly grilled lamb chops with honey glaze, whipped potatoes, and seasonal vegetable medley.</p>
+
+                    <div class="option-card">
+                        <h3 class="option-title">7-course experience</h3>
+                        <div class="option-price">$125</div>
+                        <p class="option-description">our signature tasting menu featuring seven expertly crafted courses, each designed to surprise and delight your palate.</p>
+                        <div class="option-includes">wine pairings available for additional $55</div>
+                    </div>
                 </div>
 
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">steak and frites</h4>
-                        <span class="item-price">45</span>
-                    </div>
-                    <p class="item-description">8oz ribeye steak cooked to perfection, served with parmesan white truffle oil fries.</p>
-                </div>
+                <div class="tasting-menu">
+                    <div class="menu-section">
+                        <h3 class="section-title">sample evening menu</h3>
+                        <p class="section-description">tonight's inspiration (menu changes daily)</p>
+                        
+                        <div class="course-item">
+                            <div class="course-number">1</div>
+                            <h4 class="course-name">amuse-bouche</h4>
+                            <p class="course-description">compressed watermelon with feta mousse, micro basil, and aged balsamic pearls</p>
+                            <div class="course-wine-pairing">
+                                <span class="pairing-label">paired with:</span> sauvignon blanc, loire valley
+                            </div>
+                        </div>
 
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">grilled chicken & avocado club</h4>
-                        <span class="item-price">20</span>
-                    </div>
-                    <p class="item-description">grilled chicken breast on texas toast with lettuce, tomatoes, onions, chipotle aioli, and fries.</p>
-                </div>
+                        <div class="course-item">
+                            <div class="course-number">2</div>
+                            <h4 class="course-name">ocean</h4>
+                            <p class="course-description">seared diver scallops with cauliflower puree, crispy pancetta, and brown butter foam</p>
+                            <div class="course-wine-pairing">
+                                <span class="pairing-label">paired with:</span> chardonnay, burgundy
+                            </div>
+                        </div>
 
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">wings & fries</h4>
-                        <span class="item-price"></span>
-                    </div>
-                    <p class="item-description">crispy chicken wings served with your choice of seasoning and a side of fries.</p>
-                    <div style="margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 4px;">
-                        <p style="font-weight: 500; margin-bottom: 10px; color: #333; text-transform: lowercase; letter-spacing: 1px;">available flavors:</p>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px; text-transform: lowercase;">plain, lemon pepper, ranch seasoning, sweet thai chili sauce, honey garlic, bbq, garlic parmesan, hot, mild, mumbo, honey old bay, jerk, or 64 honey chipotle.</p>
-                        <p style="font-weight: 500; margin-bottom: 8px; color: #333; text-transform: lowercase; letter-spacing: 1px;">pricing by count:</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; font-size: 0.85rem; color: #555;">
-                            <span>6 pieces - $12</span>
-                            <span>10 pieces - $16</span>
-                            <span>15 pieces - $20</span>
-                            <span>20 pieces - $25</span>
-                            <span>30 pieces - $35</span>
-                            <span>40 pieces - $45</span>
-                            <span>50 pieces - $55</span>
-                            <span>75 pieces - $80</span>
-                            <span>100 pieces - $105</span>
+                        <div class="course-item">
+                            <div class="course-number">3</div>
+                            <h4 class="course-name">garden</h4>
+                            <p class="course-description">roasted beet salad with whipped goat cheese, candied walnuts, and microgreens</p>
+                            <div class="course-wine-pairing">
+                                <span class="pairing-label">paired with:</span> pinot noir, oregon
+                            </div>
+                        </div>
+
+                        <div class="course-item">
+                            <div class="course-number">4</div>
+                            <h4 class="course-name">land</h4>
+                            <p class="course-description">duck breast with cherry gastrique, wild rice pilaf, and roasted root vegetables</p>
+                            <div class="course-wine-pairing">
+                                <span class="pairing-label">paired with:</span> côtes du rhône, france
+                            </div>
+                        </div>
+
+                        <div class="course-item">
+                            <div class="course-number">5</div>
+                            <h4 class="course-name">sweet conclusion</h4>
+                            <p class="course-description">dark chocolate tart with salted caramel, vanilla bean ice cream, and gold leaf</p>
+                            <div class="course-wine-pairing">
+                                <span class="pairing-label">paired with:</span> port wine, portugal
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">fried shrimp & fries</h4>
-                        <span class="item-price">20</span>
-                    </div>
-                    <p class="item-description">golden fried shrimp served with our signature creamy cocktail sauce.</p>
+                <div class="reservation-note">
+                    <h3>reservations required</h3>
+                    <p>chef's selection experiences require 48-hour advance notice. please inform us of any dietary restrictions when making your reservation. our kitchen can accommodate most dietary needs with advance planning.</p>
                 </div>
 
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">maryland jumbo lump crab cake</h4>
-                        <span class="item-price">45</span>
-                    </div>
-                    <p class="item-description">8oz of premium lump crab meat with chipotle aioli, served with elote ribs.</p>
+                <div class="menu-footer">
+                    <p class="footer-text">64 third st nw, atlanta, ga 30308 • (404) 404-4004 • DOOR64ATL.com</p>
                 </div>
-
-                <div class="menu-item">
-                    <div class="item-header">
-                        <h4 class="item-name">spicy honey chicken chipotle pasta</h4>
-                        <span class="item-price">25</span>
-                    </div>
-                    <p class="item-description">rigatoni with bell peppers, onions, peas, asparagus, tortilla chip strips, and creamy chipotle sauce.</p>
-                </div>
-            </div>
-
-            <div class="sides-selection">
-                <h3 class="section-title">sides</h3>
-                <p class="section-description">perfect accompaniments to complete your meal</p>
-                
-                <div class="sides-grid">
-                    <div class="side-item">
-                        <span class="side-name">hibachi rice</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">vegetable fried rice</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">white rice</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">elote ribs</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">parmesan truffle fries</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">green beans</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">broccoli</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">vegetable medley</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">asparagus</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">onion rings</span>
-                        <span class="side-price">10</span>
-                    </div>
-                    <div class="side-item">
-                        <span class="side-name">crinkle fries</span>
-                        <span class="side-price">10</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="allergen-note">
-                <p>please inform your server of any dietary restrictions or allergies. our kitchen can accommodate most dietary needs with advance notice. all prices exclude tax and gratuity.</p>
-            </div>
-
-            <div class="menu-footer">
-                <p class="footer-text">64 third st nw, atlanta, ga 30308 • (404) 404-4004 • DOOR64ATL.com</p>
             </div>
         </div>
     </div>
@@ -859,7 +1013,7 @@
         // PDF Download functionality
         function downloadPDF() {
             const originalTitle = document.title;
-            document.title = 'DOOR 64 - Kitchen Menu';
+            document.title = 'DOOR 64 - Chef\'s Selection Menu';
             window.print();
             document.title = originalTitle;
         }
