@@ -782,7 +782,15 @@ class Door64InteractiveLetters {
     
     setRandomActiveLetter() {
         this.currentActiveIndex = Math.floor(Math.random() * this.letters.length);
-        console.log(`🎯 Correct letter: ${this.letters[this.currentActiveIndex]} (index: ${this.currentActiveIndex})`);
+        const letter = this.letters[this.currentActiveIndex];
+        
+        // Update status hint if it exists
+        const currentLetterElement = document.getElementById('currentLetter');
+        if (currentLetterElement) {
+            currentLetterElement.textContent = letter;
+        }
+        
+        console.log(`🎯 Correct letter: ${letter} (index: ${this.currentActiveIndex})`);
     }
     
     handleLetterClick(clickedIndex) {
@@ -808,6 +816,12 @@ class Door64InteractiveLetters {
         this.isSystemActive = false;
         this.stopRotation();
         
+        // Hide status hint
+        const statusHint = document.getElementById('statusHint');
+        if (statusHint) {
+            statusHint.style.display = 'none';
+        }
+        
         setTimeout(() => {
             const successOverlay = document.getElementById('entrySuccessOverlay');
             if (successOverlay) {
@@ -822,6 +836,12 @@ class Door64InteractiveLetters {
         console.log('🔄 Showing try again overlay');
         this.isSystemActive = false;
         this.stopRotation();
+        
+        // Hide status hint
+        const statusHint = document.getElementById('statusHint');
+        if (statusHint) {
+            statusHint.style.display = 'none';
+        }
         
         setTimeout(() => {
             const wrongOverlay = document.getElementById('entryWrongOverlay');
@@ -863,9 +883,11 @@ class Door64InteractiveLetters {
         // Hide overlays
         const successOverlay = document.getElementById('entrySuccessOverlay');
         const wrongOverlay = document.getElementById('entryWrongOverlay');
+        const statusHint = document.getElementById('statusHint');
         
         if (successOverlay) successOverlay.classList.remove('show');
         if (wrongOverlay) wrongOverlay.classList.remove('show');
+        if (statusHint) statusHint.style.display = 'block';
         
         this.setRandomActiveLetter();
         this.startRotation();
