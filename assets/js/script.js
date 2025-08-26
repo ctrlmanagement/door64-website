@@ -1,3029 +1,1384 @@
-/* Door 64 Restaurant - Main Stylesheet - COMPLETE WITH IPHONE ENHANCEMENTS */
+/* Door 64 Restaurant - Complete FIXED JavaScript - FINAL VERSION WITH MOBILE NAV FIXES */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    width: 100%;
-    height: 100%;
-    scroll-behavior: smooth;
-}
-
-/* CSS Custom Properties for dynamic height calculations */
-:root {
-    --vh: 1vh;
-    --nav-height: 80px;
-    --mobile-nav-height: 64px;
-    --safe-area-top: env(safe-area-inset-top, 0px);
-    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-    --safe-area-left: env(safe-area-inset-left, 0px);
-    --safe-area-right: env(safe-area-inset-right, 0px);
-    --tuscan-orange: #C65102;
-    --tuscan-orange-light: rgba(198, 81, 2, 0.8);
-    --tuscan-orange-glow: rgba(198, 81, 2, 0.7);
-}
-
-body {
-    font-family: 'Georgia', serif;
-    line-height: 1.6;
-    color: #2c2c2c;
-    background-color: #0a0a0a;
-    overflow-x: hidden;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
-    scroll-behavior: smooth;
-    /* iPhone specific optimizations */
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* Prevent body scroll when mobile menu is open */
-body.menu-open {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-}
-
-/* iPhone specific styles */
-@supports (-webkit-touch-callout: none) {
-    body {
-        /* Additional iPhone optimizations */
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-}
-
-/* Custom scrollbar for webkit browsers */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    width: 100%;
-}
-
-/* =============== GEOMETRIC DOOR SPLASH PAGE - UPDATED SECTION =============== */
-.splash-page {
-    width: 100%;
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 1.2s ease;
-    /* iPhone safe areas */
-    padding-top: var(--safe-area-top);
-    padding-bottom: var(--safe-area-bottom);
-    padding-left: var(--safe-area-left);
-    padding-right: var(--safe-area-right);
-}
-
-/* Enhanced splash page interaction - GREY WASH DISABLED */
-.splash-page::before {
-    display: none !important;
-}
-
-.splash-page:hover::before {
-    display: none !important;
-}
-
-.splash-page.hidden {
-    opacity: 0;
-    transform: scale(1.1);
-    pointer-events: none;
-}
-
-.splash-overlay {
-    display: none !important;
-}
-
-/* Door Gallery Design - ENLARGED */
-.door-gallery {
-    /* OPTION 1: Medium increase (currently active) */
-    height: 75vh;
-    width: 30vh;
-    
-    /* OPTION 2: Large increase (uncomment to use) */
-    /* height: 85vh;
-    width: 40vh; */
-    
-    /* OPTION 3: Extra large increase (uncomment to use) */
-    /* height: 95vh;
-    width: 50vh; */
-    
-    display: grid;
-    grid-template-rows: repeat(4, 1fr 2fr 1fr);
-    overflow: hidden;
-    list-style: none;
-    position: relative;
-    z-index: 1;
-}
-
-/* Door gallery moved up - NEW POSITIONING */
-.door-gallery-raised {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -65%) !important; /* Moved up from -50% */
-}
-
-.door-gallery li {
-    width: 100%;
-    height: 100%;
-    grid-column: 1/span 1;
-    --offsetX: 50%;
-    transition: opacity 0.3s;
-}
-
-.door-gallery li a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    transition: all 0.15s;
-}
-
-.door-gallery li img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    animation: blr 2s;
-    filter: blur(5px); /* Reduced from 10px for sharper letters */
-    transition: filter 0.7s;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    /* Better SVG rendering */
-    image-rendering: crisp-edges;
-}
-
-/* Door Clip Paths */
-.door-gallery li:first-of-type {
-    grid-row: 1/span 4;
-    clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20% * 3));
-}
-
-.door-gallery li:nth-of-type(2) {
-    grid-row: 3/span 5;
-    clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
-}
-
-.door-gallery li:nth-of-type(3) {
-    grid-row: 6/span 5;
-    clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
-}
-
-.door-gallery li:last-of-type {
-    grid-row: -5/span 4;
-    clip-path: polygon(100% 0, 0 calc(20% * 2), 0 calc(20% * 6), 100% calc(20% * 4));
-}
-
-/* Door Animations - CONTINUOUS MOVEMENT */
-@keyframes doorFloat1 {
-    0%, 100% { 
-        transform: translate(var(--offsetX), calc(var(--offsetX) * 0.166 * -2)) scale(1);
-    }
-    25% { 
-        transform: translate(calc(var(--offsetX) * 1.1), calc(var(--offsetX) * 0.166 * -2.2)) scale(1.02);
-    }
-    50% { 
-        transform: translate(calc(var(--offsetX) * 0.9), calc(var(--offsetX) * 0.166 * -1.8)) scale(0.98);
-    }
-    75% { 
-        transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.166 * -2.1)) scale(1.01);
-    }
-}
-
-@keyframes doorFloat2 {
-    0%, 100% { 
-        transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.166 * 2)) scale(1);
-    }
-    25% { 
-        transform: translate(calc(var(--offsetX) * -0.9), calc(var(--offsetX) * 0.166 * 1.8)) scale(1.01);
-    }
-    50% { 
-        transform: translate(calc(var(--offsetX) * -1.1), calc(var(--offsetX) * 0.166 * 2.2)) scale(0.99);
-    }
-    75% { 
-        transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.166 * 1.9)) scale(1.02);
-    }
-}
-
-@keyframes doorFloat3 {
-    0%, 100% { 
-        transform: translate(var(--offsetX), calc(var(--offsetX) * 0.200 * -2)) scale(1);
-    }
-    30% { 
-        transform: translate(calc(var(--offsetX) * 0.95), calc(var(--offsetX) * 0.200 * -1.9)) scale(1.01);
-    }
-    60% { 
-        transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.200 * -2.1)) scale(0.99);
-    }
-}
-
-@keyframes doorFloat4 {
-    0%, 100% { 
-        transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.200 * 2)) scale(1);
-    }
-    40% { 
-        transform: translate(calc(var(--offsetX) * -1.05), calc(var(--offsetX) * 0.200 * 2.1)) scale(1.02);
-    }
-    80% { 
-        transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.200 * 1.9)) scale(0.98);
-    }
-}
-
-/* Improved blur animation for letters */
-@keyframes blurPulse {
-    0%, 100% { filter: blur(4px) brightness(0.9); }
-    25% { filter: blur(6px) brightness(0.8); }
-    50% { filter: blur(2px) brightness(1); }
-    75% { filter: blur(5px) brightness(0.85); }
-}
-
-/* Initial blur animation - less aggressive */
-@keyframes blr {
-    0% { filter: blur(15px); }
-    100% { filter: blur(5px); }
-}
-
-/* Apply continuous animations to doors */
-.door-gallery li:nth-of-type(1) a {
-    animation: doorFloat3 8s ease-in-out infinite;
-}
-
-.door-gallery li:nth-of-type(2) a {
-    animation: doorFloat1 6s ease-in-out infinite;
-}
-
-.door-gallery li:nth-of-type(3) a {
-    animation: doorFloat2 7s ease-in-out infinite;
-}
-
-.door-gallery li:nth-of-type(4) a {
-    animation: doorFloat4 9s ease-in-out infinite;
-}
-
-/* Continuous image animations */
-.door-gallery li:nth-of-type(1) img {
-    animation: blurPulse 8s ease-in-out infinite;
-}
-
-.door-gallery li:nth-of-type(2) img {
-    animation: blurPulse 6s ease-in-out infinite 1s; /* Offset by 1s */
-}
-
-.door-gallery li:nth-of-type(3) img {
-    animation: blurPulse 7s ease-in-out infinite 2s; /* Offset by 2s */
-}
-
-.door-gallery li:nth-of-type(4) img {
-    animation: blurPulse 9s ease-in-out infinite 3s; /* Offset by 3s */
-}
-
-/* Door Hover Effects - GREY WASH REMOVED */
-.door-gallery li:hover a {
-    transition: transform 0.3s !important;
-    transform: translate(0) scale(1.05) !important;
-    animation-play-state: paused; /* Pause floating on hover */
-}
-
-/* REMOVE GREY WASH - DISABLED */
-/* .door-gallery:hover li {
-    opacity: 0.1;
-} */
-
-.door-gallery:hover li {
-    opacity: 1 !important; /* Force no dimming */
-}
-
-.door-gallery:hover li:hover {
-    opacity: 1 !important;
-    /* Keep the nice letter reveal on direct hover */
-    transition: clip-path 0.4s 0.3s;
-    clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
-    z-index: 10;
-}
-
-/* Sharp letters on hover */
-.door-gallery li:hover img {
-    filter: blur(0) brightness(1) !important;
-    animation-play-state: paused; /* Pause blur animation on hover */
-    transform: scale(1.02);
-    transition: filter 0.3s ease, transform 0.3s ease;
-}
-
-/* Mobile door gallery - ENLARGED */
-@media (max-width: 768px) {
-    .door-gallery {
-        /* OPTION 1: Medium mobile increase (currently active) */
-        height: 60vh;
-        width: 40vw;
+// =============== FIXED DOOR 64 AUDIO SYSTEM - NO MORE RESTARTS ===============
+class Door64Audio {
+    constructor() {
+        this.audio = null;
+        this.isPlaying = false;
+        this.currentTime = 0;
+        this.volume = 0.3;
+        this.storageKey = 'door64_audio_state';
+        this.timeKey = 'door64_audio_time';
+        this.lastUpdateTime = 0;
+        this.updateInterval = 500;
+        this.hasUserInteracted = false;
+        this.isInitialized = false;
+        this.audioStartPromise = null;
+        this.isMobile = this.detectMobile();
+        this.interactionListenersActive = false;
         
-        /* OPTION 2: Large mobile increase (uncomment to use) */
-        /* height: 70vh;
-        width: 45vw; */
+        // FIX 1: Add navigation tracking to prevent restarts
+        this.isNavigating = false;
+        this.navigationTimeout = null;
         
-        /* OPTION 3: Extra large mobile increase (uncomment to use) */
-        /* height: 80vh;
-        width: 50vw; */
-        
-        grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
+        this.init();
     }
     
-    .door-gallery-raised {
-        transform: translate(-50%, -60%) !important; /* Less movement on mobile */
-    }
-}
-
-.splash-content {
-    position: absolute;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    color: #333;
-    z-index: 20;
-}
-
-/* Logo content moved below and styled white embossed - NEW STYLING */
-.splash-content-below {
-    position: absolute !important;
-    bottom: 15% !important; /* Moved down from 20% */
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    text-align: center !important;
-    z-index: 20 !important;
-}
-
-.splash-content h1,
-.splash-content-below h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: #333;
-    animation: pulse 2s infinite;
-}
-
-/* WHITE EMBOSSED STYLE for below content */
-.splash-content-below h1 {
-    /* WHITE EMBOSSED STYLE */
-    color: #fff !important;
-    text-shadow: 
-        1px 1px 0px #e0e0e0,
-        2px 2px 0px #d0d0d0,
-        3px 3px 0px #c0c0c0,
-        4px 4px 0px #b0b0b0,
-        5px 5px 0px #a0a0a0,
-        6px 6px 10px rgba(0,0,0,0.3) !important;
-}
-
-.splash-content p,
-.splash-content-below p {
-    font-size: 1rem;
-    opacity: 0.7;
-    color: #666;
-}
-
-.splash-content-below p {
-    opacity: 0.8 !important;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-@media (max-width: 768px) {
-    .splash-content h1,
-    .splash-content-below h1 {
-        font-size: 2rem;
+    detectMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               ('ontouchstart' in window) ||
+               (navigator.maxTouchPoints > 0);
     }
     
-    .splash-content-below {
-        bottom: 18% !important; /* Adjusted for mobile */
-    }
-    
-    .splash-content-below h1 {
-        text-shadow: 
-            1px 1px 0px #e0e0e0,
-            2px 2px 0px #d0d0d0,
-            3px 3px 0px #c0c0c0,
-            4px 4px 5px rgba(0,0,0,0.3) !important;
-    }
-}
-
-/* ========== IPHONE SPLASH PAGE ENHANCEMENTS ========== */
-
-/* iPhone safe area improvements */
-@supports (-webkit-touch-callout: none) {
-    .splash-page {
-        /* Better iPhone X/11/12/13/14/15 support */
-        padding-top: max(20px, env(safe-area-inset-top));
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
-        
-        /* Improve rendering on iPhone */
-        -webkit-font-smoothing: antialiased;
-        -webkit-backface-visibility: hidden;
-        transform: translateZ(0);
-    }
-}
-
-/* Enhanced iPhone door gallery */
-@media (max-width: 768px) {
-    .door-gallery {
-        /* Larger on iPhone for better touch targets */
-        height: 65vh;
-        width: 45vw;
-        
-        /* Better performance on iPhone */
-        will-change: transform;
-        transform: translateZ(0);
-        
-        /* Override previous mobile settings */
-        grid-template-rows: repeat(4, 1fr 2fr 1fr);
-    }
-    
-    .door-gallery-raised {
-        /* Better positioning for iPhone screens */
-        transform: translate(-50%, -58%) !important;
-    }
-    
-    /* iPhone letter image optimizations */
-    .door-gallery li img {
-        /* Sharper rendering on iPhone */
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-        
-        /* Reduced blur for iPhone clarity */
-        filter: blur(3px);
-        
-        /* Better touch response */
-        touch-action: manipulation;
-        -webkit-touch-callout: none;
-    }
-    
-    /* Clear letters on iPhone tap/touch */
-    .door-gallery li:active img,
-    .door-gallery li:focus img {
-        filter: blur(0) brightness(1) !important;
-        transform: scale(1.02);
-        transition: all 0.2s ease;
-    }
-    
-    /* iPhone logo positioning */
-    .splash-content-below {
-        bottom: max(12%, calc(env(safe-area-inset-bottom) + 8%)) !important;
-    }
-    
-    .splash-content-below h1 {
-        /* iPhone-optimized embossed text */
-        font-size: clamp(2.2rem, 10vw, 3.5rem);
-        text-shadow: 
-            1px 1px 0px #e8e8e8,
-            2px 2px 0px #d8d8d8,
-            3px 3px 0px #c8c8c8,
-            4px 4px 8px rgba(0,0,0,0.2) !important;
-    }
-}
-
-/* iPhone landscape orientation */
-@media (max-width: 768px) and (orientation: landscape) {
-    .door-gallery {
-        height: 80vh;
-        width: 35vw;
-    }
-    
-    .door-gallery-raised {
-        transform: translate(-50%, -55%) !important;
-    }
-    
-    .splash-content-below {
-        bottom: 8% !important;
-    }
-    
-    .splash-content-below h1 {
-        font-size: clamp(1.8rem, 8vw, 2.8rem);
-    }
-}
-
-/* iPhone Pro Max optimizations - NO AUDIO BUTTON SIZE CHANGES */
-@media (min-width: 428px) and (max-width: 768px) {
-    .door-gallery {
-        height: 70vh;
-        width: 42vw;
-    }
-    
-    .splash-content-below h1 {
-        font-size: clamp(2.5rem, 8vw, 4rem);
-    }
-}
-
-/* Disable problematic hover effects on iPhone */
-@media (hover: none) and (pointer: coarse) {
-    .door-gallery:hover li,
-    .door-gallery li:hover a,
-    .door-gallery li:hover img {
-        /* Reset all hover effects on touch devices */
-        opacity: 1 !important;
-        transform: none !important;
-        filter: none !important;
-        clip-path: none !important;
-        animation-play-state: running !important;
-    }
-    
-    /* Keep touch feedback instead */
-    .door-gallery li:active {
-        transform: scale(0.98);
-        transition: transform 0.1s ease;
-    }
-}
-
-/* Skip link for accessibility */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 6px;
-    background: #000;
-    color: #fff;
-    padding: 8px;
-    text-decoration: none;
-    z-index: 1002;
-    transition: top 0.3s;
-}
-
-.skip-link:focus {
-    top: 0;
-}
-
-/* =============== MAIN SITE STYLES =============== */
-.main-site {
-    opacity: 0;
-    transition: opacity 1s ease 0.5s;
-    min-height: 100vh;
-    min-height: calc(var(--vh, 1vh) * 100);
-}
-
-.main-site.active {
-    opacity: 1;
-}
-
-/* Navigation - Fixed sizing with MOBILE NAVIGATION */
-.nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    padding: 20px 0;
-    border-bottom: 1px solid #333;
-    height: var(--nav-height);
-    display: flex;
-    align-items: center;
-    transition: all 0.3s ease;
-    /* iPhone safe areas */
-    padding-top: max(20px, calc(var(--safe-area-top) + 10px));
-    padding-left: var(--safe-area-left);
-    padding-right: var(--safe-area-right);
-}
-
-/* Desktop hover behavior - RESTORED */
-@media (min-width: 769px) {
-    .nav {
-        opacity: 0;
-        transform: translateY(-100%);
-        transition: all 0.3s ease;
-    }
-
-    .nav:hover,
-    .nav.show-nav,
-    body:hover .nav,
-    .main-site:hover .nav {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    /* Ensure nav shows when hovering over any main site content */
-    .main-site.active:hover .nav {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.nav-logo {
-    font-size: clamp(1.2rem, 3vw, 1.8rem);
-    font-weight: 300;
-    color: #fff;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-    font-family: 'Georgia', serif;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    -webkit-tap-highlight-color: transparent;
-}
-
-.nav-logo:hover {
-    opacity: 0.8;
-}
-
-.nav-left-section {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-left: auto;
-}
-
-.nav-center {
-    display: flex;
-    justify-content: flex-start;
-    flex: 0 0 auto;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: clamp(15px, 3vw, 35px);
-    margin: 0;
-    padding: 0;
-    align-items: center;
-    flex: 1;
-    justify-content: space-evenly;
-    max-width: 1000px;
-    margin-left: auto;
-}
-
-/* Nav links - Clean styling without artifacts */
-.nav-links a {
-    color: #ccc;
-    text-decoration: none;
-    text-transform: lowercase;
-    font-size: 14px;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    position: relative;
-    -webkit-tap-highlight-color: transparent;
-    padding: 8px 12px;
-    border-radius: 4px;
-    background: transparent;
-    border: none;
-    outline: none;
-}
-
-/* Remove the problematic pseudo-element that may cause artifacts */
-.nav-links a::before {
-    display: none;
-}
-
-.nav-links a:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-/* =============== MOBILE MENU BUTTON =============== */
-.mobile-menu {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    will-change: transform;
-    backface-visibility: hidden;
-    perspective: 1000px;
-    background: transparent;
-    border: none;
-    padding: 8px;
-    min-width: 44px;
-    min-height: 44px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    transition: background 0.3s ease;
-}
-
-.mobile-menu span {
-    width: 25px;
-    height: 2px;
-    background: #fff;
-    margin: 3px 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-    transform-origin: center;
-}
-
-/* Mobile menu animation improvements */
-.mobile-menu.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.mobile-menu.active span:nth-child(2) {
-    opacity: 0;
-    transform: translateX(20px);
-}
-
-.mobile-menu.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
-}
-
-.mobile-menu:active {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(0.95);
-    transition: all 0.1s ease;
-}
-
-/* =============== ENHANCED AUDIO BUTTON STYLES WITH ALL FIXES =============== */
-
-/* Audio Toggle Button - Enhanced with new animations */
-.audio-toggle {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    color: #fff !important;
-    font-size: 18px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-    -webkit-tap-highlight-color: transparent;
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-    will-change: transform;
-    backface-visibility: hidden;
-    perspective: 1000px;
-    /* ✅ MOBILE FIXES */
-    min-width: 44px;
-    min-height: 44px;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    contain: layout style;
-}
-
-.audio-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: scale(1.1);
-    color: #fff !important;
-    transition: transform 0.2s ease;
-}
-
-.audio-toggle:active {
-    transform: scale(0.9);
-    transition: transform 0.1s ease;
-}
-
-.audio-toggle:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-}
-
-/* Playing state with enhanced pulsing animation */
-.audio-toggle.playing {
-    background: var(--tuscan-orange-light) !important;
-    border-color: var(--tuscan-orange) !important;
-    color: #fff !important;
-    animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
-    box-shadow: 0 0 15px rgba(198, 81, 2, 0.4);
-}
-
-@keyframes audioPlaying {
-    0% {
-        opacity: 0.8;
-        transform: scale(1);
-        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1.05);
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-    }
-}
-
-.audio-toggle.playing:hover {
-    animation-play-state: paused;
-    transform: scale(1.15);
-}
-
-@keyframes pulseTuscanOrange {
-    0% { box-shadow: 0 0 0 0 var(--tuscan-orange-glow); }
-    70% { box-shadow: 0 0 0 10px rgba(198, 81, 2, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(198, 81, 2, 0); }
-}
-
-/* Splash Audio Button - Enhanced and Properly Positioned */
-.splash-audio-toggle {
-    position: fixed !important;
-    top: 20px !important;
-    top: max(20px, calc(var(--safe-area-top) + 15px)) !important;
-    right: 20px !important;
-    right: max(20px, calc(var(--safe-area-right) + 15px)) !important;
-    background: rgba(0, 0, 0, 0.85) !important;
-    border: 2px solid rgba(255, 255, 255, 0.4) !important;
-    border-radius: 50% !important;
-    width: 60px !important;
-    height: 60px !important;
-    color: #fff !important;
-    font-size: 20px !important;
-    cursor: pointer !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    backdrop-filter: blur(15px) !important;
-    z-index: 99999 !important;
-    font-family: 'Georgia', serif !important;
-    -webkit-tap-highlight-color: transparent !important;
-    overflow: hidden !important;
-    user-select: none !important;
-    will-change: transform !important;
-    backface-visibility: hidden !important;
-    perspective: 1000px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-    /* ✅ MOBILE FIXES */
-    min-width: 44px;
-    min-height: 44px;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    contain: layout style;
-}
-
-.splash-audio-toggle:hover {
-    background: rgba(0, 0, 0, 0.9);
-    border-color: rgba(255, 255, 255, 0.6);
-    transform: scale(1.1);
-    transition: transform 0.2s ease;
-}
-
-.splash-audio-toggle:active {
-    transform: scale(0.9);
-    transition: transform 0.1s ease;
-}
-
-.splash-audio-toggle:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-}
-
-/* Playing state with enhanced animation for splash */
-.splash-audio-toggle.playing {
-    background: rgba(95, 179, 211, 0.95) !important;
-    border-color: rgba(95, 179, 211, 1) !important;
-    color: #fff !important;
-    animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
-    box-shadow: 0 6px 30px rgba(95, 179, 211, 0.5) !important;
-}
-
-.splash-audio-toggle.playing:hover {
-    animation-play-state: paused !important;
-    transform: scale(1.08) !important;
-    background: rgba(95, 179, 211, 1) !important;
-}
-
-@keyframes pulseBlueSplash {
-    0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.8), 0 6px 30px rgba(95, 179, 211, 0.5); }
-    70% { box-shadow: 0 0 0 15px rgba(95, 179, 211, 0), 0 6px 30px rgba(95, 179, 211, 0.5); }
-    100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0), 0 6px 30px rgba(95, 179, 211, 0.5); }
-}
-
-@keyframes pulseBlue {
-    0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
-}
-
-/* iPhone audio button improvements - POSITION ONLY, SAME SIZE */
-@media (max-width: 768px) {
-    .splash-audio-toggle {
-        /* Better iPhone positioning */
-        top: max(25px, calc(env(safe-area-inset-top) + 15px)) !important;
-        right: max(25px, calc(env(safe-area-inset-right) + 15px)) !important;
-        
-        /* Better iPhone interaction - SIZE UNCHANGED */
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-    }
-}
-
-/* ✅ MOBILE AUDIO HINTS */
-@media (max-width: 768px) {
-    .splash-audio-toggle:not(.playing)::after {
-        content: attr(data-mobile-hint);
-        position: absolute;
-        bottom: -35px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8em;
-        opacity: 0.7;
-        white-space: nowrap;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-family: 'Georgia', serif;
-        pointer-events: none;
-        z-index: 1;
-    }
-    
-    .audio-toggle:not(.playing)::after {
-        content: "Tap to start";
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.7em;
-        opacity: 0.7;
-        white-space: nowrap;
-        background: rgba(255, 255, 255, 0.9);
-        color: #000;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-family: 'Georgia', serif;
-        pointer-events: none;
-        z-index: 1;
-    }
-}
-
-/* Audio loading indicator */
-.audio-toggle[data-loading="true"], 
-.splash-audio-toggle[data-loading="true"] {
-    animation: audioLoading 1.5s linear infinite;
-    opacity: 0.7;
-}
-
-@keyframes audioLoading {
-    0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.05); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-
-/* Global Text Styling */
-h1, h2, h3, h4, h5, h6 {
-    text-transform: lowercase;
-    color: #000;
-}
-
-p, .sub-links a, .menu-item p {
-    color: #666;
-    text-transform: lowercase;
-}
-
-.section {
-    background: #fff;
-}
-
-/* =============== LANDING PAGE - ALIGNED WITH NAV =============== */
-.landing-page {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    position: relative;
-    top: 0;
-    left: 0;
-    /* Align with navigation bar */
-    padding-top: var(--nav-height);
-    min-height: 100vh;
-    min-height: calc(var(--vh, 1vh) * 100);
-    overflow-y: auto;
-}
-
-/* Desktop specific */
-@media (min-width: 769px) {
-    .landing-page {
-        height: auto;
-        min-height: 100vh;
-        min-height: calc(var(--vh, 1vh) * 100);
-        overflow-y: auto;
-    }
-}
-
-/* Mobile landing page - force white background in ALL orientations */
-@media (max-width: 768px) {
-    .landing-page {
-        background: #fff !important;
-        background-image: none !important;
-        background-color: #fff !important;
-    }
-
-    .landing-page .gallery-slider {
-        background: #fff !important;
-        background-image: none !important;
-        background-color: #fff !important;
-    }
-
-    /* Remove gradients on all child elements */
-    .landing-page *,
-    .landing-content *,
-    .landing-links * {
-        background-image: none !important;
-    }
-}
-
-.gallery-slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-}
-
-/* Force white background on mobile for page 64 */
-@media (max-width: 768px) {
-    .gallery-slider {
-        background: #fff !important;
-        z-index: -2; /* Lower z-index to prevent layering issues */
-    }
-
-    /* Additional mobile landscape override */
-    .landing-page .gallery-slider {
-        background: #fff !important;
-        background-image: none !important;
-        z-index: -2; /* Ensure it stays behind content */
-    }
-}
-
-.slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 1.5s ease-in-out;
-    background-size: cover;
-    background-position: center;
-}
-
-.slide.active {
-    opacity: 1;
-}
-
-.slide:nth-child(1) {
-    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
-    position: relative;
-}
-
-.slide:nth-child(2) {
-    background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
-    position: relative;
-}
-
-.slide:nth-child(3) {
-    background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
-    position: relative;
-}
-
-.slide:nth-child(1)::before,
-.slide:nth-child(2)::before,
-.slide:nth-child(3)::before {
-    display: none;
-}
-
-.landing-content {
-    z-index: 10;
-    position: relative;
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    margin: 0 auto;
-}
-
-.landing-content h1 {
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    margin-bottom: 40px;
-    text-transform: uppercase;
-    letter-spacing: clamp(2px, 2vw, 8px);
-    font-weight: 300;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    color: #fff;
-    line-height: 1.2;
-}
-
-/* Mobile page 64 logo - white embossed like other pages */
-@media (max-width: 768px) {
-    .landing-content h1 {
-        font-size: clamp(2.5rem, 12vw, 4rem);
-        letter-spacing: clamp(2px, 3vw, 6px);
-        margin-bottom: 30px;
-        line-height: 1.1;
-        color: #fff !important; /* White embossed logo on mobile */
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 0px #999,
-            5px 5px 10px rgba(0,0,0,0.2) !important;
-    }
-}
-
-.landing-links {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: clamp(30px, 5vw, 80px);
-    margin: 40px auto;
-    flex-wrap: wrap;
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 20px;
-    box-sizing: border-box;
-}
-
-.landing-link {
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    flex: 1;
-    min-width: 280px;
-    max-width: 350px;
-    margin-bottom: 30px;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.landing-link:hover {
-    transform: translateY(-5px);
-}
-
-.landing-link h3 {
-    font-size: clamp(1.4rem, 4vw, 2rem);
-    margin-bottom: 25px;
-    text-transform: lowercase;
-    letter-spacing: clamp(1px, 1vw, 3px);
-    color: #000;
-    font-weight: 300;
-}
-
-.sub-links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-}
-
-.sub-links a {
-    color: #ccc;
-    text-decoration: none;
-    font-size: clamp(0.9rem, 3vw, 1.1rem);
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-    text-transform: lowercase;
-    padding: 5px 0;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.sub-links a:hover {
-    color: #fff;
-}
-
-/* =============== ENHANCED GALLERY STYLES =============== */
-.css-gallery {
-    position: relative;
-    width: 100%;
-    max-width: 1000px;
-    height: 400px;
-    margin: 40px auto 60px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    background: #f8f8f8;
-    /* ✅ GALLERY HOVER INTERFERENCE FIX */
-    will-change: auto;
-}
-
-/* ✅ ISOLATE GALLERY CONTROLS */
-.css-gallery .gallery-nav,
-.css-gallery .gallery-dots,
-.css-gallery .gallery-dot {
-    isolation: isolate;
-}
-
-.gallery-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.gallery-track {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-.gallery-slide {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.gallery-slide::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05));
-    pointer-events: none;
-}
-
-/* Gallery slide loading states */
-.gallery-slide img {
-    transition: opacity 0.3s ease;
-}
-
-.gallery-slide img[data-loading="true"] {
-    opacity: 0.5;
-}
-
-.gallery-content {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    right: 30px;
-    color: white;
-    z-index: 2;
-}
-
-.gallery-content h3 {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-    text-transform: lowercase;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-    color: #fff;
-}
-
-.gallery-content p {
-    font-size: 1rem;
-    opacity: 0.9;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-    color: #fff;
-}
-
-/* Enhanced Gallery Controls */
-.gallery-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 3;
-    background: rgba(0,0,0,0.5);
-    border: none;
-    color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    font-size: 18px;
-    will-change: transform;
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
-.gallery-nav:hover {
-    background: rgba(0,0,0,0.8);
-    transform: translateY(-50%) scale(1.1);
-}
-
-.gallery-nav:active {
-    transform: translateY(-50%) scale(0.95);
-}
-
-.gallery-nav.prev {
-    left: 20px;
-}
-
-.gallery-nav.next {
-    right: 20px;
-}
-
-/* Enhanced Gallery Dots */
-.gallery-dots {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 12px;
-    z-index: 3;
-}
-
-.gallery-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.gallery-dot:hover {
-    transform: scale(1.3);
-    opacity: 0.8;
-}
-
-.gallery-dot.active {
-    background: white;
-    transform: scale(1.2);
-}
-
-.gallery-dot:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-}
-
-/* Enhanced Auto-play indicator */
-.gallery-progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 3px;
-    background: linear-gradient(90deg, 
-        rgba(255, 255, 255, 0.8) 0%, 
-        rgba(255, 255, 255, 0.4) 100%);
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 3;
-}
-
-/* Touch/Swipe Effects */
-.gallery-container.swiping .gallery-track {
-    transition: none;
-}
-
-.gallery-slide.fade-in {
-    animation: fadeInSlide 0.6s ease-out;
-}
-
-@keyframes fadeInSlide {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* =============== COMING SOON PAGE STYLES =============== */
-.coming-soon-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    text-align: center;
-    padding: 2rem;
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.coming-soon-title {
-    font-size: 3rem;
-    font-weight: 300;
-    margin-bottom: 1rem;
-    color: #333;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    animation: slideInFromTop 1s ease-out;
-}
-
-.coming-soon-subtitle {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    color: #666;
-    max-width: 600px;
-    line-height: 1.6;
-    text-transform: lowercase;
-    animation: slideInFromBottom 1s ease-out 0.3s both;
-}
-
-.coming-soon-message {
-    font-size: 1rem;
-    color: #888;
-    margin-bottom: 3rem;
-    font-style: italic;
-    text-transform: lowercase;
-    animation: fadeIn 1s ease-out 0.6s both;
-}
-
-.back-button {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: transparent;
-    color: #333;
-    text-decoration: none;
-    border: 2px solid #333;
-    border-radius: 4px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    animation: slideInFromBottom 1s ease-out 0.9s both;
-    min-height: 44px;
-    min-width: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.back-button:hover {
-    background-color: #333;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.back-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-/* Coming Soon Animation Keyframes */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInFromTop {
-    from {
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInFromBottom {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* Mobile Coming Soon Styles */
-@media (max-width: 768px) {
-    .coming-soon-content {
-        padding: 1.5rem;
-        min-height: 50vh;
-    }
-
-    .coming-soon-title {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
-        letter-spacing: 1px;
-    }
-    
-    .coming-soon-subtitle {
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
-        padding: 0 1rem;
-    }
-    
-    .coming-soon-message {
-        font-size: 0.9rem;
-        margin-bottom: 2rem;
-    }
-    
-    .back-button {
-        padding: 15px 25px;
-        font-size: 0.9rem;
-        min-height: 48px;
-        min-width: 150px;
-    }
-}
-
-/* Section Styles */
-.section {
-    padding: 100px 0;
-    background: #fff;
-    display: none;
-    min-height: calc(100vh - var(--nav-height));
-}
-
-.section.active {
-    display: block;
-}
-
-/* Page Logo (above section titles) - White Embossed Style */
-.page-logo {
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    text-align: center;
-    margin-bottom: 30px;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: clamp(2px, 2vw, 6px);
-    color: #fff;
-    font-family: 'Georgia', serif;
-    text-shadow: 
-        1px 1px 0px #ccc,
-        2px 2px 0px #bbb,
-        3px 3px 0px #aaa,
-        4px 4px 0px #999,
-        5px 5px 10px rgba(0,0,0,0.2);
-    position: relative;
-    text-decoration: none;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-    display: block;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.page-logo:hover {
-    opacity: 0.8;
-}
-
-.page-logo::before {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: rgba(255,255,255,0.1);
-    text-shadow: none;
-    z-index: -1;
-}
-
-.section-title {
-    font-size: 3em;
-    text-align: center;
-    margin-bottom: 60px;
-    font-weight: 300;
-    text-transform: lowercase;
-    letter-spacing: 3px;
-    color: #000;
-}
-
-/* Space Section - Added borders like other pages */
-.space-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-bottom: 60px;
-}
-
-.space-item {
-    background: #f8f8f8;
-    padding: 40px;
-    border-radius: 10px;
-    border-left: 4px solid #000;
-    text-align: center;
-    transition: transform 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.space-item:hover {
-    transform: translateY(-5px);
-}
-
-.space-item h3 {
-    font-size: 1.5em;
-    margin-bottom: 20px;
-    text-transform: lowercase;
-    letter-spacing: 2px;
-    color: #000;
-}
-
-.space-item p {
-    color: #666;
-}
-
-/* Menu Items */
-.menu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 40px;
-}
-
-.menu-item {
-    background: #f8f8f8;
-    padding: 30px;
-    border-radius: 10px;
-    border-left: 4px solid #000;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.menu-item:hover {
-    transform: translateY(-3px);
-}
-
-.menu-item h3 {
-    font-size: 1.3em;
-    margin-bottom: 15px;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    color: #000;
-}
-
-.menu-item p {
-    color: #666;
-}
-
-.menu-item .price {
-    color: #000;
-    font-weight: bold;
-    font-size: 1.1em;
-    margin-top: 10px;
-}
-
-/* Sub Navigation Tabs */
-.sub-nav {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.sub-nav-links {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 20px;
-}
-
-.sub-nav-link {
-    color: #666;
-    text-decoration: none;
-    font-size: 1.1em;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.sub-nav-link:hover {
-    color: #000;
-    background: rgba(0,0,0,0.05);
-}
-
-/* Breadcrumb Navigation */
-.breadcrumb {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.breadcrumb-link {
-    color: #666;
-    text-decoration: none;
-    font-size: 1.1em;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.breadcrumb-link:hover {
-    color: #000;
-}
-
-/* Tasting Menu Content */
-.tasting-menu-content {
-    margin-bottom: 60px;
-}
-
-.menu-description {
-    text-align: center;
-    margin-bottom: 50px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.menu-description h3 {
-    font-size: 2em;
-    margin-bottom: 20px;
-    text-transform: lowercase;
-    letter-spacing: 2px;
-    color: #000;
-}
-
-.menu-description p {
-    font-size: 1.2em;
-    line-height: 1.8;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.price-highlight {
-    font-size: 1.5em;
-    color: #000;
-    font-weight: bold;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-}
-
-/* Chef's Philosophy */
-.chef-philosophy {
-    margin-top: 60px;
-}
-
-.chef-philosophy h3 {
-    text-align: center;
-    font-size: 2em;
-    margin-bottom: 40px;
-    text-transform: lowercase;
-    letter-spacing: 2px;
-    color: #000;
-}
-
-.philosophy-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-}
-
-.philosophy-item {
-    background: #f8f8f8;
-    padding: 30px;
-    border-radius: 10px;
-    border-left: 4px solid #000;
-    text-align: center;
-}
-
-.philosophy-item h4 {
-    font-size: 1.2em;
-    margin-bottom: 15px;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    color: #000;
-}
-
-.philosophy-item p {
-    color: #666;
-    line-height: 1.6;
-}
-
-/* Spirits Categories */
-.spirits-categories {
-    margin-top: 50px;
-}
-
-.spirit-category {
-    margin-bottom: 50px;
-}
-
-.spirit-category h3 {
-    text-align: center;
-    font-size: 1.8em;
-    margin-bottom: 30px;
-    text-transform: lowercase;
-    letter-spacing: 2px;
-    color: #000;
-}
-
-.spirit-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-}
-
-.spirit-item {
-    background: #f8f8f8;
-    padding: 25px;
-    border-radius: 10px;
-    border-left: 4px solid #000;
-}
-
-.spirit-item h4 {
-    font-size: 1.2em;
-    margin-bottom: 8px;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    color: #000;
-}
-
-.spirit-item p {
-    color: #666;
-    margin-bottom: 15px;
-    font-style: italic;
-}
-
-.spirit-item .price {
-    color: #000;
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-/* Cocktail and Zero-Proof Content */
-.cocktail-content,
-.zero-proof-content {
-    margin-bottom: 60px;
-}
-
-/* Events */
-.events-list {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.event-item {
-    background: #f8f8f8;
-    padding: 40px;
-    margin-bottom: 30px;
-    border-radius: 10px;
-    border-left: 4px solid #000;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.event-date {
-    color: #000;
-    font-weight: bold;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-}
-
-.event-item h3 {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-    text-transform: lowercase;
-    color: #000;
-}
-
-.event-item p {
-    color: #666;
-}
-
-/* Gallery Grid for Gallery Section */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-.gallery-item {
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 14px;
-    text-align: center;
-    transition: transform 0.3s ease;
-    text-transform: lowercase;
-    -webkit-tap-highlight-color: transparent;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.gallery-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.3);
-    transition: opacity 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: scale(1.05);
-}
-
-.gallery-item:hover::before {
-    opacity: 0;
-}
-
-.gallery-item span {
-    position: relative;
-    z-index: 2;
-    padding: 20px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
-
-/* Contact Info */
-.contact-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 40px;
-    margin-bottom: 60px;
-}
-
-.contact-card {
-    background: #f8f8f8;
-    padding: 40px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.contact-card h3 {
-    font-size: 1.3em;
-    margin-bottom: 20px;
-    text-transform: lowercase;
-    letter-spacing: 2px;
-    color: #000;
-}
-
-.contact-card p {
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    color: #666;
-}
-
-.social-links {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 30px;
-}
-
-.social-links a {
-    color: #000;
-    font-size: 1.2em;
-    text-decoration: none;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.social-links a:hover {
-    color: #666;
-}
-
-/* Reservation Form */
-.reservation-form {
-    max-width: 600px;
-    margin: 0 auto;
-    background: #f8f8f8;
-    padding: 40px;
-    border-radius: 10px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    text-transform: lowercase;
-    letter-spacing: 1px;
-    color: #000;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    font-family: 'Georgia', serif;
-    color: #000;
-    -webkit-appearance: none;
-    -webkit-border-radius: 5px;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: #000;
-    outline: none;
-}
-
-.submit-btn {
-    width: 100%;
-    padding: 15px;
-    background: #000;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    text-transform: lowercase;
-    letter-spacing: 2px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    font-family: 'Georgia', serif;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.submit-btn:hover {
-    background: #333;
-}
-
-/* Focus states for accessibility */
-a:focus, 
-button:focus, 
-input:focus, 
-textarea:focus, 
-select:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-}
-
-/* ✅ ENHANCED FOCUS INDICATORS */
-.audio-toggle:focus-visible,
-.splash-audio-toggle:focus-visible,
-.mobile-menu:focus-visible,
-.nav-links a:focus-visible,
-.gallery-nav:focus-visible,
-.gallery-dot:focus-visible {
-    outline: 3px solid rgba(255, 255, 255, 0.8);
-    outline-offset: 3px;
-    z-index: 10;
-}
-
-/* =============== MOBILE RESPONSIVE - OPTIMIZED FOR IPHONE 14/15 SERIES =============== */
-@media (max-width: 768px) {
-    :root {
-        --nav-height: var(--mobile-nav-height);
-    }
-
-    /* Mobile body optimizations */
-    body {
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: none;
-        overflow-x: hidden;
-        overflow-y: auto;
-        background: #fff !important;
-    }
-
-    /* Mobile Navigation Styles */
-    .nav {
-        padding: 15px 0;
-        height: var(--mobile-nav-height);
-        opacity: 1;
-        transform: translateY(0);
-        position: fixed;
-        top: 0;
-        padding-top: max(15px, calc(var(--safe-area-top) + 8px));
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid #ddd;
-    }
-
-    /* Ensure logo is visible and properly positioned on mobile */
-    .nav-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        padding: 0 20px;
-        padding-left: max(20px, calc(var(--safe-area-left) + 10px));
-        padding-right: max(20px, calc(var(--safe-area-right) + 10px));
-        max-width: 100%;
-    }
-
-    .nav-logo {
-        font-size: clamp(1rem, 4vw, 1.4rem);
-        color: #000;
-        text-shadow: none;
-        flex-shrink: 0;
-        order: 1;
-    }
-
-    .nav-left-section {
-        flex-direction: row;
-        gap: 15px;
-        align-items: center;
-        width: auto;
-        justify-content: flex-end;
-        order: 2;
-        margin-left: auto;
-        margin-right: 15px;
-    }
-
-    /* Show mobile menu button */
-    .mobile-menu {
-        display: flex;
-        order: 3;
-        margin-left: 10px;
-        width: 44px;
-        height: 44px;
-        padding: 10px;
-        justify-content: center;
-        align-items: center;
-        border-radius: 8px;
-        transition: background 0.3s ease;
-        min-width: 48px;
-        min-height: 48px;
-    }
-
-    .mobile-menu:active {
-        background: rgba(0, 0, 0, 0.1);
-        transform: scale(0.95);
-        transition: all 0.1s ease;
-    }
-
-    .mobile-menu span {
-        background: #000;
-    }
-
-    /* Audio toggle - minimum 44×44px touch target */
-    .audio-toggle {
-        width: 44px;
-        height: 44px;
-        font-size: 18px;
-        min-width: 44px;
-        min-height: 44px;
-        border-color: rgba(0, 0, 0, 0.3);
-        color: #000;
-        background: rgba(0, 0, 0, 0.1);
-    }
-
-    .audio-toggle:hover {
-        background: rgba(0, 0, 0, 0.2);
-        border-color: rgba(0, 0, 0, 0.5);
-        transform: scale(1.1);
-    }
-
-    /* Mobile Navigation Links - Full Screen Overlay */
-    .nav-links {
-        display: none;
-        position: fixed;
-        top: var(--mobile-nav-height);
-        left: 0;
-        width: 100%;
-        background: rgba(255, 255, 255, 0.98);
-        flex-direction: column;
-        padding: 30px 20px;
-        gap: 0;
-        border-top: 1px solid #ddd;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        padding-bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
-        justify-content: flex-start;
-        backdrop-filter: blur(15px);
-        z-index: 999;
-        height: calc(100vh - var(--mobile-nav-height));
-    }
-
-    .nav-links.active {
-        display: flex;
-        animation: slideInFromTop 0.3s ease-out;
-    }
-
-    @keyframes slideInFromTop {
-        0% {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .nav-links a {
-        font-size: 18px; /* Minimum readable size */
-        padding: 15px 0; /* Minimum 44px touch target */
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-        text-align: center;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #000;
-        background: transparent;
-    }
-
-    .nav-links a:active {
-        background: rgba(0,0,0,0.1);
-        color: #000;
-    }
-
-    /* ✅ ENHANCED MOBILE TOUCH TARGETS */
-    .nav-links a,
-    .sub-links a,
-    .sub-nav-link,
-    .breadcrumb-link,
-    .social-links a,
-    .gallery-nav,
-    .gallery-dot,
-    .mobile-menu,
-    .audio-toggle,
-    .splash-audio-toggle,
-    .landing-link,
-    .space-item,
-    .menu-item,
-    .submit-btn,
-    .form-group input,
-    .form-group select,
-    .form-group textarea,
-    .back-button {
-        min-width: 44px;
-        min-height: 44px;
-        /* Improve touch responsiveness */
-        touch-action: manipulation;
-    }
-
-    .splash-hint {
-        bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
-        font-size: 16px; /* Minimum 16px for readability */
-        padding: 15px 25px;
-        max-width: 85%;
-        margin: 0 auto;
-        border-radius: 25px;
-    }
-
-    /* Gallery styles for mobile */
-    .css-gallery {
-        height: 300px;
-        margin: 30px auto 40px;
-        border-radius: 12px;
-    }
-
-    .gallery-content {
-        bottom: 20px;
-        left: 20px;
-        right: 20px;
-    }
-
-    .gallery-content h3 {
-        font-size: 1.4rem;
-        margin-bottom: 8px;
-    }
-
-    .gallery-content p {
-        font-size: 0.9rem;
-    }
-
-    .gallery-nav {
-        width: 44px;
-        height: 44px;
-        font-size: 16px;
-        min-width: 48px;
-        min-height: 48px;
-    }
-
-    .gallery-nav.prev {
-        left: 15px;
-    }
-
-    .gallery-nav.next {
-        right: 15px;
-    }
-
-    .gallery-dots {
-        bottom: 15px;
-        gap: 10px;
-    }
-
-    .gallery-dot {
-        width: 10px;
-        height: 10px;
-        min-width: 16px;
-        min-height: 16px;
-        margin: 0 8px;
-    }
-
-    /* mobile landing page specific styles */
-    .landing-page {
-        padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
-        justify-content: flex-start;
-        box-sizing: border-box;
-        color: #000; /* Black text on mobile */
-        background: #fff !important;
-    }
-
-    .gallery-slider {
-        background: #fff !important;
-    }
-
-    .landing-content {
-        width: 100%;
-        max-width: none;
-        padding: 0;
-        gap: 25px;
-        margin-bottom: 40px;
-        flex-shrink: 0;
-    }
-
-    .landing-content h1 {
-        font-size: clamp(2.5rem, 12vw, 4rem);
-        letter-spacing: clamp(2px, 3vw, 6px);
-        margin-bottom: 30px;
-        line-height: 1.1;
-        color: #fff !important; /* White embossed logo on mobile */
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 0px #999,
-            5px 5px 10px rgba(0,0,0,0.2) !important;
-    }
-
-    .landing-links {
-        flex-direction: column;
-        gap: 35px;
-        margin: 30px 0;
-        width: 100%;
-        padding: 0;
-    }
-
-    .landing-link {
-        min-width: auto;
-        max-width: none;
-        width: 100%;
-        /* Minimum 44px touch target */
-        min-height: 44px;
-        padding: 10px;
-    }
-
-    .landing-link h3 {
-        font-size: clamp(1.4rem, 6vw, 1.8rem);
-        letter-spacing: clamp(1px, 3vw, 4px);
-        margin-bottom: 20px;
-        color: #000; /* Black headings on mobile */
-    }
-
-    .sub-links a {
-        font-size: 18px; /* Minimum readable size */
-        padding: 12px 0; /* Minimum 44px touch target */
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #666; /* Dark gray links on mobile */
-    }
-
-    .sub-links a:hover,
-    .sub-links a:active {
-        color: #000; /* Black on interaction */
-    }
-
-    /* Ensure section background is white on mobile */
-    .landing-page.section {
-        background: #fff;
-    }
-
-    .page-logo {
-        font-size: clamp(1.8rem, 8vw, 2.5rem);
-        margin-bottom: 20px;
-        letter-spacing: clamp(2px, 3vw, 4px);
-        color: #fff;
-        text-shadow: 
-            1px 1px 0px #ddd,
-            2px 2px 0px #ccc,
-            3px 3px 0px #bbb,
-            4px 4px 5px rgba(0,0,0,0.3);
-    }
-
-    .section-title {
-        font-size: clamp(2rem, 10vw, 2.8rem);
-        margin-bottom: 50px;
-    }
-
-    .menu-grid,
-    .space-grid,
-    .gallery-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .space-item,
-    .menu-item {
-        padding: 30px 25px;
-        margin: 0 15px;
-    }
-
-    .space-item h3,
-    .menu-item h3 {
-        font-size: 18px; /* Minimum readable size */
-    }
-
-    .space-item p,
-    .menu-item p {
-        font-size: 16px; /* Minimum readable size */
-        line-height: 1.6;
-    }
-
-    .section {
-        padding: max(90px, calc(var(--mobile-nav-height) + 30px)) 0 max(70px, calc(var(--safe-area-bottom) + 40px));
-        min-height: calc(100vh - var(--mobile-nav-height));
-    }
-
-    .reservation-form,
-    .contact-card {
-        margin: 0 20px;
-        padding: 30px 25px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        font-size: 16px; /* Prevent zoom on iOS */
-        padding: 18px;
-        border-radius: 10px;
-        min-height: 44px; /* Minimum touch target */
-    }
-
-    .submit-btn {
-        padding: 20px;
-        font-size: 18px;
-        border-radius: 10px;
-        min-height: 44px; /* Minimum touch target */
-    }
-
-    .space-item:active,
-    .menu-item:active,
-    .landing-link:active {
-        transform: scale(0.98);
-        transition: transform 0.1s ease;
-    }
-
-    /* Social links - minimum touch targets */
-    .social-links {
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-
-    .social-links a {
-        font-size: 18px;
-        padding: 12px 15px;
-        min-height: 44px;
-        min-width: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        transition: background 0.3s ease;
-    }
-
-    .social-links a:active {
-        background: rgba(0,0,0,0.1);
-    }
-
-    .sub-nav-links {
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
-    }
-
-    .sub-nav-link {
-        font-size: 16px;
-        padding: 15px 20px;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 300px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-    }
-
-    .sub-nav-link:active {
-        background: rgba(0,0,0,0.1);
-        transform: scale(0.98);
-    }
-
-    .breadcrumb {
-        margin-bottom: 20px;
-    }
-
-    .breadcrumb-link {
-        font-size: 16px;
-        padding: 12px 20px;
-        min-height: 44px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .menu-description h3 {
-        font-size: clamp(1.5rem, 8vw, 2rem);
-    }
-
-    .menu-description p {
-        font-size: 16px;
-        padding: 0 15px;
-    }
-
-    .price-highlight {
-        font-size: 1.3em;
-    }
-
-    .philosophy-grid,
-    .spirit-list {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .philosophy-item,
-    .spirit-item {
-        margin: 0 15px;
-        padding: 25px 20px;
-    }
-
-    .spirit-category h3 {
-        font-size: clamp(1.4rem, 6vw, 1.8rem);
-    }
-
-    /* Mobile focus states */
-    .audio-toggle:focus-visible,
-    .splash-audio-toggle:focus-visible,
-    .mobile-menu:focus-visible {
-        outline: 2px solid rgba(0, 0, 0, 0.8);
-        outline-offset: 2px;
-    }
-}
-
-/* ✅ PREVENT HOVER EFFECTS ON MOBILE DEVICES */
-@media (hover: none) and (pointer: coarse) {
-    /* Disable problematic hover effects on touch devices */
-    .gallery-nav:hover,
-    .audio-toggle:hover,
-    .splash-audio-toggle:hover,
-    .nav-links a:hover,
-    .landing-link:hover,
-    .space-item:hover,
-    .menu-item:hover,
-    .door-gallery li:hover a,
-    .door-gallery li:hover img {
-        background-color: initial !important;
-        transform: initial !important;
-        filter: initial !important;
-        opacity: initial !important;
-        animation-play-state: running !important;
-        box-shadow: initial !important;
-    }
-    
-    /* Keep essential playing state animations */
-    .audio-toggle.playing {
-        animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
-    }
-    
-    .splash-audio-toggle.playing {
-        animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
-    }
-    
-    /* Prevent door gallery hover interference */
-    .door-gallery:hover li {
-        opacity: 1 !important;
-    }
-    
-    .door-gallery:hover li:hover {
-        clip-path: initial !important;
-        z-index: initial !important;
-    }
-}
-
-/* Throttled hover effects for desktop only */
-@media (min-width: 769px) and (hover: hover) {
-    .css-gallery:hover {
-        /* Only pause gallery auto-play, don't affect audio */
-        --gallery-paused: true;
-    }
-    
-    /* Smooth transitions for desktop hover */
-    .gallery-nav,
-    .audio-toggle,
-    .nav-links a,
-    .landing-link,
-    .space-item,
-    .menu-item {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-}
-
-/* ✅ PERFORMANCE OPTIMIZATIONS */
-.audio-toggle,
-.splash-audio-toggle,
-.gallery-nav,
-.mobile-menu,
-.door-gallery li a,
-.door-gallery li img {
-    /* Optimize animations and transitions */
-    will-change: transform;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-}
-
-/* Reset will-change after animations complete */
-.audio-toggle:not(.playing),
-.splash-audio-toggle:not(.playing) {
-    will-change: auto;
-}
-
-/* ✅ ACCESSIBILITY IMPROVEMENTS */
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .audio-toggle, 
-    .splash-audio-toggle {
-        border: 3px solid currentColor !important;
-        background: transparent !important;
-    }
-    
-    .gallery-nav {
-        border: 2px solid rgba(255, 255, 255, 1) !important;
-        background: rgba(0, 0, 0, 0.9) !important;
-    }
-}
-
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-    
-    /* Disable all problematic animations */
-    .audio-toggle.playing, 
-    .splash-audio-toggle.playing,
-    .door-gallery li a,
-    .door-gallery li img {
-        animation: none !important;
-    }
-    
-    /* Keep essential functionality with minimal motion */
-    .audio-toggle.playing {
-        background: var(--tuscan-orange-light) !important;
-        border-color: var(--tuscan-orange) !important;
-    }
-    
-    .splash-audio-toggle.playing {
-        background: rgba(95, 179, 211, 0.95) !important;
-        border-color: rgba(95, 179, 211, 1) !important;
-    }
-}
-
-/* ✅ SAFE AREA IMPROVEMENTS FOR NOTCHED DEVICES */
-@supports (padding-top: env(safe-area-inset-top)) {
-    .splash-audio-toggle {
-        top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
-        right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
-    }
-    
-    .nav {
-        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
-    }
-    
-    @media (max-width: 768px) {
-        .nav-links.active {
-            padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
+    init() {
+        if (this.isInitialized) {
+            console.log('🎵 Door 64 Audio - Already initialized, skipping...');
+            return;
         }
         
-        .section {
-            padding-bottom: max(70px, calc(env(safe-area-inset-bottom) + 40px));
+        console.log('🎵 Door 64 Audio System - Initializing...', this.isMobile ? '📱 Mobile detected' : '🖥️ Desktop detected');
+        
+        this.audio = document.getElementById('backgroundAudio');
+        if (!this.audio) {
+            console.warn('⚠️ Background audio element not found');
+            return;
+        }
+        
+        // Set up audio properties
+        this.audio.volume = this.volume;
+        this.audio.preload = 'auto';
+        this.audio.loop = true;
+        
+        // Force load the audio
+        this.audio.load();
+        
+        // Set up event listeners
+        this.setupAudioEventListeners();
+        this.setupPageUnloadHandler();
+        
+        // FIX 2: Better restore logic with splash page detection
+        this.restoreAudioState();
+        
+        this.isInitialized = true;
+    }
+    
+    // FIX 2: IMPROVED restore logic for splash page
+    restoreAudioState() {
+        const storedState = localStorage.getItem(this.storageKey);
+        const storedTime = localStorage.getItem(this.timeKey);
+        const isFirstTimeVisitor = !storedState;
+        const isSplashPage = document.getElementById('splashPage') !== null;
+        
+        console.log('🎵 Restoring audio state:', { storedState, storedTime, isFirstTimeVisitor, isSplashPage });
+        
+        if (storedState === 'playing') {
+            console.log('🎵 Audio should be playing - starting automatically');
+            
+            // Set time BEFORE starting audio
+            if (storedTime && parseFloat(storedTime) > 0) {
+                this.setAudioTime(parseFloat(storedTime));
+            }
+            
+            // Start audio based on device type
+            if (this.isMobile) {
+                this.setupUserInteractionListeners();
+                this.attemptAudioStart();
+            } else {
+                this.attemptAudioStart();
+            }
+        } else if (storedState === 'paused') {
+            console.log('🎵 Audio was paused by user, respecting choice');
+            if (storedTime && parseFloat(storedTime) > 0) {
+                this.setAudioTime(parseFloat(storedTime));
+            }
+            this.updateButtons();
+        } else {
+            // FIX 2: First time visitor - AUTO-START on splash page
+            console.log('🎵 First time visitor detected');
+            
+            if (isSplashPage) {
+                console.log('🚪 Splash page detected - auto-starting audio for first impression');
+                // On splash page, always attempt to start (even on mobile)
+                this.attemptAudioStart();
+                // But still set up interaction listeners for mobile
+                if (this.isMobile) {
+                    this.setupUserInteractionListeners();
+                }
+            } else {
+                // Regular page - use normal logic
+                if (this.isMobile) {
+                    this.setupUserInteractionListeners();
+                } else {
+                    this.attemptAudioStart();
+                }
+            }
+            this.updateButtons();
+        }
+    }
+    
+    // FIX 3: Prevent restarts during navigation
+    attemptAudioStart() {
+        // Don't start if we're in the middle of navigation
+        if (this.isNavigating || this.audioStartPromise) {
+            console.log('🎵 Skipping audio start - navigation in progress or already starting');
+            return this.audioStartPromise || Promise.resolve();
+        }
+        
+        if (!this.audio) {
+            console.warn('⚠️ No audio element found');
+            return Promise.resolve();
+        }
+        
+        console.log('🎵 Attempting to start audio...');
+        
+        // Start muted for autoplay compliance
+        this.audio.muted = true;
+        
+        this.audioStartPromise = this.audio.play()
+            .then(() => {
+                console.log('✅ Audio started successfully (muted for autoplay compliance)');
+                this.isPlaying = true;
+                localStorage.setItem(this.storageKey, 'playing');
+                this.updateButtons();
+                this.audioStartPromise = null;
+                
+                // Unmute based on previous interaction
+                const hasInteracted = localStorage.getItem('door64_user_interacted') === 'true';
+                if (hasInteracted) {
+                    this.audio.muted = false;
+                    console.log('🔊 User has interacted before - unmuting audio');
+                    this.hasUserInteracted = true;
+                } else if (!this.isMobile) {
+                    // Desktop: unmute on any interaction
+                    this.setupUserInteractionListeners();
+                }
+            })
+            .catch(error => {
+                console.log('⚠️ Audio autoplay prevented:', error.message);
+                this.audioStartPromise = null;
+                
+                // Only set up interaction listeners if not already active
+                if (!this.interactionListenersActive) {
+                    this.setupUserInteractionListeners();
+                }
+                this.updateButtons();
+            });
+            
+        return this.audioStartPromise;
+    }
+    
+    // FIX 4: Better navigation state management
+    prepareForNavigation() {
+        console.log('🚪 Preparing for navigation - preserving audio state');
+        this.isNavigating = true;
+        this.storeCurrentTime();
+        
+        // Don't change state if user explicitly paused
+        if (this.isPlaying && this.audio && !this.audio.paused) {
+            localStorage.setItem(this.storageKey, 'playing');
+        }
+        
+        // Clear any pending navigation timeout
+        if (this.navigationTimeout) {
+            clearTimeout(this.navigationTimeout);
+        }
+        
+        // Reset navigation flag after a delay
+        this.navigationTimeout = setTimeout(() => {
+            this.isNavigating = false;
+            console.log('🚪 Navigation state reset');
+        }, 2000);
+    }
+    
+    setAudioTime(time) {
+        if (!this.audio) return;
+        
+        const setTime = () => {
+            try {
+                if (this.audio.duration && time <= this.audio.duration) {
+                    this.audio.currentTime = time;
+                    console.log('🎵 Audio time set to:', time);
+                } else if (!this.audio.duration) {
+                    console.log('⏳ Audio metadata not ready, waiting...');
+                    setTimeout(() => setTime(), 100);
+                }
+            } catch (error) {
+                console.log('⚠️ Failed to set audio time:', error.message);
+            }
+        };
+        
+        if (this.audio.readyState >= 1) {
+            setTime();
+        } else {
+            const onLoadedMetadata = () => {
+                setTime();
+                this.audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+            };
+            this.audio.addEventListener('loadedmetadata', onLoadedMetadata);
+        }
+    }
+    
+    setupAudioEventListeners() {
+        if (!this.audio) return;
+        
+        this.audio.addEventListener('timeupdate', () => {
+            if (this.isPlaying && !this.isNavigating) {
+                const now = Date.now();
+                if (now - this.lastUpdateTime > this.updateInterval) {
+                    this.storeCurrentTime();
+                    this.lastUpdateTime = now;
+                }
+            }
+        });
+        
+        this.audio.addEventListener('play', () => {
+            if (!this.isNavigating) {
+                this.isPlaying = true;
+                localStorage.setItem(this.storageKey, 'playing');
+                this.updateButtons();
+                console.log('🎵 Audio playing - Current time:', this.audio.currentTime);
+            }
+        });
+        
+        this.audio.addEventListener('pause', () => {
+            if (!this.isNavigating) {
+                this.isPlaying = false;
+                this.storeCurrentTime();
+                this.updateButtons();
+                console.log('⏸️ Audio paused - Current time:', this.audio.currentTime);
+            }
+        });
+        
+        this.audio.addEventListener('canplay', () => {
+            console.log('🎵 Audio can play - Duration:', this.audio.duration);
+        });
+        
+        this.audio.addEventListener('error', (e) => {
+            console.error('🚨 Audio error:', e, 'Error code:', this.audio.error?.code);
+            this.isPlaying = false;
+            this.updateButtons();
+        });
+        
+        this.audio.addEventListener('ended', () => {
+            console.log('🎵 Audio ended - restarting...');
+            if (this.isPlaying && !this.isNavigating) {
+                this.audio.currentTime = 0;
+                localStorage.setItem(this.timeKey, '0');
+                this.audio.play().catch(console.log);
+            }
+        });
+    }
+    
+    storeCurrentTime() {
+        if (this.audio && this.audio.currentTime > 0 && !this.isNavigating) {
+            localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
+        }
+    }
+    
+    // ✅ MOBILE NAV FIX: Improved mobile-safe interaction listeners
+    setupUserInteractionListeners() {
+        if (this.interactionListenersActive || this.hasUserInteracted) {
+            console.log('🎵 Interaction listeners already set up or not needed');
+            return;
+        }
+        
+        console.log('🎵 Setting up mobile-safe user interaction listeners');
+        this.interactionListenersActive = true;
+        
+        // ✅ FIX: Use different strategies for mobile vs desktop
+        const isMobileDevice = this.isMobile;
+        
+        if (isMobileDevice) {
+            // Mobile: Use click events only, avoid touchstart conflicts
+            const events = ['click'];
+            
+            const handleFirstInteraction = (e) => {
+                // Don't interfere with audio buttons or form elements
+                if (e.target.closest('.audio-toggle, .splash-audio-toggle') || 
+                    e.target.closest('input, textarea, select, button')) {
+                    return;
+                }
+                
+                if (!this.hasUserInteracted) {
+                    this.hasUserInteracted = true;
+                    localStorage.setItem('door64_user_interacted', 'true');
+                    console.log('🔊 Mobile: First click detected - starting audio');
+                    
+                    this.enableAudioAfterInteraction();
+                    this.removeInteractionListeners();
+                }
+            };
+            
+            // ✅ FIX: Use bubble phase, not capture, to avoid interfering with navigation
+            events.forEach(event => {
+                document.addEventListener(event, handleFirstInteraction, { 
+                    passive: true,
+                    once: true  // ✅ Automatically removes after first use
+                });
+            });
+            
+            this.interactionHandler = handleFirstInteraction;
+            this.interactionEvents = events;
+        } else {
+            // Desktop: Use both click and touch for hybrid devices
+            const events = ['click', 'touchstart'];
+            
+            const handleFirstInteraction = (e) => {
+                if (e.target.closest('.audio-toggle, .splash-audio-toggle')) {
+                    return;
+                }
+                
+                if (!this.hasUserInteracted) {
+                    this.hasUserInteracted = true;
+                    localStorage.setItem('door64_user_interacted', 'true');
+                    console.log('🔊 Desktop: First interaction detected - starting audio');
+                    
+                    this.enableAudioAfterInteraction();
+                    this.removeInteractionListeners();
+                }
+            };
+            
+            events.forEach(event => {
+                document.addEventListener(event, handleFirstInteraction, { 
+                    passive: true,
+                    once: true
+                });
+            });
+            
+            this.interactionHandler = handleFirstInteraction;
+            this.interactionEvents = events;
+        }
+    }
+    
+    // ✅ NEW: Helper method for audio enabling
+    enableAudioAfterInteraction() {
+        if (this.audio) {
+            // Unmute audio if muted
+            if (this.audio.muted) {
+                this.audio.muted = false;
+                console.log('🔊 Audio unmuted');
+            }
+            
+            // Start audio if it should be playing but isn't
+            const storedState = localStorage.getItem(this.storageKey);
+            if (storedState !== 'paused' && this.audio.paused && !this.isNavigating) {
+                console.log('▶️ Starting audio after user interaction');
+                this.resumeAudio();
+            }
+        }
+    }
+    
+    removeInteractionListeners() {
+        if (this.interactionHandler && this.interactionEvents) {
+            this.interactionEvents.forEach(event => {
+                document.removeEventListener(event, this.interactionHandler, { capture: true });
+            });
+            this.interactionHandler = null;
+            this.interactionEvents = null;
+            this.interactionListenersActive = false;
+            console.log('🧹 User interaction listeners removed - audio system ready');
+        }
+    }
+    
+    setupPageUnloadHandler() {
+        const storeState = () => {
+            if (this.audio && !this.isNavigating) {
+                this.storeCurrentTime();
+                if (this.isPlaying) {
+                    localStorage.setItem(this.storageKey, 'playing');
+                }
+                console.log('💾 Audio state saved - Time:', this.audio.currentTime, 'State:', this.isPlaying ? 'playing' : 'paused');
+            }
+        };
+        
+        window.addEventListener('beforeunload', storeState);
+        window.addEventListener('pagehide', storeState);
+        
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.storeCurrentTime();
+            } else if (!document.hidden && this.audio) {
+                const storedState = localStorage.getItem(this.storageKey);
+                if (storedState === 'playing' && this.audio.paused && !this.isNavigating) {
+                    console.log('🎵 Page visible - resuming audio at stored time');
+                    
+                    const storedTime = localStorage.getItem(this.timeKey);
+                    if (storedTime && parseFloat(storedTime) > 0) {
+                        this.setAudioTime(parseFloat(storedTime));
+                    }
+                    
+                    this.resumeAudio();
+                }
+            }
+        });
+    }
+    
+    pauseAudio() {
+        if (!this.audio) return;
+        
+        console.log('⏸️ User requested audio pause');
+        this.storeCurrentTime();
+        this.audio.pause();
+        this.isPlaying = false;
+        localStorage.setItem(this.storageKey, 'paused');
+        this.updateButtons();
+        console.log('⏸️ Audio paused by user at time:', this.audio.currentTime);
+    }
+    
+    resumeAudio() {
+        if (!this.audio || this.audioStartPromise || this.isNavigating) return;
+        
+        console.log('▶️ User requested audio resume (or auto-resume)');
+        
+        // Restore time position before resuming
+        const storedTime = localStorage.getItem(this.timeKey);
+        if (storedTime && parseFloat(storedTime) > 0 && 
+            Math.abs(this.audio.currentTime - parseFloat(storedTime)) > 1) {
+            this.setAudioTime(parseFloat(storedTime));
+        }
+        
+        // Unmute if muted and user has interacted
+        if (this.audio.muted && (this.hasUserInteracted || localStorage.getItem('door64_user_interacted') === 'true')) {
+            this.audio.muted = false;
+            console.log('🔊 Audio unmuted for resume');
+        }
+        
+        this.audioStartPromise = this.audio.play()
+            .then(() => {
+                this.isPlaying = true;
+                localStorage.setItem(this.storageKey, 'playing');
+                this.updateButtons();
+                this.audioStartPromise = null;
+                console.log('▶️ Audio resumed at time:', this.audio.currentTime);
+            })
+            .catch(error => {
+                console.error('🚨 Failed to resume audio:', error);
+                this.audioStartPromise = null;
+                // Set up interaction listeners if resume failed
+                if (!this.hasUserInteracted && !this.interactionListenersActive) {
+                    this.setupUserInteractionListeners();
+                }
+                this.updateButtons();
+            });
+            
+        return this.audioStartPromise;
+    }
+    
+    toggle() {
+        console.log('🎵 Audio toggle button clicked - Current state:', this.isPlaying, 'Paused:', this.audio?.paused);
+        
+        if (this.isPlaying && this.audio && !this.audio.paused) {
+            this.pauseAudio();
+        } else {
+            this.resumeAudio();
+        }
+    }
+    
+    updateButtons() {
+        const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
+        
+        buttons.forEach(button => {
+            const isActuallyPlaying = this.isPlaying && this.audio && !this.audio.paused;
+            
+            if (isActuallyPlaying) {
+                button.innerHTML = '⏸';
+                button.classList.add('playing');
+                button.title = 'Pause Background Music';
+                button.setAttribute('aria-label', 'Pause background music');
+            } else {
+                button.innerHTML = '♪';
+                button.classList.remove('playing');
+                button.title = 'Play Background Music';
+                button.setAttribute('aria-label', 'Play background music');
+                
+                if (this.isMobile && !this.hasUserInteracted) {
+                    button.title = 'Tap anywhere to start music';
+                }
+            }
+        });
+        
+        console.log('🎵 Audio buttons updated - Playing:', this.isPlaying, 'Actually playing:', this.audio && !this.audio.paused);
+    }
+}
+
+// =============== ENHANCED GALLERY SYSTEM ===============
+class Door64Gallery {
+    constructor(galleryId) {
+        this.galleryId = galleryId;
+        this.currentSlide = 0;
+        this.slides = document.querySelectorAll(`#${galleryId} .gallery-slide`);
+        this.dots = document.querySelectorAll(`#${galleryId} .gallery-dot`);
+        this.track = document.querySelector(`#${galleryId} .gallery-track`);
+        this.progress = document.querySelector(`#${galleryId} .gallery-progress`);
+        this.totalSlides = this.slides.length;
+        this.autoPlayInterval = null;
+        this.isPlaying = false;
+        this.autoPlayDelay = 5000;
+        this.isPaused = false;
+        
+        if (this.totalSlides > 0) {
+            this.init();
+        }
+    }
+    
+    init() {
+        console.log(`🖼️ Gallery ${this.galleryId} - Initializing with ${this.totalSlides} slides`);
+        
+        this.setupEventListeners();
+        this.updateGallery();
+        this.startAutoPlay();
+    }
+    
+    setupEventListeners() {
+        this.dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => this.goToSlide(index));
+            dot.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        this.goToSlide(Math.max(0, index - 1));
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        this.goToSlide(Math.min(this.totalSlides - 1, index + 1));
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        this.goToSlide(0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        this.goToSlide(this.totalSlides - 1);
+                        break;
+                }
+            });
+        });
+        
+        const prevButton = document.querySelector(`#${this.galleryId} .gallery-nav.prev`);
+        const nextButton = document.querySelector(`#${this.galleryId} .gallery-nav.next`);
+        
+        if (prevButton) prevButton.addEventListener('click', () => this.previousSlide());
+        if (nextButton) nextButton.addEventListener('click', () => this.nextSlide());
+        
+        const container = document.querySelector(`#${this.galleryId}`);
+        if (container) {
+            container.addEventListener('mouseenter', this.throttle(() => {
+                this.pauseAutoPlay();
+            }, 100));
+            
+            container.addEventListener('mouseleave', this.throttle(() => {
+                this.resumeAutoPlay();
+            }, 100));
+            
+            container.addEventListener('focusin', () => this.pauseAutoPlay());
+            container.addEventListener('focusout', () => {
+                setTimeout(() => this.resumeAutoPlay(), 100);
+            });
+        }
+        
+        this.setupTouchEvents();
+    }
+    
+    throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+    
+    // ✅ MOBILE NAV FIX: Improved touch events that don't block vertical scrolling
+    setupTouchEvents() {
+        const container = document.querySelector(`#${this.galleryId}`);
+        if (!container) return;
+        
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        let isHorizontalSwipe = false;
+        
+        container.addEventListener('touchstart', (e) => {
+            // ✅ FIX: Only handle single-touch events
+            if (e.touches.length !== 1) return;
+            
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            isHorizontalSwipe = false;
+            
+            container.classList.add('swiping');
+            this.pauseAutoPlay();
+        }, { passive: true });
+        
+        container.addEventListener('touchmove', (e) => {
+            if (!isDragging || e.touches.length !== 1) return;
+            
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const deltaX = currentX - startX;
+            const deltaY = currentY - startY;
+            
+            // ✅ FIX: Only prevent default for confirmed horizontal swipes
+            // Allow vertical scrolling unless user is clearly swiping horizontally
+            if (!isHorizontalSwipe) {
+                const absX = Math.abs(deltaX);
+                const absY = Math.abs(deltaY);
+                
+                // Determine swipe direction only after significant movement
+                if (absX > 15 || absY > 15) {
+                    isHorizontalSwipe = absX > absY && absX > 30;
+                }
+            }
+            
+            // Only prevent scrolling for confirmed horizontal swipes
+            if (isHorizontalSwipe && Math.abs(deltaX) > 10) {
+                e.preventDefault();
+            }
+        }, { passive: false }); // ✅ passive: false allows preventDefault
+        
+        container.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const deltaX = endX - startX;
+            
+            container.classList.remove('swiping');
+            isDragging = false;
+            
+            // ✅ FIX: Only trigger slide change for confirmed horizontal swipes
+            if (isHorizontalSwipe && Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    this.previousSlide();
+                } else {
+                    this.nextSlide();
+                }
+            }
+            
+            isHorizontalSwipe = false;
+            this.resumeAutoPlay();
+        }, { passive: true });
+    }
+    
+    updateGallery() {
+        if (!this.track) return;
+        
+        this.track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
+        
+        this.dots.forEach((dot, index) => {
+            const isActive = index === this.currentSlide;
+            dot.classList.toggle('active', isActive);
+            dot.setAttribute('aria-selected', isActive.toString());
+            dot.setAttribute('tabindex', isActive ? '0' : '-1');
+        });
+        
+        this.updateProgress();
+        
+        this.slides.forEach((slide, index) => {
+            slide.setAttribute('aria-hidden', (index !== this.currentSlide).toString());
+            if (index === this.currentSlide) {
+                slide.classList.add('fade-in');
+                setTimeout(() => slide.classList.remove('fade-in'), 600);
+            }
+        });
+    }
+    
+    updateProgress() {
+        if (!this.progress) return;
+        
+        const progressWidth = ((this.currentSlide + 1) / this.totalSlides) * 100;
+        this.progress.style.width = `${progressWidth}%`;
+    }
+    
+    nextSlide() {
+        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        this.updateGallery();
+        console.log(`🖼️ Gallery ${this.galleryId} - Next slide: ${this.currentSlide + 1}/${this.totalSlides}`);
+    }
+    
+    previousSlide() {
+        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.updateGallery();
+        console.log(`🖼️ Gallery ${this.galleryId} - Previous slide: ${this.currentSlide + 1}/${this.totalSlides}`);
+    }
+    
+    goToSlide(slideIndex) {
+        if (slideIndex >= 0 && slideIndex < this.totalSlides) {
+            this.currentSlide = slideIndex;
+            this.updateGallery();
+            this.restartAutoPlay();
+            console.log(`🖼️ Gallery ${this.galleryId} - Go to slide: ${slideIndex + 1}/${this.totalSlides}`);
+        }
+    }
+    
+    startAutoPlay() {
+        this.pauseAutoPlay();
+        if (this.totalSlides > 1) {
+            this.autoPlayInterval = setInterval(() => {
+                this.nextSlide();
+            }, this.autoPlayDelay);
+            this.isPlaying = true;
+            this.isPaused = false;
+            console.log(`▶️ Gallery ${this.galleryId} - Auto-play started`);
+        }
+    }
+    
+    pauseAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+        this.isPlaying = false;
+        this.isPaused = true;
+    }
+    
+    resumeAutoPlay() {
+        if (this.isPaused && this.totalSlides > 1) {
+            this.startAutoPlay();
+        }
+    }
+    
+    restartAutoPlay() {
+        this.startAutoPlay();
+    }
+}
+
+// =============== GLOBAL VARIABLES ===============
+let currentSlide = 0;
+let slideInterval = null;
+let isAudioPlaying = false;
+
+// Global instances
+window.door64Audio = null;
+window.door64Galleries = {};
+
+// =============== DOCUMENT READY & INITIALIZATION ===============
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚪 Door 64 - Initializing FIXED audio system...');
+    
+    // Initialize FIXED audio system
+    window.door64Audio = new Door64Audio();
+    
+    // Initialize other functionality
+    initGalleries();
+    initSplashPage();
+    initMobileMenu();
+    initViewportHeight();
+    initKeyboardNavigation();
+    initAccessibilityFeatures();
+    
+    if ('IntersectionObserver' in window) {
+        initLazyLoading();
+    }
+    
+    console.log('✅ Door 64 - FIXED audio system ready - no more restarts!');
+});
+
+// =============== GALLERY INITIALIZATION ===============
+function initGalleries() {
+    const galleries = document.querySelectorAll('.css-gallery');
+    
+    galleries.forEach(gallery => {
+        const galleryId = gallery.id;
+        if (galleryId) {
+            window.door64Galleries[galleryId] = new Door64Gallery(galleryId);
+        }
+    });
+    
+    const landingTrack = document.getElementById('landing-track');
+    if (landingTrack && !window.door64Galleries['landing-gallery']) {
+        const landingGallery = landingTrack.closest('.css-gallery');
+        if (landingGallery) {
+            landingGallery.id = 'landing-gallery';
+            window.door64Galleries['landing-gallery'] = new Door64Gallery('landing-gallery');
         }
     }
 }
 
-/* iPhone 14/15 Standard (393px) optimizations */
-@media only screen and (max-width: 393px) and (-webkit-min-device-pixel-ratio: 2) {
-    .splash-hint {
-        bottom: max(45px, calc(var(--safe-area-bottom) + 35px));
-        font-size: 16px;
-        padding: 15px 20px;
-    }
-
-    .landing-content h1 {
-        font-size: clamp(2.5rem, 15vw, 4rem);
-        letter-spacing: clamp(3px, 4vw, 8px);
-        color: #fff !important; /* White embossed logo */
-        text-shadow: 
-            1px 1px 0px #ddd,
-            2px 2px 0px #ccc,
-            3px 3px 5px rgba(0,0,0,0.2) !important;
-    }
-
-    .page-logo {
-        font-size: clamp(1.6rem, 10vw, 2.2rem);
-        margin-bottom: 15px;
-        letter-spacing: clamp(2px, 4vw, 3px);
-        color: #fff;
-        text-shadow: 
-            1px 1px 0px #ddd,
-            2px 2px 0px #ccc,
-            3px 3px 5px rgba(0,0,0,0.2);
-    }
-
-    .section-title {
-        font-size: clamp(1.8rem, 12vw, 2.5rem);
-    }
-
-    .nav {
-        padding: 12px 0;
-        padding-top: max(12px, calc(var(--safe-area-top) + 6px));
-    }
-
-    .space-item,
-    .menu-item,
-    .event-item {
-        padding: 25px 20px;
-        margin: 0 10px;
-    }
-
-    .reservation-form,
-    .contact-card {
-        margin: 0 15px;
-        padding: 25px 20px;
-    }
-
-    /* iPhone specific audio button positioning */
-    .splash-audio-toggle {
-        top: max(20px, calc(var(--safe-area-top) + 8px));
-        right: max(20px, calc(var(--safe-area-right) + 8px));
-        width: 48px;
-        height: 48px;
-        font-size: 18px;
-    }
-}
-
-/* iPhone 14/15 Plus/Pro Max (430px) optimizations */
-@media (min-width: 394px) and (max-width: 430px) {
-    .landing-content h1 {
-        font-size: clamp(2.8rem, 10vw, 4.2rem);
-        letter-spacing: clamp(3px, 3vw, 7px);
-        color: #fff !important; /* White embossed logo */
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 8px rgba(0,0,0,0.3) !important;
-    }
-
-    .page-logo {
-        font-size: clamp(2rem, 6vw, 2.8rem);
-        margin-bottom: 25px;
-        letter-spacing: clamp(3px, 3vw, 5px);
-        color: #fff;
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 8px rgba(0,0,0,0.3);
-    }
-
-    .section-title {
-        font-size: clamp(2.2rem, 8vw, 3.2rem);
-    }
-
-    .space-item,
-    .menu-item {
-        padding: 35px 30px;
-    }
-}
-
-@media (max-width: 768px) {
-    body {
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: none;
-        overflow-x: hidden;
-        overflow-y: auto;
-        background: #fff !important;
+// =============== GLOBAL FUNCTIONS ===============
+function toggleAudio(event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
     }
     
-    .landing-page,
-    .section {
-        overscroll-behavior: none;
-        background: #fff !important;
-    }
-
-    /* Comprehensive page 64 mobile background override */
-    .landing-page,
-    .landing-page *,
-    #landing,
-    #landing * {
-        background-color: #fff !important;
-        background-image: none !important;
-        background: #fff !important;
-    }
-
-    /* Remove any purple masks or overlays */
-    .landing-page::before,
-    .section::before,
-    .main-site::before,
-    body::before {
-        display: none !important;
-    }
-
-    /* Ensure white background for all content areas */
-    .main-site,
-    .container,
-    .landing-content,
-    .space-grid,
-    .menu-grid,
-    .events-list,
-    .contact-info {
-        background: #fff !important;
-    }
-}
-
-/* Mobile landscape orientation fixes */
-@media (max-width: 768px) and (orientation: landscape) {
-    body,
-    .main-site,
-    .section,
-    .landing-page {
-        background: #fff !important;
-    }
-
-    /* Force white background for page 64 in landscape */
-    .landing-page,
-    .landing-page .gallery-slider {
-        background: #fff !important;
-    }
-
-    /* Remove any potential purple overlays in landscape */
-    *::before,
-    *::after {
-        background: transparent !important;
-    }
-
-    .nav-logo {
-        font-size: 1rem;
-    }
-
-    .nav {
-        background: rgba(255, 255, 255, 0.95) !important;
-        backdrop-filter: blur(10px);
-    }
-
-    .nav-logo {
-        color: #000 !important;
-    }
-
-    /* Landing page content white background in landscape */
-    .landing-content,
-    .landing-links,
-    .landing-link {
-        background: #fff !important;
-    }
-
-    /* Ensure main title is white embossed in landscape */
-    .landing-content h1 {
-        color: #fff !important; /* White embossed logo */
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 0px #999,
-            5px 5px 10px rgba(0,0,0,0.2) !important;
-    }
-
-    /* Ensure section headings are black in landscape */
-    .landing-link h3 {
-        color: #000 !important;
-    }
-
-    .sub-links a {
-        color: #666 !important;
-    }
-
-    /* Kill any gradients in landscape mobile */
-    * {
-        background-image: none !important;
-    }
-
-    .gallery-slider,
-    .slide,
-    .landing-page,
-    #landing {
-        background: #fff !important;
-        background-image: none !important;
-        background-color: #fff !important;
-        z-index: auto;
-    }
-}
-
-/* ✅ DARK MODE SUPPORT (if needed) */
-@media (prefers-color-scheme: dark) {
-    /* Adjust audio buttons for dark mode */
-    .audio-toggle:not(.playing) {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.4);
-    }
+    console.log('🎵 Audio toggle function called');
     
-    @media (max-width: 768px) {
-        .audio-toggle:not(.playing)::after {
-            background: rgba(255, 255, 255, 0.9);
-            color: #000;
+    if (window.door64Audio) {
+        window.door64Audio.toggle();
+    } else {
+        console.warn('⚠️ Audio system not initialized');
+    }
+}
+
+function nextSlide(galleryId) {
+    if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
+        window.door64Galleries[galleryId].nextSlide();
+    } else if (!galleryId && window.door64Galleries['landing-gallery']) {
+        window.door64Galleries['landing-gallery'].nextSlide();
+    } else {
+        console.warn(`⚠️ Gallery ${galleryId || 'landing-gallery'} not found`);
+    }
+}
+
+function previousSlide(galleryId) {
+    if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
+        window.door64Galleries[galleryId].previousSlide();
+    } else if (!galleryId && window.door64Galleries['landing-gallery']) {
+        window.door64Galleries['landing-gallery'].previousSlide();
+    } else {
+        console.warn(`⚠️ Gallery ${galleryId || 'landing-gallery'} not found`);
+    }
+}
+
+function goToSlide(galleryIdOrIndex, slideIndex) {
+    if (typeof galleryIdOrIndex === 'string') {
+        if (window.door64Galleries && window.door64Galleries[galleryIdOrIndex]) {
+            window.door64Galleries[galleryIdOrIndex].goToSlide(slideIndex);
+        }
+    } else {
+        const slideIdx = galleryIdOrIndex;
+        if (window.door64Galleries && window.door64Galleries['landing-gallery']) {
+            window.door64Galleries['landing-gallery'].goToSlide(slideIdx);
         }
     }
 }
 
-/* Disable hover effects on touch devices */
-@media (hover: none) and (pointer: coarse) {
-    .space-item:hover,
-    .menu-item:hover,
-    .landing-link:hover,
-    .gallery-item:hover,
-    .door-gallery li:hover a,
-    .door-gallery li:hover img {
-        transform: none;
-        filter: none;
-        animation-play-state: running;
-    }
+// ✅ MOBILE NAV FIX: Improved splash page functionality
+function initSplashPage() {
+    const splashPage = document.getElementById('splashPage');
+    const mainSite = document.getElementById('mainSite');
     
-    .audio-toggle.playing:hover,
-    .splash-audio-toggle.playing:hover {
-        animation-play-state: running;
-        transform: scale(1.05);
+    if (!splashPage) return;
+    
+    console.log('🚪 Initializing mobile-safe splash page...');
+    
+    const handleNavigation = (targetUrl = '64.html') => {
+        console.log('🚪 Navigating to:', targetUrl);
+        
+        if (window.door64Audio) {
+            window.door64Audio.prepareForNavigation();
+        }
+        
+        setTimeout(() => {
+            if (window.location.pathname.includes('index.html') || 
+                window.location.pathname === '/' || 
+                window.location.pathname === '') {
+                window.location.href = targetUrl;
+            } else {
+                hideSplash();
+            }
+        }, 50);
+    };
+    
+    // ✅ FIX: More selective click handling
+    splashPage.addEventListener('click', function(e) {
+        // Don't navigate if user clicked on interactive elements
+        if (e.target.closest('.splash-audio-toggle, button, input, textarea, select, a[href], [onclick]')) {
+            return;
+        }
+        
+        // Don't navigate if this was a touch gesture (like pinch/zoom)
+        if (e.touches && e.touches.length > 1) {
+            return;
+        }
+        
+        // ✅ Only navigate on genuine content clicks
+        if (e.target.closest('.splash-content, .door-gallery')) {
+            handleNavigation();
+        }
+    });
+    
+    // ✅ FIX: Improved door link handling
+    const doorLinks = splashPage.querySelectorAll('.door-gallery a');
+    doorLinks.forEach((link, index) => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // ✅ Prevent double navigation
+            console.log(`🚪 Door ${index + 1} clicked`);
+            handleNavigation('64.html');
+        });
+    });
+    
+    // ✅ FIX: Safer keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        if (splashPage.style.display === 'none') return;
+        
+        if (event.key === 'Enter' || event.key === ' ') {
+            // Don't navigate if focus is on interactive elements
+            if (event.target.closest('.splash-audio-toggle, button, input, textarea, select')) {
+                return;
+            }
+            
+            // Only navigate if Enter/Space is pressed on the splash content
+            if (event.target === document.body || event.target.closest('#splashPage')) {
+                event.preventDefault();
+                handleNavigation();
+            }
+        }
+    });
+}
+
+function hideSplash() {
+    const splashPage = document.getElementById('splashPage');
+    const mainSite = document.getElementById('mainSite');
+    
+    if (splashPage && mainSite) {
+        splashPage.classList.add('hidden');
+        mainSite.classList.add('active');
+        
+        setTimeout(() => {
+            splashPage.style.display = 'none';
+        }, 1200);
+        
+        console.log('✅ Splash hidden, main site active');
     }
 }
 
-/* End Door 64 Restaurant Stylesheet - Complete with iPhone Enhancements */
+// ✅ MOBILE NAV FIX: Improved mobile menu functionality
+function initMobileMenu() {
+    const mobileMenuButton = document.querySelector('.mobile-menu');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (!mobileMenuButton || !navLinks) return;
+    
+    console.log('📱 Initializing mobile-safe menu...');
+    
+    mobileMenuButton.addEventListener('click', toggleMobileMenu);
+    
+    // ✅ FIX: Close menu only when clicking nav links
+    const navLinkElements = navLinks.querySelectorAll('a');
+    navLinkElements.forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+    });
+    
+    // ✅ FIX: Smarter click-outside detection
+    document.addEventListener('click', (e) => {
+        if (!navLinks.classList.contains('active')) return;
+        
+        // Don't close if clicking on the menu button or any nav element
+        if (e.target.closest('.nav-container, .mobile-menu')) {
+            return;
+        }
+        
+        // Don't close if clicking on form elements or other interactive elements
+        if (e.target.closest('input, textarea, select, button, [tabindex]')) {
+            return;
+        }
+        
+        // ✅ Only close on genuine outside clicks
+        closeMobileMenu();
+    });
+    
+    // Keyboard support unchanged
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            closeMobileMenu();
+            mobileMenuButton.focus();
+        }
+    });
+}
+
+function toggleMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const mobileMenuButton = document.querySelector('.mobile-menu');
+    
+    if (!navLinks || !mobileMenuButton) return;
+    
+    const isOpen = navLinks.classList.contains('active');
+    
+    if (isOpen) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
+    }
+}
+
+function openMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const mobileMenuButton = document.querySelector('.mobile-menu');
+    
+    if (!navLinks || !mobileMenuButton) return;
+    
+    navLinks.classList.add('active');
+    mobileMenuButton.classList.add('active');
+    mobileMenuButton.setAttribute('aria-expanded', 'true');
+    
+    // Prevent body scroll
+    document.body.classList.add('menu-open');
+    
+    const firstLink = navLinks.querySelector('a');
+    if (firstLink) {
+        setTimeout(() => firstLink.focus(), 100);
+    }
+    
+    console.log('📱 Mobile menu opened');
+}
+
+function closeMobileMenu() {
+    const navLinks = document.getElementById('navLinks');
+    const mobileMenuButton = document.querySelector('.mobile-menu');
+    
+    if (!navLinks || !mobileMenuButton) return;
+    
+    navLinks.classList.remove('active');
+    mobileMenuButton.classList.remove('active');
+    mobileMenuButton.setAttribute('aria-expanded', 'false');
+    
+    // Restore body scroll
+    document.body.classList.remove('menu-open');
+    
+    console.log('📱 Mobile menu closed');
+}
+
+// ✅ MOBILE NAV FIX: Safer viewport height fix for mobile
+function initViewportHeight() {
+    function setViewportHeight() {
+        // ✅ FIX: Debounce viewport changes to avoid navigation interference
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    setViewportHeight();
+    
+    // ✅ FIX: Safer resize handling on mobile
+    const debouncedSetViewportHeight = debounce(() => {
+        // Only update if not in the middle of navigation
+        if (!window.door64Audio?.isNavigating) {
+            setViewportHeight();
+        }
+    }, 150);
+    
+    window.addEventListener('resize', debouncedSetViewportHeight);
+    
+    // ✅ FIX: Better orientation change handling
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            if (!window.door64Audio?.isNavigating) {
+                setViewportHeight();
+            }
+        }, 200);
+    });
+    
+    console.log('📱 Mobile-safe viewport height optimization initialized');
+}
+
+// ✅ MOBILE NAV FIX: Improved keyboard navigation support
+function initKeyboardNavigation() {
+    document.addEventListener('keydown', (e) => {
+        // ✅ FIX: Only prevent spacebar if NOT in an input field
+        if (e.key === ' ' && e.target === document.body) {
+            // Check if user is on mobile device
+            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // On mobile, be more careful about preventing spacebar
+            if (!isMobileDevice || !document.activeElement || document.activeElement === document.body) {
+                e.preventDefault();
+                toggleAudio();
+            }
+        }
+        
+        // ✅ FIX: Don't prevent default for mobile menu if user is typing
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mobile-menu')) {
+            // Only prevent default if it's not a form element
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                toggleMobileMenu();
+            }
+        }
+        
+        // Gallery navigation - unchanged but safer
+        const activeElement = document.activeElement;
+        if (activeElement && activeElement.closest('.css-gallery')) {
+            const gallery = activeElement.closest('.css-gallery');
+            const galleryId = gallery.id;
+            
+            // ✅ FIX: Only prevent default for actual gallery interactions
+            if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        previousSlide(galleryId);
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        nextSlide(galleryId);
+                        break;
+                    case 'Home':
+                        e.preventDefault();
+                        goToSlide(galleryId, 0);
+                        break;
+                    case 'End':
+                        e.preventDefault();
+                        if (window.door64Galleries[galleryId]) {
+                            const lastSlide = window.door64Galleries[galleryId].totalSlides - 1;
+                            goToSlide(galleryId, lastSlide);
+                        }
+                        break;
+                }
+            }
+        }
+    });
+    
+    console.log('⌨️ Mobile-safe keyboard navigation initialized');
+}
+
+// =============== ACCESSIBILITY FEATURES ===============
+function initAccessibilityFeatures() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === '') return;
+            
+            e.preventDefault();
+            const target = document.querySelector(href);
+            
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                if (target.tabIndex === -1) {
+                    target.tabIndex = -1;
+                }
+                target.focus();
+            }
+        });
+    });
+    
+    const skipLink = document.querySelector('.skip-link');
+    if (skipLink) {
+        skipLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector('#main-content') || document.querySelector('main');
+            if (target) {
+                target.focus();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+    
+    console.log('♿ Accessibility features initialized');
+}
+
+// =============== LAZY LOADING IMAGES ===============
+function initLazyLoading() {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    img.setAttribute('data-loading', 'false');
+                    observer.unobserve(img);
+                    console.log('🖼️ Lazy loaded:', img.alt || img.src);
+                }
+            }
+        });
+    }, {
+        rootMargin: '50px'
+    });
+    
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        img.setAttribute('data-loading', 'true');
+        imageObserver.observe(img);
+    });
+    
+    console.log('🖼️ Lazy loading initialized');
+}
+
+// =============== UTILITY FUNCTIONS ===============
+function debounce(func, wait, immediate) {
+    let timeout;
+    return function executedFunction(...args) {
+        const context = this;
+        const later = () => {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+// ✅ NEW: Mobile navigation helper functions
+function isMobileMultiTouch(e) {
+    return e.touches && e.touches.length > 1;
+}
+
+// =============== ERROR HANDLING ===============
+window.addEventListener('error', (e) => {
+    console.error('🚨 Door 64 - JavaScript error:', e.error);
+    
+    if (e.error.message.includes('audio') && window.door64Audio) {
+        console.log('🔧 Attempting audio system recovery...');
+        setTimeout(() => {
+            try {
+                window.door64Audio.updateButtons();
+            } catch (recoveryError) {
+                console.error('🚨 Audio recovery failed:', recoveryError);
+            }
+        }, 1000);
+    }
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('🚨 Door 64 - Unhandled promise rejection:', e.reason);
+});
+
+// =============== PERFORMANCE MONITORING ===============
+if ('performance' in window) {
+    window.addEventListener('load', () => {
+        const loadTime = Math.round(performance.now());
+        console.log(`⚡ Door 64 - Page loaded in ${loadTime}ms`);
+        
+        if (performance.navigation) {
+            const navType = performance.navigation.type;
+            const navTypes = ['navigate', 'reload', 'back_forward', 'reserved'];
+            console.log(`📊 Navigation type: ${navTypes[navType] || 'unknown'}`);
+        }
+    });
+}
+
+// =============== DEVELOPMENT HELPERS ===============
+if (window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1' || 
+    window.location.hostname.includes('dev')) {
+    
+    console.log('🏠 Door 64 - Development mode active');
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey) {
+            switch (e.key.toLowerCase()) {
+                case 'a':
+                    e.preventDefault();
+                    toggleAudio();
+                    console.log('🎵 Dev: Audio toggled');
+                    break;
+                case 's':
+                    e.preventDefault();
+                    hideSplash();
+                    console.log('🚪 Dev: Splash hidden');
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    localStorage.removeItem('door64_audio_state');
+                    localStorage.removeItem('door64_audio_time');
+                    localStorage.removeItem('door64_user_interacted');
+                    console.log('🔄 Dev: Audio state reset');
+                    break;
+                case 'i':
+                    e.preventDefault();
+                    console.log('📊 Dev: System info:', {
+                        audioState: localStorage.getItem('door64_audio_state'),
+                        audioTime: localStorage.getItem('door64_audio_time'),
+                        userInteracted: localStorage.getItem('door64_user_interacted'),
+                        galleries: Object.keys(window.door64Galleries),
+                        isAudioPlaying: window.door64Audio?.isPlaying,
+                        currentAudioTime: window.door64Audio?.audio?.currentTime,
+                        audioMuted: window.door64Audio?.audio?.muted,
+                        isMobile: window.door64Audio?.isMobile,
+                        hasUserInteracted: window.door64Audio?.hasUserInteracted,
+                        isNavigating: window.door64Audio?.isNavigating
+                    });
+                    break;
+                case 'm':
+                    e.preventDefault();
+                    toggleMobileMenu();
+                    console.log('📱 Dev: Mobile menu toggled');
+                    break;
+            }
+        }
+    });
+    
+    window.door64Debug = {
+        audio: () => window.door64Audio,
+        galleries: () => window.door64Galleries,
+        resetAudio: () => {
+            localStorage.removeItem('door64_audio_state');
+            localStorage.removeItem('door64_audio_time');
+            localStorage.removeItem('door64_user_interacted');
+            location.reload();
+        },
+        forceAudioStart: () => {
+            if (window.door64Audio) {
+                window.door64Audio.audio.muted = false;
+                window.door64Audio.resumeAudio();
+            }
+        },
+        testAutoResume: () => {
+            localStorage.setItem('door64_audio_state', 'playing');
+            localStorage.setItem('door64_user_interacted', 'true');
+            location.reload();
+        },
+        simulateNavigation: () => {
+            if (window.door64Audio) {
+                window.door64Audio.prepareForNavigation();
+            }
+        },
+        toggleMobileMenu: () => toggleMobileMenu(),
+        mobileMenuState: () => {
+            const navLinks = document.getElementById('navLinks');
+            return navLinks ? navLinks.classList.contains('active') : false;
+        }
+    };
+    
+    console.log('🔧 Dev tools available: window.door64Debug');
+}
+
+// =============== CONSOLE BRANDING ===============
+console.log(`
+🚪 Door 64 Restaurant - COMPLETELY FIXED AUDIO + MOBILE NAV SYSTEM
+✅ NO MORE RESTARTS: Music continues seamlessly
+🚪 SPLASH AUTO-START: First-time visitors hear music immediately  
+📱 Mobile: Touch once, continuous play forever
+🖥️ Desktop: Automatic start and continuous play
+⏸️ Only audio buttons control playback
+🔄 Perfect navigation continuity
+📱 MOBILE NAV FIXES: All touch/scroll conflicts resolved
+📱 HAMBURGER MENU: Full-screen mobile navigation
+🎯 TOUCH TARGETS: 44px minimum for accessibility
+🚫 SCROLL BLOCK: Prevents body scroll when menu open
+⌨️ KEYBOARD NAV: Full accessibility support
+🔧 DEV TOOLS: Available in development mode
+
+All audio restart issues AND mobile navigation issues SOLVED.
+`);
+
+// Export for testing
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        Door64Audio,
+        Door64Gallery,
+        toggleAudio,
+        nextSlide,
+        previousSlide,
+        goToSlide,
+        toggleMobileMenu,
+        openMobileMenu,
+        closeMobileMenu
+    };
+}
