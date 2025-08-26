@@ -78,7 +78,7 @@
             height: 100%;
             object-fit: cover;
             animation: blr 2s;
-            filter: blur(5px);
+            filter: blur(1px); /* Reduced for letter visibility */
             transition: filter 0.7s;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: optimize-contrast;
@@ -162,15 +162,15 @@
         }
 
         @keyframes blurPulse {
-            0%, 100% { filter: blur(4px) brightness(0.9); }
-            25% { filter: blur(6px) brightness(0.8); }
-            50% { filter: blur(2px) brightness(1); }
-            75% { filter: blur(5px) brightness(0.85); }
+            0%, 100% { filter: blur(1px) brightness(0.9); }
+            25% { filter: blur(2px) brightness(0.8); }
+            50% { filter: blur(0px) brightness(1); }
+            75% { filter: blur(1px) brightness(0.85); }
         }
 
         @keyframes blr {
-            0% { filter: blur(15px); }
-            100% { filter: blur(5px); }
+            0% { filter: blur(8px); }
+            100% { filter: blur(1px); }
         }
 
         /* Apply animations to doors */
@@ -272,6 +272,28 @@
             50% { transform: translate(-50%, -65%) scale(1.1) rotate(-1deg); }
             75% { transform: translate(-50%, -65%) scale(1.12) rotate(1deg); }
             100% { transform: translate(-50%, -65%) scale(1) rotate(0deg); }
+        }
+
+        /* Status hint styling */
+        .status-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            font-size: 1rem;
+            text-align: center;
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .current-letter {
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 2px;
         }
 
         /* Wrong choice overlay */
@@ -403,9 +425,13 @@
                 padding: 18px 40px;
                 font-size: 0.9em;
             }
-        }
 
-        /* Remove status hint styles */
+            .status-hint {
+                bottom: 20px;
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -415,35 +441,38 @@
         <ul class="door-gallery door-gallery-raised" id="interactiveDoorGallery">
             <li data-letter="D" data-index="0">
                 <a href="javascript:void(0)">
-                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=D" 
+                    <img src="images/splash/door_letter_D_blue.svg" 
                          alt="Letter D - Door 64" 
                          loading="eager">
                 </a>
             </li>
             <li data-letter="O" data-index="1">
                 <a href="javascript:void(0)">
-                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=O" 
+                    <img src="images/splash/door_letter_O1_blue.svg" 
                          alt="Letter O - Door 64" 
                          loading="eager">
                 </a>
             </li>
             <li data-letter="O" data-index="2">
                 <a href="javascript:void(0)">
-                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=O" 
+                    <img src="images/splash/door_letter_O2_blue.svg" 
                          alt="Letter O - Door 64" 
                          loading="eager">
                 </a>
             </li>
             <li data-letter="R" data-index="3">
                 <a href="javascript:void(0)">
-                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=R" 
+                    <img src="images/splash/door_letter_R_blue.svg" 
                          alt="Letter R - Door 64" 
                          loading="eager">
                 </a>
             </li>
         </ul>
         
-
+        <!-- Status hint showing current correct letter for testing -->
+        <div class="status-hint" id="statusHint">
+            Click the correct letter: <span class="current-letter" id="currentLetter">?</span>
+        </div>
     </div>
 
     <!-- Wrong Choice Overlay -->
@@ -495,7 +524,15 @@
             
             setRandomActiveLetter() {
                 this.currentActiveIndex = Math.floor(Math.random() * this.letters.length);
-                console.log(`Correct letter: ${this.letters[this.currentActiveIndex]} (index ${this.currentActiveIndex})`);
+                const letter = this.letters[this.currentActiveIndex];
+                
+                // Update status hint
+                const currentLetterElement = document.getElementById('currentLetter');
+                if (currentLetterElement) {
+                    currentLetterElement.textContent = letter;
+                }
+                
+                console.log(`Correct letter: ${letter} (index ${this.currentActiveIndex})`);
             }
             
             handleLetterClick(clickedIndex) {
@@ -522,6 +559,12 @@
                 this.isSystemActive = false;
                 this.stopRotation();
                 
+                // Hide status hint
+                const statusHint = document.getElementById('statusHint');
+                if (statusHint) {
+                    statusHint.style.display = 'none';
+                }
+                
                 setTimeout(() => {
                     const successOverlay = document.getElementById('entrySuccessOverlay');
                     if (successOverlay) {
@@ -533,6 +576,12 @@
             showTryAgain() {
                 this.isSystemActive = false;
                 this.stopRotation();
+                
+                // Hide status hint
+                const statusHint = document.getElementById('statusHint');
+                if (statusHint) {
+                    statusHint.style.display = 'none';
+                }
                 
                 setTimeout(() => {
                     const wrongOverlay = document.getElementById('entryWrongOverlay');
@@ -553,7 +602,7 @@
                     }
                 }, this.rotationInterval);
                 
-                console.log('Key rotation started - changes every 8 seconds');
+                console.log('Letter rotation started - changes every 8 seconds');
             }
             
             stopRotation() {
@@ -569,6 +618,7 @@
             // Hide both overlays
             const successOverlay = document.getElementById('entrySuccessOverlay');
             const wrongOverlay = document.getElementById('entryWrongOverlay');
+            const statusHint = document.getElementById('statusHint');
             
             if (successOverlay) {
                 successOverlay.classList.remove('show');
@@ -576,6 +626,10 @@
             
             if (wrongOverlay) {
                 wrongOverlay.classList.remove('show');
+            }
+            
+            if (statusHint) {
+                statusHint.style.display = 'block';
             }
             
             // Remove success animations
