@@ -3,259 +3,597 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Door 64</title>
+    <title>Door 64 - Splash Preview</title>
     
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://images.unsplash.com">
-    
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    
-    <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline webkit-playsinline="true">
-        <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
-        <source src="assets/audio/QUIETSTORM.ogg" type="audio/ogg">
-        <!-- Fallback message for browsers that don't support audio -->
-        Your browser does not support the audio element.
-    </audio>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Door 64 - An intimate dining experience where every meal becomes a memory. Discover our elegant atmosphere and culinary artistry.">
-    <meta name="keywords" content="restaurant, fine dining, Door 64, culinary experience, intimate dining">
-    <meta name="author" content="Door 64">
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Splash page styles (from your CSS) */
+        .splash-page {
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 1.2s ease;
+        }
+
+        /* Door Gallery Design */
+        .door-gallery {
+            height: 75vh;
+            width: 30vh;
+            display: grid;
+            grid-template-rows: repeat(4, 1fr 2fr 1fr);
+            overflow: hidden;
+            list-style: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .door-gallery-raised {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -65%) !important;
+        }
+
+        .door-gallery li {
+            width: 100%;
+            height: 100%;
+            grid-column: 1/span 1;
+            --offsetX: 50%;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+
+        .door-gallery li a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transition: all 0.15s;
+        }
+
+        .door-gallery li img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: blr 2s;
+            filter: blur(5px);
+            transition: filter 0.7s;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        /* Door Clip Paths */
+        .door-gallery li:first-of-type {
+            grid-row: 1/span 4;
+            clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20% * 3));
+        }
+
+        .door-gallery li:nth-of-type(2) {
+            grid-row: 3/span 5;
+            clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
+        }
+
+        .door-gallery li:nth-of-type(3) {
+            grid-row: 6/span 5;
+            clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
+        }
+
+        .door-gallery li:last-of-type {
+            grid-row: -5/span 4;
+            clip-path: polygon(100% 0, 0 calc(20% * 2), 0 calc(20% * 6), 100% calc(20% * 4));
+        }
+
+        /* Door Animations */
+        @keyframes doorFloat1 {
+            0%, 100% { 
+                transform: translate(var(--offsetX), calc(var(--offsetX) * 0.166 * -2)) scale(1);
+            }
+            25% { 
+                transform: translate(calc(var(--offsetX) * 1.1), calc(var(--offsetX) * 0.166 * -2.2)) scale(1.02);
+            }
+            50% { 
+                transform: translate(calc(var(--offsetX) * 0.9), calc(var(--offsetX) * 0.166 * -1.8)) scale(0.98);
+            }
+            75% { 
+                transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.166 * -2.1)) scale(1.01);
+            }
+        }
+
+        @keyframes doorFloat2 {
+            0%, 100% { 
+                transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.166 * 2)) scale(1);
+            }
+            25% { 
+                transform: translate(calc(var(--offsetX) * -0.9), calc(var(--offsetX) * 0.166 * 1.8)) scale(1.01);
+            }
+            50% { 
+                transform: translate(calc(var(--offsetX) * -1.1), calc(var(--offsetX) * 0.166 * 2.2)) scale(0.99);
+            }
+            75% { 
+                transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.166 * 1.9)) scale(1.02);
+            }
+        }
+
+        @keyframes doorFloat3 {
+            0%, 100% { 
+                transform: translate(var(--offsetX), calc(var(--offsetX) * 0.200 * -2)) scale(1);
+            }
+            30% { 
+                transform: translate(calc(var(--offsetX) * 0.95), calc(var(--offsetX) * 0.200 * -1.9)) scale(1.01);
+            }
+            60% { 
+                transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.200 * -2.1)) scale(0.99);
+            }
+        }
+
+        @keyframes doorFloat4 {
+            0%, 100% { 
+                transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.200 * 2)) scale(1);
+            }
+            40% { 
+                transform: translate(calc(var(--offsetX) * -1.05), calc(var(--offsetX) * 0.200 * 2.1)) scale(1.02);
+            }
+            80% { 
+                transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.200 * 1.9)) scale(0.98);
+            }
+        }
+
+        @keyframes blurPulse {
+            0%, 100% { filter: blur(4px) brightness(0.9); }
+            25% { filter: blur(6px) brightness(0.8); }
+            50% { filter: blur(2px) brightness(1); }
+            75% { filter: blur(5px) brightness(0.85); }
+        }
+
+        @keyframes blr {
+            0% { filter: blur(15px); }
+            100% { filter: blur(5px); }
+        }
+
+        /* Apply animations to doors */
+        .door-gallery li:nth-of-type(1) a {
+            animation: doorFloat3 8s ease-in-out infinite;
+        }
+
+        .door-gallery li:nth-of-type(2) a {
+            animation: doorFloat1 6s ease-in-out infinite;
+        }
+
+        .door-gallery li:nth-of-type(3) a {
+            animation: doorFloat2 7s ease-in-out infinite;
+        }
+
+        .door-gallery li:nth-of-type(4) a {
+            animation: doorFloat4 9s ease-in-out infinite;
+        }
+
+        .door-gallery li:nth-of-type(1) img {
+            animation: blurPulse 8s ease-in-out infinite;
+        }
+
+        .door-gallery li:nth-of-type(2) img {
+            animation: blurPulse 6s ease-in-out infinite 1s;
+        }
+
+        .door-gallery li:nth-of-type(3) img {
+            animation: blurPulse 7s ease-in-out infinite 2s;
+        }
+
+        .door-gallery li:nth-of-type(4) img {
+            animation: blurPulse 9s ease-in-out infinite 3s;
+        }
+
+        /* Hover effects */
+        .door-gallery li:hover a {
+            transition: transform 0.3s !important;
+            transform: translate(0) scale(1.05) !important;
+            animation-play-state: paused;
+        }
+
+        .door-gallery li:hover img {
+            filter: blur(0) brightness(1) !important;
+            animation-play-state: paused;
+            transform: scale(1.02);
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+        .door-gallery:hover li:hover {
+            opacity: 1 !important;
+            transition: clip-path 0.4s 0.3s;
+            clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
+            z-index: 10;
+        }
+
+        /* Splash content */
+        .splash-content-below {
+            position: absolute !important;
+            bottom: 15% !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            text-align: center !important;
+            z-index: 20 !important;
+        }
+
+        .splash-content-below h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #fff !important;
+            text-shadow: 
+                1px 1px 0px #e0e0e0,
+                2px 2px 0px #d0d0d0,
+                3px 3px 0px #c0c0c0,
+                4px 4px 0px #b0b0b0,
+                5px 5px 0px #a0a0a0,
+                6px 6px 10px rgba(0,0,0,0.3) !important;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Interactive letter success animation */
+        .door-gallery li.letter-success {
+            animation: letterSuccess 1.2s ease-out;
+        }
+
+        .door-gallery li.letter-success img {
+            filter: blur(0px) brightness(1.5) contrast(1.6) !important;
+        }
+
+        @keyframes letterSuccess {
+            0% { transform: translate(-50%, -65%) scale(1); }
+            25% { transform: translate(-50%, -65%) scale(1.15) rotate(2deg); }
+            50% { transform: translate(-50%, -65%) scale(1.1) rotate(-1deg); }
+            75% { transform: translate(-50%, -65%) scale(1.12) rotate(1deg); }
+            100% { transform: translate(-50%, -65%) scale(1) rotate(0deg); }
+        }
+
+        /* Wrong choice overlay */
+        .entry-wrong-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .entry-wrong-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Success overlay */
+        .entry-success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .entry-success-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-content {
+            text-align: center;
+            animation: successFadeIn 1s ease-out;
+        }
+
+        .success-title {
+            font-size: 4em;
+            font-weight: 300;
+            letter-spacing: 8px;
+            color: #333;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .success-subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        .enter-button {
+            padding: 20px 50px;
+            background: transparent;
+            border: 2px solid #333;
+            color: #333;
+            font-size: 1em;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 30px;
+            text-transform: uppercase;
+            font-weight: 300;
+            font-family: 'Georgia', serif;
+        }
+
+        .enter-button:hover {
+            background: #333;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @keyframes successFadeIn {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .door-gallery {
+                height: 60vh;
+                width: 40vw;
+                grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
+            }
+            
+            .door-gallery-raised {
+                transform: translate(-50%, -60%) !important;
+            }
+
+            .splash-content-below h1 {
+                font-size: 2rem;
+                text-shadow: 
+                    1px 1px 0px #e0e0e0,
+                    2px 2px 0px #d0d0d0,
+                    3px 3px 0px #c0c0c0,
+                    4px 4px 5px rgba(0,0,0,0.3) !important;
+            }
+
+            .splash-content-below {
+                bottom: 18% !important;
+            }
+            
+            .success-title {
+                font-size: 2.5em;
+                letter-spacing: 4px;
+            }
+            
+            .enter-button {
+                padding: 18px 40px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Remove status hint styles */
+    </style>
 </head>
 <body>
-    <!-- Skip to main content for accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-
-    <!-- DOOR PLUGIN SPLASH PAGE WITH BLUE D-O-O-R LETTERS -->
-    <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door 64">
-        <!-- Door Gallery with BLUE D-O-O-R letter images - MOVED UP -->
-        <ul class="door-gallery door-gallery-raised" role="presentation" aria-hidden="true">
-            <li>
-                <a href="64.html" tabindex="-1" aria-hidden="true">
-                    <img src="assets/images/splash/door_letter_D_blue.svg" 
-                         alt="Letter D - Door 64 logo" 
+    <!-- DOOR 64 SPLASH PAGE PREVIEW -->
+    <div class="splash-page" id="splashPage">
+        <!-- Interactive Door Gallery -->
+        <ul class="door-gallery door-gallery-raised" id="interactiveDoorGallery">
+            <li data-letter="D" data-index="0">
+                <a href="javascript:void(0)">
+                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=D" 
+                         alt="Letter D - Door 64" 
                          loading="eager">
                 </a>
             </li>
-            <li>
-                <a href="64.html" tabindex="-1" aria-hidden="true">
-                    <img src="assets/images/splash/door_letter_O1_blue.svg" 
-                         alt="Letter O - Door 64 logo" 
+            <li data-letter="O" data-index="1">
+                <a href="javascript:void(0)">
+                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=O" 
+                         alt="Letter O - Door 64" 
                          loading="eager">
                 </a>
             </li>
-            <li>
-                <a href="64.html" tabindex="-1" aria-hidden="true">
-                    <img src="assets/images/splash/door_letter_O2_blue.svg" 
-                         alt="Letter O - Door 64 logo" 
+            <li data-letter="O" data-index="2">
+                <a href="javascript:void(0)">
+                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=O" 
+                         alt="Letter O - Door 64" 
                          loading="eager">
                 </a>
             </li>
-            <li>
-                <a href="64.html" tabindex="-1" aria-hidden="true">
-                    <img src="assets/images/splash/door_letter_R_blue.svg" 
-                         alt="Letter R - Door 64 logo" 
+            <li data-letter="R" data-index="3">
+                <a href="javascript:void(0)">
+                    <img src="https://via.placeholder.com/200x300/4A90E2/ffffff?text=R" 
+                         alt="Letter R - Door 64" 
                          loading="eager">
                 </a>
             </li>
         </ul>
         
-        <!-- Logo content - MOVED BELOW IMAGES -->
-        <div class="splash-content splash-content-below">
-            <h1 aria-label="Door 64">DOOR 64</h1>
+
+    </div>
+
+    <!-- Wrong Choice Overlay -->
+    <div class="entry-wrong-overlay" id="entryWrongOverlay">
+        <div class="success-content">
+            <div class="success-title">DOOR 64</div>
+            <button class="enter-button" onclick="resetPreview()">TRY AGAIN</button>
         </div>
-        
-        <!-- Audio toggle for splash page -->
-        <button class="splash-audio-toggle" 
-                onclick="toggleAudio(event)" 
-                data-mobile-hint="Tap to start music"
-                title="Play Background Music" 
-                id="splashAudioToggle"
-                aria-label="Play background music">♪</button>
     </div>
 
-    <!-- MAIN SITE -->
-    <div class="main-site" id="mainSite" role="main">
-        <!-- Mobile-Optimized Navigation -->
-        <nav class="nav" role="navigation" aria-label="Main navigation">
-            <div class="nav-container">
-                <a href="index.html" class="nav-logo" aria-label="Door 64 Home">DOOR 64</a>
-                
-                <!-- Mobile hamburger menu button -->
-                <button class="mobile-menu" 
-                        onclick="toggleMobileMenu()" 
-                        aria-label="Toggle mobile menu"
-                        aria-expanded="false"
-                        aria-controls="navLinks">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                
-                <!-- Navigation links -->
-                <ul class="nav-links" id="navLinks" role="menubar">
-                    <li role="none"><a href="index.html" role="menuitem">64</a></li>
-                    <li role="none"><a href="space.html" role="menuitem">space</a></li>
-                    <li role="none"><a href="in.the.kitchen.html" role="menuitem">in the kitchen</a></li>
-                    <li role="none"><a href="at.the.bar.html" role="menuitem">at the bar</a></li>
-                    <li role="none"><a href="who.was.here.html" role="menuitem">who was here</a></li>
-                    <li role="none"><a href="what.to.do.html" role="menuitem">what to do</a></li>
-                    <li role="none"><a href="come.see.us.html" role="menuitem">come see us</a></li>
-                    <li role="none"><a href="hit.us.up.html" role="menuitem">hit us up</a></li>
-                </ul>
-                
-                <!-- Audio toggle button -->
-                <div class="nav-left-section">
-                    <button class="audio-toggle" 
-                            onclick="toggleAudio(event)" 
-                            title="Play Background Music"
-                            aria-label="Play background music">♪</button>
-                </div>
-            </div>
-        </nav>
+    <!-- Success Overlay -->
+    <div class="entry-success-overlay" id="entrySuccessOverlay">
+        <div class="success-content">
+            <div class="success-title">DOOR 64</div>
+            <div class="success-subtitle">Access Granted</div>
+            <button class="enter-button" onclick="resetPreview()">ENTER</button>
+        </div>
+    </div>
 
-        <!-- Landing Page -->
-        <main class="landing-page section active" id="main-content">
-            <div class="gallery-slider" role="presentation" aria-hidden="true"></div>
+    <script>
+        // Door 64 Interactive Letters Preview
+        class Door64LettersPreview {
+            constructor() {
+                this.letters = ['D', 'O', 'O', 'R'];
+                this.letterElements = document.querySelectorAll('#interactiveDoorGallery li');
+                this.currentActiveIndex = 0;
+                this.rotationInterval = 8000; // 8 seconds for preview
+                this.rotationTimer = null;
+                this.isSystemActive = true;
+                
+                console.log('Door 64 Letters Preview - Starting...');
+                this.init();
+            }
             
-            <div class="landing-content">
-                <a href="index.html" style="text-decoration: none;" aria-label="Door 64">
-                    <h1 class="embossed-logo" style="cursor: pointer;">DOOR 64</h1>
-                </a>
+            init() {
+                // Add click listeners
+                this.letterElements.forEach((element, index) => {
+                    element.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.handleLetterClick(index);
+                    });
+                });
                 
-                <div class="landing-links">
-                    <div class="landing-link">
-                        <h3>space</h3>
-                        <div class="sub-links">
-                            <a href="in.the.kitchen.html">in the kitchen</a>
-                            <a href="at.the.bar.html">at the bar</a>
-                        </div>
-                    </div>
-                    
-                    <div class="landing-link">
-                        <h3>what to do</h3>
-                        <div class="sub-links">
-                            <a href="come.see.us.html">make reservation</a>
-                            <a href="what.to.do.html">upcoming events</a>
-                        </div>
-                    </div>
-                    
-                    <div class="landing-link">
-                        <h3>connect</h3>
-                        <div class="sub-links">
-                            <a href="who.was.here.html">who was here</a>
-                            <a href="come.see.us.html">come see us</a>
-                        </div>
-                    </div>
-                </div>
+                // Set initial active letter
+                this.setRandomActiveLetter();
+                this.startRotation();
+            }
+            
+            setRandomActiveLetter() {
+                this.currentActiveIndex = Math.floor(Math.random() * this.letters.length);
+                console.log(`Correct letter: ${this.letters[this.currentActiveIndex]} (index ${this.currentActiveIndex})`);
+            }
+            
+            handleLetterClick(clickedIndex) {
+                if (!this.isSystemActive) return;
+                
+                const clickedElement = this.letterElements[clickedIndex];
+                const clickedLetter = this.letters[clickedIndex];
+                
+                console.log(`Letter clicked: ${clickedLetter}`);
+                
+                if (clickedIndex === this.currentActiveIndex) {
+                    // Correct letter - ACCESS GRANTED
+                    console.log('Correct! Access granted');
+                    clickedElement.classList.add('letter-success');
+                    this.grantAccess();
+                } else {
+                    // Wrong letter - SHOW TRY AGAIN
+                    console.log('Wrong letter - try again');
+                    this.showTryAgain();
+                }
+            }
+            
+            grantAccess() {
+                this.isSystemActive = false;
+                this.stopRotation();
+                
+                setTimeout(() => {
+                    const successOverlay = document.getElementById('entrySuccessOverlay');
+                    if (successOverlay) {
+                        successOverlay.classList.add('show');
+                    }
+                }, 800);
+            }
+            
+            showTryAgain() {
+                this.isSystemActive = false;
+                this.stopRotation();
+                
+                setTimeout(() => {
+                    const wrongOverlay = document.getElementById('entryWrongOverlay');
+                    if (wrongOverlay) {
+                        wrongOverlay.classList.add('show');
+                    }
+                }, 300);
+            }
+            
+            startRotation() {
+                if (this.rotationTimer) {
+                    clearInterval(this.rotationTimer);
+                }
+                
+                this.rotationTimer = setInterval(() => {
+                    if (this.isSystemActive) {
+                        this.setRandomActiveLetter();
+                    }
+                }, this.rotationInterval);
+                
+                console.log('Key rotation started - changes every 8 seconds');
+            }
+            
+            stopRotation() {
+                if (this.rotationTimer) {
+                    clearInterval(this.rotationTimer);
+                    this.rotationTimer = null;
+                }
+            }
+        }
 
-                <!-- Landing Gallery -->
-                <section class="css-gallery" 
-                         id="landing-gallery" 
-                         role="region" 
-                         aria-label="Restaurant showcase gallery"
-                         aria-live="polite">
-                    <div class="gallery-container">
-                        <div class="gallery-track" id="landing-track" role="presentation">
-                            <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')"
-                                 role="img"
-                                 aria-label="Intimate dining experience">
-                                <div class="gallery-content">
-                                    <h3>intimate dining experience</h3>
-                                    <p>where every meal becomes a memory</p>
-                                </div>
-                            </div>
-                            <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')"
-                                 role="img"
-                                 aria-label="Craft cocktails">
-                                <div class="gallery-content">
-                                    <h3>craft cocktails</h3>
-                                    <p>handcrafted with passion and precision</p>
-                                </div>
-                            </div>
-                            <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')"
-                                 role="img"
-                                 aria-label="Culinary artistry">
-                                <div class="gallery-content">
-                                    <h3>culinary artistry</h3>
-                                    <p>seasonal ingredients, chef's creativity</p>
-                                </div>
-                            </div>
-                            <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')"
-                                 role="img"
-                                 aria-label="Wine selection">
-                                <div class="gallery-content">
-                                    <h3>wine selection</h3>
-                                    <p>curated collection of exceptional wines</p>
-                                </div>
-                            </div>
-                            <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')"
-                                 role="img"
-                                 aria-label="Elegant atmosphere">
-                                <div class="gallery-content">
-                                    <h3>elegant atmosphere</h3>
-                                    <p>designed for unforgettable experiences</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="gallery-nav prev" 
-                                onclick="previousSlide()" 
-                                aria-label="Previous image"
-                                title="Previous">‹</button>
-                        <button class="gallery-nav next" 
-                                onclick="nextSlide()" 
-                                aria-label="Next image"
-                                title="Next">›</button>
-                        
-                        <div class="gallery-dots" role="tablist" aria-label="Gallery navigation">
-                            <span class="gallery-dot active" 
-                                  onclick="goToSlide(0)" 
-                                  role="tab"
-                                  aria-label="Go to slide 1"
-                                  aria-selected="true"
-                                  tabindex="0"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(1)" 
-                                  role="tab"
-                                  aria-label="Go to slide 2"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(2)" 
-                                  role="tab"
-                                  aria-label="Go to slide 3"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(3)" 
-                                  role="tab"
-                                  aria-label="Go to slide 4"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(4)" 
-                                  role="tab"
-                                  aria-label="Go to slide 5"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
-                        </div>
-                        
-                        <div class="gallery-progress" role="progressbar" aria-label="Gallery progress" aria-hidden="true"></div>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
+        // Reset preview function
+        function resetPreview() {
+            // Hide both overlays
+            const successOverlay = document.getElementById('entrySuccessOverlay');
+            const wrongOverlay = document.getElementById('entryWrongOverlay');
+            
+            if (successOverlay) {
+                successOverlay.classList.remove('show');
+            }
+            
+            if (wrongOverlay) {
+                wrongOverlay.classList.remove('show');
+            }
+            
+            // Remove success animations
+            document.querySelectorAll('.letter-success').forEach(el => {
+                el.classList.remove('letter-success');
+            });
+            
+            // Restart system
+            setTimeout(() => {
+                window.letterSystem = new Door64LettersPreview();
+            }, 500);
+        }
 
-    <!-- JavaScript -->
-    <script src="assets/js/script.js"></script>
+        // Initialize when page loads
+        let letterSystem = null;
+        document.addEventListener('DOMContentLoaded', function() {
+            letterSystem = new Door64LettersPreview();
+        });
+    </script>
 </body>
 </html>
