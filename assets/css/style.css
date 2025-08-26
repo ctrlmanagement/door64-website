@@ -179,7 +179,7 @@ body.menu-open {
     height: 100%;
     object-fit: cover;
     animation: blr 2s;
-    filter: blur(1px); /* Reduced to 1px for interactive letters visibility */
+    filter: blur(0px); /* No blur for clear letter visibility */
     transition: filter 0.7s;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: optimize-contrast;
@@ -263,18 +263,18 @@ body.menu-open {
     }
 }
 
-/* Improved blur animation for letters - more readable */
+/* Improved blur animation for letters - completely clear for interactivity */
 @keyframes blurPulse {
-    0%, 100% { filter: blur(1px) brightness(0.9); }
-    25% { filter: blur(2px) brightness(0.8); }
+    0%, 100% { filter: blur(0px) brightness(0.9); }
+    25% { filter: blur(0px) brightness(0.8); }
     50% { filter: blur(0px) brightness(1); }
-    75% { filter: blur(1px) brightness(0.85); }
+    75% { filter: blur(0px) brightness(0.85); }
 }
 
-/* Initial blur animation - much less aggressive for readability */
+/* Initial blur animation - no blur for clear letter visibility */
 @keyframes blr {
-    0% { filter: blur(8px); }
-    100% { filter: blur(1px); }
+    0% { filter: blur(0px); }
+    100% { filter: blur(0px); }
 }
 
 /* Apply continuous animations to doors */
@@ -487,8 +487,8 @@ body.menu-open {
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
         
-        /* Much clearer letters for interactive system */
-        filter: blur(0.5px);
+        /* Completely clear letters for interactive system */
+        filter: blur(0px);
         
         /* Better touch response */
         touch-action: manipulation;
