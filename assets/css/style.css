@@ -1,4 +1,4 @@
-/* Door 64 Restaurant - Main Stylesheet - COMPLETE WITH IPHONE ENHANCEMENTS */
+/* Door 64 Restaurant - Complete Stylesheet with Rotating Door Entry System */
 
 * {
     margin: 0;
@@ -40,10 +40,21 @@ body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     scroll-behavior: smooth;
-    /* iPhone specific optimizations */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove ALL link styling completely */
+a, a:link, a:visited, a:hover, a:active, a:focus {
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+    text-decoration-line: none !important;
+    text-decoration-color: transparent !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    text-underline-offset: 0 !important;
 }
 
 /* Prevent body scroll when mobile menu is open */
@@ -56,7 +67,6 @@ body.menu-open {
 /* iPhone specific styles */
 @supports (-webkit-touch-callout: none) {
     body {
-        /* Additional iPhone optimizations */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
@@ -87,7 +97,7 @@ body.menu-open {
     width: 100%;
 }
 
-/* =============== GEOMETRIC DOOR SPLASH PAGE - UPDATED SECTION =============== */
+/* =============== GEOMETRIC DOOR SPLASH PAGE WITH EMBOSSED LETTERS =============== */
 .splash-page {
     width: 100%;
     height: 100vh;
@@ -102,14 +112,12 @@ body.menu-open {
     justify-content: center;
     cursor: pointer;
     transition: all 1.2s ease;
-    /* iPhone safe areas */
     padding-top: var(--safe-area-top);
     padding-bottom: var(--safe-area-bottom);
     padding-left: var(--safe-area-left);
     padding-right: var(--safe-area-right);
 }
 
-/* Enhanced splash page interaction - GREY WASH DISABLED */
 .splash-page::before {
     display: none !important;
 }
@@ -130,18 +138,8 @@ body.menu-open {
 
 /* Door Gallery Design - ENLARGED */
 .door-gallery {
-    /* OPTION 1: Medium increase (currently active) */
     height: 75vh;
     width: 30vh;
-    
-    /* OPTION 2: Large increase (uncomment to use) */
-    /* height: 85vh;
-    width: 40vh; */
-    
-    /* OPTION 3: Extra large increase (uncomment to use) */
-    /* height: 95vh;
-    width: 50vh; */
-    
     display: grid;
     grid-template-rows: repeat(4, 1fr 2fr 1fr);
     overflow: hidden;
@@ -155,7 +153,7 @@ body.menu-open {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -65%) !important; /* Moved up from -50% */
+    transform: translate(-50%, -65%) !important;
 }
 
 .door-gallery li {
@@ -171,20 +169,11 @@ body.menu-open {
     width: 100%;
     height: 100%;
     transition: all 0.15s;
-}
-
-.door-gallery li img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    animation: blr 2s;
-    filter: blur(5px); /* Reduced from 10px for sharper letters */
-    transition: filter 0.7s;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    /* Better SVG rendering */
-    image-rendering: crisp-edges;
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+    color: inherit !important;
+    background: transparent !important;
 }
 
 /* Door Clip Paths */
@@ -208,162 +197,146 @@ body.menu-open {
     clip-path: polygon(100% 0, 0 calc(20% * 2), 0 calc(20% * 6), 100% calc(20% * 4));
 }
 
-/* Door Animations - CONTINUOUS MOVEMENT */
-@keyframes doorFloat1 {
-    0%, 100% { 
-        transform: translate(var(--offsetX), calc(var(--offsetX) * 0.166 * -2)) scale(1);
-    }
-    25% { 
-        transform: translate(calc(var(--offsetX) * 1.1), calc(var(--offsetX) * 0.166 * -2.2)) scale(1.02);
-    }
-    50% { 
-        transform: translate(calc(var(--offsetX) * 0.9), calc(var(--offsetX) * 0.166 * -1.8)) scale(0.98);
-    }
-    75% { 
-        transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.166 * -2.1)) scale(1.01);
-    }
+/* Letter containers */
+.door-gallery li .letter-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
 }
 
-@keyframes doorFloat2 {
-    0%, 100% { 
-        transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.166 * 2)) scale(1);
-    }
-    25% { 
-        transform: translate(calc(var(--offsetX) * -0.9), calc(var(--offsetX) * 0.166 * 1.8)) scale(1.01);
-    }
-    50% { 
-        transform: translate(calc(var(--offsetX) * -1.1), calc(var(--offsetX) * 0.166 * 2.2)) scale(0.99);
-    }
-    75% { 
-        transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.166 * 1.9)) scale(1.02);
-    }
+/* Letters - EMBOSSED WHITE STYLE LIKE BOTTOM DOOR 64 LOGO */
+.door-gallery li .letter-container span {
+    color: #fff;
+    font-size: 4rem;
+    font-weight: bold;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    text-shadow: 
+        1px 1px 0px #e0e0e0,
+        2px 2px 0px #d0d0d0,
+        3px 3px 0px #c0c0c0,
+        4px 4px 0px #b0b0b0,
+        5px 5px 0px #a0a0a0,
+        6px 6px 10px rgba(0,0,0,0.3);
 }
 
-@keyframes doorFloat3 {
-    0%, 100% { 
-        transform: translate(var(--offsetX), calc(var(--offsetX) * 0.200 * -2)) scale(1);
-    }
-    30% { 
-        transform: translate(calc(var(--offsetX) * 0.95), calc(var(--offsetX) * 0.200 * -1.9)) scale(1.01);
-    }
-    60% { 
-        transform: translate(calc(var(--offsetX) * 1.05), calc(var(--offsetX) * 0.200 * -2.1)) scale(0.99);
+/* Desktop hover effects - PULSATE */
+@media (hover: hover) and (pointer: fine) {
+    .door-gallery li a:hover .letter-container span {
+        opacity: 1;
+        animation: pulsateEmbossed 1s ease-in-out infinite alternate;
     }
 }
 
-@keyframes doorFloat4 {
-    0%, 100% { 
-        transform: translate(calc(var(--offsetX) * -1), calc(var(--offsetX) * 0.200 * 2)) scale(1);
-    }
-    40% { 
-        transform: translate(calc(var(--offsetX) * -1.05), calc(var(--offsetX) * 0.200 * 2.1)) scale(1.02);
-    }
-    80% { 
-        transform: translate(calc(var(--offsetX) * -0.95), calc(var(--offsetX) * 0.200 * 1.9)) scale(0.98);
+/* Mobile touch effects - PULSATE */
+@media (hover: none) and (pointer: coarse) {
+    .door-gallery li a:active .letter-container span {
+        opacity: 1;
+        animation: pulsateEmbossed 1s ease-in-out infinite alternate;
     }
 }
 
-/* Improved blur animation for letters */
-@keyframes blurPulse {
-    0%, 100% { filter: blur(4px) brightness(0.9); }
-    25% { filter: blur(6px) brightness(0.8); }
-    50% { filter: blur(2px) brightness(1); }
-    75% { filter: blur(5px) brightness(0.85); }
+/* Active door - enhanced embossed with stronger pulsation */
+.door-gallery li a.door-active .letter-container span {
+    opacity: 1 !important;
+    animation: pulsateEmbossedActive 2s ease-in-out infinite alternate !important;
 }
 
-/* Initial blur animation - less aggressive */
-@keyframes blr {
-    0% { filter: blur(15px); }
-    100% { filter: blur(5px); }
+/* Pulsate animation for hover/touch */
+@keyframes pulsateEmbossed {
+    0% { 
+        transform: scale(1);
+        text-shadow: 
+            1px 1px 0px #e0e0e0,
+            2px 2px 0px #d0d0d0,
+            3px 3px 0px #c0c0c0,
+            4px 4px 0px #b0b0b0,
+            5px 5px 0px #a0a0a0,
+            6px 6px 10px rgba(0,0,0,0.3);
+    }
+    100% { 
+        transform: scale(1.05);
+        text-shadow: 
+            1px 1px 0px #f0f0f0,
+            2px 2px 0px #e0e0e0,
+            3px 3px 0px #d0d0d0,
+            4px 4px 0px #c0c0c0,
+            5px 5px 0px #b0b0b0,
+            6px 6px 15px rgba(255,255,255,0.4);
+    }
 }
 
-/* Apply continuous animations to doors */
-.door-gallery li:nth-of-type(1) a {
-    animation: doorFloat3 8s ease-in-out infinite;
+/* Enhanced pulsate for active door */
+@keyframes pulsateEmbossedActive {
+    0% { 
+        transform: scale(1.1);
+        text-shadow: 
+            1px 1px 0px #f0f0f0,
+            2px 2px 0px #e0e0e0,
+            3px 3px 0px #d0d0d0,
+            4px 4px 0px #c0c0c0,
+            5px 5px 0px #b0b0b0,
+            6px 6px 15px rgba(255,255,255,0.5);
+    }
+    100% { 
+        transform: scale(1.15);
+        text-shadow: 
+            1px 1px 0px #f5f5f5,
+            2px 2px 0px #e8e8e8,
+            3px 3px 0px #d8d8d8,
+            4px 4px 0px #c8c8c8,
+            5px 5px 0px #b8b8b8,
+            6px 6px 20px rgba(255,255,255,0.7);
+    }
 }
 
-.door-gallery li:nth-of-type(2) a {
-    animation: doorFloat1 6s ease-in-out infinite;
+/* Status Message - BLACK TEXT ON WHITE BACKGROUND */
+.status-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.95);
+    color: #000 !important;
+    padding: 30px;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 40;
+    display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    font-family: 'Georgia', serif;
+    border: 2px solid #000;
 }
 
-.door-gallery li:nth-of-type(3) a {
-    animation: doorFloat2 7s ease-in-out infinite;
-}
-
-.door-gallery li:nth-of-type(4) a {
-    animation: doorFloat4 9s ease-in-out infinite;
-}
-
-/* Continuous image animations */
-.door-gallery li:nth-of-type(1) img {
-    animation: blurPulse 8s ease-in-out infinite;
-}
-
-.door-gallery li:nth-of-type(2) img {
-    animation: blurPulse 6s ease-in-out infinite 1s; /* Offset by 1s */
-}
-
-.door-gallery li:nth-of-type(3) img {
-    animation: blurPulse 7s ease-in-out infinite 2s; /* Offset by 2s */
-}
-
-.door-gallery li:nth-of-type(4) img {
-    animation: blurPulse 9s ease-in-out infinite 3s; /* Offset by 3s */
-}
-
-/* Door Hover Effects - GREY WASH REMOVED */
+/* Door Hover Effects - NO GREY WASH */
 .door-gallery li:hover a {
     transition: transform 0.3s !important;
     transform: translate(0) scale(1.05) !important;
-    animation-play-state: paused; /* Pause floating on hover */
+    animation-play-state: paused;
 }
 
-/* REMOVE GREY WASH - DISABLED */
-/* .door-gallery:hover li {
-    opacity: 0.1;
-} */
-
 .door-gallery:hover li {
-    opacity: 1 !important; /* Force no dimming */
+    opacity: 1 !important;
 }
 
 .door-gallery:hover li:hover {
     opacity: 1 !important;
-    /* Keep the nice letter reveal on direct hover */
     transition: clip-path 0.4s 0.3s;
     clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
     z-index: 10;
 }
 
-/* Sharp letters on hover */
 .door-gallery li:hover img {
     filter: blur(0) brightness(1) !important;
-    animation-play-state: paused; /* Pause blur animation on hover */
+    animation-play-state: paused;
     transform: scale(1.02);
     transition: filter 0.3s ease, transform 0.3s ease;
-}
-
-/* Mobile door gallery - ENLARGED */
-@media (max-width: 768px) {
-    .door-gallery {
-        /* OPTION 1: Medium mobile increase (currently active) */
-        height: 60vh;
-        width: 40vw;
-        
-        /* OPTION 2: Large mobile increase (uncomment to use) */
-        /* height: 70vh;
-        width: 45vw; */
-        
-        /* OPTION 3: Extra large mobile increase (uncomment to use) */
-        /* height: 80vh;
-        width: 50vw; */
-        
-        grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
-    }
-    
-    .door-gallery-raised {
-        transform: translate(-50%, -60%) !important; /* Less movement on mobile */
-    }
 }
 
 .splash-content {
@@ -376,10 +349,10 @@ body.menu-open {
     z-index: 20;
 }
 
-/* Logo content moved below and styled white embossed - NEW STYLING */
+/* Logo content moved below and styled white embossed */
 .splash-content-below {
     position: absolute !important;
-    bottom: 15% !important; /* Moved down from 20% */
+    bottom: 15% !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     text-align: center !important;
@@ -397,7 +370,6 @@ body.menu-open {
 
 /* WHITE EMBOSSED STYLE for below content */
 .splash-content-below h1 {
-    /* WHITE EMBOSSED STYLE */
     color: #fff !important;
     text-shadow: 
         1px 1px 0px #e0e0e0,
@@ -424,14 +396,42 @@ body.menu-open {
     50% { transform: scale(1.05); }
 }
 
+/* ========== IPHONE SPLASH PAGE ENHANCEMENTS ========== */
+@supports (-webkit-touch-callout: none) {
+    .splash-page {
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        -webkit-font-smoothing: antialiased;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+}
+
+/* Enhanced Mobile Support */
 @media (max-width: 768px) {
+    .door-gallery {
+        height: 60vh;
+        width: 40vw;
+        grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
+    }
+    
+    .door-gallery-raised {
+        transform: translate(-50%, -60%) !important;
+    }
+
+    .door-gallery li .letter-container span {
+        font-size: 3rem;
+    }
+
     .splash-content h1,
     .splash-content-below h1 {
         font-size: 2rem;
     }
     
     .splash-content-below {
-        bottom: 18% !important; /* Adjusted for mobile */
+        bottom: 18% !important;
     }
     
     .splash-content-below h1 {
@@ -443,131 +443,51 @@ body.menu-open {
     }
 }
 
-/* ========== IPHONE SPLASH PAGE ENHANCEMENTS ========== */
+/* Performance Optimizations */
+.door-gallery li a.door-active {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
 
-/* iPhone safe area improvements */
-@supports (-webkit-touch-callout: none) {
-    .splash-page {
-        /* Better iPhone X/11/12/13/14/15 support */
-        padding-top: max(20px, env(safe-area-inset-top));
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
-        
-        /* Improve rendering on iPhone */
-        -webkit-font-smoothing: antialiased;
-        -webkit-backface-visibility: hidden;
-        transform: translateZ(0);
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .door-gallery li a.door-active .letter-container span,
+    .door-gallery li a:hover .letter-container span {
+        animation: none !important;
+        transform: none !important;
+    }
+    
+    .door-gallery li a.door-active {
+        outline: 3px solid #00ffff;
+        outline-offset: 5px;
     }
 }
 
-/* Enhanced iPhone door gallery */
-@media (max-width: 768px) {
-    .door-gallery {
-        /* Larger on iPhone for better touch targets */
-        height: 65vh;
-        width: 45vw;
-        
-        /* Better performance on iPhone */
-        will-change: transform;
-        transform: translateZ(0);
-        
-        /* Override previous mobile settings */
-        grid-template-rows: repeat(4, 1fr 2fr 1fr);
-    }
-    
-    .door-gallery-raised {
-        /* Better positioning for iPhone screens */
-        transform: translate(-50%, -58%) !important;
-    }
-    
-    /* iPhone letter image optimizations */
-    .door-gallery li img {
-        /* Sharper rendering on iPhone */
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-        
-        /* Reduced blur for iPhone clarity */
-        filter: blur(3px);
-        
-        /* Better touch response */
-        touch-action: manipulation;
-        -webkit-touch-callout: none;
-    }
-    
-    /* Clear letters on iPhone tap/touch */
-    .door-gallery li:active img,
-    .door-gallery li:focus img {
-        filter: blur(0) brightness(1) !important;
-        transform: scale(1.02);
-        transition: all 0.2s ease;
-    }
-    
-    /* iPhone logo positioning */
-    .splash-content-below {
-        bottom: max(12%, calc(env(safe-area-inset-bottom) + 8%)) !important;
-    }
-    
-    .splash-content-below h1 {
-        /* iPhone-optimized embossed text */
-        font-size: clamp(2.2rem, 10vw, 3.5rem);
-        text-shadow: 
-            1px 1px 0px #e8e8e8,
-            2px 2px 0px #d8d8d8,
-            3px 3px 0px #c8c8c8,
-            4px 4px 8px rgba(0,0,0,0.2) !important;
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .door-gallery li a.door-active {
+        outline: 4px solid currentColor !important;
+        outline-offset: 4px;
+        background: rgba(255, 255, 255, 0.1) !important;
     }
 }
 
-/* iPhone landscape orientation */
-@media (max-width: 768px) and (orientation: landscape) {
-    .door-gallery {
-        height: 80vh;
-        width: 35vw;
-    }
-    
-    .door-gallery-raised {
-        transform: translate(-50%, -55%) !important;
-    }
-    
-    .splash-content-below {
-        bottom: 8% !important;
-    }
-    
-    .splash-content-below h1 {
-        font-size: clamp(1.8rem, 8vw, 2.8rem);
-    }
-}
-
-/* iPhone Pro Max optimizations - NO AUDIO BUTTON SIZE CHANGES */
-@media (min-width: 428px) and (max-width: 768px) {
-    .door-gallery {
-        height: 70vh;
-        width: 42vw;
-    }
-    
-    .splash-content-below h1 {
-        font-size: clamp(2.5rem, 8vw, 4rem);
-    }
-}
-
-/* Disable problematic hover effects on iPhone */
+/* Touch Device Optimizations */
 @media (hover: none) and (pointer: coarse) {
-    .door-gallery:hover li,
-    .door-gallery li:hover a,
-    .door-gallery li:hover img {
-        /* Reset all hover effects on touch devices */
+    .door-gallery li a:hover .letter-container span {
         opacity: 1 !important;
         transform: none !important;
-        filter: none !important;
-        clip-path: none !important;
         animation-play-state: running !important;
     }
     
-    /* Keep touch feedback instead */
-    .door-gallery li:active {
-        transform: scale(0.98);
+    .door-gallery li a:active {
+        transform: scale(0.95);
         transition: transform 0.1s ease;
+    }
+    
+    .door-gallery li a.door-active:active {
+        transform: scale(1.02);
     }
 }
 
@@ -614,13 +534,12 @@ body.menu-open {
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
-    /* iPhone safe areas */
     padding-top: max(20px, calc(var(--safe-area-top) + 10px));
     padding-left: var(--safe-area-left);
     padding-right: var(--safe-area-right);
 }
 
-/* Desktop hover behavior - RESTORED */
+/* Desktop hover behavior */
 @media (min-width: 769px) {
     .nav {
         opacity: 0;
@@ -636,7 +555,6 @@ body.menu-open {
         transform: translateY(0);
     }
     
-    /* Ensure nav shows when hovering over any main site content */
     .main-site.active:hover .nav {
         opacity: 1;
         transform: translateY(0);
@@ -658,7 +576,7 @@ body.menu-open {
     font-size: clamp(1.2rem, 3vw, 1.8rem);
     font-weight: 300;
     color: #fff;
-    text-decoration: none;
+    text-decoration: none !important;
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
@@ -701,7 +619,7 @@ body.menu-open {
 /* Nav links - Clean styling without artifacts */
 .nav-links a {
     color: #ccc;
-    text-decoration: none;
+    text-decoration: none !important;
     text-transform: lowercase;
     font-size: 14px;
     letter-spacing: 1px;
@@ -711,11 +629,10 @@ body.menu-open {
     padding: 8px 12px;
     border-radius: 4px;
     background: transparent;
-    border: none;
-    outline: none;
+    border: none !important;
+    outline: none !important;
 }
 
-/* Remove the problematic pseudo-element that may cause artifacts */
 .nav-links a::before {
     display: none;
 }
@@ -775,9 +692,9 @@ body.menu-open {
     transition: all 0.1s ease;
 }
 
-/* =============== ENHANCED AUDIO BUTTON STYLES WITH ALL FIXES =============== */
+/* =============== ENHANCED AUDIO BUTTON STYLES =============== */
 
-/* Audio Toggle Button - Enhanced with new animations */
+/* Audio Toggle Button */
 .audio-toggle {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.3);
@@ -799,7 +716,6 @@ body.menu-open {
     will-change: transform;
     backface-visibility: hidden;
     perspective: 1000px;
-    /* ✅ MOBILE FIXES */
     min-width: 44px;
     min-height: 44px;
     touch-action: manipulation;
@@ -865,8 +781,8 @@ body.menu-open {
     top: max(20px, calc(var(--safe-area-top) + 15px)) !important;
     right: 20px !important;
     right: max(20px, calc(var(--safe-area-right) + 15px)) !important;
-    background: rgba(0, 0, 0, 0.85) !important;
-    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    background: rgba(70, 130, 180, 0.9) !important;
+    border: 2px solid rgba(70, 130, 180, 1) !important;
     border-radius: 50% !important;
     width: 60px !important;
     height: 60px !important;
@@ -886,8 +802,7 @@ body.menu-open {
     will-change: transform !important;
     backface-visibility: hidden !important;
     perspective: 1000px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-    /* ✅ MOBILE FIXES */
+    box-shadow: 0 4px 20px rgba(70, 130, 180, 0.3) !important;
     min-width: 44px;
     min-height: 44px;
     touch-action: manipulation;
@@ -896,8 +811,7 @@ body.menu-open {
 }
 
 .splash-audio-toggle:hover {
-    background: rgba(0, 0, 0, 0.9);
-    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(70, 130, 180, 1) !important;
     transform: scale(1.1);
     transition: transform 0.2s ease;
 }
@@ -914,80 +828,29 @@ body.menu-open {
 
 /* Playing state with enhanced animation for splash */
 .splash-audio-toggle.playing {
-    background: rgba(95, 179, 211, 0.95) !important;
-    border-color: rgba(95, 179, 211, 1) !important;
-    color: #fff !important;
+    background: rgba(70, 130, 180, 1) !important;
     animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
-    box-shadow: 0 6px 30px rgba(95, 179, 211, 0.5) !important;
+    box-shadow: 0 6px 30px rgba(70, 130, 180, 0.5) !important;
 }
 
 .splash-audio-toggle.playing:hover {
     animation-play-state: paused !important;
     transform: scale(1.08) !important;
-    background: rgba(95, 179, 211, 1) !important;
 }
 
 @keyframes pulseBlueSplash {
-    0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.8), 0 6px 30px rgba(95, 179, 211, 0.5); }
-    70% { box-shadow: 0 0 0 15px rgba(95, 179, 211, 0), 0 6px 30px rgba(95, 179, 211, 0.5); }
-    100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0), 0 6px 30px rgba(95, 179, 211, 0.5); }
+    0% { box-shadow: 0 0 0 0 rgba(70, 130, 180, 0.8), 0 6px 30px rgba(70, 130, 180, 0.5); }
+    70% { box-shadow: 0 0 0 15px rgba(70, 130, 180, 0), 0 6px 30px rgba(70, 130, 180, 0.5); }
+    100% { box-shadow: 0 0 0 0 rgba(70, 130, 180, 0), 0 6px 30px rgba(70, 130, 180, 0.5); }
 }
 
-@keyframes pulseBlue {
-    0% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(95, 179, 211, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(95, 179, 211, 0); }
-}
-
-/* iPhone audio button improvements - POSITION ONLY, SAME SIZE */
+/* iPhone audio button improvements */
 @media (max-width: 768px) {
     .splash-audio-toggle {
-        /* Better iPhone positioning */
         top: max(25px, calc(env(safe-area-inset-top) + 15px)) !important;
         right: max(25px, calc(env(safe-area-inset-right) + 15px)) !important;
-        
-        /* Better iPhone interaction - SIZE UNCHANGED */
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
-    }
-}
-
-/* ✅ MOBILE AUDIO HINTS */
-@media (max-width: 768px) {
-    .splash-audio-toggle:not(.playing)::after {
-        content: attr(data-mobile-hint);
-        position: absolute;
-        bottom: -35px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8em;
-        opacity: 0.7;
-        white-space: nowrap;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-family: 'Georgia', serif;
-        pointer-events: none;
-        z-index: 1;
-    }
-    
-    .audio-toggle:not(.playing)::after {
-        content: "Tap to start";
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.7em;
-        opacity: 0.7;
-        white-space: nowrap;
-        background: rgba(255, 255, 255, 0.9);
-        color: #000;
-        padding: 2px 6px;
-        border-radius: 3px;
-        font-family: 'Georgia', serif;
-        pointer-events: none;
-        z-index: 1;
     }
 }
 
@@ -1031,7 +894,6 @@ p, .sub-links a, .menu-item p {
     position: relative;
     top: 0;
     left: 0;
-    /* Align with navigation bar */
     padding-top: var(--nav-height);
     min-height: 100vh;
     min-height: calc(var(--vh, 1vh) * 100);
@@ -1062,7 +924,6 @@ p, .sub-links a, .menu-item p {
         background-color: #fff !important;
     }
 
-    /* Remove gradients on all child elements */
     .landing-page *,
     .landing-content *,
     .landing-links * {
@@ -1084,14 +945,13 @@ p, .sub-links a, .menu-item p {
 @media (max-width: 768px) {
     .gallery-slider {
         background: #fff !important;
-        z-index: -2; /* Lower z-index to prevent layering issues */
+        z-index: -2;
     }
 
-    /* Additional mobile landscape override */
     .landing-page .gallery-slider {
         background: #fff !important;
         background-image: none !important;
-        z-index: -2; /* Ensure it stays behind content */
+        z-index: -2;
     }
 }
 
@@ -1164,7 +1024,7 @@ p, .sub-links a, .menu-item p {
         letter-spacing: clamp(2px, 3vw, 6px);
         margin-bottom: 30px;
         line-height: 1.1;
-        color: #fff !important; /* White embossed logo on mobile */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
             2px 2px 0px #bbb,
@@ -1220,7 +1080,7 @@ p, .sub-links a, .menu-item p {
 
 .sub-links a {
     color: #ccc;
-    text-decoration: none;
+    text-decoration: none !important;
     font-size: clamp(0.9rem, 3vw, 1.1rem);
     letter-spacing: 1px;
     transition: color 0.3s ease;
@@ -1244,11 +1104,9 @@ p, .sub-links a, .menu-item p {
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     background: #f8f8f8;
-    /* ✅ GALLERY HOVER INTERFERENCE FIX */
     will-change: auto;
 }
 
-/* ✅ ISOLATE GALLERY CONTROLS */
 .css-gallery .gallery-nav,
 .css-gallery .gallery-dots,
 .css-gallery .gallery-dot {
@@ -1293,7 +1151,6 @@ p, .sub-links a, .menu-item p {
     pointer-events: none;
 }
 
-/* Gallery slide loading states */
 .gallery-slide img {
     transition: opacity 0.3s ease;
 }
@@ -1402,7 +1259,6 @@ p, .sub-links a, .menu-item p {
     outline-offset: 2px;
 }
 
-/* Enhanced Auto-play indicator */
 .gallery-progress {
     position: absolute;
     bottom: 0;
@@ -1415,7 +1271,6 @@ p, .sub-links a, .menu-item p {
     z-index: 3;
 }
 
-/* Touch/Swipe Effects */
 .gallery-container.swiping .gallery-track {
     transition: none;
 }
@@ -1481,7 +1336,7 @@ p, .sub-links a, .menu-item p {
     padding: 12px 24px;
     background-color: transparent;
     color: #333;
-    text-decoration: none;
+    text-decoration: none !important;
     border: 2px solid #333;
     border-radius: 4px;
     font-weight: 500;
@@ -1509,7 +1364,6 @@ p, .sub-links a, .menu-item p {
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* Coming Soon Animation Keyframes */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -1613,7 +1467,7 @@ p, .sub-links a, .menu-item p {
         4px 4px 0px #999,
         5px 5px 10px rgba(0,0,0,0.2);
     position: relative;
-    text-decoration: none;
+    text-decoration: none !important;
     cursor: pointer;
     transition: opacity 0.3s ease;
     display: block;
@@ -1646,7 +1500,7 @@ p, .sub-links a, .menu-item p {
     color: #000;
 }
 
-/* Space Section - Added borders like other pages */
+/* Space Section */
 .space-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1737,7 +1591,7 @@ p, .sub-links a, .menu-item p {
 
 .sub-nav-link {
     color: #666;
-    text-decoration: none;
+    text-decoration: none !important;
     font-size: 1.1em;
     text-transform: lowercase;
     letter-spacing: 1px;
@@ -1761,7 +1615,7 @@ p, .sub-links a, .menu-item p {
 
 .breadcrumb-link {
     color: #666;
-    text-decoration: none;
+    text-decoration: none !important;
     font-size: 1.1em;
     text-transform: lowercase;
     letter-spacing: 1px;
@@ -2033,7 +1887,7 @@ p, .sub-links a, .menu-item p {
 .social-links a {
     color: #000;
     font-size: 1.2em;
-    text-decoration: none;
+    text-decoration: none !important;
     text-transform: lowercase;
     letter-spacing: 1px;
     transition: color 0.3s ease;
@@ -2118,7 +1972,6 @@ select:focus {
     outline-offset: 2px;
 }
 
-/* ✅ ENHANCED FOCUS INDICATORS */
 .audio-toggle:focus-visible,
 .splash-audio-toggle:focus-visible,
 .mobile-menu:focus-visible,
@@ -2159,7 +2012,6 @@ select:focus {
         border-bottom: 1px solid #ddd;
     }
 
-    /* Ensure logo is visible and properly positioned on mobile */
     .nav-container {
         display: flex;
         align-items: center;
@@ -2271,8 +2123,8 @@ select:focus {
     }
 
     .nav-links a {
-        font-size: 18px; /* Minimum readable size */
-        padding: 15px 0; /* Minimum 44px touch target */
+        font-size: 18px;
+        padding: 15px 0;
         border-bottom: 1px solid rgba(0,0,0,0.1);
         text-align: center;
         min-height: 44px;
@@ -2288,7 +2140,7 @@ select:focus {
         color: #000;
     }
 
-    /* ✅ ENHANCED MOBILE TOUCH TARGETS */
+    /* Enhanced mobile touch targets */
     .nav-links a,
     .sub-links a,
     .sub-nav-link,
@@ -2309,13 +2161,12 @@ select:focus {
     .back-button {
         min-width: 44px;
         min-height: 44px;
-        /* Improve touch responsiveness */
         touch-action: manipulation;
     }
 
     .splash-hint {
         bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
-        font-size: 16px; /* Minimum 16px for readability */
+        font-size: 16px;
         padding: 15px 25px;
         max-width: 85%;
         margin: 0 auto;
@@ -2378,7 +2229,7 @@ select:focus {
         padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
         justify-content: flex-start;
         box-sizing: border-box;
-        color: #000; /* Black text on mobile */
+        color: #000;
         background: #fff !important;
     }
 
@@ -2400,7 +2251,7 @@ select:focus {
         letter-spacing: clamp(2px, 3vw, 6px);
         margin-bottom: 30px;
         line-height: 1.1;
-        color: #fff !important; /* White embossed logo on mobile */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
             2px 2px 0px #bbb,
@@ -2421,7 +2272,6 @@ select:focus {
         min-width: auto;
         max-width: none;
         width: 100%;
-        /* Minimum 44px touch target */
         min-height: 44px;
         padding: 10px;
     }
@@ -2430,25 +2280,24 @@ select:focus {
         font-size: clamp(1.4rem, 6vw, 1.8rem);
         letter-spacing: clamp(1px, 3vw, 4px);
         margin-bottom: 20px;
-        color: #000; /* Black headings on mobile */
+        color: #000;
     }
 
     .sub-links a {
-        font-size: 18px; /* Minimum readable size */
-        padding: 12px 0; /* Minimum 44px touch target */
+        font-size: 18px;
+        padding: 12px 0;
         min-height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #666; /* Dark gray links on mobile */
+        color: #666;
     }
 
     .sub-links a:hover,
     .sub-links a:active {
-        color: #000; /* Black on interaction */
+        color: #000;
     }
 
-    /* Ensure section background is white on mobile */
     .landing-page.section {
         background: #fff;
     }
@@ -2485,12 +2334,12 @@ select:focus {
 
     .space-item h3,
     .menu-item h3 {
-        font-size: 18px; /* Minimum readable size */
+        font-size: 18px;
     }
 
     .space-item p,
     .menu-item p {
-        font-size: 16px; /* Minimum readable size */
+        font-size: 16px;
         line-height: 1.6;
     }
 
@@ -2508,17 +2357,17 @@ select:focus {
     .form-group input,
     .form-group select,
     .form-group textarea {
-        font-size: 16px; /* Prevent zoom on iOS */
+        font-size: 16px;
         padding: 18px;
         border-radius: 10px;
-        min-height: 44px; /* Minimum touch target */
+        min-height: 44px;
     }
 
     .submit-btn {
         padding: 20px;
         font-size: 18px;
         border-radius: 10px;
-        min-height: 44px; /* Minimum touch target */
+        min-height: 44px;
     }
 
     .space-item:active,
@@ -2528,7 +2377,6 @@ select:focus {
         transition: transform 0.1s ease;
     }
 
-    /* Social links - minimum touch targets */
     .social-links {
         gap: 20px;
         flex-wrap: wrap;
@@ -2616,7 +2464,6 @@ select:focus {
         font-size: clamp(1.4rem, 6vw, 1.8rem);
     }
 
-    /* Mobile focus states */
     .audio-toggle:focus-visible,
     .splash-audio-toggle:focus-visible,
     .mobile-menu:focus-visible {
@@ -2625,9 +2472,8 @@ select:focus {
     }
 }
 
-/* ✅ PREVENT HOVER EFFECTS ON MOBILE DEVICES */
+/* Prevent hover effects on mobile devices */
 @media (hover: none) and (pointer: coarse) {
-    /* Disable problematic hover effects on touch devices */
     .gallery-nav:hover,
     .audio-toggle:hover,
     .splash-audio-toggle:hover,
@@ -2645,7 +2491,6 @@ select:focus {
         box-shadow: initial !important;
     }
     
-    /* Keep essential playing state animations */
     .audio-toggle.playing {
         animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
     }
@@ -2654,7 +2499,6 @@ select:focus {
         animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
     }
     
-    /* Prevent door gallery hover interference */
     .door-gallery:hover li {
         opacity: 1 !important;
     }
@@ -2668,11 +2512,9 @@ select:focus {
 /* Throttled hover effects for desktop only */
 @media (min-width: 769px) and (hover: hover) {
     .css-gallery:hover {
-        /* Only pause gallery auto-play, don't affect audio */
         --gallery-paused: true;
     }
     
-    /* Smooth transitions for desktop hover */
     .gallery-nav,
     .audio-toggle,
     .nav-links a,
@@ -2683,27 +2525,24 @@ select:focus {
     }
 }
 
-/* ✅ PERFORMANCE OPTIMIZATIONS */
+/* Performance Optimizations */
 .audio-toggle,
 .splash-audio-toggle,
 .gallery-nav,
 .mobile-menu,
 .door-gallery li a,
 .door-gallery li img {
-    /* Optimize animations and transitions */
     will-change: transform;
     backface-visibility: hidden;
     transform-style: preserve-3d;
 }
 
-/* Reset will-change after animations complete */
 .audio-toggle:not(.playing),
 .splash-audio-toggle:not(.playing) {
     will-change: auto;
 }
 
-/* ✅ ACCESSIBILITY IMPROVEMENTS */
-/* High contrast mode support */
+/* Accessibility Improvements */
 @media (prefers-contrast: high) {
     .audio-toggle, 
     .splash-audio-toggle {
@@ -2717,7 +2556,6 @@ select:focus {
     }
 }
 
-/* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -2728,7 +2566,6 @@ select:focus {
         scroll-behavior: auto !important;
     }
     
-    /* Disable all problematic animations */
     .audio-toggle.playing, 
     .splash-audio-toggle.playing,
     .door-gallery li a,
@@ -2736,19 +2573,17 @@ select:focus {
         animation: none !important;
     }
     
-    /* Keep essential functionality with minimal motion */
     .audio-toggle.playing {
         background: var(--tuscan-orange-light) !important;
         border-color: var(--tuscan-orange) !important;
     }
     
     .splash-audio-toggle.playing {
-        background: rgba(95, 179, 211, 0.95) !important;
-        border-color: rgba(95, 179, 211, 1) !important;
+        background: rgba(70, 130, 180, 1) !important;
     }
 }
 
-/* ✅ SAFE AREA IMPROVEMENTS FOR NOTCHED DEVICES */
+/* Safe area improvements for notched devices */
 @supports (padding-top: env(safe-area-inset-top)) {
     .splash-audio-toggle {
         top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
@@ -2772,7 +2607,7 @@ select:focus {
     }
 }
 
-/* iPhone 14/15 Standard (393px) optimizations */
+/* iPhone 14/15 Standard optimizations */
 @media only screen and (max-width: 393px) and (-webkit-min-device-pixel-ratio: 2) {
     .splash-hint {
         bottom: max(45px, calc(var(--safe-area-bottom) + 35px));
@@ -2783,7 +2618,7 @@ select:focus {
     .landing-content h1 {
         font-size: clamp(2.5rem, 15vw, 4rem);
         letter-spacing: clamp(3px, 4vw, 8px);
-        color: #fff !important; /* White embossed logo */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ddd,
             2px 2px 0px #ccc,
@@ -2823,7 +2658,6 @@ select:focus {
         padding: 25px 20px;
     }
 
-    /* iPhone specific audio button positioning */
     .splash-audio-toggle {
         top: max(20px, calc(var(--safe-area-top) + 8px));
         right: max(20px, calc(var(--safe-area-right) + 8px));
@@ -2833,12 +2667,12 @@ select:focus {
     }
 }
 
-/* iPhone 14/15 Plus/Pro Max (430px) optimizations */
+/* iPhone 14/15 Plus/Pro Max optimizations */
 @media (min-width: 394px) and (max-width: 430px) {
     .landing-content h1 {
         font-size: clamp(2.8rem, 10vw, 4.2rem);
         letter-spacing: clamp(3px, 3vw, 7px);
-        color: #fff !important; /* White embossed logo */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
             2px 2px 0px #bbb,
@@ -2883,7 +2717,6 @@ select:focus {
         background: #fff !important;
     }
 
-    /* Comprehensive page 64 mobile background override */
     .landing-page,
     .landing-page *,
     #landing,
@@ -2893,7 +2726,6 @@ select:focus {
         background: #fff !important;
     }
 
-    /* Remove any purple masks or overlays */
     .landing-page::before,
     .section::before,
     .main-site::before,
@@ -2901,7 +2733,6 @@ select:focus {
         display: none !important;
     }
 
-    /* Ensure white background for all content areas */
     .main-site,
     .container,
     .landing-content,
@@ -2922,13 +2753,11 @@ select:focus {
         background: #fff !important;
     }
 
-    /* Force white background for page 64 in landscape */
     .landing-page,
     .landing-page .gallery-slider {
         background: #fff !important;
     }
 
-    /* Remove any potential purple overlays in landscape */
     *::before,
     *::after {
         background: transparent !important;
@@ -2947,16 +2776,14 @@ select:focus {
         color: #000 !important;
     }
 
-    /* Landing page content white background in landscape */
     .landing-content,
     .landing-links,
     .landing-link {
         background: #fff !important;
     }
 
-    /* Ensure main title is white embossed in landscape */
     .landing-content h1 {
-        color: #fff !important; /* White embossed logo */
+        color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
             2px 2px 0px #bbb,
@@ -2965,7 +2792,6 @@ select:focus {
             5px 5px 10px rgba(0,0,0,0.2) !important;
     }
 
-    /* Ensure section headings are black in landscape */
     .landing-link h3 {
         color: #000 !important;
     }
@@ -2974,7 +2800,6 @@ select:focus {
         color: #666 !important;
     }
 
-    /* Kill any gradients in landscape mobile */
     * {
         background-image: none !important;
     }
@@ -2990,9 +2815,8 @@ select:focus {
     }
 }
 
-/* ✅ DARK MODE SUPPORT (if needed) */
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
-    /* Adjust audio buttons for dark mode */
     .audio-toggle:not(.playing) {
         background: rgba(255, 255, 255, 0.15);
         border-color: rgba(255, 255, 255, 0.4);
@@ -3026,4 +2850,4 @@ select:focus {
     }
 }
 
-/* End Door 64 Restaurant Stylesheet - Complete with iPhone Enhancements */
+/* End Door 64 Restaurant Stylesheet - Complete with Rotating Door Entry System */
