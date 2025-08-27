@@ -746,7 +746,7 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // =============== RESTORED WORKING QUOTE DISPLAY SYSTEM ===============
+    // Updated showRandomQuote method with better mobile support
     showRandomQuote() {
         console.log('showRandomQuote() called - looking for quote elements...');
         
@@ -762,73 +762,20 @@ class RotatingDoorEntry {
                 clearTimeout(this.quoteTimeout);
             }
             
-            // Reset all styles first
-            quoteSection.style.cssText = '';
-            quoteSection.className = 'quote-responses';
-            
             // Set the text
             quoteText.textContent = randomQuote;
             
-            // Force reflow
-            quoteSection.offsetHeight;
-            
-            // Apply show styles with mobile-specific considerations
-            quoteSection.style.display = 'block';
-            quoteSection.style.visibility = 'visible';
-            quoteSection.style.opacity = '1';
-            quoteSection.style.position = 'relative';
-            quoteSection.style.zIndex = '9999';
-            
-            // Mobile-specific styling - position under door letters
-            if (this.isMobile) {
-                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
-                quoteSection.style.padding = '20px';
-                quoteSection.style.margin = '20px auto 10px auto';
-                quoteSection.style.maxWidth = '90%';
-                quoteSection.style.textAlign = 'center';
-                quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                quoteSection.style.color = 'white';
-                quoteSection.style.borderRadius = '10px';
-                quoteSection.style.lineHeight = '1.4';
-                quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
-                quoteSection.style.position = 'relative';
-                quoteSection.style.marginTop = '30px';
-                
-                // Scroll into view on mobile - center the quote area
-                setTimeout(() => {
-                    quoteSection.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                }, 100);
-            }
-            
+            // Simply add the 'show' class - let CSS handle the styling
             quoteSection.className = 'quote-responses show';
             
             console.log('Quote should now be visible:', randomQuote);
-            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
             
             // Mobile gets longer display time for readability
             const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
             
             this.quoteTimeout = setTimeout(() => {
                 console.log('Hiding quote after timeout');
-                
-                if (this.isMobile) {
-                    // Smooth fade out on mobile
-                    quoteSection.style.transition = 'opacity 0.5s ease-out';
-                    quoteSection.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        quoteSection.style.display = 'none';
-                        quoteSection.style.cssText = '';
-                        quoteSection.className = 'quote-responses';
-                    }, 500);
-                } else {
-                    quoteSection.style.display = 'none';
-                    quoteSection.style.opacity = '0';
-                    quoteSection.className = 'quote-responses';
-                }
+                quoteSection.className = 'quote-responses';
             }, displayTime);
             
         } else {
@@ -844,182 +791,74 @@ class RotatingDoorEntry {
                 console.log('Found alternative quote elements, using those...');
                 const randomQuote = this.getRandomQuote();
                 altQuoteText.textContent = randomQuote;
-                altQuoteSection.style.display = 'block';
-                altQuoteSection.style.opacity = '1';
-                
-                if (this.isMobile) {
-                    altQuoteSection.style.fontSize = '18px';
-                    altQuoteSection.style.padding = '20px';
-                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                    altQuoteSection.style.color = 'white';
-                    altQuoteSection.style.borderRadius = '10px';
-                    altQuoteSection.style.position = 'relative';
-                    altQuoteSection.style.margin = '20px auto 10px auto';
-                    altQuoteSection.style.maxWidth = '90%';
-                    altQuoteSection.style.zIndex = '9999';
-                    altQuoteSection.style.textAlign = 'center';
-                    altQuoteSection.style.marginTop = '30px';
-                }
+                altQuoteSection.className = 'quote-responses show';
             } else {
                 // Create quote elements if they don't exist
                 this.createQuoteElements();
             }
         }
-    } = '35px 25px !important';
-                quoteOverlay.style.borderRadius = '20px !important';
-                console.log('Applied iPhone-specific mobile styling');
-            }
-        } else {
-            // Desktop: Use the proven working approach
-            const baseStyles = {
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: '99999',
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                color: 'white',
-                textAlign: 'center',
-                borderRadius: '12px',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.7)',
-                fontFamily: 'inherit',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                pointerEvents: 'auto',
-                visibility: 'visible',
-                display: 'block',
-                width: '75%',
-                maxWidth: '500px',
-                fontSize: '18px',
-                fontWeight: '600',
-                padding: '20px 25px',
-                lineHeight: '1.5',
-                opacity: '1'
-            };
-            
-            Object.assign(quoteOverlay.style, baseStyles);
-        }
+    }
+    
+    // Add method to create quote elements if missing
+    createQuoteElements() {
+        console.log('Creating missing quote elements...');
         
-        console.log(`[${deviceType}] Adding to parent element:`, parentElement.tagName, parentElement.id);
+        const splashPage = document.getElementById('splashPage');
+        if (!splashPage) return;
         
-        // Add to appropriate parent element
-        parentElement.appendChild(quoteOverlay);
+        // Create quote section
+        const quoteSection = document.createElement('div');
+        quoteSection.id = 'quoteResponses';
+        quoteSection.className = 'quote-responses';
         
-        // Force reflow and verify visibility
-        quoteOverlay.offsetHeight;
+        // Create quote text
+        const quoteText = document.createElement('p');
+        quoteText.id = 'quoteText';
+        quoteText.className = 'quote-text';
         
-        // Mobile-specific visibility verification
-        setTimeout(() => {
-            const rect = quoteOverlay.getBoundingClientRect();
-            const computedStyle = window.getComputedStyle(quoteOverlay);
-            
-            console.log(`[${deviceType}] Quote visibility check:`, {
-                rect: { 
-                    top: Math.round(rect.top), 
-                    left: Math.round(rect.left), 
-                    width: Math.round(rect.width), 
-                    height: Math.round(rect.height) 
-                },
-                visible: rect.width > 0 && rect.height > 0,
-                display: computedStyle.display,
-                visibility: computedStyle.visibility,
-                opacity: computedStyle.opacity,
-                zIndex: computedStyle.zIndex,
-                position: computedStyle.position,
-                parentElement: parentElement.tagName,
-                viewportSize: { width: window.innerWidth, height: window.innerHeight }
-            });
-            
-            // If not visible on mobile, try fallback approach
-            if (this.isMobile && (rect.width === 0 || rect.height === 0)) {
-                console.warn(`[${deviceType}] Quote not visible, applying fallback styling...`);
-                
-                // Fallback: Even more aggressive mobile styling
-                quoteOverlay.style.cssText = `
-                    position: absolute !important;
-                    top: 200px !important;
-                    left: 5% !important;
-                    right: 5% !important;
-                    width: 90% !important;
-                    background: black !important;
-                    color: white !important;
-                    font-size: 24px !important;
-                    font-weight: bold !important;
-                    padding: 40px 20px !important;
-                    text-align: center !important;
-                    border: 5px solid white !important;
-                    border-radius: 10px !important;
-                    z-index: 9999999 !important;
-                    display: block !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    margin: 0 !important;
-                    box-sizing: border-box !important;
-                `;
-                
-                // Re-verify after fallback
-                setTimeout(() => {
-                    const newRect = quoteOverlay.getBoundingClientRect();
-                    console.log(`[${deviceType}] Fallback verification:`, {
-                        visible: newRect.width > 0 && newRect.height > 0,
-                        rect: { width: Math.round(newRect.width), height: Math.round(newRect.height) }
-                    });
-                }, 100);
-            }
-        }, 100);
+        quoteSection.appendChild(quoteText);
         
-        // Set display timeout
-        const displayTime = this.isIPhone ? 5000 : (this.isMobile ? 4500 : 4000);
-        
-        this.quoteTimeout = setTimeout(() => {
-            console.log(`[${deviceType}] Hiding quote overlay after ${displayTime}ms`);
-            
-            if (quoteOverlay && quoteOverlay.parentNode) {
-                if (this.isMobile) {
-                    // Mobile: Immediate removal (no fancy animations)
-                    quoteOverlay.remove();
-                } else {
-                    // Desktop: Fade out
-                    quoteOverlay.style.transition = 'opacity 0.4s ease-out';
-                    quoteOverlay.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        if (quoteOverlay && quoteOverlay.parentNode) {
-                            quoteOverlay.remove();
-                        }
-                    }, 400);
-                }
-                console.log(`[${deviceType}] Quote overlay removed`);
-            }
-        }, displayTime);
-        
-        // Add click/touch handler to dismiss
-        const dismissHandler = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log(`[${deviceType}] Quote overlay dismissed by user`);
-            
-            if (this.quoteTimeout) {
-                clearTimeout(this.quoteTimeout);
-            }
-            
-            if (quoteOverlay && quoteOverlay.parentNode) {
-                quoteOverlay.remove();
-            }
-        };
-        
-        // Mobile-optimized event handlers
+        // Add mobile-friendly styles - position under door letters
         if (this.isMobile) {
-            // Mobile: Use both touchstart and click for maximum compatibility
-            quoteOverlay.addEventListener('touchstart', dismissHandler, { passive: false });
-            quoteOverlay.addEventListener('click', dismissHandler);
+            quoteSection.style.cssText = `
+                position: relative !important;
+                margin: 30px auto 10px auto !important;
+                max-width: 90% !important;
+                background: rgba(0, 0, 0, 0.9) !important;
+                color: white !important;
+                padding: 20px !important;
+                border-radius: 10px !important;
+                font-size: 18px !important;
+                line-height: 1.4 !important;
+                text-align: center !important;
+                z-index: 9999 !important;
+                display: none !important;
+                opacity: 0 !important;
+                transition: opacity 0.3s ease-in-out !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+            `;
         } else {
-            // Desktop: Just click
-            quoteOverlay.addEventListener('click', dismissHandler);
+            quoteSection.style.cssText = `
+                display: none;
+                opacity: 0;
+                text-align: center;
+                padding: 15px;
+                margin: 20px auto;
+                max-width: 80%;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                border-radius: 8px;
+                z-index: 9999;
+                position: relative;
+            `;
         }
         
-        console.log(`[${deviceType}] Quote overlay setup complete with enhanced mobile support`);
+        splashPage.appendChild(quoteSection);
+        
+        // Now try to show the quote again
+        setTimeout(() => {
+            this.showRandomQuote();
+        }, 50);
     }
     
     showAccessGranted() {
@@ -1150,12 +989,6 @@ class RotatingDoorEntry {
         if (this.quoteTimeout) {
             clearTimeout(this.quoteTimeout);
             this.quoteTimeout = null;
-        }
-        
-        // Remove any existing quote overlay
-        const existingOverlay = document.getElementById('quoteOverlay');
-        if (existingOverlay) {
-            existingOverlay.remove();
         }
         
         this.doorLinks.forEach(link => {
@@ -1913,14 +1746,14 @@ function initSplashPage() {
         // Prevent default touch behaviors on splash
         splashPage.addEventListener('touchmove', (e) => {
             // Allow scrolling only within specific elements
-            if (!e.target.closest('.nav-links, .quote-overlay')) {
+            if (!e.target.closest('.nav-links, .quote-responses')) {
                 e.preventDefault();
             }
         }, { passive: false });
         
         // Enhanced mobile gesture handling
         splashPage.addEventListener('touchstart', (e) => {
-            if (!e.target.closest('.door-gallery a, .splash-audio-toggle, .quote-overlay')) {
+            if (!e.target.closest('.door-gallery a, .splash-audio-toggle')) {
                 e.preventDefault();
             }
         }, { passive: false });
@@ -2412,11 +2245,13 @@ if (window.location.hostname === 'localhost' ||
                 window.viewportHandler.setViewportHeight();
             }
         },
-        testProminentQuote: () => {
-            // Test the new prominent quote overlay system
+        testMobileQuote: () => {
+            // Force create quote elements and test mobile display
             if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.showRandomQuote();
-                console.log('Dev: Testing prominent quote overlay display');
+                window.rotatingDoorEntry.createQuoteElements();
+                setTimeout(() => {
+                    window.rotatingDoorEntry.showRandomQuote();
+                }, 100);
             }
         }
     };
@@ -2435,30 +2270,22 @@ console.log(`
 🎯 DOOR SYSTEM: Universal mobile touch detection
 🖼️ GALLERY: Enhanced swipe gestures for all mobile devices
 ⌨️ KEYBOARD: Mobile-compatible navigation
-💬 QUOTE DISPLAY: **PROMINENT OVERLAY** with statusMessage-style positioning
+🎲 RANDOM QUOTES: Mobile-specific timing and positioning
 🔄 VIEWPORT: Dynamic height handling for mobile keyboards
 📏 RESPONSIVE: Optimized for all mobile screen sizes
 🎨 PERFORMANCE: Hardware acceleration for smooth mobile experience
 
-✨ **NEW: PROMINENT QUOTE OVERLAY SYSTEM** ✨
-• Center/upper splash page positioning like statusMessage
-• Fixed overlay with backdrop blur and premium styling
-• Enhanced mobile-specific timing and dismissal
-• Gradient backgrounds with proper contrast
-• Touch-to-dismiss functionality on mobile devices
-• Consistent with ACCESS GRANTED message styling
-
 Mobile Features:
 • Universal mobile device detection (Android, iPhone, iPad, etc.)
 • Enhanced touch event handling with fallback click events
-• **Prominent quote overlay with statusMessage positioning**
+• Improved quote display with mobile-specific styling
 • Better touch target sizing and visual feedback
 • Optimized timing for mobile interactions
 • Enhanced swipe gesture recognition across all devices
 • Improved form input handling (prevents zoom)
 • Mobile-specific debugging and logging
 
-Dev Tools: Ctrl+Shift+Q (test prominent quote), window.doorDebug.testProminentQuote()
+Dev Tools: Ctrl+Shift+V (viewport refresh), window.doorDebug.deviceInfo()
 Philosophy: "Every mobile device deserves a beautiful experience" 📱✨
 `);
 
