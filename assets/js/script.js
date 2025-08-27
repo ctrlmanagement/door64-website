@@ -594,22 +594,44 @@ class RotatingDoorEntry {
     }
     
     showRandomQuote() {
+        console.log('showRandomQuote() called - looking for quote elements...');
+        
         const quoteSection = document.getElementById('quoteResponses');
         const quoteText = document.getElementById('quoteText');
         
+        console.log('Quote section found:', !!quoteSection);
+        console.log('Quote text found:', !!quoteText);
+        
         if (quoteSection && quoteText) {
             const randomQuote = this.getRandomQuote();
+            console.log('Setting quote text to:', randomQuote);
+            
             quoteText.textContent = randomQuote;
             quoteSection.style.display = 'block';
+            quoteSection.style.visibility = 'visible';
+            quoteSection.style.opacity = '1';
             quoteSection.className = 'quote-responses show';
-            console.log('Showing random quote at bottom:', randomQuote);
+            
+            console.log('Quote should now be visible at bottom:', randomQuote);
+            console.log('Quote section display:', quoteSection.style.display);
+            console.log('Quote section class:', quoteSection.className);
             
             setTimeout(() => {
+                console.log('Hiding quote after timeout');
                 quoteSection.style.display = 'none';
+                quoteSection.style.opacity = '0';
                 quoteSection.className = 'quote-responses';
             }, 4000); // Show quotes longer since they're at the bottom
         } else {
             console.error('Quote section elements not found');
+            console.log('Available elements:', {
+                quoteResponses: document.getElementById('quoteResponses'),
+                quoteText: document.getElementById('quoteText'),
+                allDivs: document.querySelectorAll('div').length
+            });
+            
+            // Fallback: use alert for debugging
+            alert(this.getRandomQuote());
         }
     }
     
