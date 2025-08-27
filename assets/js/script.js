@@ -746,187 +746,194 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // Updated showRandomQuote method with better mobile support
+    // =============== UPDATED PROMINENT QUOTE DISPLAY SYSTEM ===============
     showRandomQuote() {
-        console.log('showRandomQuote() called - looking for quote elements...');
+        console.log('showRandomQuote() called - creating prominent overlay display...');
         
-        const quoteSection = document.getElementById('quoteResponses');
-        const quoteText = document.getElementById('quoteText');
+        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
         
-        if (quoteSection && quoteText) {
-            const randomQuote = this.getRandomQuote();
-            console.log('Setting quote text to:', randomQuote);
-            
-            // Clear any existing timeouts
-            if (this.quoteTimeout) {
-                clearTimeout(this.quoteTimeout);
-            }
-            
-            // Reset all styles first
-            quoteSection.style.cssText = '';
-            quoteSection.className = 'quote-responses';
-            
-            // Set the text
-            quoteText.textContent = randomQuote;
-            
-            // Force reflow
-            quoteSection.offsetHeight;
-            
-            // Apply show styles with mobile-specific considerations
-            quoteSection.style.display = 'block';
-            quoteSection.style.visibility = 'visible';
-            quoteSection.style.opacity = '1';
-            quoteSection.style.position = 'relative';
-            quoteSection.style.zIndex = '9999';
-            
-            // Mobile-specific styling - position under door letters
-            if (this.isMobile) {
-                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
-                quoteSection.style.padding = '20px';
-                quoteSection.style.margin = '20px auto 10px auto';
-                quoteSection.style.maxWidth = '90%';
-                quoteSection.style.textAlign = 'center';
-                quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                quoteSection.style.color = 'white';
-                quoteSection.style.borderRadius = '10px';
-                quoteSection.style.lineHeight = '1.4';
-                quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
-                quoteSection.style.position = 'relative';
-                quoteSection.style.marginTop = '30px';
-                
-                // Scroll into view on mobile - center the quote area
-                setTimeout(() => {
-                    quoteSection.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                }, 100);
-            }
-            
-            quoteSection.className = 'quote-responses show';
-            
-            console.log('Quote should now be visible:', randomQuote);
-            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
-            
-            // Mobile gets longer display time for readability
-            const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
-            
-            this.quoteTimeout = setTimeout(() => {
-                console.log('Hiding quote after timeout');
-                
-                if (this.isMobile) {
-                    // Smooth fade out on mobile
-                    quoteSection.style.transition = 'opacity 0.5s ease-out';
-                    quoteSection.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        quoteSection.style.display = 'none';
-                        quoteSection.style.cssText = '';
-                        quoteSection.className = 'quote-responses';
-                    }, 500);
-                } else {
-                    quoteSection.style.display = 'none';
-                    quoteSection.style.opacity = '0';
-                    quoteSection.className = 'quote-responses';
-                }
-            }, displayTime);
-            
-        } else {
-            console.error('Quote section elements not found');
-            console.log('Available elements with id:', 
-                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
-            
-            // Try alternative selectors
-            const altQuoteSection = document.querySelector('.quote-responses');
-            const altQuoteText = document.querySelector('.quote-text');
-            
-            if (altQuoteSection && altQuoteText) {
-                console.log('Found alternative quote elements, using those...');
-                const randomQuote = this.getRandomQuote();
-                altQuoteText.textContent = randomQuote;
-                altQuoteSection.style.display = 'block';
-                altQuoteSection.style.opacity = '1';
-                
-                if (this.isMobile) {
-                    altQuoteSection.style.fontSize = '18px';
-                    altQuoteSection.style.padding = '20px';
-                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                    altQuoteSection.style.color = 'white';
-                    altQuoteSection.style.borderRadius = '10px';
-                    altQuoteSection.style.position = 'relative';
-                    altQuoteSection.style.margin = '20px auto 10px auto';
-                    altQuoteSection.style.maxWidth = '90%';
-                    altQuoteSection.style.zIndex = '9999';
-                    altQuoteSection.style.textAlign = 'center';
-                    altQuoteSection.style.marginTop = '30px';
-                }
-            } else {
-                // Create quote elements if they don't exist
-                this.createQuoteElements();
-            }
+        // Clear any existing timeouts
+        if (this.quoteTimeout) {
+            clearTimeout(this.quoteTimeout);
         }
-    }
-    
-    // Add method to create quote elements if missing
-    createQuoteElements() {
-        console.log('Creating missing quote elements...');
+        
+        // Remove any existing quote overlay
+        const existingOverlay = document.getElementById('quoteOverlay');
+        if (existingOverlay) {
+            existingOverlay.remove();
+        }
         
         const splashPage = document.getElementById('splashPage');
-        if (!splashPage) return;
+        if (!splashPage) {
+            console.error('Splash page not found for quote display');
+            return;
+        }
         
-        // Create quote section
-        const quoteSection = document.createElement('div');
-        quoteSection.id = 'quoteResponses';
-        quoteSection.className = 'quote-responses';
+        const randomQuote = this.getRandomQuote();
+        console.log(`[${deviceType}] Creating prominent quote overlay:`, randomQuote);
         
-        // Create quote text
-        const quoteText = document.createElement('p');
-        quoteText.id = 'quoteText';
+        // Create prominent overlay similar to statusMessage
+        const quoteOverlay = document.createElement('div');
+        quoteOverlay.id = 'quoteOverlay';
+        quoteOverlay.className = 'quote-overlay';
+        
+        // Create quote text element
+        const quoteText = document.createElement('div');
         quoteText.className = 'quote-text';
+        quoteText.textContent = randomQuote;
         
-        quoteSection.appendChild(quoteText);
+        quoteOverlay.appendChild(quoteText);
         
-        // Add mobile-friendly styles - position under door letters
-        if (this.isMobile) {
-            quoteSection.style.cssText = `
-                position: relative !important;
-                margin: 30px auto 10px auto !important;
-                max-width: 90% !important;
-                background: rgba(0, 0, 0, 0.9) !important;
-                color: white !important;
-                padding: 20px !important;
-                border-radius: 10px !important;
-                font-size: 18px !important;
-                line-height: 1.4 !important;
+        // Apply prominent overlay styling based on device
+        if (this.isMobile || this.isIPhone) {
+            // Mobile/iPhone: Prominent center/upper overlay styling
+            quoteOverlay.style.cssText = `
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 90% !important;
+                max-width: 400px !important;
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 20, 0.95)) !important;
+                color: #ffffff !important;
+                font-size: 20px !important;
+                font-weight: 600 !important;
+                line-height: 1.5 !important;
+                padding: 30px 25px !important;
+                border-radius: 16px !important;
                 text-align: center !important;
-                z-index: 9999 !important;
-                display: none !important;
+                z-index: 10000 !important;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+                border: 2px solid rgba(255, 255, 255, 0.2) !important;
+                backdrop-filter: blur(10px) !important;
                 opacity: 0 !important;
-                transition: opacity 0.3s ease-in-out !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+                animation: fadeInScale 0.4s ease-out forwards !important;
+                letter-spacing: 0.5px !important;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
             `;
+            
+            // Enhanced iPhone styling
+            if (this.isIPhone) {
+                quoteOverlay.style.fontSize = '22px';
+                quoteOverlay.style.padding = '35px 30px';
+                quoteOverlay.style.fontWeight = '700';
+                quoteOverlay.style.borderRadius = '20px';
+                console.log('Applied iPhone-specific prominent styling');
+            }
         } else {
-            quoteSection.style.cssText = `
-                display: none;
-                opacity: 0;
-                text-align: center;
-                padding: 15px;
-                margin: 20px auto;
-                max-width: 80%;
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                border-radius: 8px;
-                z-index: 9999;
-                position: relative;
+            // Desktop: Prominent center overlay styling
+            quoteOverlay.style.cssText = `
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 80% !important;
+                max-width: 500px !important;
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.92), rgba(30, 30, 30, 0.92)) !important;
+                color: #ffffff !important;
+                font-size: 18px !important;
+                font-weight: 600 !important;
+                line-height: 1.6 !important;
+                padding: 25px 30px !important;
+                border-radius: 12px !important;
+                text-align: center !important;
+                z-index: 10000 !important;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                backdrop-filter: blur(8px) !important;
+                opacity: 0 !important;
+                animation: fadeInScale 0.3s ease-out forwards !important;
+                letter-spacing: 0.3px !important;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
             `;
         }
         
-        splashPage.appendChild(quoteSection);
+        // Add CSS animation keyframes if not already present
+        if (!document.getElementById('quoteAnimationStyles')) {
+            const styleSheet = document.createElement('style');
+            styleSheet.id = 'quoteAnimationStyles';
+            styleSheet.textContent = `
+                @keyframes fadeInScale {
+                    0% {
+                        opacity: 0;
+                        transform: translate(-50%, -50%) scale(0.8);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: translate(-50%, -50%) scale(1);
+                    }
+                }
+                
+                @keyframes fadeOutScale {
+                    0% {
+                        opacity: 1;
+                        transform: translate(-50%, -50%) scale(1);
+                    }
+                    100% {
+                        opacity: 0;
+                        transform: translate(-50%, -50%) scale(0.9);
+                    }
+                }
+                
+                .quote-overlay {
+                    user-select: none;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                }
+                
+                .quote-overlay .quote-text {
+                    margin: 0;
+                    padding: 0;
+                }
+            `;
+            document.head.appendChild(styleSheet);
+        }
         
-        // Now try to show the quote again
-        setTimeout(() => {
-            this.showRandomQuote();
-        }, 50);
+        // Add to splash page
+        splashPage.appendChild(quoteOverlay);
+        
+        // Force reflow and show
+        quoteOverlay.offsetHeight;
+        
+        console.log(`[${deviceType}] Prominent quote overlay created and displayed`);
+        
+        // Set display timeout with device-specific durations
+        const displayTime = this.isIPhone ? 6000 : (this.isMobile ? 5500 : 4500);
+        
+        this.quoteTimeout = setTimeout(() => {
+            console.log(`[${deviceType}] Hiding prominent quote overlay after ${displayTime}ms`);
+            
+            // Animate out
+            quoteOverlay.style.animation = 'fadeOutScale 0.5s ease-in forwards';
+            
+            setTimeout(() => {
+                if (quoteOverlay && quoteOverlay.parentNode) {
+                    quoteOverlay.remove();
+                }
+                console.log(`[${deviceType}] Quote overlay removed`);
+            }, 500);
+        }, displayTime);
+        
+        // Add touch/click handler to dismiss on mobile
+        if (this.isMobile) {
+            quoteOverlay.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`[${deviceType}] Quote overlay dismissed by touch`);
+                
+                if (this.quoteTimeout) {
+                    clearTimeout(this.quoteTimeout);
+                }
+                
+                quoteOverlay.style.animation = 'fadeOutScale 0.3s ease-in forwards';
+                setTimeout(() => {
+                    if (quoteOverlay && quoteOverlay.parentNode) {
+                        quoteOverlay.remove();
+                    }
+                }, 300);
+            }, { passive: false });
+        }
     }
     
     showAccessGranted() {
@@ -1057,6 +1064,12 @@ class RotatingDoorEntry {
         if (this.quoteTimeout) {
             clearTimeout(this.quoteTimeout);
             this.quoteTimeout = null;
+        }
+        
+        // Remove any existing quote overlay
+        const existingOverlay = document.getElementById('quoteOverlay');
+        if (existingOverlay) {
+            existingOverlay.remove();
         }
         
         this.doorLinks.forEach(link => {
@@ -1435,7 +1448,7 @@ class MobileMenu {
                 return;
             }
             
-            if (e.target.closest('input, textarea, select, button, [tabindex]')) {
+            if (e.target.closest('input, textarea, select, button[type="button"], button[type="submit"]')) {
                 return;
             }
             
@@ -1814,14 +1827,14 @@ function initSplashPage() {
         // Prevent default touch behaviors on splash
         splashPage.addEventListener('touchmove', (e) => {
             // Allow scrolling only within specific elements
-            if (!e.target.closest('.nav-links, .quote-responses')) {
+            if (!e.target.closest('.nav-links, .quote-overlay')) {
                 e.preventDefault();
             }
         }, { passive: false });
         
         // Enhanced mobile gesture handling
         splashPage.addEventListener('touchstart', (e) => {
-            if (!e.target.closest('.door-gallery a, .splash-audio-toggle')) {
+            if (!e.target.closest('.door-gallery a, .splash-audio-toggle, .quote-overlay')) {
                 e.preventDefault();
             }
         }, { passive: false });
@@ -2313,13 +2326,11 @@ if (window.location.hostname === 'localhost' ||
                 window.viewportHandler.setViewportHeight();
             }
         },
-        testMobileQuote: () => {
-            // Force create quote elements and test mobile display
+        testProminentQuote: () => {
+            // Test the new prominent quote overlay system
             if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.createQuoteElements();
-                setTimeout(() => {
-                    window.rotatingDoorEntry.showRandomQuote();
-                }, 100);
+                window.rotatingDoorEntry.showRandomQuote();
+                console.log('Dev: Testing prominent quote overlay display');
             }
         }
     };
@@ -2338,22 +2349,30 @@ console.log(`
 🎯 DOOR SYSTEM: Universal mobile touch detection
 🖼️ GALLERY: Enhanced swipe gestures for all mobile devices
 ⌨️ KEYBOARD: Mobile-compatible navigation
-🎲 RANDOM QUOTES: Mobile-specific timing and positioning
+💬 QUOTE DISPLAY: **PROMINENT OVERLAY** with statusMessage-style positioning
 🔄 VIEWPORT: Dynamic height handling for mobile keyboards
 📏 RESPONSIVE: Optimized for all mobile screen sizes
 🎨 PERFORMANCE: Hardware acceleration for smooth mobile experience
 
+✨ **NEW: PROMINENT QUOTE OVERLAY SYSTEM** ✨
+• Center/upper splash page positioning like statusMessage
+• Fixed overlay with backdrop blur and premium styling
+• Enhanced mobile-specific timing and dismissal
+• Gradient backgrounds with proper contrast
+• Touch-to-dismiss functionality on mobile devices
+• Consistent with ACCESS GRANTED message styling
+
 Mobile Features:
 • Universal mobile device detection (Android, iPhone, iPad, etc.)
 • Enhanced touch event handling with fallback click events
-• Improved quote display with mobile-specific styling
+• **Prominent quote overlay with statusMessage positioning**
 • Better touch target sizing and visual feedback
 • Optimized timing for mobile interactions
 • Enhanced swipe gesture recognition across all devices
 • Improved form input handling (prevents zoom)
 • Mobile-specific debugging and logging
 
-Dev Tools: Ctrl+Shift+V (viewport refresh), window.doorDebug.deviceInfo()
+Dev Tools: Ctrl+Shift+Q (test prominent quote), window.doorDebug.testProminentQuote()
 Philosophy: "Every mobile device deserves a beautiful experience" 📱✨
 `);
 
