@@ -1,4 +1,4 @@
-/* Door Restaurant - Complete iPhone-Optimized JavaScript */
+/* Door Restaurant - Complete Mobile-Optimized JavaScript */
 
 // =============== ENHANCED DOOR AUDIO SYSTEM FOR IPHONE ===============
 class DoorAudio {
@@ -534,7 +534,7 @@ class DoorAudio {
     }
 }
 
-// =============== ENHANCED ROTATING DOOR ENTRY SYSTEM FOR IPHONE ===============
+// =============== ENHANCED ROTATING DOOR ENTRY SYSTEM FOR ALL MOBILE DEVICES ===============
 class RotatingDoorEntry {
     constructor() {
         this.letters = ['D', 'O1', 'O2', 'R'];
@@ -545,8 +545,10 @@ class RotatingDoorEntry {
         this.isInitialized = false;
         this.attemptCount = 0;
         this.isIPhone = this.detectIPhone();
+        this.isMobile = this.detectMobile(); // Add mobile detection for all devices
+        this.quoteTimeout = null; // Add quote timeout tracking
         
-        // Enhanced quotes for iPhone users
+        // Enhanced quotes for all mobile users
         this.doorLockQuotes = [
             "I'm not locked out, I'm just testing the security system... unsuccessfully.",
             "The door is locked, but my Wi-Fi password is still 'password123' - priorities, people!",
@@ -557,7 +559,7 @@ class RotatingDoorEntry {
             "Like a locksmith, except instead of opening doors, I just stand outside them looking confused.",
             "The definition of optimism: carrying only one key and hoping it's the right one.",
             "Door thinks it's Fort Knox, but really it's just keeping out someone who can't remember where they put their keys five minutes ago.",
-            "Even my iPhone unlocks faster than this door... and that's saying something!"
+            "Even my phone unlocks faster than this door... and that's saying something!"
         ];
         
         this.init();
@@ -568,23 +570,53 @@ class RotatingDoorEntry {
                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     }
     
+    // Add comprehensive mobile detection for all devices
+    detectMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               ('ontouchstart' in window) ||
+               (navigator.maxTouchPoints > 0) ||
+               window.matchMedia('(pointer: coarse)').matches;
+    }
+    
+    // Enhanced initialization with mobile checks
     init() {
         if (this.isInitialized) return;
         
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) return;
+        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
+        console.log(`[${deviceType}] Initializing Rotating Door Entry System...`);
         
-        console.log('Initializing iPhone-Optimized Rotating Door Entry System...');
+        const splashPage = document.getElementById('splashPage');
+        if (!splashPage) {
+            console.error(`[${deviceType}] No splash page found`);
+            return;
+        }
         
         // Get all door links
         this.doorLinks = Array.from(document.querySelectorAll('.door-gallery a'));
         
         if (this.doorLinks.length === 0) {
-            console.warn('No door links found');
+            console.warn(`[${deviceType}] No door links found`);
             return;
         }
         
-        // Add iPhone-optimized click handlers
+        console.log(`[${deviceType}] Found ${this.doorLinks.length} door links`);
+        
+        // Check for required DOM elements
+        const quoteSection = document.getElementById('quoteResponses');
+        const quoteText = document.getElementById('quoteText');
+        
+        console.log(`[${deviceType}] DOM Check:`, {
+            splashPage: !!splashPage,
+            doorLinks: this.doorLinks.length,
+            quoteSection: !!quoteSection,
+            quoteText: !!quoteText,
+            viewport: `${window.innerWidth}x${window.innerHeight}`,
+            devicePixelRatio: window.devicePixelRatio,
+            touchSupport: 'ontouchstart' in window,
+            userAgent: navigator.userAgent.substring(0, 50) + '...'
+        });
+        
+        // Setup door click handlers
         this.setupDoorClickHandlers();
         
         // Start the rotation
@@ -594,26 +626,35 @@ class RotatingDoorEntry {
         this.rotateActiveLetter();
         
         this.isInitialized = true;
-        console.log('iPhone-Optimized Rotating Door Entry System initialized');
+        console.log(`[${deviceType}] Rotating Door Entry System initialized successfully`);
     }
     
+    // Updated setupDoorClickHandlers for all mobile devices
     setupDoorClickHandlers() {
         this.doorLinks.forEach((link, index) => {
-            // Remove existing click handlers
             const newLink = link.cloneNode(true);
             link.parentNode.replaceChild(newLink, link);
             this.doorLinks[index] = newLink;
             
-            // iPhone-optimized event handlers
-            if (this.isIPhone) {
-                // Enhanced iPhone touch handling
+            if (this.isMobile) {
+                // Enhanced mobile touch handling for ALL mobile devices
                 let touchStartTime = 0;
                 let touchStartY = 0;
+                let touchMoved = false;
                 
                 newLink.addEventListener('touchstart', (e) => {
                     touchStartTime = Date.now();
                     touchStartY = e.touches[0].clientY;
+                    touchMoved = false;
                     e.stopPropagation();
+                }, { passive: true });
+                
+                newLink.addEventListener('touchmove', (e) => {
+                    const touchEndY = e.touches[0].clientY;
+                    const verticalMovement = Math.abs(touchEndY - touchStartY);
+                    if (verticalMovement > 10) {
+                        touchMoved = true;
+                    }
                 }, { passive: true });
                 
                 newLink.addEventListener('touchend', (e) => {
@@ -621,48 +662,81 @@ class RotatingDoorEntry {
                     e.stopPropagation();
                     
                     const touchDuration = Date.now() - touchStartTime;
-                    const touchEndY = e.changedTouches[0].clientY;
-                    const verticalMovement = Math.abs(touchEndY - touchStartY);
                     
-                    // Only trigger if it's a tap (not a scroll)
-                    if (touchDuration < 500 && verticalMovement < 30) {
-                        console.log(`iPhone: Door ${this.letters[index]} tapped (index: ${index})`);
+                    // Only trigger if it's a quick tap without movement
+                    if (touchDuration < 500 && !touchMoved) {
+                        console.log(`Mobile: Door ${this.letters[index]} tapped (index: ${index})`);
                         this.handleDoorClick(index);
                     }
                 }, { passive: false });
-            } else {
-                // Standard click handler for non-iPhone devices
+                
+                // Also add click as fallback for mobile browsers that need it
                 newLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log(`Door clicked: ${this.letters[index]} (index: ${index})`);
+                    console.log(`Mobile fallback: Door ${this.letters[index]} clicked`);
+                    this.handleDoorClick(index);
+                });
+                
+            } else {
+                // Desktop click handler
+                newLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(`Desktop: Door clicked: ${this.letters[index]} (index: ${index})`);
                     this.handleDoorClick(index);
                 });
             }
         });
         
-        console.log('iPhone-optimized door click handlers set up for', this.doorLinks.length, 'doors');
+        console.log('Door click handlers set up for', this.doorLinks.length, 'doors', 
+                    this.isMobile ? '(Mobile optimized)' : '(Desktop)');
     }
     
+    // Enhanced handleDoorClick with mobile debugging
     handleDoorClick(clickedIndex) {
-        console.log(`Door ${this.letters[clickedIndex]} clicked (index: ${clickedIndex})`);
-        console.log(`Active door index: ${this.currentActiveIndex}`);
-        console.log(`Attempt count: ${this.attemptCount}`);
+        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
+        
+        console.log(`[${deviceType}] Door ${this.letters[clickedIndex]} clicked (index: ${clickedIndex})`);
+        console.log(`[${deviceType}] Active door index: ${this.currentActiveIndex}`);
+        console.log(`[${deviceType}] Attempt count: ${this.attemptCount}`);
+        console.log(`[${deviceType}] Viewport: ${window.innerWidth}x${window.innerHeight}`);
+        
+        // Log DOM elements for mobile debugging
+        if (this.isMobile) {
+            const quoteSection = document.getElementById('quoteResponses');
+            const quoteText = document.getElementById('quoteText');
+            console.log('[Mobile] Quote elements found:', {
+                quoteSection: !!quoteSection,
+                quoteText: !!quoteText,
+                quoteSectionVisible: quoteSection ? window.getComputedStyle(quoteSection).display : 'N/A',
+                quoteSectionPosition: quoteSection ? quoteSection.getBoundingClientRect() : 'N/A'
+            });
+        }
         
         if (clickedIndex === this.currentActiveIndex) {
-            console.log('Correct door clicked! Access granted!');
+            console.log(`[${deviceType}] Correct door clicked! Access granted!`);
             this.stopRotation();
             this.showAccessGranted();
         } else {
-            console.log('Wrong door clicked! Showing random quote...');
+            console.log(`[${deviceType}] Wrong door clicked! Showing random quote...`);
             this.attemptCount++;
             
             if (this.attemptCount >= 3) {
-                console.log('Third attempt reached - granting automatic access!');
+                console.log(`[${deviceType}] Third attempt reached - granting automatic access!`);
                 this.stopRotation();
                 this.showAutoAccess();
             } else {
-                this.showRandomQuote();
+                console.log(`[${deviceType}] Calling showRandomQuote()...`);
+                
+                // Add mobile-specific delay before showing quote
+                if (this.isMobile) {
+                    setTimeout(() => {
+                        this.showRandomQuote();
+                    }, 100);
+                } else {
+                    this.showRandomQuote();
+                }
             }
         }
     }
@@ -672,39 +746,7 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    showAccessGranted() {
-        const statusMessage = document.getElementById('statusMessage');
-        if (statusMessage) {
-            statusMessage.textContent = 'ACCESS GRANTED';
-            statusMessage.className = 'status-message granted';
-            statusMessage.style.display = 'block';
-            console.log('Showing ACCESS GRANTED message');
-            
-            // iPhone-optimized timing
-            setTimeout(() => {
-                statusMessage.style.display = 'none';
-                this.navigateToMainSite();
-            }, this.isIPhone ? 2500 : 2000);
-        }
-    }
-    
-    showAutoAccess() {
-        const statusMessage = document.getElementById('statusMessage');
-        if (statusMessage) {
-            statusMessage.textContent = this.isIPhone ? 
-                'Welcome! Your persistence is recognized.' : 
-                'Welcome! The door recognizes your persistence.';
-            statusMessage.className = 'status-message granted';
-            statusMessage.style.display = 'block';
-            console.log('Showing auto-access message after 3 attempts');
-            
-            setTimeout(() => {
-                statusMessage.style.display = 'none';
-                this.navigateToMainSite();
-            }, this.isIPhone ? 3000 : 2500);
-        }
-    }
-    
+    // Updated showRandomQuote method with better mobile support
     showRandomQuote() {
         console.log('showRandomQuote() called - looking for quote elements...');
         
@@ -715,38 +757,224 @@ class RotatingDoorEntry {
             const randomQuote = this.getRandomQuote();
             console.log('Setting quote text to:', randomQuote);
             
+            // Clear any existing timeouts
+            if (this.quoteTimeout) {
+                clearTimeout(this.quoteTimeout);
+            }
+            
+            // Reset all styles first
+            quoteSection.style.cssText = '';
+            quoteSection.className = 'quote-responses';
+            
+            // Set the text
             quoteText.textContent = randomQuote;
+            
+            // Force reflow
+            quoteSection.offsetHeight;
+            
+            // Apply show styles with mobile-specific considerations
             quoteSection.style.display = 'block';
             quoteSection.style.visibility = 'visible';
             quoteSection.style.opacity = '1';
+            quoteSection.style.position = 'relative';
+            quoteSection.style.zIndex = '9999';
+            
+            // Mobile-specific styling
+            if (this.isMobile) {
+                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
+                quoteSection.style.padding = '20px';
+                quoteSection.style.margin = '10px auto';
+                quoteSection.style.maxWidth = '90%';
+                quoteSection.style.textAlign = 'center';
+                quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                quoteSection.style.color = 'white';
+                quoteSection.style.borderRadius = '10px';
+                quoteSection.style.lineHeight = '1.4';
+                quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
+                
+                // Scroll into view on mobile
+                setTimeout(() => {
+                    quoteSection.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 100);
+            }
+            
             quoteSection.className = 'quote-responses show';
             
-            console.log('Quote should now be visible at bottom:', randomQuote);
+            console.log('Quote should now be visible:', randomQuote);
+            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
             
-            // iPhone-optimized timing (longer for readability)
-            setTimeout(() => {
+            // Mobile gets longer display time for readability
+            const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
+            
+            this.quoteTimeout = setTimeout(() => {
                 console.log('Hiding quote after timeout');
-                quoteSection.style.display = 'none';
-                quoteSection.style.opacity = '0';
-                quoteSection.className = 'quote-responses';
-            }, this.isIPhone ? 5000 : 4000);
+                
+                if (this.isMobile) {
+                    // Smooth fade out on mobile
+                    quoteSection.style.transition = 'opacity 0.5s ease-out';
+                    quoteSection.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        quoteSection.style.display = 'none';
+                        quoteSection.style.cssText = '';
+                        quoteSection.className = 'quote-responses';
+                    }, 500);
+                } else {
+                    quoteSection.style.display = 'none';
+                    quoteSection.style.opacity = '0';
+                    quoteSection.className = 'quote-responses';
+                }
+            }, displayTime);
+            
         } else {
             console.error('Quote section elements not found');
+            console.log('Available elements with id:', 
+                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+            
+            // Try alternative selectors
+            const altQuoteSection = document.querySelector('.quote-responses');
+            const altQuoteText = document.querySelector('.quote-text');
+            
+            if (altQuoteSection && altQuoteText) {
+                console.log('Found alternative quote elements, using those...');
+                const randomQuote = this.getRandomQuote();
+                altQuoteText.textContent = randomQuote;
+                altQuoteSection.style.display = 'block';
+                altQuoteSection.style.opacity = '1';
+                
+                if (this.isMobile) {
+                    altQuoteSection.style.fontSize = '18px';
+                    altQuoteSection.style.padding = '20px';
+                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                    altQuoteSection.style.color = 'white';
+                    altQuoteSection.style.borderRadius = '10px';
+                    altQuoteSection.style.position = 'fixed';
+                    altQuoteSection.style.bottom = '20px';
+                    altQuoteSection.style.left = '50%';
+                    altQuoteSection.style.transform = 'translateX(-50%)';
+                    altQuoteSection.style.maxWidth = '90%';
+                    altQuoteSection.style.zIndex = '9999';
+                }
+            } else {
+                // Create quote elements if they don't exist
+                this.createQuoteElements();
+            }
+        }
+    }
+    
+    // Add method to create quote elements if missing
+    createQuoteElements() {
+        console.log('Creating missing quote elements...');
+        
+        const splashPage = document.getElementById('splashPage');
+        if (!splashPage) return;
+        
+        // Create quote section
+        const quoteSection = document.createElement('div');
+        quoteSection.id = 'quoteResponses';
+        quoteSection.className = 'quote-responses';
+        
+        // Create quote text
+        const quoteText = document.createElement('p');
+        quoteText.id = 'quoteText';
+        quoteText.className = 'quote-text';
+        
+        quoteSection.appendChild(quoteText);
+        
+        // Add mobile-friendly styles
+        if (this.isMobile) {
+            quoteSection.style.cssText = `
+                position: fixed !important;
+                bottom: 20px !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                max-width: 90% !important;
+                background: rgba(0, 0, 0, 0.9) !important;
+                color: white !important;
+                padding: 20px !important;
+                border-radius: 10px !important;
+                font-size: 18px !important;
+                line-height: 1.4 !important;
+                text-align: center !important;
+                z-index: 9999 !important;
+                display: none !important;
+                opacity: 0 !important;
+                transition: opacity 0.3s ease-in-out !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+            `;
+        } else {
+            quoteSection.style.cssText = `
+                display: none;
+                opacity: 0;
+                text-align: center;
+                padding: 15px;
+                margin: 20px auto;
+                max-width: 80%;
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                border-radius: 8px;
+                z-index: 9999;
+                position: relative;
+            `;
+        }
+        
+        splashPage.appendChild(quoteSection);
+        
+        // Now try to show the quote again
+        setTimeout(() => {
+            this.showRandomQuote();
+        }, 50);
+    }
+    
+    showAccessGranted() {
+        const statusMessage = document.getElementById('statusMessage');
+        if (statusMessage) {
+            statusMessage.textContent = 'ACCESS GRANTED';
+            statusMessage.className = 'status-message granted';
+            statusMessage.style.display = 'block';
+            console.log('Showing ACCESS GRANTED message');
+            
+            // Mobile-optimized timing
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+                this.navigateToMainSite();
+            }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
+        }
+    }
+    
+    showAutoAccess() {
+        const statusMessage = document.getElementById('statusMessage');
+        if (statusMessage) {
+            statusMessage.textContent = this.isMobile ? 
+                'Welcome! Your persistence is recognized.' : 
+                'Welcome! The door recognizes your persistence.';
+            statusMessage.className = 'status-message granted';
+            statusMessage.style.display = 'block';
+            console.log('Showing auto-access message after 3 attempts');
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+                this.navigateToMainSite();
+            }, this.isMobile ? 3500 : (this.isIPhone ? 3000 : 2500));
         }
     }
     
     navigateToMainSite() {
-        console.log('Navigating to main site...', this.isIPhone ? '(iPhone)' : '');
+        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
+        console.log(`[${deviceType}] Navigating to main site...`);
         
         // Prepare audio for navigation
         if (window.doorAudio) {
             window.doorAudio.prepareForNavigation();
         }
         
-        // iPhone-optimized navigation timing
+        // Mobile-optimized navigation timing
         setTimeout(() => {
             this.hideSplash();
-        }, this.isIPhone ? 400 : 300);
+        }, this.isMobile ? 500 : (this.isIPhone ? 400 : 300));
     }
     
     hideSplash() {
@@ -759,9 +987,10 @@ class RotatingDoorEntry {
             
             setTimeout(() => {
                 splashPage.style.display = 'none';
-            }, this.isIPhone ? 1500 : 1200);
+            }, this.isMobile ? 1800 : (this.isIPhone ? 1500 : 1200));
             
-            console.log('Splash hidden, main site active', this.isIPhone ? '(iPhone)' : '');
+            const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
+            console.log(`[${deviceType}] Splash hidden, main site active`);
         }
     }
     
@@ -786,7 +1015,8 @@ class RotatingDoorEntry {
             this.doorLinks[this.currentActiveIndex].classList.add('door-active');
         }
         
-        console.log(`Active door rotated to: ${this.letters[this.currentActiveIndex]} (index: ${this.currentActiveIndex})`);
+        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
+        console.log(`[${deviceType}] Active door rotated to: ${this.letters[this.currentActiveIndex]} (index: ${this.currentActiveIndex})`);
     }
     
     startRotation() {
@@ -796,7 +1026,8 @@ class RotatingDoorEntry {
             this.rotateActiveLetter();
         }, this.rotationDelay);
         
-        console.log(`Door rotation started (every ${this.rotationDelay}ms)`, this.isIPhone ? '(iPhone optimized)' : '');
+        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
+        console.log(`[${deviceType}] Door rotation started (every ${this.rotationDelay}ms)`);
     }
     
     stopRotation() {
@@ -821,6 +1052,13 @@ class RotatingDoorEntry {
     
     destroy() {
         this.stopRotation();
+        
+        // Clear any quote timeouts
+        if (this.quoteTimeout) {
+            clearTimeout(this.quoteTimeout);
+            this.quoteTimeout = null;
+        }
+        
         this.doorLinks.forEach(link => {
             link.classList.remove('door-active');
         });
@@ -1370,7 +1608,7 @@ window.viewportHandler = null;
 
 // =============== DOCUMENT READY & INITIALIZATION ===============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Door - Initializing iPhone-optimized systems...');
+    console.log('Door - Initializing mobile-optimized systems...');
     
     // Initialize audio system FIRST for quietstorm at launch
     window.doorAudio = new DoorAudio();
@@ -1378,7 +1616,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize rotating door entry system
     window.rotatingDoorEntry = new RotatingDoorEntry();
     
-    // Initialize iPhone-optimized mobile menu
+    // Initialize mobile menu
     window.mobileMenu = new MobileMenu();
     
     // Initialize viewport handler
@@ -1389,23 +1627,26 @@ document.addEventListener('DOMContentLoaded', function() {
     initSplashPage();
     initKeyboardNavigation();
     initAccessibilityFeatures();
-    initIPhoneOptimizations();
+    initMobileOptimizations();
     
     if ('IntersectionObserver' in window) {
         initLazyLoading();
     }
     
-    console.log('Door - All iPhone-optimized systems initialized!');
+    console.log('Door - All mobile-optimized systems initialized!');
 });
 
-// =============== IPHONE-SPECIFIC OPTIMIZATIONS ===============
-function initIPhoneOptimizations() {
+// =============== MOBILE-SPECIFIC OPTIMIZATIONS ===============
+function initMobileOptimizations() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                     ('ontouchstart' in window) ||
+                     (navigator.maxTouchPoints > 0);
     const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
-    if (!isIPhone) return;
+    if (!isMobile) return;
     
-    console.log('Applying iPhone-specific optimizations...');
+    console.log('Applying mobile-specific optimizations...', isIPhone ? '(iPhone)' : '');
     
     // Prevent zoom on form focus
     const inputs = document.querySelectorAll('input, select, textarea');
@@ -1420,17 +1661,17 @@ function initIPhoneOptimizations() {
         }
     });
     
-    // iPhone-specific scroll optimization
+    // Mobile-specific scroll optimization
     document.body.style.webkitOverflowScrolling = 'touch';
     
-    // Prevent iPhone bounce scroll on body
+    // Prevent mobile bounce scroll on body
     document.body.addEventListener('touchmove', (e) => {
         if (e.target === document.body || e.target === document.documentElement) {
             e.preventDefault();
         }
     }, { passive: false });
     
-    // iPhone-specific audio button enhancement
+    // Mobile-specific audio button enhancement
     const audioButtons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
     audioButtons.forEach(button => {
         button.addEventListener('touchstart', (e) => {
@@ -1444,10 +1685,10 @@ function initIPhoneOptimizations() {
         }, { passive: false });
     });
     
-    // Enhanced iPhone door interaction
+    // Enhanced mobile door interaction
     const doorLinks = document.querySelectorAll('.door-gallery a');
     doorLinks.forEach(link => {
-        // Add visual feedback for iPhone
+        // Add visual feedback for mobile
         link.addEventListener('touchstart', () => {
             link.style.transform = 'scale(0.95)';
         }, { passive: true });
@@ -1459,7 +1700,7 @@ function initIPhoneOptimizations() {
         }, { passive: true });
     });
     
-    console.log('iPhone optimizations applied');
+    console.log('Mobile optimizations applied', isIPhone ? '(iPhone)' : '');
 }
 
 // =============== GALLERY INITIALIZATION ===============
@@ -1553,20 +1794,23 @@ function closeMobileMenu() {
     }
 }
 
-// =============== UPDATED SPLASH PAGE - iPhone Optimized ===============
+// =============== UPDATED SPLASH PAGE - Mobile Optimized ===============
 function initSplashPage() {
     const splashPage = document.getElementById('splashPage');
     const mainSite = document.getElementById('mainSite');
     
     if (!splashPage) return;
     
-    console.log('Initializing iPhone-optimized splash page with rotating door entry...');
+    console.log('Initializing mobile-optimized splash page with rotating door entry...');
     
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                     ('ontouchstart' in window) ||
+                     (navigator.maxTouchPoints > 0);
     const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
-    // iPhone-specific splash optimizations
-    if (isIPhone) {
+    // Mobile-specific splash optimizations
+    if (isMobile) {
         // Prevent default touch behaviors on splash
         splashPage.addEventListener('touchmove', (e) => {
             // Allow scrolling only within specific elements
@@ -1575,7 +1819,7 @@ function initSplashPage() {
             }
         }, { passive: false });
         
-        // Enhanced iPhone gesture handling
+        // Enhanced mobile gesture handling
         splashPage.addEventListener('touchstart', (e) => {
             if (!e.target.closest('.door-gallery a, .splash-audio-toggle')) {
                 e.preventDefault();
@@ -1596,7 +1840,7 @@ function initSplashPage() {
         }
     });
     
-    console.log('iPhone-optimized splash page initialized');
+    console.log('Mobile-optimized splash page initialized', isMobile ? '(Mobile)' : '');
 }
 
 function hideSplash() {
@@ -1607,32 +1851,38 @@ function hideSplash() {
         splashPage.classList.add('hidden');
         mainSite.classList.add('active');
         
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                         ('ontouchstart' in window) ||
+                         (navigator.maxTouchPoints > 0);
         const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
                          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         
         setTimeout(() => {
             splashPage.style.display = 'none';
-        }, isIPhone ? 1500 : 1200);
+        }, isMobile ? 1800 : (isIPhone ? 1500 : 1200));
         
-        console.log('Splash hidden, main site active', isIPhone ? '(iPhone)' : '');
+        console.log('Splash hidden, main site active', isMobile ? '(Mobile)' : '');
     }
 }
 
-// =============== ENHANCED KEYBOARD NAVIGATION FOR IPHONE ===============
+// =============== ENHANCED KEYBOARD NAVIGATION FOR MOBILE ===============
 function initKeyboardNavigation() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                     ('ontouchstart' in window) ||
+                     (navigator.maxTouchPoints > 0);
     const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
     document.addEventListener('keydown', (e) => {
-        // iPhone-specific spacebar handling
+        // Mobile-specific spacebar handling
         if (e.key === ' ' && e.target === document.body) {
-            if (!isIPhone || !document.activeElement || document.activeElement === document.body) {
+            if (!isMobile || !document.activeElement || document.activeElement === document.body) {
                 e.preventDefault();
                 toggleAudio();
             }
         }
         
-        // Enhanced mobile menu keyboard support for iPhone
+        // Enhanced mobile menu keyboard support
         if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mobile-menu')) {
             if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
                 e.preventDefault();
@@ -1672,15 +1922,18 @@ function initKeyboardNavigation() {
         }
     });
     
-    console.log('iPhone-optimized keyboard navigation initialized');
+    console.log('Mobile-optimized keyboard navigation initialized');
 }
 
-// =============== ENHANCED ACCESSIBILITY FOR IPHONE ===============
+// =============== ENHANCED ACCESSIBILITY FOR MOBILE ===============
 function initAccessibilityFeatures() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                     ('ontouchstart' in window) ||
+                     (navigator.maxTouchPoints > 0);
     const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
-    // Enhanced anchor link behavior for iPhone
+    // Enhanced anchor link behavior for mobile
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -1699,8 +1952,8 @@ function initAccessibilityFeatures() {
                     target.tabIndex = -1;
                 }
                 
-                // iPhone-specific focus handling
-                if (isIPhone) {
+                // Mobile-specific focus handling
+                if (isMobile) {
                     setTimeout(() => target.focus(), 100);
                 } else {
                     target.focus();
@@ -1709,7 +1962,7 @@ function initAccessibilityFeatures() {
         });
     });
     
-    // Enhanced skip link for iPhone
+    // Enhanced skip link for mobile
     const skipLink = document.querySelector('.skip-link');
     if (skipLink) {
         skipLink.addEventListener('click', (e) => {
@@ -1722,8 +1975,8 @@ function initAccessibilityFeatures() {
         });
     }
     
-    // iPhone-specific accessibility enhancements
-    if (isIPhone) {
+    // Mobile-specific accessibility enhancements
+    if (isMobile) {
         // Enhance button accessibility
         const buttons = document.querySelectorAll('button:not([aria-label]):not([title])');
         buttons.forEach(button => {
@@ -1732,7 +1985,7 @@ function initAccessibilityFeatures() {
             }
         });
         
-        // Enhanced focus management for iPhone
+        // Enhanced focus management for mobile
         document.addEventListener('focusin', (e) => {
             if (e.target.closest('.nav-links') && window.mobileMenu?.isOpen) {
                 e.target.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -1740,11 +1993,14 @@ function initAccessibilityFeatures() {
         });
     }
     
-    console.log('iPhone-enhanced accessibility features initialized');
+    console.log('Mobile-enhanced accessibility features initialized');
 }
 
-// =============== ENHANCED LAZY LOADING FOR IPHONE ===============
+// =============== ENHANCED LAZY LOADING FOR MOBILE ===============
 function initLazyLoading() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                     ('ontouchstart' in window) ||
+                     (navigator.maxTouchPoints > 0);
     const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     
@@ -1757,12 +2013,12 @@ function initLazyLoading() {
                     img.removeAttribute('data-src');
                     img.setAttribute('data-loading', 'false');
                     observer.unobserve(img);
-                    console.log('Lazy loaded:', img.alt || img.src, isIPhone ? '(iPhone)' : '');
+                    console.log('Lazy loaded:', img.alt || img.src, isMobile ? '(Mobile)' : '');
                 }
             }
         });
     }, {
-        rootMargin: isIPhone ? '100px' : '50px' // Larger margin for iPhone
+        rootMargin: isMobile ? '100px' : '50px' // Larger margin for mobile
     });
     
     document.querySelectorAll('img[data-src]').forEach(img => {
@@ -1770,7 +2026,7 @@ function initLazyLoading() {
         imageObserver.observe(img);
     });
     
-    console.log('iPhone-optimized lazy loading initialized');
+    console.log('Mobile-optimized lazy loading initialized');
 }
 
 // =============== UTILITY FUNCTIONS ===============
@@ -1806,6 +2062,12 @@ function isMobileMultiTouch(e) {
     return e.touches && e.touches.length > 1;
 }
 
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           ('ontouchstart' in window) ||
+           (navigator.maxTouchPoints > 0);
+}
+
 function isIPhoneDevice() {
     return /iPhone|iPod/.test(navigator.userAgent) || 
            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -1813,42 +2075,45 @@ function isIPhoneDevice() {
 
 // =============== ERROR HANDLING ===============
 window.addEventListener('error', (e) => {
+    const isMobile = isMobileDevice();
     const isIPhone = isIPhoneDevice();
-    console.error('Door - JavaScript error:', e.error, isIPhone ? '(iPhone)' : '');
+    console.error('Door - JavaScript error:', e.error, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
     
     if (e.error.message.includes('audio') && window.doorAudio) {
-        console.log('Attempting audio system recovery...', isIPhone ? '(iPhone)' : '');
+        console.log('Attempting audio system recovery...', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
         setTimeout(() => {
             try {
                 window.doorAudio.updateButtons();
             } catch (recoveryError) {
-                console.error('Audio recovery failed:', recoveryError, isIPhone ? '(iPhone)' : '');
+                console.error('Audio recovery failed:', recoveryError, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
             }
-        }, isIPhone ? 1500 : 1000);
+        }, isMobile ? 1500 : 1000);
     }
 });
 
 window.addEventListener('unhandledrejection', (e) => {
+    const isMobile = isMobileDevice();
     const isIPhone = isIPhoneDevice();
-    console.error('Door - Unhandled promise rejection:', e.reason, isIPhone ? '(iPhone)' : '');
+    console.error('Door - Unhandled promise rejection:', e.reason, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
 });
 
 // =============== PERFORMANCE MONITORING ===============
 if ('performance' in window) {
     window.addEventListener('load', () => {
+        const isMobile = isMobileDevice();
         const isIPhone = isIPhoneDevice();
         const loadTime = Math.round(performance.now());
-        console.log(`Door - Page loaded in ${loadTime}ms`, isIPhone ? '(iPhone optimized)' : '');
+        console.log(`Door - Page loaded in ${loadTime}ms`, isMobile ? (isIPhone ? '(iPhone optimized)' : '(Mobile optimized)') : '');
         
         if (performance.navigation) {
             const navType = performance.navigation.type;
             const navTypes = ['navigate', 'reload', 'back_forward', 'reserved'];
-            console.log(`Navigation type: ${navTypes[navType] || 'unknown'}`, isIPhone ? '(iPhone)' : '');
+            console.log(`Navigation type: ${navTypes[navType] || 'unknown'}`, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
         }
         
-        // iPhone-specific performance metrics
-        if (isIPhone && 'memory' in performance) {
-            console.log('iPhone memory usage:', {
+        // Mobile-specific performance metrics
+        if (isMobile && 'memory' in performance) {
+            console.log('Mobile memory usage:', {
                 used: Math.round(performance.memory.usedJSHeapSize / 1048576) + 'MB',
                 total: Math.round(performance.memory.totalJSHeapSize / 1048576) + 'MB',
                 limit: Math.round(performance.memory.jsHeapSizeLimit / 1048576) + 'MB'
@@ -1857,13 +2122,15 @@ if ('performance' in window) {
     });
 }
 
-// =============== IPHONE-ENHANCED DEVELOPMENT HELPERS ===============
+// =============== MOBILE-ENHANCED DEVELOPMENT HELPERS ===============
 if (window.location.hostname === 'localhost' || 
     window.location.hostname === '127.0.0.1' || 
     window.location.hostname.includes('dev')) {
     
+    const isMobile = isMobileDevice();
     const isIPhone = isIPhoneDevice();
-    console.log('Door - Development mode active', isIPhone ? '(iPhone detected)' : '');
+    console.log('Door - Development mode active', 
+                isMobile ? (isIPhone ? '(iPhone detected)' : '(Mobile detected)') : '');
     
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey) {
@@ -1871,19 +2138,19 @@ if (window.location.hostname === 'localhost' ||
                 case 'a':
                     e.preventDefault();
                     toggleAudio();
-                    console.log('Dev: Audio toggled', isIPhone ? '(iPhone)' : '');
+                    console.log('Dev: Audio toggled', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
                     break;
                 case 's':
                     e.preventDefault();
                     hideSplash();
-                    console.log('Dev: Splash hidden', isIPhone ? '(iPhone)' : '');
+                    console.log('Dev: Splash hidden', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
                     break;
                 case 'r':
                     e.preventDefault();
                     localStorage.removeItem('door_audio_state');
                     localStorage.removeItem('door_audio_time');
                     localStorage.removeItem('door_user_interacted');
-                    console.log('Dev: Audio state reset', isIPhone ? '(iPhone)' : '');
+                    console.log('Dev: Audio state reset', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
                     break;
                 case 'd':
                     e.preventDefault();
@@ -1920,7 +2187,8 @@ if (window.location.hostname === 'localhost' ||
                     break;
                 case 'i':
                     e.preventDefault();
-                    console.log('Dev: iPhone-optimized system info:', {
+                    console.log('Dev: Mobile-optimized system info:', {
+                        isMobile: isMobile,
                         isIPhone: isIPhone,
                         deviceInfo: {
                             userAgent: navigator.userAgent,
@@ -1938,7 +2206,6 @@ if (window.location.hostname === 'localhost' ||
                         isAudioPlaying: window.doorAudio?.isPlaying,
                         currentAudioTime: window.doorAudio?.audio?.currentTime,
                         audioMuted: window.doorAudio?.audio?.muted,
-                        isMobile: window.doorAudio?.isMobile,
                         hasUserInteracted: window.doorAudio?.hasUserInteracted,
                         isNavigating: window.doorAudio?.isNavigating,
                         activeDoorIndex: window.rotatingDoorEntry?.currentActiveIndex,
@@ -1950,28 +2217,30 @@ if (window.location.hostname === 'localhost' ||
                 case 'm':
                     e.preventDefault();
                     toggleMobileMenu();
-                    console.log('Dev: Mobile menu toggled', isIPhone ? '(iPhone)' : '');
+                    console.log('Dev: Mobile menu toggled', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
                     break;
                 case 'v':
                     e.preventDefault();
                     if (window.viewportHandler) {
                         window.viewportHandler.setViewportHeight();
-                        console.log('Dev: Viewport height refreshed', isIPhone ? '(iPhone)' : '');
+                        console.log('Dev: Viewport height refreshed', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
                     }
                     break;
             }
         }
     });
     
-    // iPhone-enhanced debug tools
+    // Mobile-enhanced debug tools
     window.doorDebug = {
         audio: () => window.doorAudio,
         galleries: () => window.doorGalleries,
         doorEntry: () => window.rotatingDoorEntry,
         mobileMenu: () => window.mobileMenu,
         viewport: () => window.viewportHandler,
+        isMobile: () => isMobile,
         isIPhone: () => isIPhone,
         deviceInfo: () => ({
+            isMobile: isMobile,
             isIPhone: isIPhone,
             userAgent: navigator.userAgent,
             platform: navigator.platform,
@@ -2043,39 +2312,49 @@ if (window.location.hostname === 'localhost' ||
             if (window.viewportHandler) {
                 window.viewportHandler.setViewportHeight();
             }
+        },
+        testMobileQuote: () => {
+            // Force create quote elements and test mobile display
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.createQuoteElements();
+                setTimeout(() => {
+                    window.rotatingDoorEntry.showRandomQuote();
+                }, 100);
+            }
         }
     };
     
-    console.log('iPhone-enhanced dev tools available: window.doorDebug');
+    console.log('Mobile-enhanced dev tools available: window.doorDebug');
 }
 
 // =============== CONSOLE BRANDING ===============
 console.log(`
-🍎 Door Restaurant - IPHONE OPTIMIZED 🍎
-✅ IPHONE SAFE AREAS: Dynamic Island + Home Indicator support
-📱 TOUCH TARGETS: 44-48px minimum for all interactive elements  
+📱 Door Restaurant - ALL MOBILE DEVICES OPTIMIZED 📱
+✅ MOBILE SUPPORT: Android, iPhone, iPad, and all touch devices
+🎯 TOUCH TARGETS: 44-48px minimum for all interactive elements  
 🔤 TYPOGRAPHY: 18px body text, proper font hierarchy
-🎵 AUDIO SYSTEM: iPhone autoplay policy compliant
-🍔 MOBILE MENU: Enhanced 48px touch target with smooth overlay
-🎯 DOOR SYSTEM: iPhone-optimized touch detection
-🖼️ GALLERY: Enhanced swipe gestures for iPhone
-⌨️ KEYBOARD: iPhone-compatible navigation
-🎲 RANDOM QUOTES: iPhone-specific timing adjustments
-🔄 VIEWPORT: Dynamic height handling for iPhone keyboards
-📏 RESPONSIVE: iPhone 14/15 series optimized (390px-430px)
-🎨 PERFORMANCE: Hardware acceleration for smooth iPhone experience
+🎵 AUDIO SYSTEM: Mobile autoplay policy compliant
+🍔 MOBILE MENU: Enhanced touch targets with smooth overlay
+🎯 DOOR SYSTEM: Universal mobile touch detection
+🖼️ GALLERY: Enhanced swipe gestures for all mobile devices
+⌨️ KEYBOARD: Mobile-compatible navigation
+🎲 RANDOM QUOTES: Mobile-specific timing and positioning
+🔄 VIEWPORT: Dynamic height handling for mobile keyboards
+📏 RESPONSIVE: Optimized for all mobile screen sizes
+🎨 PERFORMANCE: Hardware acceleration for smooth mobile experience
 
-iPhone Features:
-• Dynamic Island positioning (47-59px top spacing)
-• Home indicator spacing (34px bottom)
-• Enhanced touch feedback with scale animations
-• Optimized audio handling for iOS Safari restrictions
-• Better keyboard detection and viewport management
-• Enhanced swipe gesture recognition
+Mobile Features:
+• Universal mobile device detection (Android, iPhone, iPad, etc.)
+• Enhanced touch event handling with fallback click events
+• Improved quote display with mobile-specific styling
+• Better touch target sizing and visual feedback
+• Optimized timing for mobile interactions
+• Enhanced swipe gesture recognition across all devices
 • Improved form input handling (prevents zoom)
+• Mobile-specific debugging and logging
 
 Dev Tools: Ctrl+Shift+V (viewport refresh), window.doorDebug.deviceInfo()
-Philosophy: "Every iPhone deserves a beautiful experience" 📱✨
+Philosophy: "Every mobile device deserves a beautiful experience" 📱✨
 `);
 
 // Export for testing
@@ -2093,6 +2372,7 @@ if (typeof module !== 'undefined' && module.exports) {
         toggleMobileMenu,
         openMobileMenu,
         closeMobileMenu,
+        isMobileDevice,
         isIPhoneDevice
     };
 }
