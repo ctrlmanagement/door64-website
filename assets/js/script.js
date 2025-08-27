@@ -779,6 +779,25 @@ class RotatingDoorEntry {
             quoteSection.textContent = randomQuote;
             quoteSection.className = 'status-message granted';
             quoteSection.style.display = 'block';
+            
+            // Mobile and iPhone positioning adjustments to ensure consistent positioning
+            if (this.isMobile || this.isIPhone) {
+                // Force proper positioning on mobile devices
+                quoteSection.style.position = 'fixed';
+                quoteSection.style.top = '50%';
+                quoteSection.style.left = '50%';
+                quoteSection.style.transform = 'translate(-50%, -50%)';
+                quoteSection.style.zIndex = '10000';
+                
+                // Mobile-specific text adjustments
+                quoteSection.style.fontSize = '18px';
+                quoteSection.style.maxWidth = '90%';
+                quoteSection.style.textAlign = 'center';
+                quoteSection.style.lineHeight = '1.4';
+                
+                console.log('Applied mobile/iPhone positioning adjustments');
+            }
+            
             console.log('Showing random quote with ACCESS GRANTED styling');
             
             // Mobile-optimized timing (longer than ACCESS GRANTED for reading)
