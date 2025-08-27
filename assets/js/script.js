@@ -746,7 +746,7 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // Updated showRandomQuote method with better mobile support
+    // Updated showRandomQuote method with simple access granted positioning
     showRandomQuote() {
         console.log('showRandomQuote() called - looking for quote elements...');
         
@@ -762,73 +762,20 @@ class RotatingDoorEntry {
                 clearTimeout(this.quoteTimeout);
             }
             
-            // Reset all styles first
-            quoteSection.style.cssText = '';
-            quoteSection.className = 'quote-responses';
-            
-            // Set the text
+            // Apply simple access granted positioning approach
             quoteText.textContent = randomQuote;
-            
-            // Force reflow
-            quoteSection.offsetHeight;
-            
-            // Apply show styles with mobile-specific considerations
-            quoteSection.style.display = 'block';
-            quoteSection.style.visibility = 'visible';
-            quoteSection.style.opacity = '1';
-            quoteSection.style.position = 'relative';
-            quoteSection.style.zIndex = '9999';
-            
-            // Mobile-specific styling - position under door letters
-            if (this.isMobile) {
-                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
-                quoteSection.style.padding = '20px';
-                quoteSection.style.margin = '20px auto 10px auto';
-                quoteSection.style.maxWidth = '90%';
-                quoteSection.style.textAlign = 'center';
-                quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                quoteSection.style.color = 'white';
-                quoteSection.style.borderRadius = '10px';
-                quoteSection.style.lineHeight = '1.4';
-                quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
-                quoteSection.style.position = 'relative';
-                quoteSection.style.marginTop = '30px';
-                
-                // Scroll into view on mobile - center the quote area
-                setTimeout(() => {
-                    quoteSection.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                }, 100);
-            }
-            
             quoteSection.className = 'quote-responses show';
+            quoteSection.style.display = 'block';
             
             console.log('Quote should now be visible:', randomQuote);
-            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
             
             // Mobile gets longer display time for readability
             const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
             
             this.quoteTimeout = setTimeout(() => {
                 console.log('Hiding quote after timeout');
-                
-                if (this.isMobile) {
-                    // Smooth fade out on mobile
-                    quoteSection.style.transition = 'opacity 0.5s ease-out';
-                    quoteSection.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        quoteSection.style.display = 'none';
-                        quoteSection.style.cssText = '';
-                        quoteSection.className = 'quote-responses';
-                    }, 500);
-                } else {
-                    quoteSection.style.display = 'none';
-                    quoteSection.style.opacity = '0';
-                    quoteSection.className = 'quote-responses';
-                }
+                quoteSection.style.display = 'none';
+                quoteSection.className = 'quote-responses';
             }, displayTime);
             
         } else {
@@ -844,22 +791,8 @@ class RotatingDoorEntry {
                 console.log('Found alternative quote elements, using those...');
                 const randomQuote = this.getRandomQuote();
                 altQuoteText.textContent = randomQuote;
+                altQuoteSection.className = 'quote-responses show';
                 altQuoteSection.style.display = 'block';
-                altQuoteSection.style.opacity = '1';
-                
-                if (this.isMobile) {
-                    altQuoteSection.style.fontSize = '18px';
-                    altQuoteSection.style.padding = '20px';
-                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                    altQuoteSection.style.color = 'white';
-                    altQuoteSection.style.borderRadius = '10px';
-                    altQuoteSection.style.position = 'relative';
-                    altQuoteSection.style.margin = '20px auto 10px auto';
-                    altQuoteSection.style.maxWidth = '90%';
-                    altQuoteSection.style.zIndex = '9999';
-                    altQuoteSection.style.textAlign = 'center';
-                    altQuoteSection.style.marginTop = '30px';
-                }
             } else {
                 // Create quote elements if they don't exist
                 this.createQuoteElements();
