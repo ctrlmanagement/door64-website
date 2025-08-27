@@ -746,163 +746,124 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // =============== MOBILE BROWSER BYPASS QUOTE DISPLAY SYSTEM ===============
+    // =============== RESTORED WORKING QUOTE DISPLAY SYSTEM ===============
     showRandomQuote() {
-        console.log('showRandomQuote() called - bypassing splash page for mobile...');
+        console.log('showRandomQuote() called - looking for quote elements...');
         
-        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
+        const quoteSection = document.getElementById('quoteResponses');
+        const quoteText = document.getElementById('quoteText');
         
-        // Clear any existing timeouts
-        if (this.quoteTimeout) {
-            clearTimeout(this.quoteTimeout);
-        }
-        
-        // Remove any existing overlays
-        const existingOverlay = document.getElementById('quoteOverlay');
-        if (existingOverlay) {
-            existingOverlay.remove();
-        }
-        
-        const randomQuote = this.getRandomQuote();
-        console.log(`[${deviceType}] Creating quote display:`, randomQuote);
-        
-        if (this.isMobile) {
-            // MOBILE: Create overlay outside splash page entirely
-            const quoteOverlay = document.createElement('div');
-            quoteOverlay.id = 'quoteOverlay';
-            quoteOverlay.textContent = randomQuote;
+        if (quoteSection && quoteText) {
+            const randomQuote = this.getRandomQuote();
+            console.log('Setting quote text to:', randomQuote);
             
-            // Mobile: Append directly to body and use viewport-relative positioning
-            document.body.appendChild(quoteOverlay);
-            
-            // Apply mobile-specific styling that definitely works
-            quoteOverlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                width: 100vw;
-                height: 100vh;
-                background-color: rgba(0, 0, 0, 0.8);
-                color: white;
-                font-size: 24px;
-                font-weight: bold;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                z-index: 999999;
-                padding: 20px;
-                box-sizing: border-box;
-                line-height: 1.4;
-            `;
-            
-            // Create inner content div for better control
-            const innerDiv = document.createElement('div');
-            innerDiv.textContent = randomQuote;
-            innerDiv.style.cssText = `
-                background: black;
-                color: white;
-                padding: 40px 30px;
-                border-radius: 15px;
-                border: 3px solid white;
-                max-width: 90%;
-                font-size: ${this.isIPhone ? '26px' : '24px'};
-                font-weight: bold;
-                line-height: 1.4;
-            `;
-            
-            // Replace text with styled inner div
-            quoteOverlay.textContent = '';
-            quoteOverlay.appendChild(innerDiv);
-            
-            console.log(`[${deviceType}] Mobile overlay created as full-screen`);
-            
-            // Mobile timeout
-            this.quoteTimeout = setTimeout(() => {
-                console.log(`[${deviceType}] Removing mobile overlay`);
-                if (quoteOverlay && quoteOverlay.parentNode) {
-                    quoteOverlay.remove();
-                }
-            }, 4000);
-            
-            // Mobile dismiss handler
-            quoteOverlay.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                console.log(`[${deviceType}] Mobile overlay dismissed by touch`);
-                if (this.quoteTimeout) clearTimeout(this.quoteTimeout);
-                if (quoteOverlay && quoteOverlay.parentNode) {
-                    quoteOverlay.remove();
-                }
-            }, { passive: false });
-            
-        } else {
-            // DESKTOP: Use the working approach
-            const splashPage = document.getElementById('splashPage');
-            if (!splashPage) {
-                console.error('Splash page not found for quote display');
-                return;
+            // Clear any existing timeouts
+            if (this.quoteTimeout) {
+                clearTimeout(this.quoteTimeout);
             }
             
-            const quoteOverlay = document.createElement('div');
-            quoteOverlay.id = 'quoteOverlay';
-            quoteOverlay.textContent = randomQuote;
+            // Reset all styles first
+            quoteSection.style.cssText = '';
+            quoteSection.className = 'quote-responses';
             
-            const baseStyles = {
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: '99999',
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                color: 'white',
-                textAlign: 'center',
-                borderRadius: '12px',
-                border: '2px solid rgba(255, 255, 255, 0.3)',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.7)',
-                fontFamily: 'inherit',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                pointerEvents: 'auto',
-                visibility: 'visible',
-                display: 'block',
-                width: '75%',
-                maxWidth: '500px',
-                fontSize: '18px',
-                fontWeight: '600',
-                padding: '20px 25px',
-                lineHeight: '1.5',
-                opacity: '1'
-            };
+            // Set the text
+            quoteText.textContent = randomQuote;
             
-            Object.assign(quoteOverlay.style, baseStyles);
-            splashPage.appendChild(quoteOverlay);
+            // Force reflow
+            quoteSection.offsetHeight;
             
-            console.log(`[${deviceType}] Desktop overlay created`);
+            // Apply show styles with mobile-specific considerations
+            quoteSection.style.display = 'block';
+            quoteSection.style.visibility = 'visible';
+            quoteSection.style.opacity = '1';
+            quoteSection.style.position = 'relative';
+            quoteSection.style.zIndex = '9999';
             
-            // Desktop timeout
+            // Mobile-specific styling - position under door letters
+            if (this.isMobile) {
+                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
+                quoteSection.style.padding = '20px';
+                quoteSection.style.margin = '20px auto 10px auto';
+                quoteSection.style.maxWidth = '90%';
+                quoteSection.style.textAlign = 'center';
+                quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                quoteSection.style.color = 'white';
+                quoteSection.style.borderRadius = '10px';
+                quoteSection.style.lineHeight = '1.4';
+                quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
+                quoteSection.style.position = 'relative';
+                quoteSection.style.marginTop = '30px';
+                
+                // Scroll into view on mobile - center the quote area
+                setTimeout(() => {
+                    quoteSection.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 100);
+            }
+            
+            quoteSection.className = 'quote-responses show';
+            
+            console.log('Quote should now be visible:', randomQuote);
+            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
+            
+            // Mobile gets longer display time for readability
+            const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
+            
             this.quoteTimeout = setTimeout(() => {
-                console.log(`[${deviceType}] Removing desktop overlay`);
-                if (quoteOverlay && quoteOverlay.parentNode) {
-                    quoteOverlay.style.transition = 'opacity 0.4s ease-out';
-                    quoteOverlay.style.opacity = '0';
+                console.log('Hiding quote after timeout');
+                
+                if (this.isMobile) {
+                    // Smooth fade out on mobile
+                    quoteSection.style.transition = 'opacity 0.5s ease-out';
+                    quoteSection.style.opacity = '0';
+                    
                     setTimeout(() => {
-                        if (quoteOverlay && quoteOverlay.parentNode) {
-                            quoteOverlay.remove();
-                        }
-                    }, 400);
+                        quoteSection.style.display = 'none';
+                        quoteSection.style.cssText = '';
+                        quoteSection.className = 'quote-responses';
+                    }, 500);
+                } else {
+                    quoteSection.style.display = 'none';
+                    quoteSection.style.opacity = '0';
+                    quoteSection.className = 'quote-responses';
                 }
-            }, 4000);
+            }, displayTime);
             
-            // Desktop dismiss handler
-            quoteOverlay.addEventListener('click', () => {
-                console.log(`[${deviceType}] Desktop overlay dismissed by click`);
-                if (this.quoteTimeout) clearTimeout(this.quoteTimeout);
-                if (quoteOverlay && quoteOverlay.parentNode) {
-                    quoteOverlay.remove();
+        } else {
+            console.error('Quote section elements not found');
+            console.log('Available elements with id:', 
+                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+            
+            // Try alternative selectors
+            const altQuoteSection = document.querySelector('.quote-responses');
+            const altQuoteText = document.querySelector('.quote-text');
+            
+            if (altQuoteSection && altQuoteText) {
+                console.log('Found alternative quote elements, using those...');
+                const randomQuote = this.getRandomQuote();
+                altQuoteText.textContent = randomQuote;
+                altQuoteSection.style.display = 'block';
+                altQuoteSection.style.opacity = '1';
+                
+                if (this.isMobile) {
+                    altQuoteSection.style.fontSize = '18px';
+                    altQuoteSection.style.padding = '20px';
+                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                    altQuoteSection.style.color = 'white';
+                    altQuoteSection.style.borderRadius = '10px';
+                    altQuoteSection.style.position = 'relative';
+                    altQuoteSection.style.margin = '20px auto 10px auto';
+                    altQuoteSection.style.maxWidth = '90%';
+                    altQuoteSection.style.zIndex = '9999';
+                    altQuoteSection.style.textAlign = 'center';
+                    altQuoteSection.style.marginTop = '30px';
                 }
-            });
+            } else {
+                // Create quote elements if they don't exist
+                this.createQuoteElements();
+            }
         }
     } = '35px 25px !important';
                 quoteOverlay.style.borderRadius = '20px !important';
