@@ -1498,11 +1498,11 @@ p, .sub-links a, .menu-item p {
     display: block;
 }
 
-/* Page Logo (above section titles) - White Embossed Style */
+/* Enhanced Page Logo (above section titles) - White Embossed Style - CENTERED */
 .page-logo {
     font-size: clamp(2rem, 6vw, 3.5rem);
-    text-align: center;
-    margin-bottom: 30px;
+    text-align: center !important;
+    margin: 0 auto 30px auto !important; /* Center with auto margins */
     font-weight: 300;
     text-transform: uppercase;
     letter-spacing: clamp(2px, 2vw, 6px);
@@ -1519,6 +1519,10 @@ p, .sub-links a, .menu-item p {
     cursor: pointer;
     transition: opacity 0.3s ease;
     display: block;
+    width: 100% !important; /* Full width for proper centering */
+    max-width: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important; /* Perfect centering */
     -webkit-tap-highlight-color: transparent;
     /* iPhone touch target */
     min-height: var(--touch-target-min);
@@ -1542,14 +1546,27 @@ p, .sub-links a, .menu-item p {
     z-index: -1;
 }
 
-.section-title {
-    font-size: 3em;
-    text-align: center;
-    margin-bottom: 60px;
-    font-weight: 300;
-    text-transform: lowercase;
-    letter-spacing: 3px;
-    color: #000;
+/* Mobile-specific logo centering */
+@media (max-width: 768px) {
+    .page-logo {
+        font-size: clamp(2rem, 8vw, 2.8rem);
+        margin: 0 auto 30px auto !important;
+        letter-spacing: clamp(3px, 3vw, 5px);
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(100% - 40px) !important; /* Account for padding */
+        max-width: calc(100vw - 40px) !important;
+        text-align: center !important;
+        position: relative !important;
+        /* iPhone safe area support */
+        margin-left: max(0px, env(safe-area-inset-left)) !important;
+        margin-right: max(0px, env(safe-area-inset-right)) !important;
+        text-shadow: 
+            1px 1px 0px #ddd,
+            2px 2px 0px #ccc,
+            3px 3px 0px #bbb,
+            4px 4px 8px rgba(0,0,0,0.3);
+    }
 }
 
 /* Space Section */
