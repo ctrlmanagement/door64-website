@@ -2382,7 +2382,152 @@ if (window.location.hostname === 'localhost' ||
         }
     };
     
-    console.log('Mobile-enhanced dev tools available: window.doorDebug');
+    // Mobile-enhanced debug tools
+    window.doorDebug = {
+        audio: () => window.doorAudio,
+        galleries: () => window.doorGalleries,
+        doorEntry: () => window.rotatingDoorEntry,
+        mobileMenu: () => window.mobileMenu,
+        viewport: () => window.viewportHandler,
+        isMobile: () => isMobile,
+        isIPhone: () => isIPhone,
+        deviceInfo: () => ({
+            isMobile: isMobile,
+            isIPhone: isIPhone,
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            maxTouchPoints: navigator.maxTouchPoints,
+            screen: {
+                width: screen.width,
+                height: screen.height,
+                orientation: screen.orientation?.angle || 'unknown'
+            },
+            viewport: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                vh: getComputedStyle(document.documentElement).getPropertyValue('--vh')
+            },
+            safeAreas: {
+                top: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-top'),
+                bottom: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-bottom'),
+                left: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-left'),
+                right: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-right')
+            }
+        }),
+        resetAudio: () => {
+            localStorage.removeItem('door_audio_state');
+            localStorage.removeItem('door_audio_time');
+            localStorage.removeItem('door_user_interacted');
+            location.reload();
+        },
+        forceAudioStart: () => {
+            if (window.doorAudio) {
+                window.doorAudio.audio.muted = false;
+                window.doorAudio.resumeAudio();
+            }
+        },
+        testAudioResume: () => {
+            localStorage.setItem('door_audio_state', 'playing');
+            localStorage.setItem('door_user_interacted', 'true');
+            location.reload();
+        },
+        simulateNavigation: () => {
+            if (window.doorAudio) {
+                window.doorAudio.prepareForNavigation();
+            }
+        },
+        toggleMobileMenu: () => toggleMobileMenu(),
+        mobileMenuState: () => window.mobileMenu?.isOpen || false,
+        setDoorSpeed: (ms) => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.setRotationSpeed(ms);
+                console.log(`Door rotation speed set to ${ms}ms`);
+            }
+        },
+        showAccessGranted: () => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.showAccessGranted();
+            }
+        },
+        showRandomQuote: () => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.showRandomQuote();
+            }
+        },
+        refreshViewport: () => {
+            if (window.viewportHandler) {
+                window.viewportHandler.setViewportHeight();
+            }
+        },
+        testMobileQuote: () => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.showRandomQuote();
+                console.log('Mobile quote test triggered');
+            }
+        },
+        testMobileAccess: () => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.showAccessGranted();
+                console.log('Mobile access granted test triggered');
+            }
+        },
+        testMobileMessage: (message = 'Test Message') => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.showMobileMessage(message);
+                console.log('Custom mobile message test triggered:', message);
+            }
+        },
+        checkMobileElements: () => {
+            const elements = {
+                splashPage: document.getElementById('splashPage'),
+                statusMessage: document.getElementById('statusMessage'),
+                mobileMessage: document.getElementById('mobileStatusMessage'),
+                quoteResponses: document.getElementById('quoteResponses'),
+                body: document.body
+            };
+            
+            console.log('Mobile element check:', elements);
+            
+            Object.entries(elements).forEach(([key, element]) => {
+                if (element) {
+                    const styles = window.getComputedStyle(element);
+                    console.log(`${key} computed styles:`, {
+                        display: styles.display,
+                        position: styles.position,
+                        zIndex: styles.zIndex,
+                        visibility: styles.visibility,
+                        opacity: styles.opacity
+                    });
+                } else {
+                    console.log(`${key}: Element not found`);
+                }
+            });
+        },
+        forceMobileTest: () => {
+            console.log('FORCE TEST: Creating emergency message');
+            
+            const msg = document.createElement('div');
+            msg.textContent = 'EMERGENCY TEST - CAN YOU SEE THIS?';
+            msg.style.cssText = `
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 2147483647 !important;
+                background: #ff0000 !important;
+                color: #ffffff !important;
+                padding: 40px !important;
+                font-size: 24px !important;
+                font-weight: bold !important;
+                border: 5px solid white !important;
+                border-radius: 20px !important;
+                text-align: center !important;
+            `;
+            
+            document.body.appendChild(msg);
+            setTimeout(() => { if (msg.parentNode) msg.remove(); }, 5000);
+        }
+    };
 }
 
 // =============== CONSOLE BRANDING ===============
