@@ -1,14 +1,14 @@
-/* Door 64 Restaurant - Complete JavaScript with Rotating Door Entry System */
+/* Door Restaurant - Complete JavaScript with Rotating Door Entry System */
 
-// =============== ENHANCED DOOR 64 AUDIO SYSTEM ===============
-class Door64Audio {
+// =============== ENHANCED DOOR AUDIO SYSTEM ===============
+class DoorAudio {
     constructor() {
         this.audio = null;
         this.isPlaying = false;
         this.currentTime = 0;
         this.volume = 0.3;
-        this.storageKey = 'door64_audio_state';
-        this.timeKey = 'door64_audio_time';
+        this.storageKey = 'door_audio_state';
+        this.timeKey = 'door_audio_time';
         this.lastUpdateTime = 0;
         this.updateInterval = 500;
         this.hasUserInteracted = false;
@@ -31,11 +31,11 @@ class Door64Audio {
     
     init() {
         if (this.isInitialized) {
-            console.log('Door 64 Audio - Already initialized, skipping...');
+            console.log('Door Audio - Already initialized, skipping...');
             return;
         }
         
-        console.log('Door 64 Audio System - Initializing...', this.isMobile ? 'Mobile detected' : 'Desktop detected');
+        console.log('Door Audio System - Initializing...', this.isMobile ? 'Mobile detected' : 'Desktop detected');
         
         this.audio = document.getElementById('backgroundAudio');
         if (!this.audio) {
@@ -116,7 +116,7 @@ class Door64Audio {
                 this.updateButtons();
                 this.audioStartPromise = null;
                 
-                const hasInteracted = localStorage.getItem('door64_user_interacted') === 'true';
+                const hasInteracted = localStorage.getItem('door_user_interacted') === 'true';
                 if (hasInteracted) {
                     this.audio.muted = false;
                     console.log('User has interacted before - unmuting audio');
@@ -264,7 +264,7 @@ class Door64Audio {
                 
                 if (!this.hasUserInteracted) {
                     this.hasUserInteracted = true;
-                    localStorage.setItem('door64_user_interacted', 'true');
+                    localStorage.setItem('door_user_interacted', 'true');
                     console.log('Mobile: First click detected - starting audio');
                     
                     this.enableAudioAfterInteraction();
@@ -291,7 +291,7 @@ class Door64Audio {
                 
                 if (!this.hasUserInteracted) {
                     this.hasUserInteracted = true;
-                    localStorage.setItem('door64_user_interacted', 'true');
+                    localStorage.setItem('door_user_interacted', 'true');
                     console.log('Desktop: First interaction detected - starting audio');
                     
                     this.enableAudioAfterInteraction();
@@ -394,7 +394,7 @@ class Door64Audio {
             this.setAudioTime(parseFloat(storedTime));
         }
         
-        if (this.audio.muted && (this.hasUserInteracted || localStorage.getItem('door64_user_interacted') === 'true')) {
+        if (this.audio.muted && (this.hasUserInteracted || localStorage.getItem('door_user_interacted') === 'true')) {
             this.audio.muted = false;
             console.log('Audio unmuted for resume');
         }
@@ -456,7 +456,7 @@ class Door64Audio {
     }
 }
 
-// =============== ROTATING DOOR ENTRY SYSTEM - NO HINTS ===============
+// =============== ROTATING DOOR ENTRY SYSTEM WITH RANDOM QUOTES ===============
 class RotatingDoorEntry {
     constructor() {
         this.letters = ['D', 'O1', 'O2', 'R']; // Corresponding to the 4 door letters
@@ -465,6 +465,20 @@ class RotatingDoorEntry {
         this.rotationDelay = 3000; // 3 seconds between rotations
         this.doorLinks = [];
         this.isInitialized = false;
+        this.attemptCount = 0; // Track failed attempts for auto-entry
+        
+        // Random quotes for wrong door clicks
+        this.doorLockQuotes = [
+            "I'm not locked out, I'm just testing the security system... unsuccessfully.",
+            "The door is locked, but my Wi-Fi password is still 'password123' - priorities, people!",
+            "Door is locked, but so is my motivation to find the right key.",
+            "I have a key to every door... except the one I'm standing in front of right now.",
+            "My door is very security-conscious. It doesn't even trust me, and I pay the rent!",
+            "Door is locked, but my ability to make poor decisions remains wide open.",
+            "Like a locksmith, except instead of opening doors, I just stand outside them looking confused.",
+            "The definition of optimism: carrying only one key and hoping it's the right one.",
+            "Door thinks it's Fort Knox, but really it's just keeping out someone who can't remember where they put their keys five minutes ago."
+        ];
         
         this.init();
     }
@@ -475,7 +489,7 @@ class RotatingDoorEntry {
         const splashPage = document.getElementById('splashPage');
         if (!splashPage) return;
         
-        console.log('Initializing Rotating Door Entry System...');
+        console.log('Initializing Rotating Door Entry System with Random Quotes...');
         
         // Get all door links
         this.doorLinks = Array.from(document.querySelectorAll('.door-gallery a'));
@@ -495,7 +509,7 @@ class RotatingDoorEntry {
         this.rotateActiveLetter();
         
         this.isInitialized = true;
-        console.log('Rotating Door Entry System initialized');
+        console.log('Rotating Door Entry System initialized with random quotes');
     }
     
     setupDoorClickHandlers() {
@@ -520,15 +534,29 @@ class RotatingDoorEntry {
     handleDoorClick(clickedIndex) {
         console.log(`Door ${this.letters[clickedIndex]} clicked (index: ${clickedIndex})`);
         console.log(`Active door index: ${this.currentActiveIndex}`);
+        console.log(`Attempt count: ${this.attemptCount}`);
         
         if (clickedIndex === this.currentActiveIndex) {
             console.log('Correct door clicked! Access granted!');
             this.stopRotation();
             this.showAccessGranted();
         } else {
-            console.log('Wrong door clicked! Door is locked!');
-            this.showDoorLocked();
+            console.log('Wrong door clicked! Showing random quote...');
+            this.attemptCount++;
+            
+            if (this.attemptCount >= 3) {
+                console.log('Third attempt reached - granting automatic access!');
+                this.stopRotation();
+                this.showAutoAccess();
+            } else {
+                this.showRandomQuote();
+            }
         }
+    }
+    
+    getRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * this.doorLockQuotes.length);
+        return this.doorLockQuotes[randomIndex];
     }
     
     showAccessGranted() {
@@ -548,28 +576,51 @@ class RotatingDoorEntry {
         }
     }
     
-    showDoorLocked() {
+    showAutoAccess() {
         const statusMessage = document.getElementById('statusMessage');
         if (statusMessage) {
-            statusMessage.textContent = 'DOOR IS LOCKED';
-            statusMessage.className = 'status-message locked';
+            statusMessage.textContent = 'Welcome! The door recognizes your persistence.';
+            statusMessage.className = 'status-message granted';
             statusMessage.style.display = 'block';
-            console.log('Showing DOOR IS LOCKED message');
+            console.log('Showing auto-access message after 3 attempts');
             
             setTimeout(() => {
                 statusMessage.style.display = 'none';
-            }, 2000);
+                this.navigateToMainSite();
+            }, 2500);
         } else {
             console.error('Status message element not found');
         }
+    }
+    
+    showRandomQuote() {
+        const statusMessage = document.getElementById('statusMessage');
+        if (statusMessage) {
+            const randomQuote = this.getRandomQuote();
+            statusMessage.textContent = randomQuote;
+            statusMessage.className = 'status-message locked';
+            statusMessage.style.display = 'block';
+            console.log('Showing random quote:', randomQuote);
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000); // Show quotes a bit longer since they're more entertaining
+        } else {
+            console.error('Status message element not found');
+        }
+    }
+    
+    // Kept for backwards compatibility with dev tools
+    showDoorLocked() {
+        this.showRandomQuote();
     }
     
     navigateToMainSite() {
         console.log('Navigating to main site...');
         
         // Prepare audio for navigation
-        if (window.door64Audio) {
-            window.door64Audio.prepareForNavigation();
+        if (window.doorAudio) {
+            window.doorAudio.prepareForNavigation();
         }
         
         // Navigate after a short delay
@@ -577,7 +628,8 @@ class RotatingDoorEntry {
             if (window.location.pathname.includes('index.html') || 
                 window.location.pathname === '/' || 
                 window.location.pathname === '') {
-                window.location.href = '64.html';
+                // Remove the redirect to '64.html' since we removed "64" references
+                this.hideSplash();
             } else {
                 this.hideSplash();
             }
@@ -650,19 +702,26 @@ class RotatingDoorEntry {
         }
     }
     
+    // Reset attempts (for testing or restarting)
+    resetAttempts() {
+        this.attemptCount = 0;
+        console.log('Attempt count reset to 0');
+    }
+    
     // Cleanup method
     destroy() {
         this.stopRotation();
         this.doorLinks.forEach(link => {
             link.classList.remove('door-active');
         });
+        this.attemptCount = 0;
         this.isInitialized = false;
         console.log('Rotating Door Entry System destroyed');
     }
 }
 
 // =============== ENHANCED GALLERY SYSTEM ===============
-class Door64Gallery {
+class DoorGallery {
     constructor(galleryId) {
         this.galleryId = galleryId;
         this.currentSlide = 0;
@@ -905,17 +964,17 @@ let currentSlide = 0;
 let slideInterval = null;
 let isAudioPlaying = false;
 
-// Global instances
-window.door64Audio = null;
-window.door64Galleries = {};
-window.rotatingDoorEntry = null; // Global instance for rotating door system
+// Global instances - renamed to remove "64" references
+window.doorAudio = null;
+window.doorGalleries = {};
+window.rotatingDoorEntry = null;
 
 // =============== DOCUMENT READY & INITIALIZATION ===============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Door 64 - Initializing systems...');
+    console.log('Door - Initializing systems...');
     
     // Initialize audio system FIRST for quietstorm at launch
-    window.door64Audio = new Door64Audio();
+    window.doorAudio = new DoorAudio();
     
     // Initialize rotating door entry system
     window.rotatingDoorEntry = new RotatingDoorEntry();
@@ -932,7 +991,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initLazyLoading();
     }
     
-    console.log('Door 64 - All systems initialized!');
+    console.log('Door - All systems initialized!');
 });
 
 // =============== GALLERY INITIALIZATION ===============
@@ -942,16 +1001,16 @@ function initGalleries() {
     galleries.forEach(gallery => {
         const galleryId = gallery.id;
         if (galleryId) {
-            window.door64Galleries[galleryId] = new Door64Gallery(galleryId);
+            window.doorGalleries[galleryId] = new DoorGallery(galleryId);
         }
     });
     
     const landingTrack = document.getElementById('landing-track');
-    if (landingTrack && !window.door64Galleries['landing-gallery']) {
+    if (landingTrack && !window.doorGalleries['landing-gallery']) {
         const landingGallery = landingTrack.closest('.css-gallery');
         if (landingGallery) {
             landingGallery.id = 'landing-gallery';
-            window.door64Galleries['landing-gallery'] = new Door64Gallery('landing-gallery');
+            window.doorGalleries['landing-gallery'] = new DoorGallery('landing-gallery');
         }
     }
 }
@@ -965,28 +1024,28 @@ function toggleAudio(event) {
     
     console.log('Audio toggle function called');
     
-    if (window.door64Audio) {
-        window.door64Audio.toggle();
+    if (window.doorAudio) {
+        window.doorAudio.toggle();
     } else {
         console.warn('Audio system not initialized');
     }
 }
 
 function nextSlide(galleryId) {
-    if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
-        window.door64Galleries[galleryId].nextSlide();
-    } else if (!galleryId && window.door64Galleries['landing-gallery']) {
-        window.door64Galleries['landing-gallery'].nextSlide();
+    if (galleryId && window.doorGalleries && window.doorGalleries[galleryId]) {
+        window.doorGalleries[galleryId].nextSlide();
+    } else if (!galleryId && window.doorGalleries['landing-gallery']) {
+        window.doorGalleries['landing-gallery'].nextSlide();
     } else {
         console.warn(`Gallery ${galleryId || 'landing-gallery'} not found`);
     }
 }
 
 function previousSlide(galleryId) {
-    if (galleryId && window.door64Galleries && window.door64Galleries[galleryId]) {
-        window.door64Galleries[galleryId].previousSlide();
-    } else if (!galleryId && window.door64Galleries['landing-gallery']) {
-        window.door64Galleries['landing-gallery'].previousSlide();
+    if (galleryId && window.doorGalleries && window.doorGalleries[galleryId]) {
+        window.doorGalleries[galleryId].previousSlide();
+    } else if (!galleryId && window.doorGalleries['landing-gallery']) {
+        window.doorGalleries['landing-gallery'].previousSlide();
     } else {
         console.warn(`Gallery ${galleryId || 'landing-gallery'} not found`);
     }
@@ -994,13 +1053,13 @@ function previousSlide(galleryId) {
 
 function goToSlide(galleryIdOrIndex, slideIndex) {
     if (typeof galleryIdOrIndex === 'string') {
-        if (window.door64Galleries && window.door64Galleries[galleryIdOrIndex]) {
-            window.door64Galleries[galleryIdOrIndex].goToSlide(slideIndex);
+        if (window.doorGalleries && window.doorGalleries[galleryIdOrIndex]) {
+            window.doorGalleries[galleryIdOrIndex].goToSlide(slideIndex);
         }
     } else {
         const slideIdx = galleryIdOrIndex;
-        if (window.door64Galleries && window.door64Galleries['landing-gallery']) {
-            window.door64Galleries['landing-gallery'].goToSlide(slideIdx);
+        if (window.doorGalleries && window.doorGalleries['landing-gallery']) {
+            window.doorGalleries['landing-gallery'].goToSlide(slideIdx);
         }
     }
 }
@@ -1149,7 +1208,7 @@ function initViewportHeight() {
     setViewportHeight();
     
     const debouncedSetViewportHeight = debounce(() => {
-        if (!window.door64Audio?.isNavigating) {
+        if (!window.doorAudio?.isNavigating) {
             setViewportHeight();
         }
     }, 150);
@@ -1158,7 +1217,7 @@ function initViewportHeight() {
     
     window.addEventListener('orientationchange', () => {
         setTimeout(() => {
-            if (!window.door64Audio?.isNavigating) {
+            if (!window.doorAudio?.isNavigating) {
                 setViewportHeight();
             }
         }, 200);
@@ -1206,8 +1265,8 @@ function initKeyboardNavigation() {
                         break;
                     case 'End':
                         e.preventDefault();
-                        if (window.door64Galleries[galleryId]) {
-                            const lastSlide = window.door64Galleries[galleryId].totalSlides - 1;
+                        if (window.doorGalleries[galleryId]) {
+                            const lastSlide = window.doorGalleries[galleryId].totalSlides - 1;
                             goToSlide(galleryId, lastSlide);
                         }
                         break;
@@ -1317,13 +1376,13 @@ function isMobileMultiTouch(e) {
 
 // =============== ERROR HANDLING ===============
 window.addEventListener('error', (e) => {
-    console.error('Door 64 - JavaScript error:', e.error);
+    console.error('Door - JavaScript error:', e.error);
     
-    if (e.error.message.includes('audio') && window.door64Audio) {
+    if (e.error.message.includes('audio') && window.doorAudio) {
         console.log('Attempting audio system recovery...');
         setTimeout(() => {
             try {
-                window.door64Audio.updateButtons();
+                window.doorAudio.updateButtons();
             } catch (recoveryError) {
                 console.error('Audio recovery failed:', recoveryError);
             }
@@ -1332,14 +1391,14 @@ window.addEventListener('error', (e) => {
 });
 
 window.addEventListener('unhandledrejection', (e) => {
-    console.error('Door 64 - Unhandled promise rejection:', e.reason);
+    console.error('Door - Unhandled promise rejection:', e.reason);
 });
 
 // =============== PERFORMANCE MONITORING ===============
 if ('performance' in window) {
     window.addEventListener('load', () => {
         const loadTime = Math.round(performance.now());
-        console.log(`Door 64 - Page loaded in ${loadTime}ms`);
+        console.log(`Door - Page loaded in ${loadTime}ms`);
         
         if (performance.navigation) {
             const navType = performance.navigation.type;
@@ -1354,7 +1413,7 @@ if (window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' || 
     window.location.hostname.includes('dev')) {
     
-    console.log('Door 64 - Development mode active');
+    console.log('Door - Development mode active');
     
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey) {
@@ -1371,9 +1430,9 @@ if (window.location.hostname === 'localhost' ||
                     break;
                 case 'r':
                     e.preventDefault();
-                    localStorage.removeItem('door64_audio_state');
-                    localStorage.removeItem('door64_audio_time');
-                    localStorage.removeItem('door64_user_interacted');
+                    localStorage.removeItem('door_audio_state');
+                    localStorage.removeItem('door_audio_time');
+                    localStorage.removeItem('door_user_interacted');
                     console.log('Dev: Audio state reset');
                     break;
                 case 'd':
@@ -1395,21 +1454,36 @@ if (window.location.hostname === 'localhost' ||
                         console.log('Dev: Fast door rotation (1 second)');
                     }
                     break;
+                case 't':
+                    e.preventDefault();
+                    if (window.rotatingDoorEntry) {
+                        window.rotatingDoorEntry.resetAttempts();
+                        console.log('Dev: Attempt count reset');
+                    }
+                    break;
+                case 'q':
+                    e.preventDefault();
+                    if (window.rotatingDoorEntry) {
+                        window.rotatingDoorEntry.showRandomQuote();
+                        console.log('Dev: Random quote shown');
+                    }
+                    break;
                 case 'i':
                     e.preventDefault();
                     console.log('Dev: System info:', {
-                        audioState: localStorage.getItem('door64_audio_state'),
-                        audioTime: localStorage.getItem('door64_audio_time'),
-                        userInteracted: localStorage.getItem('door64_user_interacted'),
-                        galleries: Object.keys(window.door64Galleries),
-                        isAudioPlaying: window.door64Audio?.isPlaying,
-                        currentAudioTime: window.door64Audio?.audio?.currentTime,
-                        audioMuted: window.door64Audio?.audio?.muted,
-                        isMobile: window.door64Audio?.isMobile,
-                        hasUserInteracted: window.door64Audio?.hasUserInteracted,
-                        isNavigating: window.door64Audio?.isNavigating,
+                        audioState: localStorage.getItem('door_audio_state'),
+                        audioTime: localStorage.getItem('door_audio_time'),
+                        userInteracted: localStorage.getItem('door_user_interacted'),
+                        galleries: Object.keys(window.doorGalleries),
+                        isAudioPlaying: window.doorAudio?.isPlaying,
+                        currentAudioTime: window.doorAudio?.audio?.currentTime,
+                        audioMuted: window.doorAudio?.audio?.muted,
+                        isMobile: window.doorAudio?.isMobile,
+                        hasUserInteracted: window.doorAudio?.hasUserInteracted,
+                        isNavigating: window.doorAudio?.isNavigating,
                         activeDoorIndex: window.rotatingDoorEntry?.currentActiveIndex,
-                        doorRotationActive: window.rotatingDoorEntry?.rotationInterval !== null
+                        doorRotationActive: window.rotatingDoorEntry?.rotationInterval !== null,
+                        attemptCount: window.rotatingDoorEntry?.attemptCount
                     });
                     break;
                 case 'm':
@@ -1421,30 +1495,30 @@ if (window.location.hostname === 'localhost' ||
         }
     });
     
-    window.door64Debug = {
-        audio: () => window.door64Audio,
-        galleries: () => window.door64Galleries,
+    window.doorDebug = {
+        audio: () => window.doorAudio,
+        galleries: () => window.doorGalleries,
         doorEntry: () => window.rotatingDoorEntry,
         resetAudio: () => {
-            localStorage.removeItem('door64_audio_state');
-            localStorage.removeItem('door64_audio_time');
-            localStorage.removeItem('door64_user_interacted');
+            localStorage.removeItem('door_audio_state');
+            localStorage.removeItem('door_audio_time');
+            localStorage.removeItem('door_user_interacted');
             location.reload();
         },
         forceAudioStart: () => {
-            if (window.door64Audio) {
-                window.door64Audio.audio.muted = false;
-                window.door64Audio.resumeAudio();
+            if (window.doorAudio) {
+                window.doorAudio.audio.muted = false;
+                window.doorAudio.resumeAudio();
             }
         },
         testAutoResume: () => {
-            localStorage.setItem('door64_audio_state', 'playing');
-            localStorage.setItem('door64_user_interacted', 'true');
+            localStorage.setItem('door_audio_state', 'playing');
+            localStorage.setItem('door_user_interacted', 'true');
             location.reload();
         },
         simulateNavigation: () => {
-            if (window.door64Audio) {
-                window.door64Audio.prepareForNavigation();
+            if (window.doorAudio) {
+                window.doorAudio.prepareForNavigation();
             }
         },
         toggleMobileMenu: () => toggleMobileMenu(),
@@ -1475,39 +1549,59 @@ if (window.location.hostname === 'localhost' ||
                 window.rotatingDoorEntry.showAccessGranted();
             }
         },
-        showDoorLocked: () => {
+        showRandomQuote: () => {
             if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.showDoorLocked();
+                window.rotatingDoorEntry.showRandomQuote();
+            }
+        },
+        resetAttempts: () => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.resetAttempts();
+            }
+        },
+        getAttemptCount: () => {
+            return window.rotatingDoorEntry?.attemptCount || 0;
+        },
+        testAutoAccess: () => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.attemptCount = 2; // Next click will trigger auto-access
+                console.log('Dev: Set to trigger auto-access on next wrong click');
             }
         }
     };
     
-    console.log('Dev tools available: window.door64Debug');
+    console.log('Dev tools available: window.doorDebug');
 }
 
 // =============== CONSOLE BRANDING ===============
 console.log(`
-Door 64 Restaurant - ENHANCED WITH ROTATING DOOR ENTRY SYSTEM
+Door Restaurant - ENHANCED WITH RANDOM QUOTES & AUTO-ENTRY
 ✅ EMBOSSED LETTERS: White embossed styling like main logo
 🎯 PULSATING DOORS: Active door pulsates every 3 seconds
-🔒 BLACK MESSAGES: "DOOR IS LOCKED" / "ACCESS GRANTED" in black text
+🎲 RANDOM QUOTES: Humorous messages replace generic "locked" text
+🚪 AUTO-ENTRY: Automatic access granted after 3 attempts
 🎵 BLUE MUSIC ICON: Top-right corner with quietstorm auto-play
-🚪 CLICK TO ENTER: Click the pulsating door to proceed
-❌ NO HINTS: Wrong doors show lock message only
+🔒 CLICK TO ENTER: Click the pulsating door to proceed
 ⌨️ KEYBOARD: Press Enter to click the active door
 🔄 ROTATION SYSTEM: Automatic door switching with enhanced feedback
 📱 MOBILE FRIENDLY: Touch-optimized door interactions
 🎵 AUTO AUDIO: Quietstorm plays automatically at launch
-🖥️ DEV TOOLS: Ctrl+Shift+D (stop/start), window.door64Debug
+🖥️ DEV TOOLS: Ctrl+Shift+Q (random quote), window.doorDebug
 
-Click the pulsating embossed letter to enter Door 64!
+Philosophy: "Not every closed door is rejection" - Try 3 times for auto-access!
+
+Random Quotes Include:
+• "I'm not locked out, I'm just testing the security system... unsuccessfully."
+• "Door is locked, but my Wi-Fi password is still 'password123' - priorities!"
+• "Like a locksmith, except I just stand outside doors looking confused."
+• And 6 more hilarious variations!
 `);
 
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-        Door64Audio,
-        Door64Gallery,
+        DoorAudio,
+        DoorGallery,
         RotatingDoorEntry,
         toggleAudio,
         nextSlide,
