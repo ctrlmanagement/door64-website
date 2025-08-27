@@ -2280,4 +2280,416 @@ if (typeof module !== 'undefined' && module.exports) {
         closeMobileMenu,
         isIPhoneDevice
     };
+    }
+
+// =============== MOBILE QUOTE FIX - ADDITIONAL ENHANCEMENT ===============
+
+// Enhanced Mobile Device Detection
+function isMobileDevice() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const touchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const mobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+    const smallScreen = window.innerWidth <= 768;
+    
+    const isMobile = touchDevice || mobileUA || smallScreen;
+    console.log('Mobile Detection:', { isMobile, touchDevice, mobileUA, smallScreen, width: window.innerWidth });
+    return isMobile;
+}
+
+// Force Create Quote Elements for Mobile
+function forceCreateQuoteElements() {
+    console.log('Force creating quote elements for mobile...');
+    
+    // Remove existing elements
+    const existing = document.getElementById('quoteResponses');
+    if (existing) {
+        existing.remove();
+    }
+    
+    // Create new quote section
+    const quoteSection = document.createElement('div');
+    quoteSection.id = 'quoteResponses';
+    quoteSection.className = 'quote-responses';
+    quoteSection.setAttribute('role', 'status');
+    quoteSection.setAttribute('aria-live', 'polite');
+    quoteSection.setAttribute('aria-atomic', 'true');
+    
+    // Create quote text
+    const quoteText = document.createElement('div');
+    quoteText.id = 'quoteText';
+    quoteText.className = 'quote-text';
+    
+    quoteSection.appendChild(quoteText);
+    document.body.appendChild(quoteSection);
+    
+    console.log('Quote elements force-created:', {
+        section: !!document.getElementById('quoteResponses'),
+        text: !!document.getElementById('quoteText')
+    });
+    
+    return { quoteSection, quoteText };
+}
+
+// Enhanced Mobile Quote CSS
+function addMobileQuoteCSS() {
+    const existingStyle = document.getElementById('mobile-quote-fix');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+    
+    const css = `
+    /* MOBILE QUOTE FIX - Override all existing styles */
+    @media screen and (max-width: 768px) {
+        .quote-responses {
+            position: fixed !important;
+            bottom: 30px !important;
+            left: 20px !important;
+            right: 20px !important;
+            width: calc(100% - 40px) !important;
+            max-width: calc(100% - 40px) !important;
+            background: #000000 !important;
+            color: #ffffff !important;
+            padding: 25px !important;
+            border-radius: 15px !important;
+            border: 3px solid #ffffff !important;
+            text-align: center !important;
+            font-size: 18px !important;
+            line-height: 1.5 !important;
+            font-family: 'Georgia', serif !important;
+            z-index: 999999 !important;
+            display: none !important;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.5) !important;
+            margin: 0 !important;
+            transform: translateZ(0) !important;
+            backface-visibility: hidden !important;
+            -webkit-backface-visibility: hidden !important;
+            -webkit-transform: translateZ(0) !important;
+        }
+        
+        .quote-responses.show {
+            display: block !important;
+            animation: mobileQuoteShow 0.5s ease-out forwards !important;
+        }
+        
+        @keyframes mobileQuoteShow {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) translateZ(0) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) translateZ(0) scale(1);
+            }
+        }
+        
+        .quote-text {
+            font-style: italic !important;
+            font-weight: normal !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: #ffffff !important;
+            font-size: 18px !important;
+            line-height: 1.5 !important;
+            font-family: 'Georgia', serif !important;
+        }
+    }
+    
+    /* Force visibility on all screen sizes */
+    .quote-responses.force-show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    `;
+    
+    const style = document.createElement('style');
+    style.id = 'mobile-quote-fix';
+    style.textContent = css;
+    document.head.appendChild(style);
+    console.log('Mobile quote CSS injected');
+}
+
+// Enhanced Mobile Quote Display Function
+function showMobileQuote(quoteText) {
+    console.log('showMobileQuote called with:', quoteText);
+    
+    const isMobile = isMobileDevice();
+    console.log('Is mobile device:', isMobile);
+    
+    // Ensure quote elements exist
+    let quoteSection = document.getElementById('quoteResponses');
+    let quoteTextElement = document.getElementById('quoteText');
+    
+    if (!quoteSection || !quoteTextElement) {
+        console.log('Quote elements missing - force creating...');
+        const created = forceCreateQuoteElements();
+        quoteSection = created.quoteSection;
+        quoteTextElement = created.quoteText;
+    }
+    
+    console.log('Quote elements found/created:', {
+        section: !!quoteSection,
+        text: !!quoteTextElement
+    });
+    
+    if (quoteSection && quoteTextElement) {
+        // Set the quote text
+        quoteTextElement.textContent = quoteText;
+        quoteTextElement.innerHTML = quoteText;
+        
+        // Reset all styles
+        quoteSection.style.cssText = '';
+        
+        // Force mobile styles if mobile
+        if (isMobile) {
+            console.log('Applying mobile-specific quote styles...');
+            
+            quoteSection.style.setProperty('position', 'fixed', 'important');
+            quoteSection.style.setProperty('bottom', '30px', 'important');
+            quoteSection.style.setProperty('left', '20px', 'important');
+            quoteSection.style.setProperty('right', '20px', 'important');
+            quoteSection.style.setProperty('width', 'calc(100% - 40px)', 'important');
+            quoteSection.style.setProperty('max-width', 'calc(100% - 40px)', 'important');
+            quoteSection.style.setProperty('background', '#000000', 'important');
+            quoteSection.style.setProperty('color', '#ffffff', 'important');
+            quoteSection.style.setProperty('padding', '25px', 'important');
+            quoteSection.style.setProperty('border-radius', '15px', 'important');
+            quoteSection.style.setProperty('border', '3px solid #ffffff', 'important');
+            quoteSection.style.setProperty('text-align', 'center', 'important');
+            quoteSection.style.setProperty('font-size', '18px', 'important');
+            quoteSection.style.setProperty('line-height', '1.5', 'important');
+            quoteSection.style.setProperty('font-family', 'Georgia, serif', 'important');
+            quoteSection.style.setProperty('z-index', '999999', 'important');
+            quoteSection.style.setProperty('box-shadow', '0 8px 25px rgba(255, 255, 255, 0.5)', 'important');
+            quoteSection.style.setProperty('margin', '0', 'important');
+            quoteSection.style.setProperty('transform', 'translateZ(0)', 'important');
+            quoteSection.style.setProperty('backface-visibility', 'hidden', 'important');
+            quoteSection.style.setProperty('-webkit-backface-visibility', 'hidden', 'important');
+        }
+        
+        // Show the quote
+        quoteSection.style.setProperty('display', 'block', 'important');
+        quoteSection.style.setProperty('opacity', '1', 'important');
+        quoteSection.style.setProperty('visibility', 'visible', 'important');
+        quoteSection.className = 'quote-responses show force-show';
+        
+        // Force reflow
+        quoteSection.offsetHeight;
+        
+        console.log('Quote should now be visible:', {
+            display: quoteSection.style.display,
+            opacity: quoteSection.style.opacity,
+            visibility: quoteSection.style.visibility,
+            className: quoteSection.className,
+            text: quoteTextElement.textContent
+        });
+        
+        // Debug positioning
+        const rect = quoteSection.getBoundingClientRect();
+        console.log('Quote position:', {
+            top: rect.top,
+            bottom: rect.bottom,
+            left: rect.left,
+            right: rect.right,
+            width: rect.width,
+            height: rect.height,
+            inViewport: rect.bottom > 0 && rect.top < window.innerHeight
+        });
+        
+        // Hide after delay
+        const delay = isMobile ? 6000 : 4000;
+        setTimeout(() => {
+            console.log('Hiding quote after', delay + 'ms');
+            quoteSection.style.setProperty('display', 'none', 'important');
+            quoteSection.style.setProperty('opacity', '0', 'important');
+            quoteSection.className = 'quote-responses';
+        }, delay);
+        
+    } else {
+        console.error('Failed to create or find quote elements');
+    }
+}
+
+// Enhanced Door Click Handler
+function enhancedHandleDoorClick(clickedIndex, currentActiveIndex, attemptCount, doorLockQuotes) {
+    console.log(`Enhanced door click: ${clickedIndex}, active: ${currentActiveIndex}, attempts: ${attemptCount}`);
+    
+    if (clickedIndex === currentActiveIndex) {
+        console.log('Correct door clicked! Access granted!');
+        return { action: 'grant_access', newAttemptCount: attemptCount };
+    } else {
+        const newAttemptCount = attemptCount + 1;
+        console.log(`Wrong door clicked! Attempt ${newAttemptCount}`);
+        
+        if (newAttemptCount >= 3) {
+            console.log('Third attempt reached - granting automatic access!');
+            return { action: 'auto_access', newAttemptCount };
+        } else {
+            // Show random quote
+            const randomIndex = Math.floor(Math.random() * doorLockQuotes.length);
+            const randomQuote = doorLockQuotes[randomIndex];
+            console.log('Showing mobile quote:', randomQuote);
+            
+            showMobileQuote(randomQuote);
+            return { action: 'show_quote', newAttemptCount, quote: randomQuote };
+        }
+    }
+}
+
+// Override the original RotatingDoorEntry's handleDoorClick method
+function overrideDoorClickHandler() {
+    if (window.rotatingDoorEntry) {
+        const originalHandleDoorClick = window.rotatingDoorEntry.handleDoorClick.bind(window.rotatingDoorEntry);
+        
+        window.rotatingDoorEntry.handleDoorClick = function(clickedIndex) {
+            console.log('Overridden handleDoorClick called:', clickedIndex);
+            
+            const result = enhancedHandleDoorClick(
+                clickedIndex, 
+                this.currentActiveIndex, 
+                this.attemptCount, 
+                this.doorLockQuotes
+            );
+            
+            this.attemptCount = result.newAttemptCount;
+            
+            switch (result.action) {
+                case 'grant_access':
+                    this.stopRotation();
+                    this.showAccessGranted();
+                    break;
+                case 'auto_access':
+                    this.stopRotation();
+                    this.showAutoAccess();
+                    break;
+                case 'show_quote':
+                    // Quote already shown by enhancedHandleDoorClick
+                    break;
+            }
+        };
+        
+        console.log('Door click handler overridden for mobile compatibility');
+    }
+}
+
+// Enhanced Touch Event Setup for Mobile
+function setupMobileTouchEvents() {
+    const isMobile = isMobileDevice();
+    if (!isMobile) return;
+    
+    console.log('Setting up enhanced mobile touch events...');
+    
+    const doorLinks = document.querySelectorAll('.door-gallery a');
+    console.log('Found door links:', doorLinks.length);
+    
+    doorLinks.forEach((link, index) => {
+        let touchStartTime = 0;
+        let touchMoved = false;
+        
+        // Remove existing event listeners by cloning
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+        
+        // Add enhanced touch events
+        newLink.addEventListener('touchstart', (e) => {
+            touchStartTime = Date.now();
+            touchMoved = false;
+            console.log(`Touch start on door ${index}`);
+            
+            // Visual feedback
+            newLink.style.transform = 'scale(0.9)';
+            newLink.style.opacity = '0.8';
+        }, { passive: true });
+        
+        newLink.addEventListener('touchmove', (e) => {
+            touchMoved = true;
+            newLink.style.transform = '';
+            newLink.style.opacity = '';
+        }, { passive: true });
+        
+        newLink.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Reset visual feedback
+            newLink.style.transform = '';
+            newLink.style.opacity = '';
+            
+            const touchDuration = Date.now() - touchStartTime;
+            
+            if (!touchMoved && touchDuration < 500) {
+                console.log(`Mobile door tap confirmed: index ${index}`);
+                
+                // Directly trigger the door click handler
+                if (window.rotatingDoorEntry) {
+                    window.rotatingDoorEntry.handleDoorClick(index);
+                } else {
+                    console.error('rotatingDoorEntry not found');
+                }
+            } else {
+                console.log(`Touch ignored - moved: ${touchMoved}, duration: ${touchDuration}ms`);
+            }
+        }, { passive: false });
+        
+        // Also add click handler as fallback
+        newLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(`Click handler triggered for door ${index}`);
+            
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.handleDoorClick(index);
+            }
+        });
+    });
+    
+    console.log('Mobile touch events setup complete');
+}
+
+// Initialize Mobile Fix
+function initMobileFix() {
+    console.log('Initializing mobile quote fix...');
+    
+    // Add CSS
+    addMobileQuoteCSS();
+    
+    // Force create quote elements
+    forceCreateQuoteElements();
+    
+    // Setup enhanced touch events
+    setupMobileTouchEvents();
+    
+    // Override door click handler
+    setTimeout(() => {
+        overrideDoorClickHandler();
+    }, 500);
+    
+    console.log('Mobile quote fix initialized');
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileFix);
+} else {
+    initMobileFix();
+}
+
+// Also initialize after a delay to ensure everything is loaded
+setTimeout(initMobileFix, 1000);
+
+// Debug function for testing
+window.testMobileQuote = function() {
+    console.log('Testing mobile quote...');
+    showMobileQuote("This is a test quote for mobile devices!");
+};
+
+// Export for console testing
+window.mobileFix = {
+    isMobileDevice,
+    showMobileQuote,
+    forceCreateQuoteElements,
+    addMobileQuoteCSS,
+    setupMobileTouchEvents,
+    initMobileFix
+};
 }
