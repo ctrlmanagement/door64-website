@@ -779,11 +779,11 @@ class RotatingDoorEntry {
             quoteSection.style.position = 'relative';
             quoteSection.style.zIndex = '9999';
             
-            // Mobile-specific styling
+            // Mobile-specific styling - position under door letters
             if (this.isMobile) {
                 quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
                 quoteSection.style.padding = '20px';
-                quoteSection.style.margin = '10px auto';
+                quoteSection.style.margin = '20px auto 10px auto';
                 quoteSection.style.maxWidth = '90%';
                 quoteSection.style.textAlign = 'center';
                 quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
@@ -791,8 +791,10 @@ class RotatingDoorEntry {
                 quoteSection.style.borderRadius = '10px';
                 quoteSection.style.lineHeight = '1.4';
                 quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
+                quoteSection.style.position = 'relative';
+                quoteSection.style.marginTop = '30px';
                 
-                // Scroll into view on mobile
+                // Scroll into view on mobile - center the quote area
                 setTimeout(() => {
                     quoteSection.scrollIntoView({ 
                         behavior: 'smooth', 
@@ -851,12 +853,12 @@ class RotatingDoorEntry {
                     altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
                     altQuoteSection.style.color = 'white';
                     altQuoteSection.style.borderRadius = '10px';
-                    altQuoteSection.style.position = 'fixed';
-                    altQuoteSection.style.bottom = '20px';
-                    altQuoteSection.style.left = '50%';
-                    altQuoteSection.style.transform = 'translateX(-50%)';
+                    altQuoteSection.style.position = 'relative';
+                    altQuoteSection.style.margin = '20px auto 10px auto';
                     altQuoteSection.style.maxWidth = '90%';
                     altQuoteSection.style.zIndex = '9999';
+                    altQuoteSection.style.textAlign = 'center';
+                    altQuoteSection.style.marginTop = '30px';
                 }
             } else {
                 // Create quote elements if they don't exist
@@ -884,13 +886,11 @@ class RotatingDoorEntry {
         
         quoteSection.appendChild(quoteText);
         
-        // Add mobile-friendly styles
+        // Add mobile-friendly styles - position under door letters
         if (this.isMobile) {
             quoteSection.style.cssText = `
-                position: fixed !important;
-                bottom: 20px !important;
-                left: 50% !important;
-                transform: translateX(-50%) !important;
+                position: relative !important;
+                margin: 30px auto 10px auto !important;
                 max-width: 90% !important;
                 background: rgba(0, 0, 0, 0.9) !important;
                 color: white !important;
