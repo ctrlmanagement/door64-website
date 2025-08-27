@@ -2,36 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- iPhone-optimized viewport settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover, shrink-to-fit=no">
+    
+    <!-- iPhone-specific meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Door">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Enhanced iPhone touch icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/door-icon-180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/images/door-icon-152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/images/door-icon-120.png">
+    
     <title>Door</title>
     
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
     
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
     
-    <!-- Quote Responses Styling -->
+    <!-- Quote Responses Styling - iPhone Enhanced -->
     <style>
         .quote-responses {
             position: fixed !important;
-            bottom: 30px !important;
-            left: 20px !important;
-            right: 20px !important;
+            /* iPhone home indicator positioning */
+            bottom: max(40px, calc(env(safe-area-inset-bottom) + 30px)) !important;
+            left: max(20px, calc(env(safe-area-inset-left) + 15px)) !important;
+            right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
             background: #000000 !important;
             color: #ffffff !important;
-            padding: 20px !important;
-            border-radius: 10px !important;
+            padding: 25px !important;
+            border-radius: 16px !important;
             border: 2px solid #ffffff !important;
             text-align: center !important;
-            font-size: 16px !important;
-            line-height: 1.4 !important;
+            font-size: 18px !important;
+            line-height: 1.5 !important;
             display: none !important;
             z-index: 99999 !important;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.3) !important;
-            font-family: Arial, sans-serif !important;
+            font-family: 'Georgia', serif !important;
             margin: 0 auto !important;
             max-width: 600px !important;
+            backdrop-filter: blur(15px) !important;
         }
         
         .quote-responses.show {
@@ -42,11 +59,11 @@
         @keyframes quoteFadeIn {
             0% {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: translateY(20px) scale(0.9);
             }
             100% {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0) scale(1);
             }
         }
         
@@ -56,31 +73,44 @@
             margin: 0 !important;
             padding: 0 !important;
             color: #ffffff !important;
-        }
-        
-        @media (max-width: 768px) {
-            .quote-responses {
-                bottom: 20px !important;
-                left: 10px !important;
-                right: 10px !important;
-                padding: 15px !important;
-                font-size: 14px !important;
-            }
+            font-size: 18px !important;
+            line-height: 1.5 !important;
         }
     </style>
     
-    <!-- Background Audio -->
-    <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline webkit-playsinline="true">
+    <!-- Enhanced Background Audio for iPhone -->
+    <audio id="backgroundAudio" 
+           loop 
+           preload="auto" 
+           autoplay 
+           muted 
+           playsinline 
+           webkit-playsinline="true"
+           x-webkit-airplay="deny">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
         <source src="assets/audio/QUIETSTORM.ogg" type="audio/ogg">
-        <!-- Fallback message for browsers that don't support audio -->
+        <source src="assets/audio/QUIETSTORM.wav" type="audio/wav">
+        <!-- Enhanced fallback for iPhone -->
         Your browser does not support the audio element.
     </audio>
     
-    <!-- SEO Meta Tags -->
+    <!-- SEO and iPhone-optimized Meta Tags -->
     <meta name="description" content="Door - An intimate dining experience where every meal becomes a memory. Discover our elegant atmosphere and culinary artistry.">
     <meta name="keywords" content="restaurant, fine dining, Door, culinary experience, intimate dining">
     <meta name="author" content="Door">
+    
+    <!-- iPhone-specific Open Graph tags -->
+    <meta property="og:title" content="Door Restaurant">
+    <meta property="og:description" content="An intimate dining experience where every meal becomes a memory">
+    <meta property="og:image" content="assets/images/door-og-image.jpg">
+    <meta property="og:url" content="https://doorrestaurant.com">
+    <meta property="og:type" content="restaurant">
+    
+    <!-- iPhone Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Door Restaurant">
+    <meta name="twitter:description" content="An intimate dining experience where every meal becomes a memory">
+    <meta name="twitter:image" content="assets/images/door-twitter-card.jpg">
 </head>
 <body>
     <!-- Skip to main content for accessibility -->
@@ -88,31 +118,51 @@
 
     <!-- DOOR PLUGIN SPLASH PAGE WITH EMBOSSED D-O-O-R LETTERS -->
     <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door">
-        <!-- Door Gallery with EMBOSSED D-O-O-R letter images - MOVED UP -->
+        <!-- Door Gallery with EMBOSSED D-O-O-R letter images -->
         <ul class="door-gallery door-gallery-raised" role="presentation" aria-hidden="true">
             <li>
-                <a href="#" data-door="0" tabindex="-1" aria-hidden="true">
+                <a href="#" 
+                   data-door="0" 
+                   tabindex="-1" 
+                   aria-hidden="true"
+                   role="button"
+                   aria-label="Door D - Click when highlighted">
                     <div class="letter-container">
                         <span>D</span>
                     </div>
                 </a>
             </li>
             <li>
-                <a href="#" data-door="1" tabindex="-1" aria-hidden="true">
+                <a href="#" 
+                   data-door="1" 
+                   tabindex="-1" 
+                   aria-hidden="true"
+                   role="button"
+                   aria-label="Door O - Click when highlighted">
                     <div class="letter-container">
                         <span>O</span>
                     </div>
                 </a>
             </li>
             <li>
-                <a href="#" data-door="2" tabindex="-1" aria-hidden="true">
+                <a href="#" 
+                   data-door="2" 
+                   tabindex="-1" 
+                   aria-hidden="true"
+                   role="button"
+                   aria-label="Door O - Click when highlighted">
                     <div class="letter-container">
                         <span>O</span>
                     </div>
                 </a>
             </li>
             <li>
-                <a href="#" data-door="3" tabindex="-1" aria-hidden="true">
+                <a href="#" 
+                   data-door="3" 
+                   tabindex="-1" 
+                   aria-hidden="true"
+                   role="button"
+                   aria-label="Door R - Click when highlighted">
                     <div class="letter-container">
                         <span>R</span>
                     </div>
@@ -121,54 +171,91 @@
         </ul>
         
         <!-- Status Message for Door Entry -->
-        <div class="status-message" id="statusMessage">
+        <div class="status-message" 
+             id="statusMessage" 
+             role="status" 
+             aria-live="polite">
             Welcome
         </div>
         
-        <!-- Audio toggle for splash page -->
+        <!-- Enhanced audio toggle for splash page -->
         <button class="splash-audio-toggle" 
                 onclick="toggleAudio(event)" 
                 data-mobile-hint="Tap to start music"
                 title="Play Background Music" 
                 id="splashAudioToggle"
-                aria-label="Play background music">♪</button>
+                aria-label="Play background music"
+                type="button">♪</button>
     </div>
 
     <!-- MAIN SITE -->
     <div class="main-site" id="mainSite" role="main">
-        <!-- Mobile-Optimized Navigation -->
+        <!-- iPhone-Optimized Navigation -->
         <nav class="nav" role="navigation" aria-label="Main navigation">
             <div class="nav-container">
-                <a href="index.html" class="nav-logo" aria-label="Door Home">DOOR</a>
+                <a href="index.html" 
+                   class="nav-logo" 
+                   aria-label="Door Home"
+                   role="button">DOOR</a>
                 
-                <!-- Mobile hamburger menu button -->
+                <!-- Enhanced mobile hamburger menu button for iPhone -->
                 <button class="mobile-menu" 
                         onclick="toggleMobileMenu()" 
                         aria-label="Toggle mobile menu"
                         aria-expanded="false"
-                        aria-controls="navLinks">
+                        aria-controls="navLinks"
+                        type="button">
                     <span></span>
                     <span></span>
                     <span></span>
                 </button>
                 
-                <!-- Navigation links -->
+                <!-- Enhanced Navigation links for iPhone -->
                 <ul class="nav-links" id="navLinks" role="menubar">
-                    <li role="none"><a href="space.html" role="menuitem">space</a></li>
-                    <li role="none"><a href="in.the.kitchen.html" role="menuitem">in the kitchen</a></li>
-                    <li role="none"><a href="at.the.bar.html" role="menuitem">at the bar</a></li>
-                    <li role="none"><a href="who.was.here.html" role="menuitem">who was here</a></li>
-                    <li role="none"><a href="what.to.do.html" role="menuitem">what to do</a></li>
-                    <li role="none"><a href="come.see.us.html" role="menuitem">come see us</a></li>
-                    <li role="none"><a href="hit.us.up.html" role="menuitem">hit us up</a></li>
+                    <li role="none">
+                        <a href="space.html" 
+                           role="menuitem" 
+                           aria-label="Space section">space</a>
+                    </li>
+                    <li role="none">
+                        <a href="in.the.kitchen.html" 
+                           role="menuitem" 
+                           aria-label="Kitchen section">in the kitchen</a>
+                    </li>
+                    <li role="none">
+                        <a href="at.the.bar.html" 
+                           role="menuitem" 
+                           aria-label="Bar section">at the bar</a>
+                    </li>
+                    <li role="none">
+                        <a href="who.was.here.html" 
+                           role="menuitem" 
+                           aria-label="Guest section">who was here</a>
+                    </li>
+                    <li role="none">
+                        <a href="what.to.do.html" 
+                           role="menuitem" 
+                           aria-label="Events section">what to do</a>
+                    </li>
+                    <li role="none">
+                        <a href="come.see.us.html" 
+                           role="menuitem" 
+                           aria-label="Reservations">come see us</a>
+                    </li>
+                    <li role="none">
+                        <a href="hit.us.up.html" 
+                           role="menuitem" 
+                           aria-label="Contact">hit us up</a>
+                    </li>
                 </ul>
                 
-                <!-- Audio toggle button -->
+                <!-- Enhanced Audio toggle button for iPhone -->
                 <div class="nav-left-section">
                     <button class="audio-toggle" 
                             onclick="toggleAudio(event)" 
                             title="Play Background Music"
-                            aria-label="Play background music">♪</button>
+                            aria-label="Play background music"
+                            type="button">♪</button>
                 </div>
             </div>
         </nav>
@@ -178,37 +265,46 @@
             <div class="gallery-slider" role="presentation" aria-hidden="true"></div>
             
             <div class="landing-content">
-                <a href="64.html" style="text-decoration: none;" aria-label="Door">
+                <a href="64.html" 
+                   style="text-decoration: none;" 
+                   aria-label="Door main page"
+                   role="button">
                     <h1 class="embossed-logo" style="cursor: pointer;">DOOR</h1>
                 </a>
                 
                 <div class="landing-links">
-                    <div class="landing-link">
+                    <div class="landing-link" role="region" aria-label="Space section">
                         <h3>space</h3>
                         <div class="sub-links">
-                            <a href="in.the.kitchen.html">in the kitchen</a>
-                            <a href="at.the.bar.html">at the bar</a>
+                            <a href="in.the.kitchen.html" 
+                               aria-label="Kitchen dining area">in the kitchen</a>
+                            <a href="at.the.bar.html" 
+                               aria-label="Bar area">at the bar</a>
                         </div>
                     </div>
                     
-                    <div class="landing-link">
+                    <div class="landing-link" role="region" aria-label="Activities section">
                         <h3>what to do</h3>
                         <div class="sub-links">
-                            <a href="come.see.us.html">make reservation</a>
-                            <a href="what.to.do.html">upcoming events</a>
+                            <a href="come.see.us.html" 
+                               aria-label="Make a reservation">make reservation</a>
+                            <a href="what.to.do.html" 
+                               aria-label="View upcoming events">upcoming events</a>
                         </div>
                     </div>
                     
-                    <div class="landing-link">
+                    <div class="landing-link" role="region" aria-label="Connect section">
                         <h3>connect</h3>
                         <div class="sub-links">
-                            <a href="who.was.here.html">who was here</a>
-                            <a href="come.see.us.html">come see us</a>
+                            <a href="who.was.here.html" 
+                               aria-label="See guest experiences">who was here</a>
+                            <a href="come.see.us.html" 
+                               aria-label="Visit us">come see us</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Landing Gallery -->
+                <!-- Enhanced Landing Gallery for iPhone -->
                 <section class="css-gallery" 
                          id="landing-gallery" 
                          role="region" 
@@ -217,7 +313,7 @@
                     <div class="gallery-container">
                         <div class="gallery-track" id="landing-track" role="presentation">
                             <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop')"
+                                 style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=400&fit=crop&auto=format&q=80')"
                                  role="img"
                                  aria-label="Intimate dining experience">
                                 <div class="gallery-content">
@@ -226,7 +322,7 @@
                                 </div>
                             </div>
                             <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop')"
+                                 style="background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800&h=400&fit=crop&auto=format&q=80')"
                                  role="img"
                                  aria-label="Craft cocktails">
                                 <div class="gallery-content">
@@ -235,7 +331,7 @@
                                 </div>
                             </div>
                             <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop')"
+                                 style="background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=800&h=400&fit=crop&auto=format&q=80')"
                                  role="img"
                                  aria-label="Culinary artistry">
                                 <div class="gallery-content">
@@ -244,7 +340,7 @@
                                 </div>
                             </div>
                             <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop')"
+                                 style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=400&fit=crop&auto=format&q=80')"
                                  role="img"
                                  aria-label="Wine selection">
                                 <div class="gallery-content">
@@ -253,7 +349,7 @@
                                 </div>
                             </div>
                             <div class="gallery-slide" 
-                                 style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop')"
+                                 style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop&auto=format&q=80')"
                                  role="img"
                                  aria-label="Elegant atmosphere">
                                 <div class="gallery-content">
@@ -266,46 +362,56 @@
                         <button class="gallery-nav prev" 
                                 onclick="previousSlide()" 
                                 aria-label="Previous image"
-                                title="Previous">‹</button>
+                                title="Previous"
+                                type="button">‹</button>
                         <button class="gallery-nav next" 
                                 onclick="nextSlide()" 
                                 aria-label="Next image"
-                                title="Next">›</button>
+                                title="Next"
+                                type="button">›</button>
                         
                         <div class="gallery-dots" role="tablist" aria-label="Gallery navigation">
-                            <span class="gallery-dot active" 
-                                  onclick="goToSlide(0)" 
-                                  role="tab"
-                                  aria-label="Go to slide 1"
-                                  aria-selected="true"
-                                  tabindex="0"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(1)" 
-                                  role="tab"
-                                  aria-label="Go to slide 2"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(2)" 
-                                  role="tab"
-                                  aria-label="Go to slide 3"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(3)" 
-                                  role="tab"
-                                  aria-label="Go to slide 4"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
-                            <span class="gallery-dot" 
-                                  onclick="goToSlide(4)" 
-                                  role="tab"
-                                  aria-label="Go to slide 5"
-                                  aria-selected="false"
-                                  tabindex="-1"></span>
+                            <button class="gallery-dot active" 
+                                    onclick="goToSlide(0)" 
+                                    role="tab"
+                                    aria-label="Go to slide 1"
+                                    aria-selected="true"
+                                    tabindex="0"
+                                    type="button"></button>
+                            <button class="gallery-dot" 
+                                    onclick="goToSlide(1)" 
+                                    role="tab"
+                                    aria-label="Go to slide 2"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    type="button"></button>
+                            <button class="gallery-dot" 
+                                    onclick="goToSlide(2)" 
+                                    role="tab"
+                                    aria-label="Go to slide 3"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    type="button"></button>
+                            <button class="gallery-dot" 
+                                    onclick="goToSlide(3)" 
+                                    role="tab"
+                                    aria-label="Go to slide 4"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    type="button"></button>
+                            <button class="gallery-dot" 
+                                    onclick="goToSlide(4)" 
+                                    role="tab"
+                                    aria-label="Go to slide 5"
+                                    aria-selected="false"
+                                    tabindex="-1"
+                                    type="button"></button>
                         </div>
                         
-                        <div class="gallery-progress" role="progressbar" aria-label="Gallery progress" aria-hidden="true"></div>
+                        <div class="gallery-progress" 
+                             role="progressbar" 
+                             aria-label="Gallery progress" 
+                             aria-hidden="true"></div>
                     </div>
                 </section>
             </div>
@@ -313,11 +419,73 @@
     </div>
     
     <!-- Quote Responses Section at Bottom (visible on splash page) -->
-    <div class="quote-responses" id="quoteResponses">
+    <div class="quote-responses" 
+         id="quoteResponses" 
+         role="status" 
+         aria-live="polite" 
+         aria-atomic="true">
         <div class="quote-text" id="quoteText"></div>
     </div>
 
-    <!-- JavaScript -->
+    <!-- Enhanced JavaScript for iPhone -->
     <script src="assets/js/script.js"></script>
+    
+    <!-- iPhone-specific initialization script -->
+    <script>
+        // iPhone-specific viewport height handling
+        function setIPhoneViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        // Enhanced iPhone detection
+        function isIPhone() {
+            return /iPhone|iPod/.test(navigator.userAgent) || 
+                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+        
+        // iPhone-specific optimizations
+        if (isIPhone()) {
+            document.body.setAttribute('data-device', 'iphone');
+            
+            // Enhanced viewport handling for iPhone
+            setIPhoneViewportHeight();
+            window.addEventListener('resize', setIPhoneViewportHeight);
+            window.addEventListener('orientationchange', () => {
+                setTimeout(setIPhoneViewportHeight, 100);
+            });
+            
+            // iPhone-specific audio handling
+            document.addEventListener('DOMContentLoaded', () => {
+                const audio = document.getElementById('backgroundAudio');
+                if (audio) {
+                    // Enhanced iPhone audio attributes
+                    audio.setAttribute('webkit-playsinline', 'true');
+                    audio.setAttribute('playsinline', 'true');
+                    audio.playsInline = true;
+                    audio.load();
+                }
+            });
+            
+            // iPhone gesture prevention for door area
+            const splashPage = document.getElementById('splashPage');
+            if (splashPage) {
+                splashPage.addEventListener('touchstart', (e) => {
+                    // Allow door clicks but prevent other gestures
+                    if (!e.target.closest('.door-gallery a') && !e.target.closest('.splash-audio-toggle')) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+            }
+        }
+        
+        // Performance monitoring for iPhone
+        if ('performance' in window && isIPhone()) {
+            window.addEventListener('load', () => {
+                const loadTime = Math.round(performance.now());
+                console.log(`iPhone optimization - Page loaded in ${loadTime}ms`);
+            });
+        }
+    </script>
 </body>
 </html>
