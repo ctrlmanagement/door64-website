@@ -788,21 +788,29 @@ class RotatingDoorEntry {
             quoteSection.style.left = '50%';
             quoteSection.style.transform = 'translate(-50%, -50%)';
             quoteSection.style.zIndex = '10000';
+            quoteSection.style.pointerEvents = 'none'; // Allow clicks through
             
-            // Text-only styling for quotes (no box)
+            // Remove ALL box styling - text only
+            quoteSection.style.background = 'none';
             quoteSection.style.backgroundColor = 'transparent';
-            quoteSection.style.color = 'white';
+            quoteSection.style.border = 'none';
+            quoteSection.style.borderRadius = '0';
+            quoteSection.style.boxShadow = 'none';
             quoteSection.style.padding = '0';
-            quoteSection.style.textAlign = 'center';
-            quoteSection.style.lineHeight = '1.4';
-            quoteSection.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
+            quoteSection.style.margin = '0';
+            quoteSection.style.width = 'auto';
+            quoteSection.style.height = 'auto';
+            quoteSection.style.maxWidth = 'none';
+            quoteSection.style.maxHeight = 'none';
             
-            // Mobile-specific styling adjustments
-            if (this.isMobile) {
-                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
-                quoteSection.style.maxWidth = '90%';
-                quoteSection.style.margin = '0';
-            }
+            // Text styling only
+            quoteSection.style.color = 'white';
+            quoteSection.style.textAlign = 'center';
+            quoteSection.style.fontSize = this.isMobile ? '18px' : '16px';
+            quoteSection.style.lineHeight = '1.3';
+            quoteSection.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
+            quoteSection.style.fontStyle = 'italic';
+            quoteSection.style.fontWeight = 'normal';
             
             quoteSection.className = 'quote-responses show';
             
@@ -874,7 +882,7 @@ class RotatingDoorEntry {
         
         quoteSection.appendChild(quoteText);
         
-        // Position it to display text over the center O O letters (no box styling)
+        // Position it to display text over the center door letters (no box, text only)
         quoteSection.style.cssText = `
             position: fixed !important;
             top: 50% !important;
@@ -883,16 +891,28 @@ class RotatingDoorEntry {
             z-index: 10000 !important;
             display: none !important;
             opacity: 0 !important;
-            background: transparent !important;
-            color: white !important;
+            
+            background: none !important;
+            background-color: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
             padding: 0 !important;
-            text-align: center !important;
-            line-height: 1.4 !important;
-            transition: opacity 0.3s ease-in-out !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
-            max-width: 90% !important;
-            font-size: 18px !important;
             margin: 0 !important;
+            width: auto !important;
+            height: auto !important;
+            max-width: none !important;
+            max-height: none !important;
+            
+            color: white !important;
+            text-align: center !important;
+            font-size: 18px !important;
+            line-height: 1.3 !important;
+            font-style: italic !important;
+            font-weight: normal !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+            transition: opacity 0.3s ease-in-out !important;
+            pointer-events: none !important;
         `;
         
         // Append to the same parent as status message (or splash page as fallback)
