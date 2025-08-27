@@ -738,14 +738,13 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // Enhanced showRandomQuote method with ACCESS GRANTED styling
+    // Use statusMessage element for quotes (same as ACCESS GRANTED)
     showRandomQuote() {
-        console.log('showRandomQuote() called - looking for quote elements...');
+        console.log('showRandomQuote() called - using statusMessage element...');
         
-        const quoteSection = document.getElementById('quoteResponses');
-        const quoteText = document.getElementById('quoteText');
+        const statusMessage = document.getElementById('statusMessage');
         
-        if (quoteSection && quoteText) {
+        if (statusMessage) {
             const randomQuote = this.getRandomQuote();
             console.log('Setting quote text to:', randomQuote);
             
@@ -754,55 +753,23 @@ class RotatingDoorEntry {
                 clearTimeout(this.quoteTimeout);
             }
             
-            // Set the text
-            quoteText.textContent = randomQuote;
-            
-            // Apply ACCESS GRANTED styling and positioning exactly
-            quoteSection.className = 'status-message granted';
-            quoteSection.style.display = 'block';
+            // Use exact same approach as showAccessGranted()
+            statusMessage.textContent = randomQuote;
+            statusMessage.className = 'status-message granted';
+            statusMessage.style.display = 'block';
             
             console.log('Quote should now be visible:', randomQuote);
-            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
             
             // Use ACCESS GRANTED timing exactly
             this.quoteTimeout = setTimeout(() => {
                 console.log('Hiding quote after timeout');
-                quoteSection.style.display = 'none';
+                statusMessage.style.display = 'none';
             }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
             
         } else {
-            console.error('Quote section elements not found');
+            console.error('statusMessage element not found - cannot display quote');
             console.log('Available elements with id:', 
                 Array.from(document.querySelectorAll('[id]')).map(el => el.id));
-            
-            // Try alternative selectors
-            const altQuoteSection = document.querySelector('.quote-responses');
-            const altQuoteText = document.querySelector('.quote-text');
-            
-            if (altQuoteSection && altQuoteText) {
-                console.log('Found alternative quote elements, using those...');
-                const randomQuote = this.getRandomQuote();
-                altQuoteText.textContent = randomQuote;
-                altQuoteSection.style.display = 'block';
-                altQuoteSection.style.opacity = '1';
-                
-                if (this.isMobile) {
-                    altQuoteSection.style.fontSize = '18px';
-                    altQuoteSection.style.padding = '20px';
-                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                    altQuoteSection.style.color = 'white';
-                    altQuoteSection.style.borderRadius = '10px';
-                    altQuoteSection.style.position = 'relative';
-                    altQuoteSection.style.margin = '20px auto 10px auto';
-                    altQuoteSection.style.maxWidth = '90%';
-                    altQuoteSection.style.zIndex = '9999';
-                    altQuoteSection.style.textAlign = 'center';
-                    altQuoteSection.style.marginTop = '30px';
-                }
-            } else {
-                // Create quote elements if they don't exist
-                this.createQuoteElements();
-            }
         }
     }
     
