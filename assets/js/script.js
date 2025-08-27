@@ -864,15 +864,15 @@ class RotatingDoorEntry {
         }, 100);
     }
     
-    // Use statusMessage element for quotes (same as ACCESS GRANTED)
+    // Enhanced showRandomQuote with same positioning as showAccessGranted
     showRandomQuote() {
         console.log('showRandomQuote() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
         
         if (this.isMobile) {
-            // Mobile-specific implementation
+            // Enhanced mobile implementation - same as showAccessGranted
             this.showMobileMessage(this.getRandomQuote());
         } else {
-            // Desktop implementation
+            // Desktop implementation - same statusMessage approach as showAccessGranted
             let statusMessage = document.getElementById('statusMessage');
             
             if (!statusMessage) {
