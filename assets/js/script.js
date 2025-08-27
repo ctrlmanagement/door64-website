@@ -789,14 +789,13 @@ class RotatingDoorEntry {
             quoteSection.style.transform = 'translate(-50%, -50%)';
             quoteSection.style.zIndex = '10000';
             
-            // Common styling for quotes
-            quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+            // Text-only styling for quotes (no box)
+            quoteSection.style.backgroundColor = 'transparent';
             quoteSection.style.color = 'white';
-            quoteSection.style.padding = '20px';
-            quoteSection.style.borderRadius = '10px';
+            quoteSection.style.padding = '0';
             quoteSection.style.textAlign = 'center';
             quoteSection.style.lineHeight = '1.4';
-            quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
+            quoteSection.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
             
             // Mobile-specific styling adjustments
             if (this.isMobile) {
@@ -875,7 +874,7 @@ class RotatingDoorEntry {
         
         quoteSection.appendChild(quoteText);
         
-        // Position it to overlap with status message area
+        // Position it to display text over the center O O letters (no box styling)
         quoteSection.style.cssText = `
             position: fixed !important;
             top: 50% !important;
@@ -884,14 +883,13 @@ class RotatingDoorEntry {
             z-index: 10000 !important;
             display: none !important;
             opacity: 0 !important;
-            background: rgba(0, 0, 0, 0.9) !important;
+            background: transparent !important;
             color: white !important;
-            padding: 20px !important;
-            border-radius: 10px !important;
+            padding: 0 !important;
             text-align: center !important;
             line-height: 1.4 !important;
             transition: opacity 0.3s ease-in-out !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
             max-width: 90% !important;
             font-size: 18px !important;
             margin: 0 !important;
