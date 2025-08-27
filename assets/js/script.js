@@ -746,7 +746,7 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // Updated showRandomQuote method with better mobile support
+    // Updated showRandomQuote method with absolute positioning
     showRandomQuote() {
         console.log('showRandomQuote() called - looking for quote elements...');
         
@@ -772,41 +772,122 @@ class RotatingDoorEntry {
             // Force reflow
             quoteSection.offsetHeight;
             
-            // Apply show styles with mobile-specific considerations
-            quoteSection.style.display = 'block';
-            quoteSection.style.visibility = 'visible';
-            quoteSection.style.opacity = '1';
-            quoteSection.style.position = 'relative';
-            quoteSection.style.zIndex = '9999';
+            // Get door gallery position for absolute positioning
+            const doorGallery = document.querySelector('.door-gallery');
+            let absolutePositioning = {};
             
-            // Mobile-specific styling - position under door letters
-            if (this.isMobile) {
-                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
-                quoteSection.style.padding = '20px';
-                quoteSection.style.margin = '20px auto 10px auto';
-                quoteSection.style.maxWidth = '90%';
-                quoteSection.style.textAlign = 'center';
-                quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                quoteSection.style.color = 'white';
-                quoteSection.style.borderRadius = '10px';
-                quoteSection.style.lineHeight = '1.4';
-                quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
-                quoteSection.style.position = 'relative';
-                quoteSection.style.marginTop = '30px';
+            if (doorGallery) {
+                const doorRect = doorGallery.getBoundingClientRect();
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
                 
-                // Scroll into view on mobile - center the quote area
+                absolutePositioning = {
+                    position: 'absolute',
+                    top: `${doorRect.bottom + scrollY + 20}px`,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: '9999'
+                };
+                
+                console.log('Door gallery position:', {
+                    doorRect: doorRect,
+                    calculatedTop: doorRect.bottom + scrollY + 20,
+                    scrollY: scrollY
+                });
+            } else {
+                // Fallback if door gallery not found
+                console.warn('Door gallery not found, using fallback positioning');
+                absolutePositioning = {
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: '9999'
+                };
+            }
+            
+            // Apply base styles
+            Object.assign(quoteSection.style, {
+                display: 'block',
+                visibility: 'visible',
+                opacity: '1',
+                ...absolutePositioning
+            });
+            
+            // Mobile-specific styling - enhanced absolute positioning
+            if (this.isMobile) {
+                Object.assign(quoteSection.style, {
+                    fontSize: '18px',
+                    padding: '20px',
+                    margin: '0', // Remove margin when using absolute positioning
+                    maxWidth: '90vw', // Use viewport width instead of percentage
+                    width: 'auto',
+                    textAlign: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                    color: 'white',
+                    borderRadius: '10px',
+                    lineHeight: '1.4',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+                    // Ensure it doesn't go off-screen
+                    minWidth: '280px',
+                    maxHeight: '200px',
+                    overflow: 'auto'
+                });
+                
+                // Adjust position if it would go off screen
+                const splashPage = document.getElementById('splashPage');
+                if (splashPage) {
+                    const splashRect = splashPage.getBoundingClientRect();
+                    const quoteRect = quoteSection.getBoundingClientRect();
+                    
+                    // Check if quote goes beyond viewport
+                    if (quoteRect.right > window.innerWidth - 10) {
+                        quoteSection.style.left = 'auto';
+                        quoteSection.style.right = '10px';
+                        quoteSection.style.transform = 'none';
+                    }
+                    if (quoteRect.left < 10) {
+                        quoteSection.style.left = '10px';
+                        quoteSection.style.transform = 'none';
+                    }
+                }
+                
+                // Mobile scroll behavior - scroll to show the quote
                 setTimeout(() => {
-                    quoteSection.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
+                    const quoteRect = quoteSection.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    
+                    // If quote is not fully visible, scroll to it
+                    if (quoteRect.bottom > viewportHeight || quoteRect.top < 0) {
+                        quoteSection.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center',
+                            inline: 'center'
+                        });
+                    }
                 }, 100);
+            } else {
+                // Desktop styling with absolute positioning
+                Object.assign(quoteSection.style, {
+                    padding: '15px',
+                    margin: '0',
+                    maxWidth: '80vw',
+                    width: 'auto',
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    color: 'white',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    minWidth: '300px'
+                });
             }
             
             quoteSection.className = 'quote-responses show';
             
-            console.log('Quote should now be visible:', randomQuote);
-            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
+            console.log('Quote positioned absolutely:', {
+                position: quoteSection.style.position,
+                top: quoteSection.style.top,
+                left: quoteSection.style.left,
+                transform: quoteSection.style.transform
+            });
             
             // Mobile gets longer display time for readability
             const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
@@ -844,21 +925,34 @@ class RotatingDoorEntry {
                 console.log('Found alternative quote elements, using those...');
                 const randomQuote = this.getRandomQuote();
                 altQuoteText.textContent = randomQuote;
-                altQuoteSection.style.display = 'block';
-                altQuoteSection.style.opacity = '1';
+                
+                // Apply absolute positioning to alternative elements
+                const doorGallery = document.querySelector('.door-gallery');
+                if (doorGallery) {
+                    const doorRect = doorGallery.getBoundingClientRect();
+                    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    Object.assign(altQuoteSection.style, {
+                        position: 'absolute',
+                        top: `${doorRect.bottom + scrollY + 20}px`,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: '9999',
+                        display: 'block',
+                        opacity: '1'
+                    });
+                }
                 
                 if (this.isMobile) {
-                    altQuoteSection.style.fontSize = '18px';
-                    altQuoteSection.style.padding = '20px';
-                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                    altQuoteSection.style.color = 'white';
-                    altQuoteSection.style.borderRadius = '10px';
-                    altQuoteSection.style.position = 'relative';
-                    altQuoteSection.style.margin = '20px auto 10px auto';
-                    altQuoteSection.style.maxWidth = '90%';
-                    altQuoteSection.style.zIndex = '9999';
-                    altQuoteSection.style.textAlign = 'center';
-                    altQuoteSection.style.marginTop = '30px';
+                    Object.assign(altQuoteSection.style, {
+                        fontSize: '18px',
+                        padding: '20px',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        color: 'white',
+                        borderRadius: '10px',
+                        maxWidth: '90vw',
+                        textAlign: 'center'
+                    });
                 }
             } else {
                 // Create quote elements if they don't exist
@@ -867,7 +961,7 @@ class RotatingDoorEntry {
         }
     }
     
-    // Add method to create quote elements if missing
+    // Updated createQuoteElements method to work with absolute positioning
     createQuoteElements() {
         console.log('Creating missing quote elements...');
         
@@ -886,42 +980,19 @@ class RotatingDoorEntry {
         
         quoteSection.appendChild(quoteText);
         
-        // Add mobile-friendly styles - position under door letters
-        if (this.isMobile) {
-            quoteSection.style.cssText = `
-                position: relative !important;
-                margin: 30px auto 10px auto !important;
-                max-width: 90% !important;
-                background: rgba(0, 0, 0, 0.9) !important;
-                color: white !important;
-                padding: 20px !important;
-                border-radius: 10px !important;
-                font-size: 18px !important;
-                line-height: 1.4 !important;
-                text-align: center !important;
-                z-index: 9999 !important;
-                display: none !important;
-                opacity: 0 !important;
-                transition: opacity 0.3s ease-in-out !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-            `;
-        } else {
-            quoteSection.style.cssText = `
-                display: none;
-                opacity: 0;
-                text-align: center;
-                padding: 15px;
-                margin: 20px auto;
-                max-width: 80%;
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                border-radius: 8px;
-                z-index: 9999;
-                position: relative;
-            `;
-        }
+        // Set initial styles for absolute positioning
+        Object.assign(quoteSection.style, {
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            display: 'none',
+            opacity: '0',
+            zIndex: '9999',
+            pointerEvents: 'none' // Don't interfere with other elements when hidden
+        });
         
-        splashPage.appendChild(quoteSection);
+        // Add to the end of body to avoid stacking context issues
+        document.body.appendChild(quoteSection);
         
         // Now try to show the quote again
         setTimeout(() => {
@@ -1435,7 +1506,7 @@ class MobileMenu {
                 return;
             }
             
-            if (e.target.closest('input, textarea, select, button, [tabindex]')) {
+            if (e.target.closest('input, textarea, select, button[type="button"], button[type="submit"]')) {
                 return;
             }
             
@@ -2338,7 +2409,7 @@ console.log(`
 🎯 DOOR SYSTEM: Universal mobile touch detection
 🖼️ GALLERY: Enhanced swipe gestures for all mobile devices
 ⌨️ KEYBOARD: Mobile-compatible navigation
-🎲 RANDOM QUOTES: Mobile-specific timing and positioning
+🎲 RANDOM QUOTES: Mobile-specific timing and positioning with ABSOLUTE POSITIONING
 🔄 VIEWPORT: Dynamic height handling for mobile keyboards
 📏 RESPONSIVE: Optimized for all mobile screen sizes
 🎨 PERFORMANCE: Hardware acceleration for smooth mobile experience
@@ -2346,7 +2417,7 @@ console.log(`
 Mobile Features:
 • Universal mobile device detection (Android, iPhone, iPad, etc.)
 • Enhanced touch event handling with fallback click events
-• Improved quote display with mobile-specific styling
+• ✨ NEW: Absolute positioning for quote display directly under door letters
 • Better touch target sizing and visual feedback
 • Optimized timing for mobile interactions
 • Enhanced swipe gesture recognition across all devices
