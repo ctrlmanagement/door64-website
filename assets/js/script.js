@@ -825,9 +825,47 @@ class RotatingDoorEntry {
             }, displayTime);
             
         } else {
-            console.error('Quote section elements not found - creating new ones');
-            // Create quote elements if they don't exist
-            this.createQuoteElements();
+            console.error('Quote section elements not found');
+            console.log('Available elements with id:', 
+                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+            
+            // Try alternative selectors
+            const altQuoteSection = document.querySelector('.quote-responses');
+            const altQuoteText = document.querySelector('.quote-text');
+            
+            if (altQuoteSection && altQuoteText) {
+                console.log('Found alternative quote elements, using those...');
+                const randomQuote = this.getRandomQuote();
+                altQuoteText.textContent = randomQuote;
+                altQuoteSection.style.display = 'block';
+                altQuoteSection.style.opacity = '1';
+                
+                if (this.isMobile) {
+                    altQuoteSection.style.fontSize = '18px';
+                    altQuoteSection.style.padding = '20px';
+                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                    altQuoteSection.style.color = 'white';
+                    altQuoteSection.style.borderRadius = '10px';
+                    altQuoteSection.style.position = 'relative';
+                    altQuoteSection.style.margin = '20px auto 10px auto';
+                    altQuoteSection.style.maxWidth = '90%';
+                    altQuoteSection.style.zIndex = '9999';
+                    altQuoteSection.style.textAlign = 'center';
+                    altQuoteSection.style.marginTop = '30px';
+                }
+                
+                // Set timeout for hiding alternative quote
+                const displayTime = this.isMobile ? 7000 : 4000;
+                this.quoteTimeout = setTimeout(() => {
+                    altQuoteSection.style.display = 'none';
+                    altQuoteSection.style.opacity = '0';
+                }, displayTime);
+                
+            } else {
+                // Create quote elements if they don't exist
+                console.log('Creating new quote elements...');
+                this.createQuoteElements();
+            }
         }
     }
     
@@ -839,7 +877,10 @@ class RotatingDoorEntry {
         const doorGallery = document.querySelector('.door-gallery');
         const splashPage = document.getElementById('splashPage');
         
-        if (!doorGallery && !splashPage) return;
+        if (!doorGallery && !splashPage) {
+            console.error('Neither door gallery nor splash page found');
+            return;
+        }
         
         // Create quote section
         const quoteSection = document.createElement('div');
@@ -897,8 +938,23 @@ class RotatingDoorEntry {
             console.log('Quote element appended to splash page');
         }
         
-        // Show the quote immediately
-        this.showRandomQuote();
+        // Now display the quote with the newly created elements
+        const randomQuote = this.getRandomQuote();
+        quoteText.textContent = randomQuote;
+        quoteSection.style.display = 'block';
+        quoteSection.style.opacity = '1';
+        
+        console.log('Quote element created and displayed:', randomQuote);
+        
+        // Set timeout for hiding the quote
+        const displayTime = this.isMobile ? 7000 : 4000;
+        this.quoteTimeout = setTimeout(() => {
+            console.log('Hiding created quote after timeout');
+            quoteSection.style.opacity = '0';
+            setTimeout(() => {
+                quoteSection.style.display = 'none';
+            }, 500);
+        }, displayTime);
     }
     
     showAccessGranted() {
