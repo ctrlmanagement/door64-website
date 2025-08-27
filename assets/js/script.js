@@ -746,9 +746,9 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // =============== FIXED PROMINENT QUOTE DISPLAY SYSTEM ===============
+    // =============== MOBILE-FIXED PROMINENT QUOTE DISPLAY SYSTEM ===============
     showRandomQuote() {
-        console.log('showRandomQuote() called - creating reliable prominent display...');
+        console.log('showRandomQuote() called - creating mobile-compatible display...');
         
         const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
         
@@ -770,96 +770,154 @@ class RotatingDoorEntry {
         }
         
         const randomQuote = this.getRandomQuote();
-        console.log(`[${deviceType}] Creating reliable quote display:`, randomQuote);
+        console.log(`[${deviceType}] Creating mobile-compatible quote display:`, randomQuote);
         
-        // Create the overlay element
+        // Create the overlay element with proper classes for mobile compatibility
         const quoteOverlay = document.createElement('div');
         quoteOverlay.id = 'quoteOverlay';
+        quoteOverlay.className = 'quote-overlay'; // Add class for mobile touch event compatibility
         
         // Set the text content directly
         quoteOverlay.textContent = randomQuote;
         
-        // Apply reliable styling without animations initially
-        const baseStyles = {
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            zIndex: '99999',
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
-            color: 'white',
-            textAlign: 'center',
-            borderRadius: '12px',
-            border: '2px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.7)',
-            fontFamily: 'inherit',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            pointerEvents: 'auto',
-            visibility: 'visible',
-            display: 'block'
-        };
+        // Mobile-specific approach: Use document.body instead of splashPage for better mobile support
+        const parentElement = this.isMobile ? document.body : splashPage;
         
-        // Device-specific sizing and styling
+        // Apply mobile-optimized styling
         if (this.isMobile) {
-            Object.assign(baseStyles, {
-                width: '85%',
-                maxWidth: '380px',
-                fontSize: '20px',
-                fontWeight: '600',
-                padding: '25px 20px',
-                lineHeight: '1.4'
-            });
+            // Mobile: Simplified styling that definitely works
+            quoteOverlay.style.cssText = `
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 90% !important;
+                max-width: 350px !important;
+                background-color: black !important;
+                color: white !important;
+                font-size: 20px !important;
+                font-weight: bold !important;
+                padding: 30px 20px !important;
+                text-align: center !important;
+                border-radius: 15px !important;
+                border: 3px solid white !important;
+                z-index: 999999 !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                line-height: 1.4 !important;
+                box-sizing: border-box !important;
+                pointer-events: auto !important;
+                user-select: none !important;
+                -webkit-user-select: none !important;
+                -webkit-transform: translate(-50%, -50%) !important;
+            `;
             
             if (this.isIPhone) {
-                baseStyles.fontSize = '22px';
-                baseStyles.fontWeight = '700';
-                baseStyles.padding = '30px 25px';
-                baseStyles.borderRadius = '16px';
+                quoteOverlay.style.fontSize = '22px !important';
+                quoteOverlay.style.padding = '35px 25px !important';
+                quoteOverlay.style.borderRadius = '20px !important';
+                console.log('Applied iPhone-specific mobile styling');
             }
         } else {
-            Object.assign(baseStyles, {
+            // Desktop: Use the proven working approach
+            const baseStyles = {
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: '99999',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                color: 'white',
+                textAlign: 'center',
+                borderRadius: '12px',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.7)',
+                fontFamily: 'inherit',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                pointerEvents: 'auto',
+                visibility: 'visible',
+                display: 'block',
                 width: '75%',
                 maxWidth: '500px',
                 fontSize: '18px',
                 fontWeight: '600',
                 padding: '20px 25px',
-                lineHeight: '1.5'
-            });
+                lineHeight: '1.5',
+                opacity: '1'
+            };
+            
+            Object.assign(quoteOverlay.style, baseStyles);
         }
         
-        // Apply all styles
-        Object.assign(quoteOverlay.style, baseStyles);
+        console.log(`[${deviceType}] Adding to parent element:`, parentElement.tagName, parentElement.id);
         
-        console.log(`[${deviceType}] Applying styles:`, baseStyles);
+        // Add to appropriate parent element
+        parentElement.appendChild(quoteOverlay);
         
-        // Add to DOM immediately
-        splashPage.appendChild(quoteOverlay);
+        // Force reflow and verify visibility
+        quoteOverlay.offsetHeight;
         
-        // Verify it was added and is visible
-        const rect = quoteOverlay.getBoundingClientRect();
-        console.log(`[${deviceType}] Quote overlay positioned at:`, {
-            top: rect.top,
-            left: rect.left,
-            width: rect.width,
-            height: rect.height,
-            visible: rect.width > 0 && rect.height > 0,
-            zIndex: quoteOverlay.style.zIndex,
-            display: window.getComputedStyle(quoteOverlay).display,
-            visibility: window.getComputedStyle(quoteOverlay).visibility
-        });
-        
-        // Add simple fade-in effect after DOM insertion
+        // Mobile-specific visibility verification
         setTimeout(() => {
-            quoteOverlay.style.opacity = '0';
-            quoteOverlay.style.transition = 'opacity 0.3s ease-in-out';
+            const rect = quoteOverlay.getBoundingClientRect();
+            const computedStyle = window.getComputedStyle(quoteOverlay);
             
-            // Trigger reflow
-            quoteOverlay.offsetHeight;
+            console.log(`[${deviceType}] Quote visibility check:`, {
+                rect: { 
+                    top: Math.round(rect.top), 
+                    left: Math.round(rect.left), 
+                    width: Math.round(rect.width), 
+                    height: Math.round(rect.height) 
+                },
+                visible: rect.width > 0 && rect.height > 0,
+                display: computedStyle.display,
+                visibility: computedStyle.visibility,
+                opacity: computedStyle.opacity,
+                zIndex: computedStyle.zIndex,
+                position: computedStyle.position,
+                parentElement: parentElement.tagName,
+                viewportSize: { width: window.innerWidth, height: window.innerHeight }
+            });
             
-            // Fade in
-            quoteOverlay.style.opacity = '1';
-        }, 10);
+            // If not visible on mobile, try fallback approach
+            if (this.isMobile && (rect.width === 0 || rect.height === 0)) {
+                console.warn(`[${deviceType}] Quote not visible, applying fallback styling...`);
+                
+                // Fallback: Even more aggressive mobile styling
+                quoteOverlay.style.cssText = `
+                    position: absolute !important;
+                    top: 200px !important;
+                    left: 5% !important;
+                    right: 5% !important;
+                    width: 90% !important;
+                    background: black !important;
+                    color: white !important;
+                    font-size: 24px !important;
+                    font-weight: bold !important;
+                    padding: 40px 20px !important;
+                    text-align: center !important;
+                    border: 5px solid white !important;
+                    border-radius: 10px !important;
+                    z-index: 9999999 !important;
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    margin: 0 !important;
+                    box-sizing: border-box !important;
+                `;
+                
+                // Re-verify after fallback
+                setTimeout(() => {
+                    const newRect = quoteOverlay.getBoundingClientRect();
+                    console.log(`[${deviceType}] Fallback verification:`, {
+                        visible: newRect.width > 0 && newRect.height > 0,
+                        rect: { width: Math.round(newRect.width), height: Math.round(newRect.height) }
+                    });
+                }, 100);
+            }
+        }, 100);
         
         // Set display timeout
         const displayTime = this.isIPhone ? 5000 : (this.isMobile ? 4500 : 4000);
@@ -868,16 +926,21 @@ class RotatingDoorEntry {
             console.log(`[${deviceType}] Hiding quote overlay after ${displayTime}ms`);
             
             if (quoteOverlay && quoteOverlay.parentNode) {
-                // Fade out
-                quoteOverlay.style.transition = 'opacity 0.4s ease-out';
-                quoteOverlay.style.opacity = '0';
-                
-                setTimeout(() => {
-                    if (quoteOverlay && quoteOverlay.parentNode) {
-                        quoteOverlay.remove();
-                        console.log(`[${deviceType}] Quote overlay removed`);
-                    }
-                }, 400);
+                if (this.isMobile) {
+                    // Mobile: Immediate removal (no fancy animations)
+                    quoteOverlay.remove();
+                } else {
+                    // Desktop: Fade out
+                    quoteOverlay.style.transition = 'opacity 0.4s ease-out';
+                    quoteOverlay.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        if (quoteOverlay && quoteOverlay.parentNode) {
+                            quoteOverlay.remove();
+                        }
+                    }, 400);
+                }
+                console.log(`[${deviceType}] Quote overlay removed`);
             }
         }, displayTime);
         
@@ -892,24 +955,21 @@ class RotatingDoorEntry {
             }
             
             if (quoteOverlay && quoteOverlay.parentNode) {
-                quoteOverlay.style.transition = 'opacity 0.2s ease-out';
-                quoteOverlay.style.opacity = '0';
-                
-                setTimeout(() => {
-                    if (quoteOverlay && quoteOverlay.parentNode) {
-                        quoteOverlay.remove();
-                    }
-                }, 200);
+                quoteOverlay.remove();
             }
         };
         
-        // Add both touch and click handlers
-        quoteOverlay.addEventListener('click', dismissHandler);
+        // Mobile-optimized event handlers
         if (this.isMobile) {
-            quoteOverlay.addEventListener('touchend', dismissHandler, { passive: false });
+            // Mobile: Use both touchstart and click for maximum compatibility
+            quoteOverlay.addEventListener('touchstart', dismissHandler, { passive: false });
+            quoteOverlay.addEventListener('click', dismissHandler);
+        } else {
+            // Desktop: Just click
+            quoteOverlay.addEventListener('click', dismissHandler);
         }
         
-        console.log(`[${deviceType}] Quote overlay setup complete`);
+        console.log(`[${deviceType}] Quote overlay setup complete with enhanced mobile support`);
     }
     
     showAccessGranted() {
