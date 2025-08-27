@@ -742,7 +742,13 @@ class RotatingDoorEntry {
     showRandomQuote() {
         console.log('showRandomQuote() called - using statusMessage element...');
         
-        const statusMessage = document.getElementById('statusMessage');
+        let statusMessage = document.getElementById('statusMessage');
+        
+        // Create statusMessage element if it doesn't exist
+        if (!statusMessage) {
+            console.log('statusMessage element not found - creating it...');
+            statusMessage = this.createStatusMessageElement();
+        }
         
         if (statusMessage) {
             const randomQuote = this.getRandomQuote();
@@ -758,6 +764,9 @@ class RotatingDoorEntry {
             statusMessage.className = 'status-message granted';
             statusMessage.style.display = 'block';
             
+            // Add mobile-specific positioning
+            this.ensureMobileStatusMessagePositioning(statusMessage);
+            
             console.log('Quote should now be visible:', randomQuote);
             
             // Use ACCESS GRANTED timing exactly
@@ -767,9 +776,52 @@ class RotatingDoorEntry {
             }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
             
         } else {
-            console.error('statusMessage element not found - cannot display quote');
-            console.log('Available elements with id:', 
-                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+            console.error('Could not create or find statusMessage element');
+        }
+    }
+    
+    // Create statusMessage element if missing
+    createStatusMessageElement() {
+        console.log('Creating statusMessage element...');
+        
+        const splashPage = document.getElementById('splashPage');
+        if (!splashPage) {
+            console.error('No splash page found - cannot create statusMessage');
+            return null;
+        }
+        
+        const statusMessage = document.createElement('div');
+        statusMessage.id = 'statusMessage';
+        statusMessage.className = 'status-message';
+        statusMessage.style.display = 'none';
+        
+        splashPage.appendChild(statusMessage);
+        console.log('statusMessage element created and added to splash page');
+        
+        return statusMessage;
+    }
+    
+    // Ensure proper mobile positioning for statusMessage
+    ensureMobileStatusMessagePositioning(statusMessage) {
+        if (this.isMobile) {
+            // Mobile-specific positioning to center the message properly
+            statusMessage.style.position = 'fixed';
+            statusMessage.style.top = '50%';
+            statusMessage.style.left = '50%';
+            statusMessage.style.transform = 'translate(-50%, -50%)';
+            statusMessage.style.zIndex = '10000';
+            statusMessage.style.maxWidth = '90%';
+            statusMessage.style.textAlign = 'center';
+            statusMessage.style.padding = '20px';
+            statusMessage.style.margin = '0';
+            statusMessage.style.fontSize = '18px';
+            statusMessage.style.lineHeight = '1.4';
+            statusMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+            statusMessage.style.color = 'white';
+            statusMessage.style.borderRadius = '10px';
+            statusMessage.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
+            
+            console.log('Applied mobile positioning to statusMessage');
         }
     }
     
@@ -836,11 +888,22 @@ class RotatingDoorEntry {
     }
     
     showAccessGranted() {
-        const statusMessage = document.getElementById('statusMessage');
+        let statusMessage = document.getElementById('statusMessage');
+        
+        // Create statusMessage element if it doesn't exist
+        if (!statusMessage) {
+            console.log('statusMessage element not found - creating it...');
+            statusMessage = this.createStatusMessageElement();
+        }
+        
         if (statusMessage) {
             statusMessage.textContent = 'ACCESS GRANTED';
             statusMessage.className = 'status-message granted';
             statusMessage.style.display = 'block';
+            
+            // Add mobile-specific positioning
+            this.ensureMobileStatusMessagePositioning(statusMessage);
+            
             console.log('Showing ACCESS GRANTED message');
             
             // Mobile-optimized timing
@@ -848,23 +911,38 @@ class RotatingDoorEntry {
                 statusMessage.style.display = 'none';
                 this.navigateToMainSite();
             }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
+        } else {
+            console.error('Could not create or find statusMessage element for ACCESS GRANTED');
         }
     }
     
     showAutoAccess() {
-        const statusMessage = document.getElementById('statusMessage');
+        let statusMessage = document.getElementById('statusMessage');
+        
+        // Create statusMessage element if it doesn't exist
+        if (!statusMessage) {
+            console.log('statusMessage element not found - creating it...');
+            statusMessage = this.createStatusMessageElement();
+        }
+        
         if (statusMessage) {
             statusMessage.textContent = this.isMobile ? 
                 'Welcome! Your persistence is recognized.' : 
                 'Welcome! The door recognizes your persistence.';
             statusMessage.className = 'status-message granted';
             statusMessage.style.display = 'block';
+            
+            // Add mobile-specific positioning
+            this.ensureMobileStatusMessagePositioning(statusMessage);
+            
             console.log('Showing auto-access message after 3 attempts');
             
             setTimeout(() => {
                 statusMessage.style.display = 'none';
                 this.navigateToMainSite();
             }, this.isMobile ? 3500 : (this.isIPhone ? 3000 : 2500));
+        } else {
+            console.error('Could not create or find statusMessage element for auto-access');
         }
     }
     
