@@ -794,13 +794,26 @@ class RotatingDoorEntry {
                 quoteSection.style.position = 'relative';
                 quoteSection.style.marginTop = '30px';
                 
-                // Scroll into view on mobile - center the quote area
-                setTimeout(() => {
-                    quoteSection.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                }, 100);
+                // Enhanced mobile positioning for splash page - ensure quote stays in viewport
+                const splashPage = document.getElementById('splashPage');
+                if (splashPage && splashPage.style.display !== 'none') {
+                    // Position quote to be visible without scrolling on splash page
+                    quoteSection.style.position = 'absolute';
+                    quoteSection.style.top = '50%';
+                    quoteSection.style.left = '50%';
+                    quoteSection.style.transform = 'translate(-50%, -50%)';
+                    quoteSection.style.zIndex = '10000';
+                    quoteSection.style.maxHeight = '60vh';
+                    quoteSection.style.overflow = 'auto';
+                } else {
+                    // Original scroll behavior for main site
+                    setTimeout(() => {
+                        quoteSection.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }, 100);
+                }
             }
             
             quoteSection.className = 'quote-responses show';
@@ -1435,7 +1448,7 @@ class MobileMenu {
                 return;
             }
             
-            if (e.target.closest('input, textarea, select, button, [tabindex]')) {
+            if (e.target.closest('input, textarea, select, button[type="button"], button[type="submit"]')) {
                 return;
             }
             
