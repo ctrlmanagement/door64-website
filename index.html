@@ -14,52 +14,57 @@
     <!-- Quote Responses Styling -->
     <style>
         .quote-responses {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            border: 2px solid #333;
-            max-width: 90%;
-            text-align: center;
-            font-size: 16px;
-            line-height: 1.4;
-            display: none;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
+            position: fixed !important;
+            bottom: 30px !important;
+            left: 20px !important;
+            right: 20px !important;
+            background: #000000 !important;
+            color: #ffffff !important;
+            padding: 20px !important;
+            border-radius: 10px !important;
+            border: 2px solid #ffffff !important;
+            text-align: center !important;
+            font-size: 16px !important;
+            line-height: 1.4 !important;
+            display: none !important;
+            z-index: 99999 !important;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3) !important;
+            font-family: Arial, sans-serif !important;
+            margin: 0 auto !important;
+            max-width: 600px !important;
         }
         
         .quote-responses.show {
-            display: block;
-            animation: slideUpFade 0.3s ease-out;
+            display: block !important;
+            animation: quoteFadeIn 0.5s ease-out !important;
         }
         
-        @keyframes slideUpFade {
-            from {
+        @keyframes quoteFadeIn {
+            0% {
                 opacity: 0;
-                transform: translateX(-50%) translateY(20px);
+                transform: scale(0.8);
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
+                transform: scale(1);
             }
         }
         
         .quote-text {
-            font-style: italic;
-            font-weight: 300;
+            font-style: italic !important;
+            font-weight: normal !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: #ffffff !important;
         }
         
         @media (max-width: 768px) {
             .quote-responses {
-                bottom: 15px;
-                padding: 12px 20px;
-                font-size: 14px;
-                max-width: 95%;
+                bottom: 20px !important;
+                left: 10px !important;
+                right: 10px !important;
+                padding: 15px !important;
+                font-size: 14px !important;
             }
         }
     </style>
@@ -305,11 +310,11 @@
                 </section>
             </div>
         </main>
-        
-        <!-- Quote Responses Section at Bottom -->
-        <div class="quote-responses" id="quoteResponses">
-            <div class="quote-text" id="quoteText"></div>
-        </div>
+    </div>
+    
+    <!-- Quote Responses Section at Bottom (visible on splash page) -->
+    <div class="quote-responses" id="quoteResponses">
+        <div class="quote-text" id="quoteText"></div>
     </div>
 
     <!-- JavaScript -->
