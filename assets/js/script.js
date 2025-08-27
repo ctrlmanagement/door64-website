@@ -585,9 +585,6 @@ class RotatingDoorEntry {
         const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
         console.log(`[${deviceType}] Initializing Rotating Door Entry System...`);
         
-        // Apply minimal page scaling first
-        this.setupMinimalLayout();
-        
         const splashPage = document.getElementById('splashPage');
         if (!splashPage) {
             console.error(`[${deviceType}] No splash page found`);
@@ -749,7 +746,7 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // Reverted showRandomQuote method with simple positioning
+    // Updated showRandomQuote method with absolute positioning
     showRandomQuote() {
         console.log('showRandomQuote() called - looking for quote elements...');
         
@@ -765,39 +762,206 @@ class RotatingDoorEntry {
                 clearTimeout(this.quoteTimeout);
             }
             
+            // Reset all styles first
+            quoteSection.style.cssText = '';
+            quoteSection.className = 'quote-responses';
+            
             // Set the text
             quoteText.textContent = randomQuote;
             
-            // Simple show/hide with proper styling
-            quoteSection.style.display = 'block';
-            quoteSection.style.opacity = '1';
+            // Force reflow
+            quoteSection.offsetHeight;
+            
+            // Get door gallery position for absolute positioning
+            const doorGallery = document.querySelector('.door-gallery');
+            let absolutePositioning = {};
+            
+            if (doorGallery) {
+                const doorRect = doorGallery.getBoundingClientRect();
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                
+                absolutePositioning = {
+                    position: 'absolute',
+                    top: `${doorRect.bottom + scrollY + 20}px`,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: '9999'
+                };
+                
+                console.log('Door gallery position:', {
+                    doorRect: doorRect,
+                    calculatedTop: doorRect.bottom + scrollY + 20,
+                    scrollY: scrollY
+                });
+            } else {
+                // Fallback if door gallery not found
+                console.warn('Door gallery not found, using fallback positioning');
+                absolutePositioning = {
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: '9999'
+                };
+            }
+            
+            // Apply base styles
+            Object.assign(quoteSection.style, {
+                display: 'block',
+                visibility: 'visible',
+                opacity: '1',
+                ...absolutePositioning
+            });
+            
+            // Mobile-specific styling - enhanced absolute positioning
+            if (this.isMobile) {
+                Object.assign(quoteSection.style, {
+                    fontSize: '18px',
+                    padding: '20px',
+                    margin: '0', // Remove margin when using absolute positioning
+                    maxWidth: '90vw', // Use viewport width instead of percentage
+                    width: 'auto',
+                    textAlign: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                    color: 'white',
+                    borderRadius: '10px',
+                    lineHeight: '1.4',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+                    // Ensure it doesn't go off-screen
+                    minWidth: '280px',
+                    maxHeight: '200px',
+                    overflow: 'auto'
+                });
+                
+                // Adjust position if it would go off screen
+                const splashPage = document.getElementById('splashPage');
+                if (splashPage) {
+                    const splashRect = splashPage.getBoundingClientRect();
+                    const quoteRect = quoteSection.getBoundingClientRect();
+                    
+                    // Check if quote goes beyond viewport
+                    if (quoteRect.right > window.innerWidth - 10) {
+                        quoteSection.style.left = 'auto';
+                        quoteSection.style.right = '10px';
+                        quoteSection.style.transform = 'none';
+                    }
+                    if (quoteRect.left < 10) {
+                        quoteSection.style.left = '10px';
+                        quoteSection.style.transform = 'none';
+                    }
+                }
+                
+                // Mobile scroll behavior - scroll to show the quote
+                setTimeout(() => {
+                    const quoteRect = quoteSection.getBoundingClientRect();
+                    const viewportHeight = window.innerHeight;
+                    
+                    // If quote is not fully visible, scroll to it
+                    if (quoteRect.bottom > viewportHeight || quoteRect.top < 0) {
+                        quoteSection.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center',
+                            inline: 'center'
+                        });
+                    }
+                }, 100);
+            } else {
+                // Desktop styling with absolute positioning
+                Object.assign(quoteSection.style, {
+                    padding: '15px',
+                    margin: '0',
+                    maxWidth: '80vw',
+                    width: 'auto',
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    color: 'white',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    minWidth: '300px'
+                });
+            }
+            
             quoteSection.className = 'quote-responses show';
             
-            console.log('Quote should now be visible:', randomQuote);
+            console.log('Quote positioned absolutely:', {
+                position: quoteSection.style.position,
+                top: quoteSection.style.top,
+                left: quoteSection.style.left,
+                transform: quoteSection.style.transform
+            });
             
             // Mobile gets longer display time for readability
-            const displayTime = this.isMobile ? 6000 : 4000;
+            const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
             
             this.quoteTimeout = setTimeout(() => {
                 console.log('Hiding quote after timeout');
                 
-                quoteSection.style.transition = 'opacity 0.5s ease-out';
-                quoteSection.style.opacity = '0';
-                
-                setTimeout(() => {
+                if (this.isMobile) {
+                    // Smooth fade out on mobile
+                    quoteSection.style.transition = 'opacity 0.5s ease-out';
+                    quoteSection.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        quoteSection.style.display = 'none';
+                        quoteSection.style.cssText = '';
+                        quoteSection.className = 'quote-responses';
+                    }, 500);
+                } else {
                     quoteSection.style.display = 'none';
+                    quoteSection.style.opacity = '0';
                     quoteSection.className = 'quote-responses';
-                }, 500);
+                }
             }, displayTime);
             
         } else {
             console.error('Quote section elements not found');
-            // Create quote elements if they don't exist
-            this.createQuoteElements();
+            console.log('Available elements with id:', 
+                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+            
+            // Try alternative selectors
+            const altQuoteSection = document.querySelector('.quote-responses');
+            const altQuoteText = document.querySelector('.quote-text');
+            
+            if (altQuoteSection && altQuoteText) {
+                console.log('Found alternative quote elements, using those...');
+                const randomQuote = this.getRandomQuote();
+                altQuoteText.textContent = randomQuote;
+                
+                // Apply absolute positioning to alternative elements
+                const doorGallery = document.querySelector('.door-gallery');
+                if (doorGallery) {
+                    const doorRect = doorGallery.getBoundingClientRect();
+                    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                    
+                    Object.assign(altQuoteSection.style, {
+                        position: 'absolute',
+                        top: `${doorRect.bottom + scrollY + 20}px`,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: '9999',
+                        display: 'block',
+                        opacity: '1'
+                    });
+                }
+                
+                if (this.isMobile) {
+                    Object.assign(altQuoteSection.style, {
+                        fontSize: '18px',
+                        padding: '20px',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        color: 'white',
+                        borderRadius: '10px',
+                        maxWidth: '90vw',
+                        textAlign: 'center'
+                    });
+                }
+            } else {
+                // Create quote elements if they don't exist
+                this.createQuoteElements();
+            }
         }
     }
     
-    // Updated createQuoteElements method with simple positioning
+    // Updated createQuoteElements method to work with absolute positioning
     createQuoteElements() {
         console.log('Creating missing quote elements...');
         
@@ -816,179 +980,24 @@ class RotatingDoorEntry {
         
         quoteSection.appendChild(quoteText);
         
-        // Apply minimal layout styles
-        quoteSection.style.cssText = `
-            position: relative !important;
-            margin: 30px auto 0 auto !important;
-            padding: 20px !important;
-            max-width: 90% !important;
-            text-align: center !important;
-            display: none !important;
-            opacity: 0 !important;
-            background: rgba(0, 0, 0, 0.9) !important;
-            color: white !important;
-            border-radius: 10px !important;
-            font-size: ${this.isMobile ? '16px' : '18px'} !important;
-            line-height: 1.4 !important;
-            min-height: 60px !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-        `;
+        // Set initial styles for absolute positioning
+        Object.assign(quoteSection.style, {
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            display: 'none',
+            opacity: '0',
+            zIndex: '9999',
+            pointerEvents: 'none' // Don't interfere with other elements when hidden
+        });
         
-        splashPage.appendChild(quoteSection);
+        // Add to the end of body to avoid stacking context issues
+        document.body.appendChild(quoteSection);
         
-        // Try to show the quote again
+        // Now try to show the quote again
         setTimeout(() => {
             this.showRandomQuote();
         }, 50);
-    }
-    
-    setupMinimalLayout() {
-        console.log('Setting up minimal splash page layout...');
-        
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) return;
-        
-        // Scale down and center only the splash page content
-        splashPage.style.cssText = `
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            min-height: 100vh !important;
-            padding: 20px !important;
-            box-sizing: border-box !important;
-            overflow-y: auto !important;
-            position: relative !important;
-        `;
-        
-        // Scale and position door gallery (only within splash page) - ensure all DOOR letters show
-        const doorGallery = splashPage.querySelector('.door-gallery');
-        if (doorGallery) {
-            // Force display and clear any hidden styles
-            doorGallery.style.cssText = `
-                margin: 0 auto 30px auto !important;
-                padding: 20px !important;
-                max-width: 95vw !important;
-                width: 100% !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-                flex-wrap: nowrap !important;
-                gap: ${this.isMobile ? '8px' : '15px'} !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-            `;
-            
-            // Find all door links and ensure they're all visible
-            const doorLinks = doorGallery.querySelectorAll('a');
-            console.log(`Found ${doorLinks.length} door links for DOOR letters`);
-            
-            doorLinks.forEach((link, index) => {
-                // Force show all door letters
-                link.style.cssText = `
-                    font-size: ${this.isMobile ? '2.5rem' : '3.5rem'} !important;
-                    padding: ${this.isMobile ? '12px' : '18px'} !important;
-                    margin: 2px !important;
-                    min-width: ${this.isMobile ? '55px' : '75px'} !important;
-                    min-height: ${this.isMobile ? '55px' : '75px'} !important;
-                    max-width: ${this.isMobile ? '70px' : '90px'} !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                    transition: all 0.3s ease !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                    position: relative !important;
-                    flex-shrink: 0 !important;
-                    text-decoration: none !important;
-                    color: inherit !important;
-                `;
-                console.log(`Styled door link ${index}: ${link.textContent || link.innerHTML}`);
-            });
-            
-            // Also check for any container elements that might be hiding letters
-            const doorContainers = splashPage.querySelectorAll('.door-container, .door-wrapper, .door-item');
-            doorContainers.forEach(container => {
-                container.style.cssText = `
-                    display: flex !important;
-                    visibility: visible !important;
-                    opacity: 1 !important;
-                `;
-            });
-        } else {
-            console.warn('Door gallery not found in splash page');
-            // Try alternative selectors
-            const altDoorGallery = splashPage.querySelector('[class*="door"]');
-            if (altDoorGallery) {
-                console.log('Found alternative door gallery:', altDoorGallery.className);
-            }
-        }
-        
-        // Position quote responses directly under doors (only within splash page)
-        const quoteSection = splashPage.querySelector('#quoteResponses');
-        if (quoteSection) {
-            quoteSection.style.cssText = `
-                position: relative !important;
-                margin: 0 auto !important;
-                padding: 20px !important;
-                max-width: 90% !important;
-                text-align: center !important;
-                display: none !important;
-                opacity: 0 !important;
-                background: rgba(0, 0, 0, 0.9) !important;
-                color: white !important;
-                border-radius: 10px !important;
-                font-size: ${this.isMobile ? '16px' : '18px'} !important;
-                line-height: 1.4 !important;
-                min-height: 60px !important;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-            `;
-        }
-        
-        // Position audio toggle (only within splash page)
-        const audioToggle = splashPage.querySelector('.splash-audio-toggle');
-        if (audioToggle) {
-            audioToggle.style.cssText = `
-                position: fixed !important;
-                top: 20px !important;
-                right: 20px !important;
-                z-index: 10000 !important;
-                font-size: ${this.isMobile ? '24px' : '28px'} !important;
-                padding: ${this.isMobile ? '12px' : '15px'} !important;
-                min-width: ${this.isMobile ? '48px' : '52px'} !important;
-                min-height: ${this.isMobile ? '48px' : '52px'} !important;
-                border-radius: 50% !important;
-                background: rgba(0, 0, 0, 0.8) !important;
-                color: white !important;
-                border: 2px solid rgba(255, 255, 255, 0.3) !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                cursor: pointer !important;
-                transition: all 0.3s ease !important;
-            `;
-        }
-        
-        // Style status messages (only within splash page)
-        const statusMessage = splashPage.querySelector('#statusMessage');
-        if (statusMessage) {
-            statusMessage.style.cssText = `
-                position: relative !important;
-                margin: 20px auto !important;
-                padding: 15px 25px !important;
-                max-width: 90% !important;
-                text-align: center !important;
-                display: none !important;
-                font-size: ${this.isMobile ? '18px' : '20px'} !important;
-                font-weight: bold !important;
-                border-radius: 8px !important;
-                color: white !important;
-                background: rgba(46, 125, 50, 0.9) !important;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
-            `;
-        }
-        
-        console.log('Minimal splash page layout setup complete');
     }
     
     showAccessGranted() {
