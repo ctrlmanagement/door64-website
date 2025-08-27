@@ -750,8 +750,24 @@ class RotatingDoorEntry {
     showRandomQuote() {
         console.log('showRandomQuote() called - looking for quote elements...');
         
-        const quoteSection = document.getElementById('quoteResponses');
-        const quoteText = document.getElementById('quoteText');
+        let quoteSection = document.getElementById('quoteResponses');
+        let quoteText = document.getElementById('quoteText');
+        
+        // If elements exist but might be poorly positioned, relocate them on mobile
+        if (quoteSection && quoteText && this.isMobile) {
+            const doorGallery = document.querySelector('.door-gallery');
+            
+            // Check if quote element is not right after door gallery
+            if (doorGallery && quoteSection.previousElementSibling !== doorGallery) {
+                console.log('Relocating quote element to appear after door gallery');
+                
+                // Remove from current position
+                quoteSection.remove();
+                
+                // Insert after door gallery
+                doorGallery.parentNode.insertBefore(quoteSection, doorGallery.nextSibling);
+            }
+        }
         
         if (quoteSection && quoteText) {
             const randomQuote = this.getRandomQuote();
@@ -794,13 +810,8 @@ class RotatingDoorEntry {
                 quoteSection.style.position = 'relative';
                 quoteSection.style.marginTop = '30px';
                 
-                // Scroll into view on mobile - center the quote area
-                setTimeout(() => {
-                    quoteSection.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                }, 100);
+                // Don't scroll on mobile - let the quote appear where it is
+                console.log('Mobile quote displayed without scrolling');
             }
             
             quoteSection.className = 'quote-responses show';
@@ -871,8 +882,11 @@ class RotatingDoorEntry {
     createQuoteElements() {
         console.log('Creating missing quote elements...');
         
+        // Find the door gallery to insert quote after it
+        const doorGallery = document.querySelector('.door-gallery');
         const splashPage = document.getElementById('splashPage');
-        if (!splashPage) return;
+        
+        if (!doorGallery && !splashPage) return;
         
         // Create quote section
         const quoteSection = document.createElement('div');
@@ -921,7 +935,14 @@ class RotatingDoorEntry {
             `;
         }
         
-        splashPage.appendChild(quoteSection);
+        // Insert right after door gallery, or at end of splash if gallery not found
+        if (doorGallery && doorGallery.parentNode) {
+            doorGallery.parentNode.insertBefore(quoteSection, doorGallery.nextSibling);
+            console.log('Quote element inserted after door gallery');
+        } else {
+            splashPage.appendChild(quoteSection);
+            console.log('Quote element appended to splash page');
+        }
         
         // Now try to show the quote again
         setTimeout(() => {
