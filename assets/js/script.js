@@ -594,19 +594,22 @@ class RotatingDoorEntry {
     }
     
     showRandomQuote() {
-        const statusMessage = document.getElementById('statusMessage');
-        if (statusMessage) {
+        const quoteSection = document.getElementById('quoteResponses');
+        const quoteText = document.getElementById('quoteText');
+        
+        if (quoteSection && quoteText) {
             const randomQuote = this.getRandomQuote();
-            statusMessage.textContent = randomQuote;
-            statusMessage.className = 'status-message locked';
-            statusMessage.style.display = 'block';
-            console.log('Showing random quote:', randomQuote);
+            quoteText.textContent = randomQuote;
+            quoteSection.style.display = 'block';
+            quoteSection.className = 'quote-responses show';
+            console.log('Showing random quote at bottom:', randomQuote);
             
             setTimeout(() => {
-                statusMessage.style.display = 'none';
-            }, 3000); // Show quotes a bit longer since they're more entertaining
+                quoteSection.style.display = 'none';
+                quoteSection.className = 'quote-responses';
+            }, 4000); // Show quotes longer since they're at the bottom
         } else {
-            console.error('Status message element not found');
+            console.error('Quote section elements not found');
         }
     }
     
