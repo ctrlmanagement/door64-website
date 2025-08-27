@@ -3256,7 +3256,81 @@ select:focus-visible {
     0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
 }
-
+/* EMERGENCY MOBILE MESSAGE FIX */
+@media (max-width: 768px) {
+    #mobileStatusMessage,
+    .test-mobile-message {
+        position: fixed !important;
+        top: 50vh !important;
+        left: 50vw !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 2147483647 !important;
+        background: #ff0000 !important;
+        color: #ffffff !important;
+        padding: 30px !important;
+        border-radius: 15px !important;
+        font-size: 22px !important;
+        font-weight: bold !important;
+        text-align: center !important;
+        max-width: 90vw !important;
+        min-width: 200px !important;
+        border: 3px solid #ffffff !important;
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.8) !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        isolation: isolate !important;
+        contain: none !important;
+        overflow: visible !important;
+        pointer-events: none !important;
+        font-family: Arial, sans-serif !important;
+    }
+    
+    /* Override any splash page interference */
+    .splash-page #mobileStatusMessage,
+    .splash-page .test-mobile-message {
+        z-index: 99998 !important;
+    }
+    
+    /* Ensure debug buttons are visible */
+    .debug-toggle {
+        position: fixed !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        z-index: 999999 !important;
+        display: block !important;
+        background: #ff0000 !important;
+        color: white !important;
+        border: 3px solid white !important;
+        width: 80px !important;
+        height: 80px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+    }
+    
+    .test-buttons.active {
+        display: flex !important;
+        position: fixed !important;
+        top: 50% !important;
+        left: 10px !important;
+        transform: translateY(-50%) !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        z-index: 999998 !important;
+    }
+    
+    .test-btn {
+        display: block !important;
+        background: #0066cc !important;
+        color: white !important;
+        border: 2px solid white !important;
+        padding: 15px !important;
+        border-radius: 8px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        min-width: 120px !important;
+    }
+}
 }
 
 /* End Complete iPhone-Optimized Door Restaurant Stylesheet */
