@@ -11,6 +11,59 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
     
+    <!-- Quote Responses Styling -->
+    <style>
+        .quote-responses {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            max-width: 90%;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.4;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .quote-responses.show {
+            display: block;
+            animation: slideUpFade 0.3s ease-out;
+        }
+        
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .quote-text {
+            font-style: italic;
+            font-weight: 300;
+        }
+        
+        @media (max-width: 768px) {
+            .quote-responses {
+                bottom: 15px;
+                padding: 12px 20px;
+                font-size: 14px;
+                max-width: 95%;
+            }
+        }
+    </style>
+    
     <!-- Background Audio -->
     <audio id="backgroundAudio" loop preload="auto" autoplay muted playsinline webkit-playsinline="true">
         <source src="assets/audio/QUIETSTORM.mp3" type="audio/mpeg">
