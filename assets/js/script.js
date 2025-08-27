@@ -746,9 +746,9 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // =============== UPDATED PROMINENT QUOTE DISPLAY SYSTEM ===============
+    // =============== FIXED PROMINENT QUOTE DISPLAY SYSTEM ===============
     showRandomQuote() {
-        console.log('showRandomQuote() called - creating prominent overlay display...');
+        console.log('showRandomQuote() called - creating reliable prominent display...');
         
         const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
         
@@ -757,7 +757,7 @@ class RotatingDoorEntry {
             clearTimeout(this.quoteTimeout);
         }
         
-        // Remove any existing quote overlay
+        // Remove any existing overlays
         const existingOverlay = document.getElementById('quoteOverlay');
         if (existingOverlay) {
             existingOverlay.remove();
@@ -770,170 +770,146 @@ class RotatingDoorEntry {
         }
         
         const randomQuote = this.getRandomQuote();
-        console.log(`[${deviceType}] Creating prominent quote overlay:`, randomQuote);
+        console.log(`[${deviceType}] Creating reliable quote display:`, randomQuote);
         
-        // Create prominent overlay similar to statusMessage
+        // Create the overlay element
         const quoteOverlay = document.createElement('div');
         quoteOverlay.id = 'quoteOverlay';
-        quoteOverlay.className = 'quote-overlay';
         
-        // Create quote text element
-        const quoteText = document.createElement('div');
-        quoteText.className = 'quote-text';
-        quoteText.textContent = randomQuote;
+        // Set the text content directly
+        quoteOverlay.textContent = randomQuote;
         
-        quoteOverlay.appendChild(quoteText);
+        // Apply reliable styling without animations initially
+        const baseStyles = {
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: '99999',
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            color: 'white',
+            textAlign: 'center',
+            borderRadius: '12px',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.7)',
+            fontFamily: 'inherit',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            pointerEvents: 'auto',
+            visibility: 'visible',
+            display: 'block'
+        };
         
-        // Apply prominent overlay styling based on device
-        if (this.isMobile || this.isIPhone) {
-            // Mobile/iPhone: Prominent center/upper overlay styling
-            quoteOverlay.style.cssText = `
-                position: fixed !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                width: 90% !important;
-                max-width: 400px !important;
-                background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 20, 0.95)) !important;
-                color: #ffffff !important;
-                font-size: 20px !important;
-                font-weight: 600 !important;
-                line-height: 1.5 !important;
-                padding: 30px 25px !important;
-                border-radius: 16px !important;
-                text-align: center !important;
-                z-index: 10000 !important;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
-                border: 2px solid rgba(255, 255, 255, 0.2) !important;
-                backdrop-filter: blur(10px) !important;
-                opacity: 0 !important;
-                animation: fadeInScale 0.4s ease-out forwards !important;
-                letter-spacing: 0.5px !important;
-                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
-            `;
+        // Device-specific sizing and styling
+        if (this.isMobile) {
+            Object.assign(baseStyles, {
+                width: '85%',
+                maxWidth: '380px',
+                fontSize: '20px',
+                fontWeight: '600',
+                padding: '25px 20px',
+                lineHeight: '1.4'
+            });
             
-            // Enhanced iPhone styling
             if (this.isIPhone) {
-                quoteOverlay.style.fontSize = '22px';
-                quoteOverlay.style.padding = '35px 30px';
-                quoteOverlay.style.fontWeight = '700';
-                quoteOverlay.style.borderRadius = '20px';
-                console.log('Applied iPhone-specific prominent styling');
+                baseStyles.fontSize = '22px';
+                baseStyles.fontWeight = '700';
+                baseStyles.padding = '30px 25px';
+                baseStyles.borderRadius = '16px';
             }
         } else {
-            // Desktop: Prominent center overlay styling
-            quoteOverlay.style.cssText = `
-                position: fixed !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                width: 80% !important;
-                max-width: 500px !important;
-                background: linear-gradient(135deg, rgba(0, 0, 0, 0.92), rgba(30, 30, 30, 0.92)) !important;
-                color: #ffffff !important;
-                font-size: 18px !important;
-                font-weight: 600 !important;
-                line-height: 1.6 !important;
-                padding: 25px 30px !important;
-                border-radius: 12px !important;
-                text-align: center !important;
-                z-index: 10000 !important;
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
-                border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                backdrop-filter: blur(8px) !important;
-                opacity: 0 !important;
-                animation: fadeInScale 0.3s ease-out forwards !important;
-                letter-spacing: 0.3px !important;
-                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
-            `;
+            Object.assign(baseStyles, {
+                width: '75%',
+                maxWidth: '500px',
+                fontSize: '18px',
+                fontWeight: '600',
+                padding: '20px 25px',
+                lineHeight: '1.5'
+            });
         }
         
-        // Add CSS animation keyframes if not already present
-        if (!document.getElementById('quoteAnimationStyles')) {
-            const styleSheet = document.createElement('style');
-            styleSheet.id = 'quoteAnimationStyles';
-            styleSheet.textContent = `
-                @keyframes fadeInScale {
-                    0% {
-                        opacity: 0;
-                        transform: translate(-50%, -50%) scale(0.8);
-                    }
-                    100% {
-                        opacity: 1;
-                        transform: translate(-50%, -50%) scale(1);
-                    }
-                }
-                
-                @keyframes fadeOutScale {
-                    0% {
-                        opacity: 1;
-                        transform: translate(-50%, -50%) scale(1);
-                    }
-                    100% {
-                        opacity: 0;
-                        transform: translate(-50%, -50%) scale(0.9);
-                    }
-                }
-                
-                .quote-overlay {
-                    user-select: none;
-                    -webkit-user-select: none;
-                    -moz-user-select: none;
-                    -ms-user-select: none;
-                }
-                
-                .quote-overlay .quote-text {
-                    margin: 0;
-                    padding: 0;
-                }
-            `;
-            document.head.appendChild(styleSheet);
-        }
+        // Apply all styles
+        Object.assign(quoteOverlay.style, baseStyles);
         
-        // Add to splash page
+        console.log(`[${deviceType}] Applying styles:`, baseStyles);
+        
+        // Add to DOM immediately
         splashPage.appendChild(quoteOverlay);
         
-        // Force reflow and show
-        quoteOverlay.offsetHeight;
+        // Verify it was added and is visible
+        const rect = quoteOverlay.getBoundingClientRect();
+        console.log(`[${deviceType}] Quote overlay positioned at:`, {
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            height: rect.height,
+            visible: rect.width > 0 && rect.height > 0,
+            zIndex: quoteOverlay.style.zIndex,
+            display: window.getComputedStyle(quoteOverlay).display,
+            visibility: window.getComputedStyle(quoteOverlay).visibility
+        });
         
-        console.log(`[${deviceType}] Prominent quote overlay created and displayed`);
+        // Add simple fade-in effect after DOM insertion
+        setTimeout(() => {
+            quoteOverlay.style.opacity = '0';
+            quoteOverlay.style.transition = 'opacity 0.3s ease-in-out';
+            
+            // Trigger reflow
+            quoteOverlay.offsetHeight;
+            
+            // Fade in
+            quoteOverlay.style.opacity = '1';
+        }, 10);
         
-        // Set display timeout with device-specific durations
-        const displayTime = this.isIPhone ? 6000 : (this.isMobile ? 5500 : 4500);
+        // Set display timeout
+        const displayTime = this.isIPhone ? 5000 : (this.isMobile ? 4500 : 4000);
         
         this.quoteTimeout = setTimeout(() => {
-            console.log(`[${deviceType}] Hiding prominent quote overlay after ${displayTime}ms`);
+            console.log(`[${deviceType}] Hiding quote overlay after ${displayTime}ms`);
             
-            // Animate out
-            quoteOverlay.style.animation = 'fadeOutScale 0.5s ease-in forwards';
-            
-            setTimeout(() => {
-                if (quoteOverlay && quoteOverlay.parentNode) {
-                    quoteOverlay.remove();
-                }
-                console.log(`[${deviceType}] Quote overlay removed`);
-            }, 500);
+            if (quoteOverlay && quoteOverlay.parentNode) {
+                // Fade out
+                quoteOverlay.style.transition = 'opacity 0.4s ease-out';
+                quoteOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    if (quoteOverlay && quoteOverlay.parentNode) {
+                        quoteOverlay.remove();
+                        console.log(`[${deviceType}] Quote overlay removed`);
+                    }
+                }, 400);
+            }
         }, displayTime);
         
-        // Add touch/click handler to dismiss on mobile
-        if (this.isMobile) {
-            quoteOverlay.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log(`[${deviceType}] Quote overlay dismissed by touch`);
+        // Add click/touch handler to dismiss
+        const dismissHandler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(`[${deviceType}] Quote overlay dismissed by user`);
+            
+            if (this.quoteTimeout) {
+                clearTimeout(this.quoteTimeout);
+            }
+            
+            if (quoteOverlay && quoteOverlay.parentNode) {
+                quoteOverlay.style.transition = 'opacity 0.2s ease-out';
+                quoteOverlay.style.opacity = '0';
                 
-                if (this.quoteTimeout) {
-                    clearTimeout(this.quoteTimeout);
-                }
-                
-                quoteOverlay.style.animation = 'fadeOutScale 0.3s ease-in forwards';
                 setTimeout(() => {
                     if (quoteOverlay && quoteOverlay.parentNode) {
                         quoteOverlay.remove();
                     }
-                }, 300);
-            }, { passive: false });
+                }, 200);
+            }
+        };
+        
+        // Add both touch and click handlers
+        quoteOverlay.addEventListener('click', dismissHandler);
+        if (this.isMobile) {
+            quoteOverlay.addEventListener('touchend', dismissHandler, { passive: false });
         }
+        
+        console.log(`[${deviceType}] Quote overlay setup complete`);
     }
     
     showAccessGranted() {
