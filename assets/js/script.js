@@ -746,9 +746,9 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // =============== MOBILE-FIXED PROMINENT QUOTE DISPLAY SYSTEM ===============
+    // =============== MOBILE BROWSER BYPASS QUOTE DISPLAY SYSTEM ===============
     showRandomQuote() {
-        console.log('showRandomQuote() called - creating mobile-compatible display...');
+        console.log('showRandomQuote() called - bypassing splash page for mobile...');
         
         const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
         
@@ -763,59 +763,148 @@ class RotatingDoorEntry {
             existingOverlay.remove();
         }
         
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) {
-            console.error('Splash page not found for quote display');
-            return;
-        }
-        
         const randomQuote = this.getRandomQuote();
-        console.log(`[${deviceType}] Creating mobile-compatible quote display:`, randomQuote);
+        console.log(`[${deviceType}] Creating quote display:`, randomQuote);
         
-        // Create the overlay element with proper classes for mobile compatibility
-        const quoteOverlay = document.createElement('div');
-        quoteOverlay.id = 'quoteOverlay';
-        quoteOverlay.className = 'quote-overlay'; // Add class for mobile touch event compatibility
-        
-        // Set the text content directly
-        quoteOverlay.textContent = randomQuote;
-        
-        // Mobile-specific approach: Use document.body instead of splashPage for better mobile support
-        const parentElement = this.isMobile ? document.body : splashPage;
-        
-        // Apply mobile-optimized styling
         if (this.isMobile) {
-            // Mobile: Simplified styling that definitely works
+            // MOBILE: Create overlay outside splash page entirely
+            const quoteOverlay = document.createElement('div');
+            quoteOverlay.id = 'quoteOverlay';
+            quoteOverlay.textContent = randomQuote;
+            
+            // Mobile: Append directly to body and use viewport-relative positioning
+            document.body.appendChild(quoteOverlay);
+            
+            // Apply mobile-specific styling that definitely works
             quoteOverlay.style.cssText = `
-                position: fixed !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                width: 90% !important;
-                max-width: 350px !important;
-                background-color: black !important;
-                color: white !important;
-                font-size: 20px !important;
-                font-weight: bold !important;
-                padding: 30px 20px !important;
-                text-align: center !important;
-                border-radius: 15px !important;
-                border: 3px solid white !important;
-                z-index: 999999 !important;
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                line-height: 1.4 !important;
-                box-sizing: border-box !important;
-                pointer-events: auto !important;
-                user-select: none !important;
-                -webkit-user-select: none !important;
-                -webkit-transform: translate(-50%, -50%) !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.8);
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                z-index: 999999;
+                padding: 20px;
+                box-sizing: border-box;
+                line-height: 1.4;
             `;
             
-            if (this.isIPhone) {
-                quoteOverlay.style.fontSize = '22px !important';
-                quoteOverlay.style.padding = '35px 25px !important';
+            // Create inner content div for better control
+            const innerDiv = document.createElement('div');
+            innerDiv.textContent = randomQuote;
+            innerDiv.style.cssText = `
+                background: black;
+                color: white;
+                padding: 40px 30px;
+                border-radius: 15px;
+                border: 3px solid white;
+                max-width: 90%;
+                font-size: ${this.isIPhone ? '26px' : '24px'};
+                font-weight: bold;
+                line-height: 1.4;
+            `;
+            
+            // Replace text with styled inner div
+            quoteOverlay.textContent = '';
+            quoteOverlay.appendChild(innerDiv);
+            
+            console.log(`[${deviceType}] Mobile overlay created as full-screen`);
+            
+            // Mobile timeout
+            this.quoteTimeout = setTimeout(() => {
+                console.log(`[${deviceType}] Removing mobile overlay`);
+                if (quoteOverlay && quoteOverlay.parentNode) {
+                    quoteOverlay.remove();
+                }
+            }, 4000);
+            
+            // Mobile dismiss handler
+            quoteOverlay.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                console.log(`[${deviceType}] Mobile overlay dismissed by touch`);
+                if (this.quoteTimeout) clearTimeout(this.quoteTimeout);
+                if (quoteOverlay && quoteOverlay.parentNode) {
+                    quoteOverlay.remove();
+                }
+            }, { passive: false });
+            
+        } else {
+            // DESKTOP: Use the working approach
+            const splashPage = document.getElementById('splashPage');
+            if (!splashPage) {
+                console.error('Splash page not found for quote display');
+                return;
+            }
+            
+            const quoteOverlay = document.createElement('div');
+            quoteOverlay.id = 'quoteOverlay';
+            quoteOverlay.textContent = randomQuote;
+            
+            const baseStyles = {
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                zIndex: '99999',
+                backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                color: 'white',
+                textAlign: 'center',
+                borderRadius: '12px',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.7)',
+                fontFamily: 'inherit',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                pointerEvents: 'auto',
+                visibility: 'visible',
+                display: 'block',
+                width: '75%',
+                maxWidth: '500px',
+                fontSize: '18px',
+                fontWeight: '600',
+                padding: '20px 25px',
+                lineHeight: '1.5',
+                opacity: '1'
+            };
+            
+            Object.assign(quoteOverlay.style, baseStyles);
+            splashPage.appendChild(quoteOverlay);
+            
+            console.log(`[${deviceType}] Desktop overlay created`);
+            
+            // Desktop timeout
+            this.quoteTimeout = setTimeout(() => {
+                console.log(`[${deviceType}] Removing desktop overlay`);
+                if (quoteOverlay && quoteOverlay.parentNode) {
+                    quoteOverlay.style.transition = 'opacity 0.4s ease-out';
+                    quoteOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        if (quoteOverlay && quoteOverlay.parentNode) {
+                            quoteOverlay.remove();
+                        }
+                    }, 400);
+                }
+            }, 4000);
+            
+            // Desktop dismiss handler
+            quoteOverlay.addEventListener('click', () => {
+                console.log(`[${deviceType}] Desktop overlay dismissed by click`);
+                if (this.quoteTimeout) clearTimeout(this.quoteTimeout);
+                if (quoteOverlay && quoteOverlay.parentNode) {
+                    quoteOverlay.remove();
+                }
+            });
+        }
+    } = '35px 25px !important';
                 quoteOverlay.style.borderRadius = '20px !important';
                 console.log('Applied iPhone-specific mobile styling');
             }
