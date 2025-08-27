@@ -1,4 +1,4 @@
-/* Door 64 Restaurant - Complete Stylesheet with Rotating Door Entry System */
+/* Door Restaurant - Complete iPhone-Optimized Stylesheet with All Features */
 
 * {
     margin: 0;
@@ -10,13 +10,17 @@ html {
     width: 100%;
     height: 100%;
     scroll-behavior: smooth;
+    /* iPhone-specific font smoothing */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* CSS Custom Properties for dynamic height calculations */
+/* Enhanced CSS Custom Properties for iPhone */
 :root {
     --vh: 1vh;
     --nav-height: 80px;
     --mobile-nav-height: 64px;
+    /* Enhanced safe area support for Dynamic Island and home indicator */
     --safe-area-top: env(safe-area-inset-top, 0px);
     --safe-area-bottom: env(safe-area-inset-bottom, 0px);
     --safe-area-left: env(safe-area-inset-left, 0px);
@@ -24,6 +28,21 @@ html {
     --tuscan-orange: #C65102;
     --tuscan-orange-light: rgba(198, 81, 2, 0.8);
     --tuscan-orange-glow: rgba(198, 81, 2, 0.7);
+    
+    /* iPhone-optimized font sizes */
+    --body-text-size: 18px;
+    --body-text-size-small: 16px;
+    --heading-h1-size: 32px;
+    --heading-h2-size: 28px;
+    --heading-h3-size: 24px;
+    --button-text-size: 18px;
+    --nav-text-size: 17px;
+    --caption-text-size: 15px;
+    
+    /* Touch target sizes */
+    --touch-target-min: 44px;
+    --touch-target-optimal: 48px;
+    --touch-spacing: 8px;
 }
 
 body {
@@ -35,17 +54,20 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
+    /* iPhone-specific optimizations */
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: none;
+    overscroll-behavior: contain;
     scroll-behavior: smooth;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
+    /* Minimum 18px body text for iPhone */
+    font-size: var(--body-text-size);
 }
 
-/* Remove ALL link styling completely */
+/* iPhone-optimized link styling */
 a, a:link, a:visited, a:hover, a:active, a:focus {
     text-decoration: none !important;
     border: none !important;
@@ -55,6 +77,12 @@ a, a:link, a:visited, a:hover, a:active, a:focus {
     border-bottom: none !important;
     box-shadow: none !important;
     text-underline-offset: 0 !important;
+    /* Enhanced touch targets */
+    min-height: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
 }
 
 /* Prevent body scroll when mobile menu is open */
@@ -62,28 +90,42 @@ body.menu-open {
     overflow: hidden;
     position: fixed;
     width: 100%;
+    height: 100vh;
 }
 
-/* iPhone specific styles */
+/* iPhone-specific WebKit optimizations */
 @supports (-webkit-touch-callout: none) {
     body {
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+    
+    /* Dynamic Island and notch support */
+    .splash-page,
+    .nav {
+        padding-top: max(20px, calc(env(safe-area-inset-top) + 15px));
+    }
+    
+    /* Home indicator support */
+    .nav-links.active {
+        padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
     }
 }
 
-/* Custom scrollbar for webkit browsers */
+/* Enhanced scrollbar for iPhone Safari */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -97,7 +139,7 @@ body.menu-open {
     width: 100%;
 }
 
-/* =============== GEOMETRIC DOOR SPLASH PAGE WITH EMBOSSED LETTERS =============== */
+/* =============== OPTIMIZED SPLASH PAGE FOR IPHONE =============== */
 .splash-page {
     width: 100%;
     height: 100vh;
@@ -112,10 +154,11 @@ body.menu-open {
     justify-content: center;
     cursor: pointer;
     transition: all 1.2s ease;
-    padding-top: var(--safe-area-top);
-    padding-bottom: var(--safe-area-bottom);
-    padding-left: var(--safe-area-left);
-    padding-right: var(--safe-area-right);
+    /* iPhone safe areas */
+    padding-top: max(20px, calc(env(safe-area-inset-top) + 10px));
+    padding-bottom: max(20px, calc(env(safe-area-inset-bottom) + 10px));
+    padding-left: max(20px, calc(env(safe-area-inset-left) + 10px));
+    padding-right: max(20px, calc(env(safe-area-inset-right) + 10px));
 }
 
 .splash-page::before {
@@ -136,7 +179,7 @@ body.menu-open {
     display: none !important;
 }
 
-/* Door Gallery Design - ENLARGED */
+/* Door Gallery Design - iPhone Optimized */
 .door-gallery {
     height: 75vh;
     width: 30vh;
@@ -146,9 +189,10 @@ body.menu-open {
     list-style: none;
     position: relative;
     z-index: 1;
+    /* Enhanced touch targets for iPhone */
+    touch-action: manipulation;
 }
 
-/* Door gallery moved up - NEW POSITIONING */
 .door-gallery-raised {
     position: absolute;
     top: 50%;
@@ -162,6 +206,8 @@ body.menu-open {
     grid-column: 1/span 1;
     --offsetX: 50%;
     transition: opacity 0.3s;
+    /* iPhone touch optimization */
+    touch-action: manipulation;
 }
 
 .door-gallery li a {
@@ -174,6 +220,11 @@ body.menu-open {
     outline: none !important;
     color: inherit !important;
     background: transparent !important;
+    /* iPhone touch targets */
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Door Clip Paths */
@@ -208,7 +259,7 @@ body.menu-open {
     background: transparent;
 }
 
-/* Letters - EMBOSSED WHITE STYLE LIKE BOTTOM DOOR 64 LOGO */
+/* Letters - iPhone-optimized embossed styling */
 .door-gallery li .letter-container span {
     color: #fff;
     font-size: 4rem;
@@ -222,6 +273,8 @@ body.menu-open {
         4px 4px 0px #b0b0b0,
         5px 5px 0px #a0a0a0,
         6px 6px 10px rgba(0,0,0,0.3);
+    /* iPhone touch feedback */
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Desktop hover effects - PULSATE */
@@ -232,15 +285,17 @@ body.menu-open {
     }
 }
 
-/* Mobile touch effects - PULSATE */
+/* iPhone touch effects - optimized for iOS */
 @media (hover: none) and (pointer: coarse) {
     .door-gallery li a:active .letter-container span {
         opacity: 1;
         animation: pulsateEmbossed 1s ease-in-out infinite alternate;
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
     }
 }
 
-/* Active door - enhanced embossed with stronger pulsation */
+/* Enhanced pulsate for active door - iPhone optimized */
 .door-gallery li a.door-active .letter-container span {
     opacity: 1 !important;
     animation: pulsateEmbossedActive 2s ease-in-out infinite alternate !important;
@@ -294,7 +349,7 @@ body.menu-open {
     }
 }
 
-/* Status Message - BLACK TEXT ON WHITE BACKGROUND */
+/* Status Message - iPhone optimized */
 .status-message {
     position: fixed;
     top: 50%;
@@ -304,7 +359,7 @@ body.menu-open {
     color: #000 !important;
     padding: 30px;
     border-radius: 15px;
-    font-size: 1.5rem;
+    font-size: var(--heading-h3-size); /* 24px for iPhone */
     font-weight: bold;
     text-align: center;
     z-index: 40;
@@ -312,6 +367,9 @@ body.menu-open {
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     font-family: 'Georgia', serif;
     border: 2px solid #000;
+    /* iPhone safe positioning */
+    margin: 0 max(20px, calc(env(safe-area-inset-left) + 10px));
+    max-width: calc(100vw - 40px - 2 * max(20px, calc(env(safe-area-inset-left) + 10px)));
 }
 
 /* Door Hover Effects - NO GREY WASH */
@@ -396,20 +454,7 @@ body.menu-open {
     50% { transform: scale(1.05); }
 }
 
-/* ========== IPHONE SPLASH PAGE ENHANCEMENTS ========== */
-@supports (-webkit-touch-callout: none) {
-    .splash-page {
-        padding-top: max(20px, env(safe-area-inset-top));
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
-        -webkit-font-smoothing: antialiased;
-        -webkit-backface-visibility: hidden;
-        transform: translateZ(0);
-    }
-}
-
-/* Enhanced Mobile Support */
+/* Enhanced Mobile Support for iPhone */
 @media (max-width: 768px) {
     .door-gallery {
         height: 60vh;
@@ -450,47 +495,6 @@ body.menu-open {
     transform-style: preserve-3d;
 }
 
-/* Accessibility: Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-    .door-gallery li a.door-active .letter-container span,
-    .door-gallery li a:hover .letter-container span {
-        animation: none !important;
-        transform: none !important;
-    }
-    
-    .door-gallery li a.door-active {
-        outline: 3px solid #00ffff;
-        outline-offset: 5px;
-    }
-}
-
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-    .door-gallery li a.door-active {
-        outline: 4px solid currentColor !important;
-        outline-offset: 4px;
-        background: rgba(255, 255, 255, 0.1) !important;
-    }
-}
-
-/* Touch Device Optimizations */
-@media (hover: none) and (pointer: coarse) {
-    .door-gallery li a:hover .letter-container span {
-        opacity: 1 !important;
-        transform: none !important;
-        animation-play-state: running !important;
-    }
-    
-    .door-gallery li a:active {
-        transform: scale(0.95);
-        transition: transform 0.1s ease;
-    }
-    
-    .door-gallery li a.door-active:active {
-        transform: scale(1.02);
-    }
-}
-
 /* Skip link for accessibility */
 .skip-link {
     position: absolute;
@@ -520,7 +524,7 @@ body.menu-open {
     opacity: 1;
 }
 
-/* Navigation - Fixed sizing with MOBILE NAVIGATION */
+/* =============== IPHONE-OPTIMIZED NAVIGATION =============== */
 .nav {
     position: fixed;
     top: 0;
@@ -534,9 +538,10 @@ body.menu-open {
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
-    padding-top: max(20px, calc(var(--safe-area-top) + 10px));
-    padding-left: var(--safe-area-left);
-    padding-right: var(--safe-area-right);
+    /* iPhone Dynamic Island and notch support */
+    padding-top: max(20px, calc(env(safe-area-inset-top) + 15px));
+    padding-left: max(20px, calc(env(safe-area-inset-left) + 10px));
+    padding-right: max(20px, calc(env(safe-area-inset-right) + 10px));
 }
 
 /* Desktop hover behavior */
@@ -583,7 +588,12 @@ body.menu-open {
     transition: opacity 0.3s ease;
     font-family: 'Georgia', serif;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    /* iPhone touch target */
+    min-height: var(--touch-target-min);
+    display: flex;
+    align-items: center;
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .nav-logo:hover {
@@ -616,21 +626,28 @@ body.menu-open {
     margin-left: auto;
 }
 
-/* Nav links - Clean styling without artifacts */
+/* iPhone-optimized navigation links */
 .nav-links a {
     color: #ccc;
     text-decoration: none !important;
     text-transform: lowercase;
-    font-size: 14px;
+    font-size: var(--nav-text-size); /* 17px */
     letter-spacing: 1px;
     transition: all 0.3s ease;
     position: relative;
     -webkit-tap-highlight-color: transparent;
-    padding: 8px 12px;
-    border-radius: 4px;
+    /* Enhanced iPhone touch targets */
+    padding: 12px 16px;
+    border-radius: 8px;
     background: transparent;
     border: none !important;
     outline: none !important;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
 }
 
 .nav-links a::before {
@@ -642,7 +659,7 @@ body.menu-open {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* =============== MOBILE MENU BUTTON =============== */
+/* =============== ENHANCED MOBILE MENU FOR IPHONE =============== */
 .mobile-menu {
     display: none;
     flex-direction: column;
@@ -653,56 +670,60 @@ body.menu-open {
     perspective: 1000px;
     background: transparent;
     border: none;
-    padding: 8px;
-    min-width: 44px;
-    min-height: 44px;
+    /* iPhone-optimized touch target */
+    padding: 12px;
+    min-width: var(--touch-target-optimal); /* 48px */
+    min-height: var(--touch-target-optimal); /* 48px */
     justify-content: center;
     align-items: center;
-    border-radius: 8px;
+    border-radius: 12px;
     transition: background 0.3s ease;
+    touch-action: manipulation;
+    position: relative;
 }
 
 .mobile-menu span {
-    width: 25px;
-    height: 2px;
+    width: 28px; /* Slightly larger for iPhone */
+    height: 3px; /* Slightly thicker for visibility */
     background: #fff;
     margin: 3px 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform;
     transform-origin: center;
+    border-radius: 2px; /* Rounded ends */
 }
 
-/* Mobile menu animation improvements */
+/* Enhanced mobile menu animation for iPhone */
 .mobile-menu.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(45deg) translate(6px, 6px);
 }
 
 .mobile-menu.active span:nth-child(2) {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(25px);
 }
 
 .mobile-menu.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
+    transform: rotate(-45deg) translate(8px, -7px);
 }
 
+/* iPhone touch feedback */
 .mobile-menu:active {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(0.92);
     transition: all 0.1s ease;
 }
 
-/* =============== ENHANCED AUDIO BUTTON STYLES =============== */
-
-/* Audio Toggle Button */
+/* =============== ENHANCED AUDIO BUTTONS FOR IPHONE =============== */
 .audio-toggle {
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    /* iPhone-optimized sizing */
+    width: var(--touch-target-optimal); /* 48px */
+    height: var(--touch-target-optimal); /* 48px */
     color: #fff !important;
-    font-size: 18px;
+    font-size: var(--button-text-size); /* 18px */
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -716,8 +737,6 @@ body.menu-open {
     will-change: transform;
     backface-visibility: hidden;
     perspective: 1000px;
-    min-width: 44px;
-    min-height: 44px;
     touch-action: manipulation;
     -webkit-user-select: none;
     contain: layout style;
@@ -731,8 +750,9 @@ body.menu-open {
     transition: transform 0.2s ease;
 }
 
+/* iPhone touch feedback */
 .audio-toggle:active {
-    transform: scale(0.9);
+    transform: scale(0.85);
     transition: transform 0.1s ease;
 }
 
@@ -741,7 +761,7 @@ body.menu-open {
     outline-offset: 2px;
 }
 
-/* Playing state with enhanced pulsing animation */
+/* Enhanced playing state */
 .audio-toggle.playing {
     background: var(--tuscan-orange-light) !important;
     border-color: var(--tuscan-orange) !important;
@@ -774,18 +794,18 @@ body.menu-open {
     100% { box-shadow: 0 0 0 0 rgba(198, 81, 2, 0); }
 }
 
-/* Splash Audio Button - Enhanced and Properly Positioned */
+/* Enhanced Splash Audio Button for iPhone */
 .splash-audio-toggle {
     position: fixed !important;
-    top: 20px !important;
-    top: max(20px, calc(var(--safe-area-top) + 15px)) !important;
-    right: 20px !important;
-    right: max(20px, calc(var(--safe-area-right) + 15px)) !important;
+    /* iPhone Dynamic Island positioning */
+    top: max(25px, calc(env(safe-area-inset-top) + 20px)) !important;
+    right: max(25px, calc(env(safe-area-inset-right) + 20px)) !important;
     background: rgba(70, 130, 180, 0.9) !important;
     border: 2px solid rgba(70, 130, 180, 1) !important;
     border-radius: 50% !important;
-    width: 60px !important;
-    height: 60px !important;
+    /* iPhone-optimized sizing */
+    width: var(--touch-target-optimal) !important; /* 48px */
+    height: var(--touch-target-optimal) !important; /* 48px */
     color: #fff !important;
     font-size: 20px !important;
     cursor: pointer !important;
@@ -803,11 +823,9 @@ body.menu-open {
     backface-visibility: hidden !important;
     perspective: 1000px !important;
     box-shadow: 0 4px 20px rgba(70, 130, 180, 0.3) !important;
-    min-width: 44px;
-    min-height: 44px;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    contain: layout style;
+    touch-action: manipulation !important;
+    -webkit-user-select: none !important;
+    contain: layout style !important;
 }
 
 .splash-audio-toggle:hover {
@@ -817,7 +835,7 @@ body.menu-open {
 }
 
 .splash-audio-toggle:active {
-    transform: scale(0.9);
+    transform: scale(0.85);
     transition: transform 0.1s ease;
 }
 
@@ -844,16 +862,6 @@ body.menu-open {
     100% { box-shadow: 0 0 0 0 rgba(70, 130, 180, 0), 0 6px 30px rgba(70, 130, 180, 0.5); }
 }
 
-/* iPhone audio button improvements */
-@media (max-width: 768px) {
-    .splash-audio-toggle {
-        top: max(25px, calc(env(safe-area-inset-top) + 15px)) !important;
-        right: max(25px, calc(env(safe-area-inset-right) + 15px)) !important;
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-    }
-}
-
 /* Audio loading indicator */
 .audio-toggle[data-loading="true"], 
 .splash-audio-toggle[data-loading="true"] {
@@ -867,22 +875,35 @@ body.menu-open {
     100% { transform: rotate(360deg) scale(1); }
 }
 
-/* Global Text Styling */
+/* =============== IPHONE-OPTIMIZED TYPOGRAPHY =============== */
 h1, h2, h3, h4, h5, h6 {
     text-transform: lowercase;
     color: #000;
+    line-height: 1.3; /* Better for iPhone reading */
 }
+
+/* iPhone font size hierarchy */
+h1 { font-size: var(--heading-h1-size); } /* 32px */
+h2 { font-size: var(--heading-h2-size); } /* 28px */
+h3 { font-size: var(--heading-h3-size); } /* 24px */
 
 p, .sub-links a, .menu-item p {
     color: #666;
     text-transform: lowercase;
+    font-size: var(--body-text-size); /* 18px */
+    line-height: 1.6;
+}
+
+/* Smaller text where appropriate */
+.caption, .gallery-content p {
+    font-size: var(--caption-text-size); /* 15px */
 }
 
 .section {
     background: #fff;
 }
 
-/* =============== LANDING PAGE - ALIGNED WITH NAV =============== */
+/* =============== LANDING PAGE - iPhone Optimized =============== */
 .landing-page {
     width: 100%;
     display: flex;
@@ -910,12 +931,19 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* Mobile landing page - force white background in ALL orientations */
+/* iPhone landing page - force white background in ALL orientations */
 @media (max-width: 768px) {
     .landing-page {
         background: #fff !important;
         background-image: none !important;
         background-color: #fff !important;
+        /* iPhone safe area support */
+        padding-top: max(calc(var(--mobile-nav-height) + 30px), calc(env(safe-area-inset-top) + var(--mobile-nav-height) + 20px));
+        padding-bottom: max(60px, calc(env(safe-area-inset-bottom) + 40px));
+        padding-left: max(20px, calc(env(safe-area-inset-left) + 15px));
+        padding-right: max(20px, calc(env(safe-area-inset-right) + 15px));
+        justify-content: flex-start;
+        color: #000;
     }
 
     .landing-page .gallery-slider {
@@ -941,7 +969,7 @@ p, .sub-links a, .menu-item p {
     background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Force white background on mobile for page 64 */
+/* iPhone white background override */
 @media (max-width: 768px) {
     .gallery-slider {
         background: #fff !important;
@@ -1017,12 +1045,12 @@ p, .sub-links a, .menu-item p {
     line-height: 1.2;
 }
 
-/* Mobile page 64 logo - white embossed like other pages */
+/* iPhone-optimized landing logo */
 @media (max-width: 768px) {
     .landing-content h1 {
-        font-size: clamp(2.5rem, 12vw, 4rem);
-        letter-spacing: clamp(2px, 3vw, 6px);
-        margin-bottom: 30px;
+        font-size: clamp(3rem, 12vw, 4.5rem); /* Larger for iPhone */
+        letter-spacing: clamp(3px, 3vw, 7px);
+        margin-bottom: 40px; /* More space */
         line-height: 1.1;
         color: #fff !important;
         text-shadow: 
@@ -1031,6 +1059,12 @@ p, .sub-links a, .menu-item p {
             3px 3px 0px #aaa,
             4px 4px 0px #999,
             5px 5px 10px rgba(0,0,0,0.2) !important;
+        /* iPhone touch target */
+        min-height: var(--touch-target-optimal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: manipulation;
     }
 }
 
@@ -1056,36 +1090,54 @@ p, .sub-links a, .menu-item p {
     max-width: 350px;
     margin-bottom: 30px;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch optimization */
+    padding: 15px;
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .landing-link:hover {
     transform: translateY(-5px);
 }
 
+.landing-link:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
 .landing-link h3 {
-    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-size: clamp(1.6rem, 4vw, 2.2rem); /* Larger for iPhone */
     margin-bottom: 25px;
     text-transform: lowercase;
     letter-spacing: clamp(1px, 1vw, 3px);
     color: #000;
     font-weight: 300;
+    line-height: 1.3;
 }
 
 .sub-links {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--touch-spacing); /* 8px spacing */
     align-items: center;
 }
 
 .sub-links a {
     color: #ccc;
     text-decoration: none !important;
-    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    font-size: clamp(1rem, 3vw, 1.2rem); /* iPhone-optimized */
     letter-spacing: 1px;
     transition: color 0.3s ease;
     text-transform: lowercase;
-    padding: 5px 0;
+    /* iPhone touch targets */
+    padding: 12px 16px;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -1093,7 +1145,14 @@ p, .sub-links a, .menu-item p {
     color: #fff;
 }
 
-/* =============== ENHANCED GALLERY STYLES =============== */
+.sub-links a:active {
+    color: #000;
+    background: rgba(0,0,0,0.1);
+    transform: scale(0.95);
+    transition: all 0.1s ease;
+}
+
+/* =============== ENHANCED GALLERY FOR IPHONE =============== */
 .css-gallery {
     position: relative;
     width: 100%;
@@ -1169,31 +1228,34 @@ p, .sub-links a, .menu-item p {
 }
 
 .gallery-content h3 {
-    font-size: 1.8rem;
+    font-size: var(--heading-h3-size); /* 24px */
     margin-bottom: 10px;
     text-transform: lowercase;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     color: #fff;
+    line-height: 1.3;
 }
 
 .gallery-content p {
-    font-size: 1rem;
+    font-size: var(--body-text-size); /* 18px */
     opacity: 0.9;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
     color: #fff;
+    line-height: 1.5;
 }
 
-/* Enhanced Gallery Controls */
+/* iPhone-optimized gallery controls */
 .gallery-nav {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 3;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6);
     border: none;
     color: white;
-    width: 50px;
-    height: 50px;
+    /* iPhone touch targets */
+    width: var(--touch-target-optimal); /* 48px */
+    height: var(--touch-target-optimal); /* 48px */
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -1201,10 +1263,12 @@ p, .sub-links a, .menu-item p {
     justify-content: center;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
-    font-size: 18px;
+    font-size: 20px; /* Larger for iPhone */
     will-change: transform;
     backface-visibility: hidden;
     perspective: 1000px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .gallery-nav:hover {
@@ -1213,7 +1277,8 @@ p, .sub-links a, .menu-item p {
 }
 
 .gallery-nav:active {
-    transform: translateY(-50%) scale(0.95);
+    transform: translateY(-50%) scale(0.9);
+    transition: transform 0.1s ease;
 }
 
 .gallery-nav.prev {
@@ -1224,24 +1289,30 @@ p, .sub-links a, .menu-item p {
     right: 20px;
 }
 
-/* Enhanced Gallery Dots */
+/* iPhone-optimized gallery dots */
 .gallery-dots {
     position: absolute;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 12px;
+    gap: 16px; /* More space for iPhone */
     z-index: 3;
 }
 
 .gallery-dot {
-    width: 12px;
-    height: 12px;
+    width: 16px; /* Larger for iPhone */
+    height: 16px;
     border-radius: 50%;
     background: rgba(255,255,255,0.5);
     cursor: pointer;
     transition: all 0.3s ease;
+    /* iPhone touch targets */
+    min-width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    padding: 14px; /* Creates larger touch area */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .gallery-dot:hover {
@@ -1252,6 +1323,11 @@ p, .sub-links a, .menu-item p {
 .gallery-dot.active {
     background: white;
     transform: scale(1.2);
+}
+
+.gallery-dot:active {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
 }
 
 .gallery-dot:focus {
@@ -1290,7 +1366,7 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* =============== COMING SOON PAGE STYLES =============== */
+/* =============== COMING SOON PAGE STYLES - iPhone Enhanced =============== */
 .coming-soon-content {
     display: flex;
     flex-direction: column;
@@ -1303,52 +1379,56 @@ p, .sub-links a, .menu-item p {
 }
 
 .coming-soon-title {
-    font-size: 3rem;
+    font-size: var(--heading-h1-size); /* 32px for iPhone */
     font-weight: 300;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: #333;
     letter-spacing: 2px;
     text-transform: uppercase;
+    line-height: 1.2;
     animation: slideInFromTop 1s ease-out;
 }
 
 .coming-soon-subtitle {
-    font-size: 1.2rem;
+    font-size: var(--heading-h3-size); /* 24px for iPhone */
     margin-bottom: 2rem;
     color: #666;
     max-width: 600px;
-    line-height: 1.6;
+    line-height: 1.5;
     text-transform: lowercase;
     animation: slideInFromBottom 1s ease-out 0.3s both;
 }
 
 .coming-soon-message {
-    font-size: 1rem;
+    font-size: var(--body-text-size); /* 18px for iPhone */
     color: #888;
     margin-bottom: 3rem;
     font-style: italic;
     text-transform: lowercase;
+    line-height: 1.5;
     animation: fadeIn 1s ease-out 0.6s both;
 }
 
 .back-button {
     display: inline-block;
-    padding: 12px 24px;
+    padding: 18px 30px; /* iPhone-optimized padding */
     background-color: transparent;
     color: #333;
     text-decoration: none !important;
     border: 2px solid #333;
-    border-radius: 4px;
+    border-radius: 12px; /* iPhone-style radius */
     font-weight: 500;
     letter-spacing: 1px;
     text-transform: uppercase;
     transition: all 0.3s ease;
     animation: slideInFromBottom 1s ease-out 0.9s both;
-    min-height: 44px;
-    min-width: 44px;
+    min-height: var(--touch-target-optimal);
+    min-width: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: var(--button-text-size); /* 18px */
+    touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -1360,8 +1440,8 @@ p, .sub-links a, .menu-item p {
 }
 
 .back-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
 }
 
 @keyframes fadeInUp {
@@ -1406,38 +1486,6 @@ p, .sub-links a, .menu-item p {
     }
 }
 
-/* Mobile Coming Soon Styles */
-@media (max-width: 768px) {
-    .coming-soon-content {
-        padding: 1.5rem;
-        min-height: 50vh;
-    }
-
-    .coming-soon-title {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
-        letter-spacing: 1px;
-    }
-    
-    .coming-soon-subtitle {
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
-        padding: 0 1rem;
-    }
-    
-    .coming-soon-message {
-        font-size: 0.9rem;
-        margin-bottom: 2rem;
-    }
-    
-    .back-button {
-        padding: 15px 25px;
-        font-size: 0.9rem;
-        min-height: 48px;
-        min-width: 150px;
-    }
-}
-
 /* Section Styles */
 .section {
     padding: 100px 0;
@@ -1472,6 +1520,10 @@ p, .sub-links a, .menu-item p {
     transition: opacity 0.3s ease;
     display: block;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch target */
+    min-height: var(--touch-target-min);
+    padding: 10px;
+    touch-action: manipulation;
 }
 
 .page-logo:hover {
@@ -1516,10 +1568,18 @@ p, .sub-links a, .menu-item p {
     text-align: center;
     transition: transform 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .space-item:hover {
     transform: translateY(-5px);
+}
+
+.space-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
 }
 
 .space-item h3 {
@@ -1532,6 +1592,8 @@ p, .sub-links a, .menu-item p {
 
 .space-item p {
     color: #666;
+    font-size: var(--body-text-size);
+    line-height: 1.6;
 }
 
 /* Menu Items */
@@ -1549,10 +1611,18 @@ p, .sub-links a, .menu-item p {
     cursor: pointer;
     transition: transform 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .menu-item:hover {
     transform: translateY(-3px);
+}
+
+.menu-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
 }
 
 .menu-item h3 {
@@ -1565,6 +1635,8 @@ p, .sub-links a, .menu-item p {
 
 .menu-item p {
     color: #666;
+    font-size: var(--body-text-size);
+    line-height: 1.6;
 }
 
 .menu-item .price {
@@ -1600,11 +1672,20 @@ p, .sub-links a, .menu-item p {
     transition: all 0.3s ease;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-min);
+    touch-action: manipulation;
 }
 
 .sub-nav-link:hover {
     color: #000;
     background: rgba(0,0,0,0.05);
+}
+
+.sub-nav-link:active {
+    background: rgba(0,0,0,0.1);
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
 }
 
 /* Breadcrumb Navigation */
@@ -1621,6 +1702,10 @@ p, .sub-links a, .menu-item p {
     letter-spacing: 1px;
     transition: color 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-min);
+    padding: 8px 12px;
+    touch-action: manipulation;
 }
 
 .breadcrumb-link:hover {
@@ -1646,6 +1731,7 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 2px;
     color: #000;
+    line-height: 1.3;
 }
 
 .menu-description p {
@@ -1661,6 +1747,7 @@ p, .sub-links a, .menu-item p {
     font-weight: bold;
     text-transform: lowercase;
     letter-spacing: 1px;
+    line-height: 1.3;
 }
 
 /* Chef's Philosophy */
@@ -1675,6 +1762,7 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 2px;
     color: #000;
+    line-height: 1.3;
 }
 
 .philosophy-grid {
@@ -1689,6 +1777,9 @@ p, .sub-links a, .menu-item p {
     border-radius: 10px;
     border-left: 4px solid #000;
     text-align: center;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .philosophy-item h4 {
@@ -1697,11 +1788,13 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 1px;
     color: #000;
+    line-height: 1.3;
 }
 
 .philosophy-item p {
     color: #666;
     line-height: 1.6;
+    font-size: var(--body-text-size);
 }
 
 /* Spirits Categories */
@@ -1720,6 +1813,7 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 2px;
     color: #000;
+    line-height: 1.3;
 }
 
 .spirit-list {
@@ -1733,6 +1827,9 @@ p, .sub-links a, .menu-item p {
     padding: 25px;
     border-radius: 10px;
     border-left: 4px solid #000;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .spirit-item h4 {
@@ -1741,12 +1838,15 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 1px;
     color: #000;
+    line-height: 1.3;
 }
 
 .spirit-item p {
     color: #666;
     margin-bottom: 15px;
     font-style: italic;
+    font-size: var(--body-text-size);
+    line-height: 1.6;
 }
 
 .spirit-item .price {
@@ -1774,6 +1874,14 @@ p, .sub-links a, .menu-item p {
     border-radius: 10px;
     border-left: 4px solid #000;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
+}
+
+.event-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
 }
 
 .event-date {
@@ -1782,6 +1890,7 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
+    font-size: var(--body-text-size);
 }
 
 .event-item h3 {
@@ -1789,10 +1898,13 @@ p, .sub-links a, .menu-item p {
     margin-bottom: 15px;
     text-transform: lowercase;
     color: #000;
+    line-height: 1.3;
 }
 
 .event-item p {
     color: #666;
+    font-size: var(--body-text-size);
+    line-height: 1.6;
 }
 
 /* Gallery Grid for Gallery Section */
@@ -1820,6 +1932,9 @@ p, .sub-links a, .menu-item p {
     background-position: center;
     position: relative;
     overflow: hidden;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .gallery-item::before {
@@ -1839,6 +1954,11 @@ p, .sub-links a, .menu-item p {
 
 .gallery-item:hover::before {
     opacity: 0;
+}
+
+.gallery-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
 }
 
 .gallery-item span {
@@ -1861,6 +1981,9 @@ p, .sub-links a, .menu-item p {
     padding: 40px;
     border-radius: 10px;
     text-align: center;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .contact-card h3 {
@@ -1869,12 +1992,14 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 2px;
     color: #000;
+    line-height: 1.3;
 }
 
 .contact-card p {
     margin-bottom: 10px;
     font-size: 1.1em;
     color: #666;
+    line-height: 1.6;
 }
 
 .social-links {
@@ -1882,6 +2007,7 @@ p, .sub-links a, .menu-item p {
     justify-content: center;
     gap: 30px;
     margin-top: 30px;
+    flex-wrap: wrap;
 }
 
 .social-links a {
@@ -1892,10 +2018,20 @@ p, .sub-links a, .menu-item p {
     letter-spacing: 1px;
     transition: color 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-min);
+    padding: 8px 12px;
+    touch-action: manipulation;
 }
 
 .social-links a:hover {
     color: #666;
+}
+
+.social-links a:active {
+    background: rgba(0,0,0,0.1);
+    transform: scale(0.95);
+    transition: all 0.1s ease;
 }
 
 /* Reservation Form */
@@ -1918,6 +2054,7 @@ p, .sub-links a, .menu-item p {
     text-transform: lowercase;
     letter-spacing: 1px;
     color: #000;
+    font-size: var(--body-text-size);
 }
 
 .form-group input,
@@ -1932,6 +2069,9 @@ p, .sub-links a, .menu-item p {
     color: #000;
     -webkit-appearance: none;
     -webkit-border-radius: 5px;
+    /* iPhone optimization */
+    min-height: var(--touch-target-min);
+    touch-action: manipulation;
 }
 
 .form-group input:focus,
@@ -1956,49 +2096,43 @@ p, .sub-links a, .menu-item p {
     transition: background 0.3s ease;
     font-family: 'Georgia', serif;
     -webkit-tap-highlight-color: transparent;
+    /* iPhone touch targets */
+    min-height: var(--touch-target-optimal);
+    touch-action: manipulation;
 }
 
 .submit-btn:hover {
     background: #333;
 }
 
-/* Focus states for accessibility */
-a:focus, 
-button:focus, 
-input:focus, 
-textarea:focus, 
-select:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
+.submit-btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
 }
 
-.audio-toggle:focus-visible,
-.splash-audio-toggle:focus-visible,
-.mobile-menu:focus-visible,
-.nav-links a:focus-visible,
-.gallery-nav:focus-visible,
-.gallery-dot:focus-visible {
-    outline: 3px solid rgba(255, 255, 255, 0.8);
-    outline-offset: 3px;
-    z-index: 10;
-}
-
-/* =============== MOBILE RESPONSIVE - OPTIMIZED FOR IPHONE 14/15 SERIES =============== */
+/* =============== IPHONE-SPECIFIC MOBILE STYLES =============== */
 @media (max-width: 768px) {
     :root {
         --nav-height: var(--mobile-nav-height);
+        /* iPhone-specific overrides */
+        --body-text-size: 18px;
+        --heading-h1-size: 32px;
+        --heading-h2-size: 28px;
+        --heading-h3-size: 24px;
+        --button-text-size: 18px;
+        --nav-text-size: 17px;
     }
 
-    /* Mobile body optimizations */
     body {
         -webkit-overflow-scrolling: touch;
-        overscroll-behavior: none;
+        overscroll-behavior: contain;
         overflow-x: hidden;
         overflow-y: auto;
         background: #fff !important;
+        font-size: var(--body-text-size);
     }
 
-    /* Mobile Navigation Styles */
+    /* iPhone Navigation - Enhanced */
     .nav {
         padding: 15px 0;
         height: var(--mobile-nav-height);
@@ -2006,9 +2140,10 @@ select:focus {
         transform: translateY(0);
         position: fixed;
         top: 0;
-        padding-top: max(15px, calc(var(--safe-area-top) + 8px));
+        /* Enhanced iPhone safe area support */
+        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
         background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(15px);
         border-bottom: 1px solid #ddd;
     }
 
@@ -2018,66 +2153,77 @@ select:focus {
         justify-content: space-between;
         width: 100%;
         padding: 0 20px;
-        padding-left: max(20px, calc(var(--safe-area-left) + 10px));
-        padding-right: max(20px, calc(var(--safe-area-right) + 10px));
+        /* iPhone safe area support */
+        padding-left: max(20px, calc(env(safe-area-inset-left) + 15px));
+        padding-right: max(20px, calc(env(safe-area-inset-right) + 15px));
         max-width: 100%;
+        min-height: var(--touch-target-min);
     }
 
     .nav-logo {
-        font-size: clamp(1rem, 4vw, 1.4rem);
+        font-size: clamp(1.1rem, 4vw, 1.5rem);
         color: #000;
         text-shadow: none;
         flex-shrink: 0;
         order: 1;
+        min-height: var(--touch-target-min);
+        padding: 8px 12px;
     }
 
     .nav-left-section {
         flex-direction: row;
-        gap: 15px;
+        gap: var(--touch-spacing); /* 8px spacing */
         align-items: center;
         width: auto;
         justify-content: flex-end;
         order: 2;
         margin-left: auto;
-        margin-right: 15px;
+        margin-right: var(--touch-spacing);
     }
 
-    /* Show mobile menu button */
+    /* Enhanced mobile menu button for iPhone */
     .mobile-menu {
         display: flex;
         order: 3;
-        margin-left: 10px;
-        width: 44px;
-        height: 44px;
-        padding: 10px;
+        margin-left: var(--touch-spacing);
+        width: var(--touch-target-optimal); /* 48px */
+        height: var(--touch-target-optimal); /* 48px */
+        padding: 12px;
         justify-content: center;
         align-items: center;
-        border-radius: 8px;
+        border-radius: 12px;
         transition: background 0.3s ease;
-        min-width: 48px;
-        min-height: 48px;
+        background: transparent;
+        border: 2px solid transparent;
     }
 
     .mobile-menu:active {
         background: rgba(0, 0, 0, 0.1);
-        transform: scale(0.95);
+        transform: scale(0.92);
         transition: all 0.1s ease;
+    }
+
+    .mobile-menu:focus-visible {
+        border-color: rgba(0, 0, 0, 0.3);
+        outline: none;
     }
 
     .mobile-menu span {
         background: #000;
+        width: 28px;
+        height: 3px;
+        border-radius: 2px;
     }
 
-    /* Audio toggle - minimum 44×44px touch target */
+    /* iPhone-optimized audio toggle */
     .audio-toggle {
-        width: 44px;
-        height: 44px;
-        font-size: 18px;
-        min-width: 44px;
-        min-height: 44px;
+        width: var(--touch-target-optimal); /* 48px */
+        height: var(--touch-target-optimal); /* 48px */
+        font-size: var(--button-text-size);
         border-color: rgba(0, 0, 0, 0.3);
         color: #000;
         background: rgba(0, 0, 0, 0.1);
+        border-width: 2px;
     }
 
     .audio-toggle:hover {
@@ -2086,24 +2232,36 @@ select:focus {
         transform: scale(1.1);
     }
 
-    /* Mobile Navigation Links - Full Screen Overlay */
+    .audio-toggle:active {
+        transform: scale(0.85);
+        transition: transform 0.1s ease;
+    }
+
+    /* iPhone Navigation Links - Enhanced Overlay */
     .nav-links {
         display: none;
         position: fixed;
         top: var(--mobile-nav-height);
+        /* iPhone safe area positioning */
+        top: max(var(--mobile-nav-height), calc(env(safe-area-inset-top) + var(--mobile-nav-height)));
         left: 0;
         width: 100%;
         background: rgba(255, 255, 255, 0.98);
         flex-direction: column;
         padding: 30px 20px;
+        /* iPhone home indicator support */
+        padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 30px));
         gap: 0;
         border-top: 1px solid #ddd;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        padding-bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
         justify-content: flex-start;
-        backdrop-filter: blur(15px);
+        backdrop-filter: blur(20px);
         z-index: 999;
         height: calc(100vh - var(--mobile-nav-height));
+        /* Account for Dynamic Island */
+        height: calc(100vh - max(var(--mobile-nav-height), calc(env(safe-area-inset-top) + var(--mobile-nav-height))));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .nav-links.active {
@@ -2111,146 +2269,463 @@ select:focus {
         animation: slideInFromTop 0.3s ease-out;
     }
 
-    @keyframes slideInFromTop {
-        0% {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
+    /* iPhone-optimized navigation link items */
     .nav-links a {
-        font-size: 18px;
-        padding: 15px 0;
+        font-size: var(--button-text-size); /* 18px */
+        padding: 18px 20px; /* Larger padding for iPhone */
         border-bottom: 1px solid rgba(0,0,0,0.1);
         text-align: center;
-        min-height: 44px;
+        min-height: var(--touch-target-optimal); /* 48px */
         display: flex;
         align-items: center;
         justify-content: center;
         color: #000;
         background: transparent;
+        margin-bottom: var(--touch-spacing);
+        border-radius: 8px;
+        letter-spacing: 1px;
     }
 
     .nav-links a:active {
         background: rgba(0,0,0,0.1);
         color: #000;
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
     }
 
-    /* Enhanced mobile touch targets */
-    .nav-links a,
-    .sub-links a,
-    .sub-nav-link,
-    .breadcrumb-link,
-    .social-links a,
-    .gallery-nav,
-    .gallery-dot,
-    .mobile-menu,
-    .audio-toggle,
-    .splash-audio-toggle,
-    .landing-link,
-    .space-item,
-    .menu-item,
-    .submit-btn,
-    .form-group input,
-    .form-group select,
-    .form-group textarea,
-    .back-button {
-        min-width: 44px;
-        min-height: 44px;
-        touch-action: manipulation;
+    /* Landing page iPhone adjustments */
+    .landing-links {
+        flex-direction: column;
+        gap: 40px; /* More space for iPhone */
+        margin: 40px 0;
+        width: 100%;
+        padding: 0;
     }
 
-    .splash-hint {
-        bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
-        font-size: 16px;
-        padding: 15px 25px;
-        max-width: 85%;
-        margin: 0 auto;
-        border-radius: 25px;
+    .landing-link {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+        min-height: var(--touch-target-optimal);
+        padding: 20px 15px; /* More padding for iPhone */
+        margin-bottom: var(--touch-spacing);
     }
 
-    /* Gallery styles for mobile */
+    .landing-link h3 {
+        font-size: clamp(1.6rem, 6vw, 2rem); /* iPhone-optimized */
+        letter-spacing: clamp(2px, 3vw, 5px);
+        margin-bottom: 25px;
+        color: #000;
+        line-height: 1.2;
+    }
+
+    .sub-links a {
+        font-size: var(--button-text-size); /* 18px */
+        padding: 15px 20px; /* iPhone-optimized padding */
+        min-height: var(--touch-target-optimal);
+        color: #666;
+        margin-bottom: var(--touch-spacing);
+    }
+
+    /* iPhone gallery optimization */
     .css-gallery {
-        height: 300px;
-        margin: 30px auto 40px;
-        border-radius: 12px;
+        height: 350px; /* Slightly larger for iPhone */
+        margin: 40px auto 50px;
+        border-radius: 16px; /* iPhone-style radius */
+        /* iPhone image sizing */
+        max-width: min(430px, calc(100vw - 40px)); /* Account for largest iPhone */
     }
 
     .gallery-content {
-        bottom: 20px;
-        left: 20px;
-        right: 20px;
+        bottom: 25px;
+        left: 25px;
+        right: 25px;
+        padding: 15px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
     }
 
     .gallery-content h3 {
-        font-size: 1.4rem;
+        font-size: var(--heading-h3-size); /* 24px */
         margin-bottom: 8px;
+        line-height: 1.3;
     }
 
     .gallery-content p {
-        font-size: 0.9rem;
+        font-size: var(--body-text-size); /* 18px */
+        line-height: 1.5;
     }
 
     .gallery-nav {
-        width: 44px;
-        height: 44px;
-        font-size: 16px;
-        min-width: 48px;
-        min-height: 48px;
+        width: var(--touch-target-optimal); /* 48px */
+        height: var(--touch-target-optimal); /* 48px */
+        font-size: 22px; /* Larger for iPhone */
     }
 
     .gallery-nav.prev {
-        left: 15px;
+        left: 20px;
     }
 
     .gallery-nav.next {
-        right: 15px;
+        right: 20px;
     }
 
     .gallery-dots {
-        bottom: 15px;
-        gap: 10px;
+        bottom: 20px;
+        gap: 20px; /* More space for iPhone */
     }
 
     .gallery-dot {
-        width: 10px;
-        height: 10px;
-        min-width: 16px;
-        min-height: 16px;
-        margin: 0 8px;
+        width: 14px;
+        height: 14px;
+        /* Enhanced iPhone touch targets */
+        min-width: var(--touch-target-min);
+        min-height: var(--touch-target-min);
+        padding: 15px; /* Creates 44px touch area */
+        margin: 0 4px; /* Additional spacing */
     }
 
-    /* mobile landing page specific styles */
-    .landing-page {
-        padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
-        justify-content: flex-start;
-        box-sizing: border-box;
-        color: #000;
+    .page-logo {
+        font-size: clamp(2rem, 8vw, 2.8rem); /* iPhone-optimized */
+        margin-bottom: 30px;
+        letter-spacing: clamp(3px, 3vw, 5px);
+        color: #fff;
+        text-shadow: 
+            1px 1px 0px #ddd,
+            2px 2px 0px #ccc,
+            3px 3px 0px #bbb,
+            4px 4px 8px rgba(0,0,0,0.3);
+        min-height: var(--touch-target-min);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .section-title {
+        font-size: clamp(2.2rem, 10vw, 3rem); /* iPhone-optimized */
+        margin-bottom: 60px;
+        line-height: 1.2;
+    }
+
+    /* iPhone-optimized content sections */
+    .menu-grid,
+    .space-grid,
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 25px; /* iPhone-optimized spacing */
+        padding: 0 15px;
+    }
+
+    .space-item,
+    .menu-item {
+        padding: 25px 20px;
+        margin: 0 10px var(--touch-spacing);
+        /* iPhone touch targets */
+        min-height: var(--touch-target-optimal);
+        border-radius: 12px; /* iPhone-style radius */
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .space-item h3,
+    .menu-item h3 {
+        font-size: var(--heading-h3-size); /* 24px */
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .space-item p,
+    .menu-item p {
+        font-size: var(--body-text-size); /* 18px */
+        line-height: 1.6;
+    }
+
+    .section {
+        padding: max(calc(var(--mobile-nav-height) + 40px), calc(env(safe-area-inset-top) + var(--mobile-nav-height) + 30px)) 0 max(80px, calc(env(safe-area-inset-bottom) + 50px));
+        min-height: calc(100vh - var(--mobile-nav-height));
         background: #fff !important;
     }
 
-    .gallery-slider {
-        background: #fff !important;
+    /* iPhone form optimization */
+    .reservation-form,
+    .contact-card {
+        margin: 0 15px;
+        padding: 30px 25px;
+        border-radius: 16px; /* iPhone-style radius */
     }
 
-    .landing-content {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: var(--body-text-size); /* 18px - prevents zoom */
+        padding: 18px 15px;
+        border-radius: 12px;
+        min-height: var(--touch-target-optimal);
+        border: 2px solid #ddd;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: #000;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit-btn {
+        padding: 20px;
+        font-size: var(--button-text-size); /* 18px */
+        border-radius: 12px;
+        min-height: var(--touch-target-optimal);
+        letter-spacing: 1px;
+        font-weight: 600;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* iPhone social links optimization */
+    .social-links {
+        gap: var(--touch-spacing); /* 8px minimum */
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .social-links a {
+        font-size: var(--button-text-size); /* 18px */
+        padding: 15px 20px;
+        min-height: var(--touch-target-optimal);
+        min-width: var(--touch-target-optimal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        transition: background 0.3s ease;
+        margin: 4px; /* Additional spacing */
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* iPhone sub-navigation optimization */
+    .sub-nav-links {
+        flex-direction: column;
+        gap: var(--touch-spacing); /* 8px spacing */
+        align-items: center;
+        padding: 0 15px;
+    }
+
+    .sub-nav-link {
+        font-size: var(--button-text-size); /* 18px */
+        padding: 18px 25px;
+        min-height: var(--touch-target-optimal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100%;
-        max-width: none;
-        padding: 0;
-        gap: 25px;
-        margin-bottom: 40px;
-        flex-shrink: 0;
+        max-width: 350px;
+        border: 2px solid #ddd;
+        border-radius: 12px;
+        margin-bottom: var(--touch-spacing);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .breadcrumb-link {
+        font-size: var(--button-text-size); /* 18px */
+        padding: 15px 20px;
+        min-height: var(--touch-target-min);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        touch-action: manipulation;
+    }
+
+    /* iPhone menu description optimization */
+    .menu-description h3 {
+        font-size: clamp(1.8rem, 8vw, 2.4rem); /* iPhone-optimized */
+        line-height: 1.2;
+        margin-bottom: 20px;
+    }
+
+    .menu-description p {
+        font-size: var(--body-text-size); /* 18px */
+        padding: 0 15px;
+        line-height: 1.6;
+    }
+
+    .price-highlight {
+        font-size: clamp(1.4rem, 6vw, 1.8rem); /* iPhone-optimized */
+        line-height: 1.3;
+    }
+
+    /* iPhone philosophy and spirit sections */
+    .philosophy-grid,
+    .spirit-list {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 15px;
+    }
+
+    .philosophy-item,
+    .spirit-item {
+        margin: 0 10px var(--touch-spacing);
+        padding: 25px 20px;
+        border-radius: 12px;
+        min-height: var(--touch-target-optimal);
+    }
+
+    .philosophy-item h4,
+    .spirit-item h4 {
+        font-size: 20px; /* iPhone-optimized */
+        line-height: 1.3;
+    }
+
+    .philosophy-item p,
+    .spirit-item p {
+        font-size: var(--body-text-size); /* 18px */
+        line-height: 1.6;
+    }
+
+    .spirit-category h3 {
+        font-size: clamp(1.6rem, 6vw, 2rem); /* iPhone-optimized */
+        line-height: 1.3;
+    }
+
+    /* Enhanced event items for iPhone */
+    .event-item {
+        padding: 30px 25px;
+        margin: 0 15px var(--touch-spacing);
+        border-radius: 12px;
+        min-height: var(--touch-target-optimal);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .event-date {
+        font-size: var(--body-text-size); /* 18px */
+        margin-bottom: 12px;
+    }
+
+    .event-item h3 {
+        font-size: var(--heading-h3-size); /* 24px */
+        margin-bottom: 15px;
+        line-height: 1.3;
+    }
+
+    .event-item p {
+        font-size: var(--body-text-size); /* 18px */
+        line-height: 1.6;
+    }
+}
+
+/* =============== IPHONE-SPECIFIC DEVICE OPTIMIZATIONS =============== */
+
+/* iPhone 14/15 Standard (390×844) */
+@media only screen and (max-width: 390px) and (min-height: 800px) {
+    :root {
+        --safe-area-top: max(47px, env(safe-area-inset-top)); /* Dynamic Island */
+        --safe-area-bottom: max(34px, env(safe-area-inset-bottom)); /* Home indicator */
+    }
+    
+    .door-gallery {
+        height: 55vh; /* Adjusted for smaller screen */
+        width: 35vw;
+    }
+    
+    .door-gallery li .letter-container span {
+        font-size: 3.5rem; /* Slightly smaller for standard iPhone */
     }
 
     .landing-content h1 {
-        font-size: clamp(2.5rem, 12vw, 4rem);
-        letter-spacing: clamp(2px, 3vw, 6px);
-        margin-bottom: 30px;
-        line-height: 1.1;
+        font-size: clamp(2.8rem, 12vw, 3.8rem);
+        margin-bottom: 35px;
+    }
+    
+    .splash-audio-toggle {
+        top: max(20px, calc(env(safe-area-inset-top) + 8px)) !important;
+        right: max(20px, calc(env(safe-area-inset-right) + 8px)) !important;
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 18px !important;
+    }
+}
+
+/* iPhone 14/15 Plus/Pro Max (430×932) */
+@media (min-width: 391px) and (max-width: 430px) {
+    :root {
+        --safe-area-top: max(59px, env(safe-area-inset-top)); /* Dynamic Island on Pro Max */
+        --safe-area-bottom: max(34px, env(safe-area-inset-bottom));
+    }
+
+    .door-gallery {
+        height: 65vh; /* Can be larger on Plus models */
+        width: 32vw;
+    }
+
+    .landing-content h1 {
+        font-size: clamp(3.2rem, 10vw, 4.5rem); /* Larger for Plus models */
+        letter-spacing: clamp(3px, 3vw, 8px);
+        margin-bottom: 45px;
+    }
+
+    .page-logo {
+        font-size: clamp(2.2rem, 6vw, 3rem);
+        margin-bottom: 35px;
+        letter-spacing: clamp(3px, 3vw, 6px);
+    }
+
+    .space-item,
+    .menu-item {
+        padding: 35px 30px;
+    }
+}
+
+/* iPhone landscape orientation - optimized */
+@media (max-width: 768px) and (orientation: landscape) {
+    body,
+    .main-site,
+    .section,
+    .landing-page {
+        background: #fff !important;
+    }
+
+    .nav {
+        background: rgba(255, 255, 255, 0.98) !important;
+        height: 56px; /* Compact for landscape */
+        padding: 8px 0;
+    }
+
+    .nav-logo {
+        font-size: 1.1rem;
+        color: #000 !important;
+    }
+
+    .mobile-menu {
+        width: 40px;
+        height: 40px;
+    }
+
+    .audio-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .door-gallery {
+        height: 70vh;
+        width: 25vh;
+    }
+
+    .door-gallery li .letter-container span {
+        font-size: 3rem;
+    }
+
+    .landing-content h1 {
+        font-size: clamp(2rem, 8vw, 3rem);
+        margin-bottom: 25px;
         color: #fff !important;
         text-shadow: 
             1px 1px 0px #ccc,
@@ -2261,535 +2736,16 @@ select:focus {
     }
 
     .landing-links {
-        flex-direction: column;
-        gap: 35px;
-        margin: 30px 0;
-        width: 100%;
-        padding: 0;
-    }
-
-    .landing-link {
-        min-width: auto;
-        max-width: none;
-        width: 100%;
-        min-height: 44px;
-        padding: 10px;
-    }
-
-    .landing-link h3 {
-        font-size: clamp(1.4rem, 6vw, 1.8rem);
-        letter-spacing: clamp(1px, 3vw, 4px);
-        margin-bottom: 20px;
-        color: #000;
-    }
-
-    .sub-links a {
-        font-size: 18px;
-        padding: 12px 0;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #666;
-    }
-
-    .sub-links a:hover,
-    .sub-links a:active {
-        color: #000;
-    }
-
-    .landing-page.section {
-        background: #fff;
-    }
-
-    .page-logo {
-        font-size: clamp(1.8rem, 8vw, 2.5rem);
-        margin-bottom: 20px;
-        letter-spacing: clamp(2px, 3vw, 4px);
-        color: #fff;
-        text-shadow: 
-            1px 1px 0px #ddd,
-            2px 2px 0px #ccc,
-            3px 3px 0px #bbb,
-            4px 4px 5px rgba(0,0,0,0.3);
-    }
-
-    .section-title {
-        font-size: clamp(2rem, 10vw, 2.8rem);
-        margin-bottom: 50px;
-    }
-
-    .menu-grid,
-    .space-grid,
-    .gallery-grid {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .space-item,
-    .menu-item {
-        padding: 30px 25px;
-        margin: 0 15px;
-    }
-
-    .space-item h3,
-    .menu-item h3 {
-        font-size: 18px;
-    }
-
-    .space-item p,
-    .menu-item p {
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    .section {
-        padding: max(90px, calc(var(--mobile-nav-height) + 30px)) 0 max(70px, calc(var(--safe-area-bottom) + 40px));
-        min-height: calc(100vh - var(--mobile-nav-height));
-    }
-
-    .reservation-form,
-    .contact-card {
-        margin: 0 20px;
-        padding: 30px 25px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        font-size: 16px;
-        padding: 18px;
-        border-radius: 10px;
-        min-height: 44px;
-    }
-
-    .submit-btn {
-        padding: 20px;
-        font-size: 18px;
-        border-radius: 10px;
-        min-height: 44px;
-    }
-
-    .space-item:active,
-    .menu-item:active,
-    .landing-link:active {
-        transform: scale(0.98);
-        transition: transform 0.1s ease;
-    }
-
-    .social-links {
+        flex-direction: row;
         gap: 20px;
         flex-wrap: wrap;
-    }
-
-    .social-links a {
-        font-size: 18px;
-        padding: 12px 15px;
-        min-height: 44px;
-        min-width: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        transition: background 0.3s ease;
-    }
-
-    .social-links a:active {
-        background: rgba(0,0,0,0.1);
-    }
-
-    .sub-nav-links {
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
-    }
-
-    .sub-nav-link {
-        font-size: 16px;
-        padding: 15px 20px;
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-width: 300px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-    }
-
-    .sub-nav-link:active {
-        background: rgba(0,0,0,0.1);
-        transform: scale(0.98);
-    }
-
-    .breadcrumb {
-        margin-bottom: 20px;
-    }
-
-    .breadcrumb-link {
-        font-size: 16px;
-        padding: 12px 20px;
-        min-height: 44px;
-        display: inline-flex;
-        align-items: center;
         justify-content: center;
     }
 
-    .menu-description h3 {
-        font-size: clamp(1.5rem, 8vw, 2rem);
-    }
-
-    .menu-description p {
-        font-size: 16px;
-        padding: 0 15px;
-    }
-
-    .price-highlight {
-        font-size: 1.3em;
-    }
-
-    .philosophy-grid,
-    .spirit-list {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .philosophy-item,
-    .spirit-item {
-        margin: 0 15px;
-        padding: 25px 20px;
-    }
-
-    .spirit-category h3 {
-        font-size: clamp(1.4rem, 6vw, 1.8rem);
-    }
-
-    .audio-toggle:focus-visible,
-    .splash-audio-toggle:focus-visible,
-    .mobile-menu:focus-visible {
-        outline: 2px solid rgba(0, 0, 0, 0.8);
-        outline-offset: 2px;
-    }
-}
-
-/* Prevent hover effects on mobile devices */
-@media (hover: none) and (pointer: coarse) {
-    .gallery-nav:hover,
-    .audio-toggle:hover,
-    .splash-audio-toggle:hover,
-    .nav-links a:hover,
-    .landing-link:hover,
-    .space-item:hover,
-    .menu-item:hover,
-    .door-gallery li:hover a,
-    .door-gallery li:hover img {
-        background-color: initial !important;
-        transform: initial !important;
-        filter: initial !important;
-        opacity: initial !important;
-        animation-play-state: running !important;
-        box-shadow: initial !important;
-    }
-    
-    .audio-toggle.playing {
-        animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
-    }
-    
-    .splash-audio-toggle.playing {
-        animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
-    }
-    
-    .door-gallery:hover li {
-        opacity: 1 !important;
-    }
-    
-    .door-gallery:hover li:hover {
-        clip-path: initial !important;
-        z-index: initial !important;
-    }
-}
-
-/* Throttled hover effects for desktop only */
-@media (min-width: 769px) and (hover: hover) {
-    .css-gallery:hover {
-        --gallery-paused: true;
-    }
-    
-    .gallery-nav,
-    .audio-toggle,
-    .nav-links a,
-    .landing-link,
-    .space-item,
-    .menu-item {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-}
-
-/* Performance Optimizations */
-.audio-toggle,
-.splash-audio-toggle,
-.gallery-nav,
-.mobile-menu,
-.door-gallery li a,
-.door-gallery li img {
-    will-change: transform;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-}
-
-.audio-toggle:not(.playing),
-.splash-audio-toggle:not(.playing) {
-    will-change: auto;
-}
-
-/* Accessibility Improvements */
-@media (prefers-contrast: high) {
-    .audio-toggle, 
-    .splash-audio-toggle {
-        border: 3px solid currentColor !important;
-        background: transparent !important;
-    }
-    
-    .gallery-nav {
-        border: 2px solid rgba(255, 255, 255, 1) !important;
-        background: rgba(0, 0, 0, 0.9) !important;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-    
-    .audio-toggle.playing, 
-    .splash-audio-toggle.playing,
-    .door-gallery li a,
-    .door-gallery li img {
-        animation: none !important;
-    }
-    
-    .audio-toggle.playing {
-        background: var(--tuscan-orange-light) !important;
-        border-color: var(--tuscan-orange) !important;
-    }
-    
-    .splash-audio-toggle.playing {
-        background: rgba(70, 130, 180, 1) !important;
-    }
-}
-
-/* Safe area improvements for notched devices */
-@supports (padding-top: env(safe-area-inset-top)) {
-    .splash-audio-toggle {
-        top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
-        right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
-    }
-    
-    .nav {
-        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
-    }
-    
-    @media (max-width: 768px) {
-        .nav-links.active {
-            padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
-        }
-        
-        .section {
-            padding-bottom: max(70px, calc(env(safe-area-inset-bottom) + 40px));
-        }
-    }
-}
-
-/* iPhone 14/15 Standard optimizations */
-@media only screen and (max-width: 393px) and (-webkit-min-device-pixel-ratio: 2) {
-    .splash-hint {
-        bottom: max(45px, calc(var(--safe-area-bottom) + 35px));
-        font-size: 16px;
-        padding: 15px 20px;
-    }
-
-    .landing-content h1 {
-        font-size: clamp(2.5rem, 15vw, 4rem);
-        letter-spacing: clamp(3px, 4vw, 8px);
-        color: #fff !important;
-        text-shadow: 
-            1px 1px 0px #ddd,
-            2px 2px 0px #ccc,
-            3px 3px 5px rgba(0,0,0,0.2) !important;
-    }
-
-    .page-logo {
-        font-size: clamp(1.6rem, 10vw, 2.2rem);
-        margin-bottom: 15px;
-        letter-spacing: clamp(2px, 4vw, 3px);
-        color: #fff;
-        text-shadow: 
-            1px 1px 0px #ddd,
-            2px 2px 0px #ccc,
-            3px 3px 5px rgba(0,0,0,0.2);
-    }
-
-    .section-title {
-        font-size: clamp(1.8rem, 12vw, 2.5rem);
-    }
-
-    .nav {
-        padding: 12px 0;
-        padding-top: max(12px, calc(var(--safe-area-top) + 6px));
-    }
-
-    .space-item,
-    .menu-item,
-    .event-item {
-        padding: 25px 20px;
-        margin: 0 10px;
-    }
-
-    .reservation-form,
-    .contact-card {
-        margin: 0 15px;
-        padding: 25px 20px;
-    }
-
-    .splash-audio-toggle {
-        top: max(20px, calc(var(--safe-area-top) + 8px));
-        right: max(20px, calc(var(--safe-area-right) + 8px));
-        width: 48px;
-        height: 48px;
-        font-size: 18px;
-    }
-}
-
-/* iPhone 14/15 Plus/Pro Max optimizations */
-@media (min-width: 394px) and (max-width: 430px) {
-    .landing-content h1 {
-        font-size: clamp(2.8rem, 10vw, 4.2rem);
-        letter-spacing: clamp(3px, 3vw, 7px);
-        color: #fff !important;
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 8px rgba(0,0,0,0.3) !important;
-    }
-
-    .page-logo {
-        font-size: clamp(2rem, 6vw, 2.8rem);
-        margin-bottom: 25px;
-        letter-spacing: clamp(3px, 3vw, 5px);
-        color: #fff;
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 8px rgba(0,0,0,0.3);
-    }
-
-    .section-title {
-        font-size: clamp(2.2rem, 8vw, 3.2rem);
-    }
-
-    .space-item,
-    .menu-item {
-        padding: 35px 30px;
-    }
-}
-
-@media (max-width: 768px) {
-    body {
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: none;
-        overflow-x: hidden;
-        overflow-y: auto;
-        background: #fff !important;
-    }
-    
-    .landing-page,
-    .section {
-        overscroll-behavior: none;
-        background: #fff !important;
-    }
-
-    .landing-page,
-    .landing-page *,
-    #landing,
-    #landing * {
-        background-color: #fff !important;
-        background-image: none !important;
-        background: #fff !important;
-    }
-
-    .landing-page::before,
-    .section::before,
-    .main-site::before,
-    body::before {
-        display: none !important;
-    }
-
-    .main-site,
-    .container,
-    .landing-content,
-    .space-grid,
-    .menu-grid,
-    .events-list,
-    .contact-info {
-        background: #fff !important;
-    }
-}
-
-/* Mobile landscape orientation fixes */
-@media (max-width: 768px) and (orientation: landscape) {
-    body,
-    .main-site,
-    .section,
-    .landing-page {
-        background: #fff !important;
-    }
-
-    .landing-page,
-    .landing-page .gallery-slider {
-        background: #fff !important;
-    }
-
-    *::before,
-    *::after {
-        background: transparent !important;
-    }
-
-    .nav-logo {
-        font-size: 1rem;
-    }
-
-    .nav {
-        background: rgba(255, 255, 255, 0.95) !important;
-        backdrop-filter: blur(10px);
-    }
-
-    .nav-logo {
-        color: #000 !important;
-    }
-
-    .landing-content,
-    .landing-links,
     .landing-link {
-        background: #fff !important;
-    }
-
-    .landing-content h1 {
-        color: #fff !important;
-        text-shadow: 
-            1px 1px 0px #ccc,
-            2px 2px 0px #bbb,
-            3px 3px 0px #aaa,
-            4px 4px 0px #999,
-            5px 5px 10px rgba(0,0,0,0.2) !important;
+        min-width: 200px;
+        max-width: 250px;
+        flex: 0 1 auto;
     }
 
     .landing-link h3 {
@@ -2815,7 +2771,352 @@ select:focus {
     }
 }
 
-/* Dark mode support */
+/* =============== QUOTE RESPONSES - IPHONE OPTIMIZED =============== */
+.quote-responses {
+    position: fixed !important;
+    /* iPhone home indicator positioning */
+    bottom: max(40px, calc(env(safe-area-inset-bottom) + 30px)) !important;
+    left: max(20px, calc(env(safe-area-inset-left) + 15px)) !important;
+    right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+    padding: 25px !important;
+    border-radius: 16px !important; /* iPhone-style radius */
+    border: 2px solid #ffffff !important;
+    text-align: center !important;
+    font-size: var(--body-text-size) !important; /* 18px */
+    line-height: 1.5 !important;
+    display: none !important;
+    z-index: 99999 !important;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3) !important;
+    font-family: 'Georgia', serif !important;
+    margin: 0 auto !important;
+    max-width: 600px !important;
+    backdrop-filter: blur(15px) !important;
+}
+
+.quote-responses.show {
+    display: block !important;
+    animation: quoteFadeIn 0.5s ease-out !important;
+}
+
+@keyframes quoteFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.quote-text {
+    font-style: italic !important;
+    font-weight: normal !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #ffffff !important;
+    font-size: var(--body-text-size) !important; /* 18px */
+    line-height: 1.5 !important;
+}
+
+/* =============== ACCESSIBILITY ENHANCEMENTS FOR IPHONE =============== */
+
+/* Enhanced focus states for iPhone */
+a:focus-visible, 
+button:focus-visible, 
+input:focus-visible, 
+textarea:focus-visible, 
+select:focus-visible {
+    outline: 3px solid rgba(0, 0, 0, 0.8);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+.audio-toggle:focus-visible,
+.splash-audio-toggle:focus-visible,
+.mobile-menu:focus-visible,
+.gallery-nav:focus-visible,
+.gallery-dot:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 4px;
+    z-index: 10;
+}
+
+.nav-links a:focus-visible {
+    outline: 3px solid rgba(0, 0, 0, 0.8);
+    outline-offset: 3px;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .door-gallery li a.door-active .letter-container span {
+        animation: none !important;
+        opacity: 1 !important;
+        outline: 3px solid #00ffff;
+        outline-offset: 5px;
+    }
+    
+    .audio-toggle.playing {
+        background: var(--tuscan-orange-light) !important;
+        border-color: var(--tuscan-orange) !important;
+        animation: none !important;
+    }
+    
+    .splash-audio-toggle.playing {
+        background: rgba(70, 130, 180, 1) !important;
+        animation: none !important;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .audio-toggle, 
+    .splash-audio-toggle {
+        border: 3px solid currentColor !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: #000 !important;
+    }
+    
+    .gallery-nav {
+        border: 3px solid rgba(255, 255, 255, 1) !important;
+        background: rgba(0, 0, 0, 0.95) !important;
+    }
+    
+    .mobile-menu {
+        border: 2px solid #000 !important;
+    }
+    
+    .door-gallery li a.door-active {
+        outline: 4px solid currentColor !important;
+        outline-offset: 4px;
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+/* =============== DISABLE HOVER EFFECTS ON IPHONE =============== */
+@media (hover: none) and (pointer: coarse) {
+    /* Remove all hover transforms that could interfere with touch */
+    .space-item:hover,
+    .menu-item:hover,
+    .landing-link:hover,
+    .gallery-item:hover,
+    .door-gallery li:hover a,
+    .door-gallery li:hover img,
+    .gallery-nav:hover,
+    .audio-toggle:hover,
+    .nav-links a:hover {
+        transform: none !important;
+        background-color: initial !important;
+        filter: initial !important;
+        opacity: initial !important;
+        border-color: initial !important;
+        color: initial !important;
+        animation-play-state: running !important;
+        box-shadow: initial !important;
+    }
+    
+    /* Keep essential playing animations */
+    .audio-toggle.playing {
+        animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
+    }
+    
+    .splash-audio-toggle.playing {
+        animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
+    }
+    
+    .door-gallery li a.door-active .letter-container span {
+        animation: pulsateEmbossedActive 2s ease-in-out infinite alternate !important;
+    }
+    
+    .door-gallery:hover li {
+        opacity: 1 !important;
+    }
+    
+    .door-gallery:hover li:hover {
+        clip-path: initial !important;
+        z-index: initial !important;
+    }
+}
+
+/* =============== PERFORMANCE OPTIMIZATIONS FOR IPHONE =============== */
+
+/* Hardware acceleration for smoother animations */
+.audio-toggle,
+.splash-audio-toggle,
+.gallery-nav,
+.mobile-menu,
+.door-gallery li a,
+.gallery-track,
+.nav-links {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+}
+
+/* Remove will-change when not needed */
+.audio-toggle:not(.playing):not(:hover):not(:active),
+.splash-audio-toggle:not(.playing):not(:hover):not(:active) {
+    will-change: auto;
+}
+
+/* iPhone-specific performance optimizations */
+@supports (-webkit-touch-callout: none) {
+    .gallery-track {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+    
+    .gallery-slide {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /* Better image performance on iPhone */
+        background-attachment: scroll;
+    }
+}
+
+/* Throttled hover effects for desktop only */
+@media (min-width: 769px) and (hover: hover) {
+    .css-gallery:hover {
+        --gallery-paused: true;
+    }
+    
+    .gallery-nav,
+    .audio-toggle,
+    .nav-links a,
+    .landing-link,
+    .space-item,
+    .menu-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* =============== CONTENT SPACING FOR IPHONE READABILITY =============== */
+@media (max-width: 768px) {
+    /* Enhanced spacing for iPhone readability */
+    .container {
+        padding: 0 max(20px, calc(env(safe-area-inset-left) + 15px)) 0 max(20px, calc(env(safe-area-inset-right) + 15px));
+    }
+    
+    p + p {
+        margin-top: 1em; /* Better paragraph spacing */
+    }
+    
+    h3 + p {
+        margin-top: 0.8em;
+    }
+    
+    /* Button spacing */
+    .submit-btn + .submit-btn,
+    .back-button + .back-button {
+        margin-top: var(--touch-spacing);
+    }
+    
+    /* Form spacing */
+    .form-group + .form-group {
+        margin-top: 20px;
+    }
+    
+    /* Menu item spacing */
+    .menu-item + .menu-item,
+    .space-item + .space-item,
+    .event-item + .event-item {
+        margin-top: 15px;
+    }
+    
+    /* Enhanced touch targets for all interactive elements */
+    .nav-links a,
+    .sub-links a,
+    .sub-nav-link,
+    .breadcrumb-link,
+    .social-links a,
+    .gallery-nav,
+    .gallery-dot,
+    .mobile-menu,
+    .audio-toggle,
+    .splash-audio-toggle,
+    .landing-link,
+    .space-item,
+    .menu-item,
+    .submit-btn,
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .back-button,
+    .event-item,
+    .contact-card,
+    .philosophy-item,
+    .spirit-item {
+        min-width: var(--touch-target-min);
+        min-height: var(--touch-target-min);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* =============== IMAGE OPTIMIZATION FOR IPHONE =============== */
+@media (max-width: 768px) {
+    /* Responsive images for iPhone */
+    img {
+        max-width: 100%;
+        height: auto;
+        /* iPhone-optimized image sizing */
+        max-width: min(410px, calc(100vw - 40px));
+    }
+    
+    .gallery-slide {
+        /* Ensure images load properly on iPhone */
+        background-size: cover;
+        background-position: center center;
+        background-attachment: scroll; /* Better performance on iPhone */
+    }
+}
+
+/* Safe area improvements for notched devices */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .splash-audio-toggle {
+        top: max(25px, calc(env(safe-area-inset-top) + 20px)) !important;
+        right: max(25px, calc(env(safe-area-inset-right) + 20px)) !important;
+    }
+    
+    .nav {
+        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+    
+    @media (max-width: 768px) {
+        .nav-links.active {
+            padding-bottom: max(40px, calc(env(safe-area-inset-bottom) + 30px));
+            top: max(var(--mobile-nav-height), calc(env(safe-area-inset-top) + var(--mobile-nav-height)));
+        }
+        
+        .section {
+            padding-top: max(calc(var(--mobile-nav-height) + 40px), calc(env(safe-area-inset-top) + var(--mobile-nav-height) + 30px));
+            padding-bottom: max(80px, calc(env(safe-area-inset-bottom) + 50px));
+        }
+        
+        .landing-page {
+            padding-top: max(calc(var(--mobile-nav-height) + 30px), calc(env(safe-area-inset-top) + var(--mobile-nav-height) + 20px));
+            padding-bottom: max(60px, calc(env(safe-area-inset-bottom) + 40px));
+        }
+    }
+}
+
+/* Dark mode support for iPhone */
 @media (prefers-color-scheme: dark) {
     .audio-toggle:not(.playing) {
         background: rgba(255, 255, 255, 0.15);
@@ -2823,31 +3124,84 @@ select:focus {
     }
     
     @media (max-width: 768px) {
-        .audio-toggle:not(.playing)::after {
+        .audio-toggle:not(.playing) {
             background: rgba(255, 255, 255, 0.9);
             color: #000;
         }
     }
 }
 
-/* Disable hover effects on touch devices */
-@media (hover: none) and (pointer: coarse) {
-    .space-item:hover,
-    .menu-item:hover,
-    .landing-link:hover,
-    .gallery-item:hover,
-    .door-gallery li:hover a,
-    .door-gallery li:hover img {
-        transform: none;
-        filter: none;
-        animation-play-state: running;
+/* =============== FINAL IPHONE POLISH =============== */
+@media (max-width: 768px) {
+    /* Remove any remaining blue highlights on iPhone */
+    * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
     }
     
-    .audio-toggle.playing:hover,
-    .splash-audio-toggle.playing:hover {
-        animation-play-state: running;
-        transform: scale(1.05);
+    /* Ensure consistent font rendering on iPhone */
+    body, 
+    input, 
+    textarea, 
+    select, 
+    button {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Optimize scrolling for iPhone */
+    .nav-links.active {
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: y mandatory;
+        overscroll-behavior: contain;
+    }
+    
+    .nav-links a {
+        scroll-snap-align: start;
+    }
+    
+    /* Force white backgrounds on all iPhone orientations */
+    body,
+    .main-site,
+    .section,
+    .landing-page,
+    .landing-page *,
+    .landing-content,
+    .space-grid,
+    .menu-grid,
+    .events-list,
+    .contact-info {
+        background: #fff !important;
+        background-image: none !important;
+    }
+
+    .landing-page::before,
+    .section::before,
+    .main-site::before,
+    body::before {
+        display: none !important;
     }
 }
 
-/* End Door 64 Restaurant Stylesheet - Complete with Rotating Door Entry System */
+/* Debug information for iPhone testing (hidden by default) */
+@media (max-width: 768px) {
+    body::after {
+        content: "iPhone Optimized: Font 18px, Touch 44-48px, Safe Areas Active";
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 5px 10px;
+        font-size: 12px;
+        z-index: 10000;
+        display: none; /* Hidden by default */
+    }
+    
+    /* Show debug info when needed */
+    body.debug::after {
+        display: block;
+    }
+}
+
+/* End Complete iPhone-Optimized Door Restaurant Stylesheet */
