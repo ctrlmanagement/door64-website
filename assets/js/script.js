@@ -861,34 +861,67 @@ class RotatingDoorEntry {
             position: relative !important;
         `;
         
-        // Scale and position door gallery (only within splash page)
+        // Scale and position door gallery (only within splash page) - ensure all DOOR letters show
         const doorGallery = splashPage.querySelector('.door-gallery');
         if (doorGallery) {
+            // Force display and clear any hidden styles
             doorGallery.style.cssText = `
                 margin: 0 auto 30px auto !important;
                 padding: 20px !important;
-                max-width: 90vw !important;
+                max-width: 95vw !important;
+                width: 100% !important;
                 display: flex !important;
                 justify-content: center !important;
-                flex-wrap: wrap !important;
-                gap: 10px !important;
+                align-items: center !important;
+                flex-wrap: nowrap !important;
+                gap: ${this.isMobile ? '8px' : '15px'} !important;
+                visibility: visible !important;
+                opacity: 1 !important;
             `;
             
-            // Scale door links
+            // Find all door links and ensure they're all visible
             const doorLinks = doorGallery.querySelectorAll('a');
-            doorLinks.forEach(link => {
+            console.log(`Found ${doorLinks.length} door links for DOOR letters`);
+            
+            doorLinks.forEach((link, index) => {
+                // Force show all door letters
                 link.style.cssText = `
-                    font-size: ${this.isMobile ? '3rem' : '4rem'} !important;
-                    padding: ${this.isMobile ? '15px' : '20px'} !important;
-                    margin: 5px !important;
-                    min-width: ${this.isMobile ? '60px' : '80px'} !important;
-                    min-height: ${this.isMobile ? '60px' : '80px'} !important;
+                    font-size: ${this.isMobile ? '2.5rem' : '3.5rem'} !important;
+                    padding: ${this.isMobile ? '12px' : '18px'} !important;
+                    margin: 2px !important;
+                    min-width: ${this.isMobile ? '55px' : '75px'} !important;
+                    min-height: ${this.isMobile ? '55px' : '75px'} !important;
+                    max-width: ${this.isMobile ? '70px' : '90px'} !important;
                     display: flex !important;
                     align-items: center !important;
                     justify-content: center !important;
                     transition: all 0.3s ease !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    position: relative !important;
+                    flex-shrink: 0 !important;
+                    text-decoration: none !important;
+                    color: inherit !important;
+                `;
+                console.log(`Styled door link ${index}: ${link.textContent || link.innerHTML}`);
+            });
+            
+            // Also check for any container elements that might be hiding letters
+            const doorContainers = splashPage.querySelectorAll('.door-container, .door-wrapper, .door-item');
+            doorContainers.forEach(container => {
+                container.style.cssText = `
+                    display: flex !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
                 `;
             });
+        } else {
+            console.warn('Door gallery not found in splash page');
+            // Try alternative selectors
+            const altDoorGallery = splashPage.querySelector('[class*="door"]');
+            if (altDoorGallery) {
+                console.log('Found alternative door gallery:', altDoorGallery.className);
+            }
         }
         
         // Position quote responses directly under doors (only within splash page)
