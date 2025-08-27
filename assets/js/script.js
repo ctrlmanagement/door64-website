@@ -740,44 +740,103 @@ class RotatingDoorEntry {
     
     // Use statusMessage element for quotes (same as ACCESS GRANTED)
     showRandomQuote() {
-        console.log('showRandomQuote() called - using statusMessage element...');
+        console.log('showRandomQuote() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
         
-        let statusMessage = document.getElementById('statusMessage');
-        
-        // Create statusMessage element if it doesn't exist
-        if (!statusMessage) {
-            console.log('statusMessage element not found - creating it...');
-            statusMessage = this.createStatusMessageElement();
-        }
-        
-        if (statusMessage) {
-            const randomQuote = this.getRandomQuote();
-            console.log('Setting quote text to:', randomQuote);
+        if (this.isMobile) {
+            // Mobile-specific implementation
+            this.showMobileMessage(this.getRandomQuote());
+        } else {
+            // Desktop implementation
+            let statusMessage = document.getElementById('statusMessage');
             
-            // Clear any existing timeouts
-            if (this.quoteTimeout) {
-                clearTimeout(this.quoteTimeout);
+            if (!statusMessage) {
+                statusMessage = this.createStatusMessageElement();
             }
             
-            // Use exact same approach as showAccessGranted()
-            statusMessage.textContent = randomQuote;
-            statusMessage.className = 'status-message granted';
-            statusMessage.style.display = 'block';
-            
-            // Add mobile-specific positioning
-            this.ensureMobileStatusMessagePositioning(statusMessage);
-            
-            console.log('Quote should now be visible:', randomQuote);
-            
-            // Use ACCESS GRANTED timing exactly
-            this.quoteTimeout = setTimeout(() => {
-                console.log('Hiding quote after timeout');
-                statusMessage.style.display = 'none';
-            }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
-            
-        } else {
-            console.error('Could not create or find statusMessage element');
+            if (statusMessage) {
+                const randomQuote = this.getRandomQuote();
+                
+                if (this.quoteTimeout) {
+                    clearTimeout(this.quoteTimeout);
+                }
+                
+                statusMessage.textContent = randomQuote;
+                statusMessage.className = 'status-message granted';
+                statusMessage.style.display = 'block';
+                
+                this.quoteTimeout = setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 2000);
+            }
         }
+    }
+    
+    // Mobile-specific message display system
+    showMobileMessage(message) {
+        console.log('showMobileMessage called with:', message);
+        
+        // Remove any existing mobile message
+        const existingMessage = document.getElementById('mobileStatusMessage');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        // Clear any existing timeout
+        if (this.quoteTimeout) {
+            clearTimeout(this.quoteTimeout);
+        }
+        
+        // Create mobile message element
+        const mobileMessage = document.createElement('div');
+        mobileMessage.id = 'mobileStatusMessage';
+        mobileMessage.textContent = message;
+        
+        // Apply mobile-specific styling (bypass all CSS classes)
+        mobileMessage.style.cssText = `
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 99999 !important;
+            background: rgba(0, 0, 0, 0.95) !important;
+            color: white !important;
+            padding: 20px 25px !important;
+            border-radius: 12px !important;
+            font-size: 18px !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+            font-weight: 500 !important;
+            line-height: 1.4 !important;
+            text-align: center !important;
+            max-width: 85% !important;
+            min-width: 200px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+            border: 2px solid rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            animation: mobileMessageFadeIn 0.3s ease-out !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        `;
+        
+        // Add to DOM
+        document.body.appendChild(mobileMessage);
+        
+        console.log('Mobile message added to DOM');
+        
+        // Auto-hide after timeout
+        this.quoteTimeout = setTimeout(() => {
+            console.log('Hiding mobile message');
+            mobileMessage.style.opacity = '0';
+            mobileMessage.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            mobileMessage.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+            
+            setTimeout(() => {
+                if (mobileMessage.parentNode) {
+                    mobileMessage.remove();
+                }
+            }, 300);
+        }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
     }
     
     // Create statusMessage element if missing
@@ -888,61 +947,70 @@ class RotatingDoorEntry {
     }
     
     showAccessGranted() {
-        let statusMessage = document.getElementById('statusMessage');
+        console.log('showAccessGranted() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
         
-        // Create statusMessage element if it doesn't exist
-        if (!statusMessage) {
-            console.log('statusMessage element not found - creating it...');
-            statusMessage = this.createStatusMessageElement();
-        }
-        
-        if (statusMessage) {
-            statusMessage.textContent = 'ACCESS GRANTED';
-            statusMessage.className = 'status-message granted';
-            statusMessage.style.display = 'block';
+        if (this.isMobile) {
+            // Mobile-specific implementation
+            this.showMobileMessage('ACCESS GRANTED');
             
-            // Add mobile-specific positioning
-            this.ensureMobileStatusMessagePositioning(statusMessage);
-            
-            console.log('Showing ACCESS GRANTED message');
-            
-            // Mobile-optimized timing
+            // Navigate to main site after mobile display time
             setTimeout(() => {
-                statusMessage.style.display = 'none';
                 this.navigateToMainSite();
             }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
         } else {
-            console.error('Could not create or find statusMessage element for ACCESS GRANTED');
+            // Desktop implementation
+            let statusMessage = document.getElementById('statusMessage');
+            
+            if (!statusMessage) {
+                statusMessage = this.createStatusMessageElement();
+            }
+            
+            if (statusMessage) {
+                statusMessage.textContent = 'ACCESS GRANTED';
+                statusMessage.className = 'status-message granted';
+                statusMessage.style.display = 'block';
+                
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                    this.navigateToMainSite();
+                }, 2000);
+            }
         }
     }
     
     showAutoAccess() {
-        let statusMessage = document.getElementById('statusMessage');
+        console.log('showAutoAccess() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
         
-        // Create statusMessage element if it doesn't exist
-        if (!statusMessage) {
-            console.log('statusMessage element not found - creating it...');
-            statusMessage = this.createStatusMessageElement();
-        }
+        const autoMessage = this.isMobile ? 
+            'Welcome! Your persistence is recognized.' : 
+            'Welcome! The door recognizes your persistence.';
         
-        if (statusMessage) {
-            statusMessage.textContent = this.isMobile ? 
-                'Welcome! Your persistence is recognized.' : 
-                'Welcome! The door recognizes your persistence.';
-            statusMessage.className = 'status-message granted';
-            statusMessage.style.display = 'block';
+        if (this.isMobile) {
+            // Mobile-specific implementation
+            this.showMobileMessage(autoMessage);
             
-            // Add mobile-specific positioning
-            this.ensureMobileStatusMessagePositioning(statusMessage);
-            
-            console.log('Showing auto-access message after 3 attempts');
-            
+            // Navigate to main site after mobile display time
             setTimeout(() => {
-                statusMessage.style.display = 'none';
                 this.navigateToMainSite();
             }, this.isMobile ? 3500 : (this.isIPhone ? 3000 : 2500));
         } else {
-            console.error('Could not create or find statusMessage element for auto-access');
+            // Desktop implementation
+            let statusMessage = document.getElementById('statusMessage');
+            
+            if (!statusMessage) {
+                statusMessage = this.createStatusMessageElement();
+            }
+            
+            if (statusMessage) {
+                statusMessage.textContent = autoMessage;
+                statusMessage.className = 'status-message granted';
+                statusMessage.style.display = 'block';
+                
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                    this.navigateToMainSite();
+                }, 2500);
+            }
         }
     }
     
