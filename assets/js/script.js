@@ -728,15 +728,7 @@ class RotatingDoorEntry {
                 this.showAutoAccess();
             } else {
                 console.log(`[${deviceType}] Calling showRandomQuote()...`);
-                
-                // Add mobile-specific delay before showing quote
-                if (this.isMobile) {
-                    setTimeout(() => {
-                        this.showRandomQuote();
-                    }, 100);
-                } else {
-                    this.showRandomQuote();
-                }
+                this.showRandomQuote();
             }
         }
     }
@@ -753,19 +745,18 @@ class RotatingDoorEntry {
         let quoteSection = document.getElementById('quoteResponses');
         let quoteText = document.getElementById('quoteText');
         
-        // If elements exist but might be poorly positioned, relocate them on mobile
-        if (quoteSection && quoteText && this.isMobile) {
+        // If elements exist but might be poorly positioned, relocate them on mobile (only once)
+        if (quoteSection && quoteText && this.isMobile && !quoteSection.dataset.relocated) {
             const doorGallery = document.querySelector('.door-gallery');
             
             // Check if quote element is not right after door gallery
             if (doorGallery && quoteSection.previousElementSibling !== doorGallery) {
                 console.log('Relocating quote element to appear after door gallery');
                 
-                // Remove from current position
+                // Remove from current position and insert after door gallery
                 quoteSection.remove();
-                
-                // Insert after door gallery
                 doorGallery.parentNode.insertBefore(quoteSection, doorGallery.nextSibling);
+                quoteSection.dataset.relocated = 'true'; // Mark as relocated
             }
         }
         
@@ -778,26 +769,19 @@ class RotatingDoorEntry {
                 clearTimeout(this.quoteTimeout);
             }
             
-            // Reset all styles first
-            quoteSection.style.cssText = '';
-            quoteSection.className = 'quote-responses';
-            
-            // Set the text
+            // Set the text immediately
             quoteText.textContent = randomQuote;
             
-            // Force reflow
-            quoteSection.offsetHeight;
-            
-            // Apply show styles with mobile-specific considerations
+            // Apply styles immediately without transitions for faster display
             quoteSection.style.display = 'block';
             quoteSection.style.visibility = 'visible';
             quoteSection.style.opacity = '1';
             quoteSection.style.position = 'relative';
             quoteSection.style.zIndex = '9999';
             
-            // Mobile-specific styling - position under door letters
+            // Mobile-specific styling - applied immediately
             if (this.isMobile) {
-                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
+                quoteSection.style.fontSize = '18px';
                 quoteSection.style.padding = '20px';
                 quoteSection.style.margin = '20px auto 10px auto';
                 quoteSection.style.maxWidth = '90%';
@@ -807,17 +791,14 @@ class RotatingDoorEntry {
                 quoteSection.style.borderRadius = '10px';
                 quoteSection.style.lineHeight = '1.4';
                 quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
-                quoteSection.style.position = 'relative';
                 quoteSection.style.marginTop = '30px';
                 
-                // Don't scroll on mobile - let the quote appear where it is
-                console.log('Mobile quote displayed without scrolling');
+                console.log('Mobile quote displayed immediately');
             }
             
             quoteSection.className = 'quote-responses show';
             
             console.log('Quote should now be visible:', randomQuote);
-            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
             
             // Mobile gets longer display time for readability
             const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
@@ -834,6 +815,7 @@ class RotatingDoorEntry {
                         quoteSection.style.display = 'none';
                         quoteSection.style.cssText = '';
                         quoteSection.className = 'quote-responses';
+                        delete quoteSection.dataset.relocated; // Reset for next use
                     }, 500);
                 } else {
                     quoteSection.style.display = 'none';
@@ -843,38 +825,9 @@ class RotatingDoorEntry {
             }, displayTime);
             
         } else {
-            console.error('Quote section elements not found');
-            console.log('Available elements with id:', 
-                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
-            
-            // Try alternative selectors
-            const altQuoteSection = document.querySelector('.quote-responses');
-            const altQuoteText = document.querySelector('.quote-text');
-            
-            if (altQuoteSection && altQuoteText) {
-                console.log('Found alternative quote elements, using those...');
-                const randomQuote = this.getRandomQuote();
-                altQuoteText.textContent = randomQuote;
-                altQuoteSection.style.display = 'block';
-                altQuoteSection.style.opacity = '1';
-                
-                if (this.isMobile) {
-                    altQuoteSection.style.fontSize = '18px';
-                    altQuoteSection.style.padding = '20px';
-                    altQuoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-                    altQuoteSection.style.color = 'white';
-                    altQuoteSection.style.borderRadius = '10px';
-                    altQuoteSection.style.position = 'relative';
-                    altQuoteSection.style.margin = '20px auto 10px auto';
-                    altQuoteSection.style.maxWidth = '90%';
-                    altQuoteSection.style.zIndex = '9999';
-                    altQuoteSection.style.textAlign = 'center';
-                    altQuoteSection.style.marginTop = '30px';
-                }
-            } else {
-                // Create quote elements if they don't exist
-                this.createQuoteElements();
-            }
+            console.error('Quote section elements not found - creating new ones');
+            // Create quote elements if they don't exist
+            this.createQuoteElements();
         }
     }
     
@@ -944,10 +897,8 @@ class RotatingDoorEntry {
             console.log('Quote element appended to splash page');
         }
         
-        // Now try to show the quote again
-        setTimeout(() => {
-            this.showRandomQuote();
-        }, 50);
+        // Show the quote immediately
+        this.showRandomQuote();
     }
     
     showAccessGranted() {
