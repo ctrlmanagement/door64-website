@@ -746,21 +746,27 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // Updated showRandomQuote method with fixed center positioning
+    // Updated showRandomQuote method to match showAccessGranted() approach exactly
     showRandomQuote() {
-        console.log('showRandomQuote() called - looking for quote elements...');
+        console.log('showRandomQuote() called - using statusMessage approach...');
         
         let quoteSection = document.getElementById('quoteResponses');
         let quoteText = document.getElementById('quoteText');
         
-        // If quote elements don't exist, create them
+        // If quote elements don't exist, create them to match statusMessage structure
         if (!quoteSection || !quoteText) {
             this.createQuoteElements();
             quoteSection = document.getElementById('quoteResponses');
             quoteText = document.getElementById('quoteText');
         }
         
-        if (quoteSection && quoteText) {
+        if (quoteSection) {
+            // Hide any existing status messages first (reverse of showAccessGranted)
+            const statusMessage = document.getElementById('statusMessage');
+            if (statusMessage) {
+                statusMessage.style.display = 'none';
+            }
+            
             const randomQuote = this.getRandomQuote();
             console.log('Setting quote text to:', randomQuote);
             
@@ -769,75 +775,18 @@ class RotatingDoorEntry {
                 clearTimeout(this.quoteTimeout);
             }
             
-            // Reset all styles first
-            quoteSection.style.cssText = '';
-            quoteSection.className = 'quote-responses';
-            
-            // Set the text
-            quoteText.textContent = randomQuote;
-            
-            // Force reflow
-            quoteSection.offsetHeight;
-            
-            // Use fixed positioning with center alignment to match status message area
+            // Apply EXACT same approach as showAccessGranted()
+            quoteSection.textContent = randomQuote;
+            quoteSection.className = 'status-message granted';
             quoteSection.style.display = 'block';
-            quoteSection.style.visibility = 'visible';
-            quoteSection.style.opacity = '1';
-            quoteSection.style.position = 'fixed';
-            quoteSection.style.top = '50%';
-            quoteSection.style.left = '50%';
-            quoteSection.style.transform = 'translate(-50%, -50%)';
-            quoteSection.style.zIndex = '10000';
-            quoteSection.style.pointerEvents = 'none'; // Allow clicks through
+            console.log('Showing random quote with ACCESS GRANTED styling');
             
-            // Remove ALL box styling - text only
-            quoteSection.style.background = 'none';
-            quoteSection.style.backgroundColor = 'transparent';
-            quoteSection.style.border = 'none';
-            quoteSection.style.borderRadius = '0';
-            quoteSection.style.boxShadow = 'none';
-            quoteSection.style.padding = '0';
-            quoteSection.style.margin = '0';
-            quoteSection.style.width = 'auto';
-            quoteSection.style.height = 'auto';
-            quoteSection.style.maxWidth = 'none';
-            quoteSection.style.maxHeight = 'none';
-            
-            // Text styling only
-            quoteSection.style.color = 'white';
-            quoteSection.style.textAlign = 'center';
-            quoteSection.style.fontSize = this.isMobile ? '18px' : '16px';
-            quoteSection.style.lineHeight = '1.3';
-            quoteSection.style.textShadow = '2px 2px 4px rgba(0, 0, 0, 0.8)';
-            quoteSection.style.fontStyle = 'italic';
-            quoteSection.style.fontWeight = 'normal';
-            
-            quoteSection.className = 'quote-responses show';
-            
-            console.log('Quote should now be visible at status message position:', randomQuote);
-            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
-            
-            // Mobile gets longer display time for readability
+            // Mobile-optimized timing (longer than ACCESS GRANTED for reading)
             const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
             
             this.quoteTimeout = setTimeout(() => {
                 console.log('Hiding quote after timeout');
-                
-                if (this.isMobile) {
-                    // Smooth fade out on mobile
-                    quoteSection.style.transition = 'opacity 0.5s ease-out';
-                    quoteSection.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        quoteSection.style.display = 'none';
-                        quoteSection.style.cssText = '';
-                        quoteSection.className = 'quote-responses';
-                    }, 500);
-                } else {
-                    quoteSection.style.display = 'none';
-                    quoteSection.style.opacity = '0';
-                    quoteSection.className = 'quote-responses';
-                }
+                quoteSection.style.display = 'none';
             }, displayTime);
             
         } else {
@@ -845,11 +794,11 @@ class RotatingDoorEntry {
         }
     }
     
-    // Add method to create quote elements if missing
+    // Updated createQuoteElements to match statusMessage structure exactly
     createQuoteElements() {
-        console.log('Creating missing quote elements...');
+        console.log('Creating quote element to match statusMessage structure...');
         
-        // Find the status message to determine where to place quotes
+        // Find the status message to use the same parent
         const statusMessage = document.getElementById('statusMessage');
         const splashPage = document.getElementById('splashPage');
         
@@ -870,60 +819,17 @@ class RotatingDoorEntry {
             return;
         }
         
-        // Create quote section
+        // Create quote section that will work exactly like statusMessage
         const quoteSection = document.createElement('div');
         quoteSection.id = 'quoteResponses';
-        quoteSection.className = 'quote-responses';
         
-        // Create quote text
-        const quoteText = document.createElement('p');
-        quoteText.id = 'quoteText';
-        quoteText.className = 'quote-text';
+        // Don't set any inline styles - let it inherit from CSS classes like statusMessage
+        quoteSection.style.display = 'none';
         
-        quoteSection.appendChild(quoteText);
-        
-        // Position it to display text over the center door letters (no box, text only)
-        quoteSection.style.cssText = `
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            z-index: 10000 !important;
-            display: none !important;
-            opacity: 0 !important;
-            
-            background: none !important;
-            background-color: transparent !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            width: auto !important;
-            height: auto !important;
-            max-width: none !important;
-            max-height: none !important;
-            
-            color: white !important;
-            text-align: center !important;
-            font-size: 18px !important;
-            line-height: 1.3 !important;
-            font-style: italic !important;
-            font-weight: normal !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
-            transition: opacity 0.3s ease-in-out !important;
-            pointer-events: none !important;
-        `;
-        
-        // Append to the same parent as status message (or splash page as fallback)
+        // Append to the same parent as status message
         parentContainer.appendChild(quoteSection);
         
-        console.log('Quote elements created and positioned to overlap status message area');
-        
-        // Now try to show the quote again
-        setTimeout(() => {
-            this.showRandomQuote();
-        }, 50);
+        console.log('Quote element created to match statusMessage structure');
     }
     
     // Helper method to ensure quotes and status messages don't conflict
