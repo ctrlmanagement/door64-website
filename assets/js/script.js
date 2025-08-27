@@ -746,12 +746,19 @@ class RotatingDoorEntry {
         return this.doorLockQuotes[randomIndex];
     }
     
-    // Updated showRandomQuote method with better mobile support
+    // Updated showRandomQuote method with fixed center positioning
     showRandomQuote() {
         console.log('showRandomQuote() called - looking for quote elements...');
         
-        const quoteSection = document.getElementById('quoteResponses');
-        const quoteText = document.getElementById('quoteText');
+        let quoteSection = document.getElementById('quoteResponses');
+        let quoteText = document.getElementById('quoteText');
+        
+        // If quote elements don't exist, create them
+        if (!quoteSection || !quoteText) {
+            this.createQuoteElements();
+            quoteSection = document.getElementById('quoteResponses');
+            quoteText = document.getElementById('quoteText');
+        }
         
         if (quoteSection && quoteText) {
             const randomQuote = this.getRandomQuote();
@@ -762,40 +769,72 @@ class RotatingDoorEntry {
                 clearTimeout(this.quoteTimeout);
             }
             
+            // Reset all styles first
+            quoteSection.style.cssText = '';
+            quoteSection.className = 'quote-responses';
+            
             // Set the text
             quoteText.textContent = randomQuote;
             
-            // Simply add the 'show' class - let CSS handle the styling
+            // Force reflow
+            quoteSection.offsetHeight;
+            
+            // Use fixed positioning with center alignment to match status message area
+            quoteSection.style.display = 'block';
+            quoteSection.style.visibility = 'visible';
+            quoteSection.style.opacity = '1';
+            quoteSection.style.position = 'fixed';
+            quoteSection.style.top = '50%';
+            quoteSection.style.left = '50%';
+            quoteSection.style.transform = 'translate(-50%, -50%)';
+            quoteSection.style.zIndex = '10000';
+            
+            // Common styling for quotes
+            quoteSection.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+            quoteSection.style.color = 'white';
+            quoteSection.style.padding = '20px';
+            quoteSection.style.borderRadius = '10px';
+            quoteSection.style.textAlign = 'center';
+            quoteSection.style.lineHeight = '1.4';
+            quoteSection.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
+            
+            // Mobile-specific styling adjustments
+            if (this.isMobile) {
+                quoteSection.style.fontSize = '18px'; // Prevent zoom on mobile
+                quoteSection.style.maxWidth = '90%';
+                quoteSection.style.margin = '0';
+            }
+            
             quoteSection.className = 'quote-responses show';
             
-            console.log('Quote should now be visible:', randomQuote);
+            console.log('Quote should now be visible at status message position:', randomQuote);
+            console.log('Quote section computed style:', window.getComputedStyle(quoteSection));
             
             // Mobile gets longer display time for readability
             const displayTime = this.isMobile ? 7000 : (this.isIPhone ? 5000 : 4000);
             
             this.quoteTimeout = setTimeout(() => {
                 console.log('Hiding quote after timeout');
-                quoteSection.className = 'quote-responses';
+                
+                if (this.isMobile) {
+                    // Smooth fade out on mobile
+                    quoteSection.style.transition = 'opacity 0.5s ease-out';
+                    quoteSection.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        quoteSection.style.display = 'none';
+                        quoteSection.style.cssText = '';
+                        quoteSection.className = 'quote-responses';
+                    }, 500);
+                } else {
+                    quoteSection.style.display = 'none';
+                    quoteSection.style.opacity = '0';
+                    quoteSection.className = 'quote-responses';
+                }
             }, displayTime);
             
         } else {
-            console.error('Quote section elements not found');
-            console.log('Available elements with id:', 
-                Array.from(document.querySelectorAll('[id]')).map(el => el.id));
-            
-            // Try alternative selectors
-            const altQuoteSection = document.querySelector('.quote-responses');
-            const altQuoteText = document.querySelector('.quote-text');
-            
-            if (altQuoteSection && altQuoteText) {
-                console.log('Found alternative quote elements, using those...');
-                const randomQuote = this.getRandomQuote();
-                altQuoteText.textContent = randomQuote;
-                altQuoteSection.className = 'quote-responses show';
-            } else {
-                // Create quote elements if they don't exist
-                this.createQuoteElements();
-            }
+            console.error('Quote section elements could not be found or created');
         }
     }
     
@@ -803,8 +842,26 @@ class RotatingDoorEntry {
     createQuoteElements() {
         console.log('Creating missing quote elements...');
         
+        // Find the status message to determine where to place quotes
+        const statusMessage = document.getElementById('statusMessage');
         const splashPage = document.getElementById('splashPage');
-        if (!splashPage) return;
+        
+        let parentContainer;
+        
+        // Try to use the same parent as status message
+        if (statusMessage && statusMessage.parentNode) {
+            parentContainer = statusMessage.parentNode;
+            console.log('Using status message parent as quote container');
+        } else {
+            // Fallback to splash page
+            parentContainer = splashPage;
+            console.log('Using splash page as quote container (status message not found)');
+        }
+        
+        if (!parentContainer) {
+            console.error('No suitable parent container found for quote elements');
+            return;
+        }
         
         // Create quote section
         const quoteSection = document.createElement('div');
@@ -818,42 +875,32 @@ class RotatingDoorEntry {
         
         quoteSection.appendChild(quoteText);
         
-        // Add mobile-friendly styles - position under door letters
-        if (this.isMobile) {
-            quoteSection.style.cssText = `
-                position: relative !important;
-                margin: 30px auto 10px auto !important;
-                max-width: 90% !important;
-                background: rgba(0, 0, 0, 0.9) !important;
-                color: white !important;
-                padding: 20px !important;
-                border-radius: 10px !important;
-                font-size: 18px !important;
-                line-height: 1.4 !important;
-                text-align: center !important;
-                z-index: 9999 !important;
-                display: none !important;
-                opacity: 0 !important;
-                transition: opacity 0.3s ease-in-out !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-            `;
-        } else {
-            quoteSection.style.cssText = `
-                display: none;
-                opacity: 0;
-                text-align: center;
-                padding: 15px;
-                margin: 20px auto;
-                max-width: 80%;
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                border-radius: 8px;
-                z-index: 9999;
-                position: relative;
-            `;
-        }
+        // Position it to overlap with status message area
+        quoteSection.style.cssText = `
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 10000 !important;
+            display: none !important;
+            opacity: 0 !important;
+            background: rgba(0, 0, 0, 0.9) !important;
+            color: white !important;
+            padding: 20px !important;
+            border-radius: 10px !important;
+            text-align: center !important;
+            line-height: 1.4 !important;
+            transition: opacity 0.3s ease-in-out !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+            max-width: 90% !important;
+            font-size: 18px !important;
+            margin: 0 !important;
+        `;
         
-        splashPage.appendChild(quoteSection);
+        // Append to the same parent as status message (or splash page as fallback)
+        parentContainer.appendChild(quoteSection);
+        
+        console.log('Quote elements created and positioned to overlap status message area');
         
         // Now try to show the quote again
         setTimeout(() => {
@@ -861,9 +908,24 @@ class RotatingDoorEntry {
         }, 50);
     }
     
+    // Helper method to ensure quotes and status messages don't conflict
+    hideStatusMessage() {
+        const statusMessage = document.getElementById('statusMessage');
+        if (statusMessage && statusMessage.style.display !== 'none') {
+            statusMessage.style.display = 'none';
+            console.log('Status message hidden to show quote');
+        }
+    }
+    
     showAccessGranted() {
         const statusMessage = document.getElementById('statusMessage');
         if (statusMessage) {
+            // Hide any existing quotes first
+            const quoteSection = document.getElementById('quoteResponses');
+            if (quoteSection) {
+                quoteSection.style.display = 'none';
+            }
+            
             statusMessage.textContent = 'ACCESS GRANTED';
             statusMessage.className = 'status-message granted';
             statusMessage.style.display = 'block';
@@ -880,6 +942,12 @@ class RotatingDoorEntry {
     showAutoAccess() {
         const statusMessage = document.getElementById('statusMessage');
         if (statusMessage) {
+            // Hide any existing quotes first
+            const quoteSection = document.getElementById('quoteResponses');
+            if (quoteSection) {
+                quoteSection.style.display = 'none';
+            }
+            
             statusMessage.textContent = this.isMobile ? 
                 'Welcome! Your persistence is recognized.' : 
                 'Welcome! The door recognizes your persistence.';
