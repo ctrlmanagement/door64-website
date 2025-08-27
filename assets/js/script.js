@@ -545,8 +545,8 @@ class RotatingDoorEntry {
         this.isInitialized = false;
         this.attemptCount = 0;
         this.isIPhone = this.detectIPhone();
-        this.isMobile = this.detectMobile(); // Add mobile detection for all devices
-        this.quoteTimeout = null; // Add quote timeout tracking
+        this.isMobile = this.detectMobile();
+        this.quoteTimeout = null;
         
         // Enhanced quotes for all mobile users
         this.doorLockQuotes = [
@@ -693,7 +693,7 @@ class RotatingDoorEntry {
                     this.isMobile ? '(Mobile optimized)' : '(Desktop)');
     }
     
-    // Enhanced handleDoorClick with mobile debugging
+    // Enhanced handleDoorClick with mobile debugging - UPDATED TO REMOVE showAutoAccess()
     handleDoorClick(clickedIndex) {
         const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
         
@@ -725,7 +725,8 @@ class RotatingDoorEntry {
             if (this.attemptCount >= 3) {
                 console.log(`[${deviceType}] Third attempt reached - granting automatic access!`);
                 this.stopRotation();
-                this.showAutoAccess();
+                // UPDATED: Use showAccessGranted() instead of showAutoAccess()
+                this.showAccessGranted();
             } else {
                 console.log(`[${deviceType}] Calling showRandomQuote()...`);
                 this.showRandomQuote();
@@ -736,6 +737,131 @@ class RotatingDoorEntry {
     getRandomQuote() {
         const randomIndex = Math.floor(Math.random() * this.doorLockQuotes.length);
         return this.doorLockQuotes[randomIndex];
+    }
+    
+    // ENHANCED showMobileMessage for mobile message fix
+    showMobileMessage(message) {
+        console.log('showMobileMessage called with:', message);
+        
+        // Remove any existing mobile message
+        const existingMessage = document.getElementById('mobileStatusMessage');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        // Clear any existing timeout
+        if (this.quoteTimeout) {
+            clearTimeout(this.quoteTimeout);
+        }
+        
+        // Create mobile message element
+        const mobileMessage = document.createElement('div');
+        mobileMessage.id = 'mobileStatusMessage';
+        mobileMessage.textContent = message;
+        
+        // ENHANCED mobile-specific styling - fixes positioning issues
+        mobileMessage.style.cssText = `
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            z-index: 2147483647 !important;
+            background: #000000 !important;
+            color: #ffffff !important;
+            padding: 30px 35px !important;
+            border-radius: 16px !important;
+            font-size: 20px !important;
+            font-family: Georgia, serif !important;
+            font-weight: 600 !important;
+            line-height: 1.4 !important;
+            text-align: center !important;
+            max-width: 85vw !important;
+            min-width: 280px !important;
+            min-height: 60px !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+            border: 3px solid #ffffff !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            isolation: isolate !important;
+            contain: layout style paint !important;
+            animation: mobileMessageShow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        `;
+        
+        // Add the animation keyframes
+        if (!document.getElementById('mobileMessageStyles')) {
+            const styleSheet = document.createElement('style');
+            styleSheet.id = 'mobileMessageStyles';
+            styleSheet.textContent = `
+                @keyframes mobileMessageShow {
+                    0% {
+                        opacity: 0 !important;
+                        transform: translate(-50%, -50%) scale(0.8) !important;
+                    }
+                    100% {
+                        opacity: 1 !important;
+                        transform: translate(-50%, -50%) scale(1) !important;
+                    }
+                }
+                
+                @keyframes mobileMessageHide {
+                    0% {
+                        opacity: 1 !important;
+                        transform: translate(-50%, -50%) scale(1) !important;
+                    }
+                    100% {
+                        opacity: 0 !important;
+                        transform: translate(-50%, -50%) scale(0.9) !important;
+                    }
+                }
+                
+                #mobileStatusMessage {
+                    font-feature-settings: "kern" 1, "liga" 1 !important;
+                    text-rendering: optimizeLegibility !important;
+                    -webkit-font-smoothing: antialiased !important;
+                    -moz-osx-font-smoothing: grayscale !important;
+                }
+            `;
+            document.head.appendChild(styleSheet);
+        }
+        
+        // Add to body (not splash page) for better z-index control
+        document.body.appendChild(mobileMessage);
+        
+        console.log('Mobile message added to body with enhanced positioning');
+        
+        // Force a reflow to ensure styles are applied
+        mobileMessage.offsetHeight;
+        
+        // Auto-hide after timeout with enhanced animation
+        this.quoteTimeout = setTimeout(() => {
+            console.log('Hiding mobile message with animation');
+            mobileMessage.style.animation = 'mobileMessageHide 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+            
+            setTimeout(() => {
+                if (mobileMessage.parentNode) {
+                    mobileMessage.remove();
+                    console.log('Mobile message removed from DOM');
+                }
+            }, 400);
+        }, this.isMobile ? 3500 : 2500);
+        
+        // Additional safety: ensure message is visible
+        setTimeout(() => {
+            if (mobileMessage.parentNode) {
+                const computed = window.getComputedStyle(mobileMessage);
+                console.log('Mobile message computed styles:', {
+                    display: computed.display,
+                    opacity: computed.opacity,
+                    zIndex: computed.zIndex,
+                    position: computed.position,
+                    visibility: computed.visibility
+                });
+            }
+        }, 100);
     }
     
     // Use statusMessage element for quotes (same as ACCESS GRANTED)
@@ -771,192 +897,18 @@ class RotatingDoorEntry {
         }
     }
     
-    // Mobile-specific message display system
-    showMobileMessage(message) {
-        console.log('showMobileMessage called with:', message);
-        
-        // Remove any existing mobile message
-        const existingMessage = document.getElementById('mobileStatusMessage');
-        if (existingMessage) {
-            existingMessage.remove();
-        }
-        
-        // Clear any existing timeout
-        if (this.quoteTimeout) {
-            clearTimeout(this.quoteTimeout);
-        }
-        
-        // Create mobile message element
-        const mobileMessage = document.createElement('div');
-        mobileMessage.id = 'mobileStatusMessage';
-        mobileMessage.textContent = message;
-        
-        // Apply mobile-specific styling (bypass all CSS classes)
-        mobileMessage.style.cssText = `
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            z-index: 99999 !important;
-            background: rgba(0, 0, 0, 0.95) !important;
-            color: white !important;
-            padding: 20px 25px !important;
-            border-radius: 12px !important;
-            font-size: 18px !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-            font-weight: 500 !important;
-            line-height: 1.4 !important;
-            text-align: center !important;
-            max-width: 85% !important;
-            min-width: 200px !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
-            border: 2px solid rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            animation: mobileMessageFadeIn 0.3s ease-out !important;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        `;
-        
-        // Add to DOM
-        document.body.appendChild(mobileMessage);
-        
-        console.log('Mobile message added to DOM');
-        
-        // Auto-hide after timeout
-        this.quoteTimeout = setTimeout(() => {
-            console.log('Hiding mobile message');
-            mobileMessage.style.opacity = '0';
-            mobileMessage.style.transform = 'translate(-50%, -50%) scale(0.9)';
-            mobileMessage.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
-            
-            setTimeout(() => {
-                if (mobileMessage.parentNode) {
-                    mobileMessage.remove();
-                }
-            }, 300);
-        }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
-    }
-    
-    // Create statusMessage element if missing
-    createStatusMessageElement() {
-        console.log('Creating statusMessage element...');
-        
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) {
-            console.error('No splash page found - cannot create statusMessage');
-            return null;
-        }
-        
-        const statusMessage = document.createElement('div');
-        statusMessage.id = 'statusMessage';
-        statusMessage.className = 'status-message';
-        statusMessage.style.display = 'none';
-        
-        splashPage.appendChild(statusMessage);
-        console.log('statusMessage element created and added to splash page');
-        
-        return statusMessage;
-    }
-    
-    // Ensure proper mobile positioning for statusMessage
-    ensureMobileStatusMessagePositioning(statusMessage) {
-        if (this.isMobile) {
-            // Mobile-specific positioning to center the message properly
-            statusMessage.style.position = 'fixed';
-            statusMessage.style.top = '50%';
-            statusMessage.style.left = '50%';
-            statusMessage.style.transform = 'translate(-50%, -50%)';
-            statusMessage.style.zIndex = '10000';
-            statusMessage.style.maxWidth = '90%';
-            statusMessage.style.textAlign = 'center';
-            statusMessage.style.padding = '20px';
-            statusMessage.style.margin = '0';
-            statusMessage.style.fontSize = '18px';
-            statusMessage.style.lineHeight = '1.4';
-            statusMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-            statusMessage.style.color = 'white';
-            statusMessage.style.borderRadius = '10px';
-            statusMessage.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
-            
-            console.log('Applied mobile positioning to statusMessage');
-        }
-    }
-    
-    // Add method to create quote elements if missing
-    createQuoteElements() {
-        console.log('Creating missing quote elements...');
-        
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) return;
-        
-        // Create quote section
-        const quoteSection = document.createElement('div');
-        quoteSection.id = 'quoteResponses';
-        quoteSection.className = 'quote-responses';
-        
-        // Create quote text
-        const quoteText = document.createElement('p');
-        quoteText.id = 'quoteText';
-        quoteText.className = 'quote-text';
-        
-        quoteSection.appendChild(quoteText);
-        
-        // Add mobile-friendly styles - position under door letters
-        if (this.isMobile) {
-            quoteSection.style.cssText = `
-                position: relative !important;
-                margin: 30px auto 10px auto !important;
-                max-width: 90% !important;
-                background: rgba(0, 0, 0, 0.9) !important;
-                color: white !important;
-                padding: 20px !important;
-                border-radius: 10px !important;
-                font-size: 18px !important;
-                line-height: 1.4 !important;
-                text-align: center !important;
-                z-index: 9999 !important;
-                display: none !important;
-                opacity: 0 !important;
-                transition: opacity 0.3s ease-in-out !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-            `;
-        } else {
-            quoteSection.style.cssText = `
-                display: none;
-                opacity: 0;
-                text-align: center;
-                padding: 15px;
-                margin: 20px auto;
-                max-width: 80%;
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                border-radius: 8px;
-                z-index: 9999;
-                position: relative;
-            `;
-        }
-        
-        splashPage.appendChild(quoteSection);
-        
-        // Now try to show the quote again
-        setTimeout(() => {
-            this.showRandomQuote();
-        }, 50);
-    }
-    
+    // ENHANCED showAccessGranted method for both correct doors AND 3rd attempt
     showAccessGranted() {
         console.log('showAccessGranted() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
         
         if (this.isMobile) {
-            // Mobile-specific implementation
+            // Enhanced mobile implementation
             this.showMobileMessage('ACCESS GRANTED');
             
             // Navigate to main site after mobile display time
             setTimeout(() => {
                 this.navigateToMainSite();
-            }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
+            }, 3800);
         } else {
             // Desktop implementation
             let statusMessage = document.getElementById('statusMessage');
@@ -978,40 +930,25 @@ class RotatingDoorEntry {
         }
     }
     
-    showAutoAccess() {
-        console.log('showAutoAccess() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
+    // Create statusMessage element if missing
+    createStatusMessageElement() {
+        console.log('Creating statusMessage element...');
         
-        const autoMessage = this.isMobile ? 
-            'Welcome! Your persistence is recognized.' : 
-            'Welcome! The door recognizes your persistence.';
-        
-        if (this.isMobile) {
-            // Mobile-specific implementation
-            this.showMobileMessage(autoMessage);
-            
-            // Navigate to main site after mobile display time
-            setTimeout(() => {
-                this.navigateToMainSite();
-            }, this.isMobile ? 3500 : (this.isIPhone ? 3000 : 2500));
-        } else {
-            // Desktop implementation
-            let statusMessage = document.getElementById('statusMessage');
-            
-            if (!statusMessage) {
-                statusMessage = this.createStatusMessageElement();
-            }
-            
-            if (statusMessage) {
-                statusMessage.textContent = autoMessage;
-                statusMessage.className = 'status-message granted';
-                statusMessage.style.display = 'block';
-                
-                setTimeout(() => {
-                    statusMessage.style.display = 'none';
-                    this.navigateToMainSite();
-                }, 2500);
-            }
+        const splashPage = document.getElementById('splashPage');
+        if (!splashPage) {
+            console.error('No splash page found - cannot create statusMessage');
+            return null;
         }
+        
+        const statusMessage = document.createElement('div');
+        statusMessage.id = 'statusMessage';
+        statusMessage.className = 'status-message';
+        statusMessage.style.display = 'none';
+        
+        splashPage.appendChild(statusMessage);
+        console.log('statusMessage element created and added to splash page');
+        
+        return statusMessage;
     }
     
     navigateToMainSite() {
@@ -2223,13 +2160,6 @@ if (window.location.hostname === 'localhost' ||
                         console.log('Dev: Fast door rotation (1 second)');
                     }
                     break;
-                case 't':
-                    e.preventDefault();
-                    if (window.rotatingDoorEntry) {
-                        window.rotatingDoorEntry.resetAttempts();
-                        console.log('Dev: Attempt count reset');
-                    }
-                    break;
                 case 'q':
                     e.preventDefault();
                     if (window.rotatingDoorEntry) {
@@ -2326,7 +2256,7 @@ if (window.location.hostname === 'localhost' ||
                 window.doorAudio.resumeAudio();
             }
         },
-        testAutoResume: () => {
+        testAudioResume: () => {
             localStorage.setItem('door_audio_state', 'playing');
             localStorage.setItem('door_user_interacted', 'true');
             location.reload();
@@ -2354,25 +2284,101 @@ if (window.location.hostname === 'localhost' ||
                 window.rotatingDoorEntry.showRandomQuote();
             }
         },
-        testAutoAccess: () => {
-            if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.attemptCount = 2;
-                console.log('Dev: Set to trigger auto-access on next wrong click');
-            }
-        },
         refreshViewport: () => {
             if (window.viewportHandler) {
                 window.viewportHandler.setViewportHeight();
             }
         },
         testMobileQuote: () => {
-            // Force create quote elements and test mobile display
             if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.createQuoteElements();
-                setTimeout(() => {
-                    window.rotatingDoorEntry.showRandomQuote();
-                }, 100);
+                window.rotatingDoorEntry.showRandomQuote();
+                console.log('Mobile quote test triggered');
             }
+        },
+        testMobileAccess: () => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.showAccessGranted();
+                console.log('Mobile access granted test triggered');
+            }
+        },
+        testMobileMessage: (message = 'Test Message') => {
+            if (window.rotatingDoorEntry) {
+                window.rotatingDoorEntry.showMobileMessage(message);
+                console.log('Custom mobile message test triggered:', message);
+            }
+        },
+        checkMobileElements: () => {
+            const elements = {
+                splashPage: document.getElementById('splashPage'),
+                statusMessage: document.getElementById('statusMessage'),
+                mobileMessage: document.getElementById('mobileStatusMessage'),
+                quoteResponses: document.getElementById('quoteResponses'),
+                body: document.body
+            };
+            
+            console.log('Mobile element check:', elements);
+            
+            Object.entries(elements).forEach(([key, element]) => {
+                if (element) {
+                    const styles = window.getComputedStyle(element);
+                    console.log(`${key} computed styles:`, {
+                        display: styles.display,
+                        position: styles.position,
+                        zIndex: styles.zIndex,
+                        visibility: styles.visibility,
+                        opacity: styles.opacity,
+                        transform: styles.transform,
+                        top: styles.top,
+                        left: styles.left,
+                        right: styles.right,
+                        bottom: styles.bottom
+                    });
+                } else {
+                    console.log(`${key}: Element not found`);
+                }
+            });
+        },
+        forceMobileMessage: (message = 'FORCE TEST') => {
+            // Remove any existing messages
+            document.querySelectorAll('#mobileStatusMessage').forEach(el => el.remove());
+            
+            // Create message with absolute priority
+            const msg = document.createElement('div');
+            msg.id = 'mobileStatusMessage';
+            msg.textContent = message;
+            msg.style.cssText = `
+                position: fixed !important;
+                top: 50vh !important;
+                left: 50vw !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 9999999 !important;
+                background: #ff0000 !important;
+                color: #ffffff !important;
+                padding: 40px !important;
+                border-radius: 20px !important;
+                font-size: 24px !important;
+                font-weight: bold !important;
+                border: 5px solid #ffffff !important;
+                box-shadow: 0 0 50px rgba(255, 0, 0, 0.8) !important;
+                font-family: Arial, sans-serif !important;
+                text-align: center !important;
+                min-width: 200px !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                pointer-events: none !important;
+                isolation: isolate !important;
+            `;
+            
+            document.body.appendChild(msg);
+            console.log('Force mobile message created');
+            
+            setTimeout(() => {
+                if (msg.parentNode) {
+                    msg.remove();
+                    console.log('Force mobile message removed');
+                }
+            }, 3000);
         }
     };
     
@@ -2405,6 +2411,7 @@ Mobile Features:
 • Improved form input handling (prevents zoom)
 • Mobile-specific debugging and logging
 
+UPDATED: showAutoAccess() method removed - uses showAccessGranted() for all access scenarios
 Dev Tools: Ctrl+Shift+V (viewport refresh), window.doorDebug.deviceInfo()
 Philosophy: "Every mobile device deserves a beautiful experience" 📱✨
 `);
