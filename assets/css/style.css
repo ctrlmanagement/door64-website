@@ -140,6 +140,7 @@ body.menu-open {
 }
 
 /* =============== OPTIMIZED SPLASH PAGE FOR IPHONE =============== */
+/* =============== OPTIMIZED SPLASH PAGE FOR IPHONE =============== */
 .splash-page {
     width: 100%;
     height: 100vh;
@@ -154,11 +155,65 @@ body.menu-open {
     justify-content: center;
     cursor: pointer;
     transition: all 1.2s ease;
-    /* iPhone safe areas */
+    /* Enhanced iPhone safe areas */
     padding-top: max(20px, calc(env(safe-area-inset-top) + 10px));
     padding-bottom: max(20px, calc(env(safe-area-inset-bottom) + 10px));
     padding-left: max(20px, calc(env(safe-area-inset-left) + 10px));
     padding-right: max(20px, calc(env(safe-area-inset-right) + 10px));
+    /* iPhone performance optimizations */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: opacity, transform;
+    contain: layout style paint;
+}
+
+.splash-page::before {
+    display: none !important;
+}
+
+.splash-page:hover::before {
+    display: none !important;
+}
+
+.splash-page.hidden {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+}
+
+.splash-overlay {
+    display: none !important;
+}
+
+/* iPhone-specific splash optimizations */
+@media (max-width: 768px) {
+    .splash-page {
+        /* Enhanced iPhone safe area handling */
+        padding-top: max(30px, calc(env(safe-area-inset-top) + 20px));
+        padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
+        padding-left: max(25px, calc(env(safe-area-inset-left) + 15px));
+        padding-right: max(25px, calc(env(safe-area-inset-right) + 15px));
+        
+        /* iPhone touch optimization */
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+}
+
+/* iPhone Pro models with Dynamic Island */
+@media (max-width: 430px) {
+    .splash-page {
+        padding-top: max(40px, calc(env(safe-area-inset-top) + 30px));
+    }
+}
+
+/* iPhone landscape mode */
+@media (max-height: 500px) and (orientation: landscape) {
+    .splash-page {
+        padding-top: max(15px, calc(env(safe-area-inset-top) + 5px));
+        padding-bottom: max(15px, calc(env(safe-area-inset-bottom) + 5px));
+    }
 }
 
 .splash-page::before {
