@@ -23,7 +23,20 @@ class DoorAudio {
         
         this.init();
     }
+    // In your existing script.js, add these methods to the DoorAudio class:
+class DoorAudio {
+    // ... your existing methods ...
     
+    // Add the new methods here:
+    setVolume(volume) {
+        if (this.audio && volume >= 0 && volume <= 1) {
+            this.audio.volume = volume;
+            localStorage.setItem('door_audio_volume', volume.toString());
+        }
+    }
+    
+    // ... other enhancement methods ...
+}
     detectMobile() {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                ('ontouchstart' in window) ||
