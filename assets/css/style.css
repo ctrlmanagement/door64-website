@@ -195,13 +195,11 @@ body.menu-open {
 }
 
 .splash-image {
-    max-width: 90%;
-    max-height: 80%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    border-radius: 15px;
-    box-shadow: 0 20px 60px rgba(255, 255, 255, 0.1);
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Fill entire container */
+    border-radius: 0; /* Remove rounded corners for full coverage */
+    box-shadow: none; /* Remove shadow for full page effect */
     transition: all 0.3s ease;
 }
 
@@ -263,8 +261,9 @@ body.menu-open {
     }
 
     .splash-image {
-        max-width: 85%;
-        max-height: 75%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Fill entire screen on mobile too */
     }
 
     .click-to-enter {
@@ -287,7 +286,9 @@ body.menu-open {
     }
 
     .splash-image {
-        max-height: 70%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Fill entire screen in landscape too */
     }
 
     .click-to-enter {
@@ -302,22 +303,7 @@ body.menu-open {
     transform-style: preserve-3d;
 }
 
-/* Skip link for accessibility */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 6px;
-    background: #000;
-    color: #fff;
-    padding: 8px;
-    text-decoration: none;
-    z-index: 1002;
-    transition: top 0.3s;
-}
-
-.skip-link:focus {
-    top: 0;
-}
+/* Skip link removed */
 
 /* =============== MAIN SITE STYLES =============== */
 .main-site {
@@ -1321,7 +1307,7 @@ p, .sub-links a, .menu-item p {
     display: none !important; /* Remove DOOR64 logo from under navigation on all pages */
 }
 
-/* Desktop-specific sizing - reduced by 20% */
+/* Desktop-specific sizing - reduced by 20% - NO BOLD */
 @media (min-width: 769px) {
     .page-logo {
         display: none !important; /* Keep hidden on desktop too */
@@ -1331,6 +1317,7 @@ p, .sub-links a, .menu-item p {
         font-size: clamp(3.2rem, 8vw, 6.4rem); /* Reduced by 20% from 4rem-8rem */
         letter-spacing: clamp(3.2px, 2.4vw, 9.6px); /* Reduced by 20% */
         margin-bottom: 50px;
+        font-weight: 300; /* No bold effect */
     }
     
     .section-title,
@@ -1339,6 +1326,14 @@ p, .sub-links a, .menu-item p {
     .section > .container > h1 {
         font-size: clamp(2.8rem, 6.4vw, 4.8rem); /* Reduced by 20% from 3.5rem-6rem */
         margin-bottom: 50px;
+        font-weight: 300; /* No bold effect */
+    }
+    
+    /* All other headings no bold */
+    .menu-description h3,
+    .chef-philosophy h3,
+    .spirit-category h3 {
+        font-weight: 300;
     }
 }
 
