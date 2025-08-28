@@ -349,11 +349,11 @@ body.menu-open {
     }
 }
 
-/* Status Message - iPhone optimized */
+
 /* iPhone Status Message Positioning Fixes */
 .status-message {
     position: fixed;
-    top: 40%; /* Changed from 50% to avoid door gallery overlap */
+    top: 30%; /* Moved up from 40% to prevent cut-off */
     left: 50%;
     transform: translate(-50%, -50%);
     background: rgba(255,255,255,0.95);
@@ -363,7 +363,7 @@ body.menu-open {
     font-size: var(--heading-h3-size); /* 24px for iPhone */
     font-weight: bold;
     text-align: center;
-    z-index: 100000 !important; /* Higher than audio toggle - was 40 */
+    z-index: 100000 !important; /* Higher than audio toggle */
     display: none;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     font-family: 'Georgia', serif;
@@ -380,7 +380,7 @@ body.menu-open {
 /* iPhone landscape positioning */
 @media (max-height: 500px) and (orientation: landscape) {
     .status-message {
-        top: 25% !important; /* Much higher in landscape */
+        top: 20% !important; /* Higher in landscape */
         font-size: 15px !important;
         padding: 15px 20px !important;
     }
@@ -389,9 +389,10 @@ body.menu-open {
 /* iPhone Pro Max and newer models */
 @media (max-width: 430px) {
     .status-message {
-        top: 35% !important; /* Account for Dynamic Island */
+        top: 25% !important; /* Higher to account for Dynamic Island */
         margin-top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
     }
+}
 }
 
 /* Door Hover Effects - NO GREY WASH */
