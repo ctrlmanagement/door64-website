@@ -1089,17 +1089,7 @@ function initAccessibilityFeatures() {
         });
     });
     
-    const skipLink = document.querySelector('.skip-link');
-    if (skipLink) {
-        skipLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = document.querySelector('#main-content') || document.querySelector('main');
-            if (target) {
-                target.focus();
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    }
+    // Skip link functionality removed
     
     console.log('Accessibility features initialized');
 }
