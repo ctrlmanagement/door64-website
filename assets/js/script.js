@@ -1,2430 +1,2853 @@
-/* Door Restaurant - Complete Mobile-Optimized JavaScript */
+/* Door 64 Restaurant - Complete Stylesheet with Rotating Door Entry System */
 
-// =============== ENHANCED DOOR AUDIO SYSTEM FOR IPHONE ===============
-class DoorAudio {
-    constructor() {
-        this.audio = null;
-        this.isPlaying = false;
-        this.currentTime = 0;
-        this.volume = 0.3;
-        this.storageKey = 'door_audio_state';
-        this.timeKey = 'door_audio_time';
-        this.lastUpdateTime = 0;
-        this.updateInterval = 500;
-        this.hasUserInteracted = false;
-        this.isInitialized = false;
-        this.audioStartPromise = null;
-        this.isMobile = this.detectMobile();
-        this.isIPhone = this.detectIPhone();
-        this.interactionListenersActive = false;
-        
-        this.isNavigating = false;
-        this.navigationTimeout = null;
-        
-        this.init();
-    }
-    
-    detectMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-               ('ontouchstart' in window) ||
-               (navigator.maxTouchPoints > 0);
-    }
-    
-    detectIPhone() {
-        return /iPhone|iPod/.test(navigator.userAgent) || 
-               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    }
-    
-    init() {
-        if (this.isInitialized) {
-            console.log('Door Audio - Already initialized, skipping...');
-            return;
-        }
-        
-        console.log('Door Audio System - Initializing...', 
-                   this.isIPhone ? 'iPhone detected' : 
-                   this.isMobile ? 'Mobile detected' : 'Desktop detected');
-        
-        this.audio = document.getElementById('backgroundAudio');
-        if (!this.audio) {
-            console.warn('Background audio element not found');
-            return;
-        }
-        
-        // iPhone-specific audio setup
-        if (this.isIPhone) {
-            this.audio.setAttribute('webkit-playsinline', 'true');
-            this.audio.setAttribute('playsinline', 'true');
-            this.audio.playsInline = true;
-            this.audio.crossOrigin = 'anonymous';
-        }
-        
-        this.audio.volume = this.volume;
-        this.audio.preload = 'auto';
-        this.audio.loop = true;
-        this.audio.load();
-        
-        this.setupAudioEventListeners();
-        this.setupPageUnloadHandler();
-        this.restoreAudioState();
-        
-        this.isInitialized = true;
-    }
-    
-    restoreAudioState() {
-        const storedState = localStorage.getItem(this.storageKey);
-        const storedTime = localStorage.getItem(this.timeKey);
-        const isFirstTimeVisitor = !storedState;
-        const isSplashPage = document.getElementById('splashPage') !== null;
-        
-        console.log('Restoring audio state:', { storedState, storedTime, isFirstTimeVisitor, isSplashPage, isIPhone: this.isIPhone });
-        
-        // Enhanced iPhone autoplay handling
-        if (storedState === 'playing' || isFirstTimeVisitor) {
-            console.log('Auto-starting quietstorm audio...');
-            
-            if (storedTime && parseFloat(storedTime) > 0) {
-                this.setAudioTime(parseFloat(storedTime));
-            }
-            
-            if (this.isIPhone) {
-                // iPhone requires user interaction first
-                this.setupUserInteractionListeners();
-                this.attemptAudioStart();
-            } else if (this.isMobile) {
-                this.setupUserInteractionListeners();
-                this.attemptAudioStart();
-            } else {
-                this.attemptAudioStart();
-            }
-        } else if (storedState === 'paused') {
-            console.log('Audio was paused by user, respecting choice');
-            if (storedTime && parseFloat(storedTime) > 0) {
-                this.setAudioTime(parseFloat(storedTime));
-            }
-            this.updateButtons();
-        } else {
-            if (this.isIPhone || this.isMobile) {
-                this.setupUserInteractionListeners();
-            } else {
-                this.attemptAudioStart();
-            }
-            this.updateButtons();
-        }
-    }
-    
-    attemptAudioStart() {
-        if (this.isNavigating || this.audioStartPromise) {
-            console.log('Skipping audio start - navigation in progress or already starting');
-            return this.audioStartPromise || Promise.resolve();
-        }
-        
-        if (!this.audio) {
-            console.warn('No audio element found');
-            return Promise.resolve();
-        }
-        
-        console.log('Attempting to start quietstorm audio...', this.isIPhone ? '(iPhone)' : '');
-        
-        // iPhone requires muted autoplay
-        this.audio.muted = true;
-        
-        this.audioStartPromise = this.audio.play()
-            .then(() => {
-                console.log('Audio started successfully (muted for autoplay compliance)');
-                this.isPlaying = true;
-                localStorage.setItem(this.storageKey, 'playing');
-                this.updateButtons();
-                this.audioStartPromise = null;
-                
-                const hasInteracted = localStorage.getItem('door_user_interacted') === 'true';
-                if (hasInteracted) {
-                    this.audio.muted = false;
-                    console.log('User has interacted before - unmuting audio');
-                    this.hasUserInteracted = true;
-                } else if (!this.isIPhone && !this.isMobile) {
-                    this.setupUserInteractionListeners();
-                }
-            })
-            .catch(error => {
-                console.log('Audio autoplay prevented:', error.message, this.isIPhone ? '(iPhone restriction)' : '');
-                this.audioStartPromise = null;
-                
-                if (!this.interactionListenersActive) {
-                    this.setupUserInteractionListeners();
-                }
-                this.updateButtons();
-            });
-            
-        return this.audioStartPromise;
-    }
-    
-    setupUserInteractionListeners() {
-        if (this.interactionListenersActive || this.hasUserInteracted) {
-            console.log('Interaction listeners already set up or not needed');
-            return;
-        }
-        
-        console.log('Setting up iPhone-safe user interaction listeners');
-        this.interactionListenersActive = true;
-        
-        // Enhanced iPhone interaction detection
-        if (this.isIPhone) {
-            const events = ['touchend', 'click'];
-            
-            const handleFirstInteraction = (e) => {
-                // Skip audio/menu buttons
-                if (e.target.closest('.audio-toggle, .splash-audio-toggle, .mobile-menu') || 
-                    e.target.closest('input, textarea, select, button[type="button"], button[type="submit"]')) {
-                    return;
-                }
-                
-                if (!this.hasUserInteracted) {
-                    this.hasUserInteracted = true;
-                    localStorage.setItem('door_user_interacted', 'true');
-                    console.log('iPhone: First interaction detected - starting audio');
-                    
-                    this.enableAudioAfterInteraction();
-                    this.removeInteractionListeners();
-                }
-            };
-            
-            events.forEach(event => {
-                document.addEventListener(event, handleFirstInteraction, { 
-                    passive: true,
-                    capture: false
-                });
-            });
-            
-            this.interactionHandler = handleFirstInteraction;
-            this.interactionEvents = events;
-        } else if (this.isMobile) {
-            const events = ['click'];
-            
-            const handleFirstInteraction = (e) => {
-                if (e.target.closest('.audio-toggle, .splash-audio-toggle') || 
-                    e.target.closest('input, textarea, select, button')) {
-                    return;
-                }
-                
-                if (!this.hasUserInteracted) {
-                    this.hasUserInteracted = true;
-                    localStorage.setItem('door_user_interacted', 'true');
-                    console.log('Mobile: First click detected - starting audio');
-                    
-                    this.enableAudioAfterInteraction();
-                    this.removeInteractionListeners();
-                }
-            };
-            
-            events.forEach(event => {
-                document.addEventListener(event, handleFirstInteraction, { 
-                    passive: true,
-                    once: true
-                });
-            });
-            
-            this.interactionHandler = handleFirstInteraction;
-            this.interactionEvents = events;
-        } else {
-            const events = ['click', 'touchstart'];
-            
-            const handleFirstInteraction = (e) => {
-                if (e.target.closest('.audio-toggle, .splash-audio-toggle')) {
-                    return;
-                }
-                
-                if (!this.hasUserInteracted) {
-                    this.hasUserInteracted = true;
-                    localStorage.setItem('door_user_interacted', 'true');
-                    console.log('Desktop: First interaction detected - starting audio');
-                    
-                    this.enableAudioAfterInteraction();
-                    this.removeInteractionListeners();
-                }
-            };
-            
-            events.forEach(event => {
-                document.addEventListener(event, handleFirstInteraction, { 
-                    passive: true,
-                    once: true
-                });
-            });
-            
-            this.interactionHandler = handleFirstInteraction;
-            this.interactionEvents = events;
-        }
-    }
-    
-    enableAudioAfterInteraction() {
-        if (this.audio) {
-            if (this.audio.muted) {
-                this.audio.muted = false;
-                console.log('Audio unmuted', this.isIPhone ? '(iPhone)' : '');
-            }
-            
-            const storedState = localStorage.getItem(this.storageKey);
-            if (storedState !== 'paused' && this.audio.paused && !this.isNavigating) {
-                console.log('Starting audio after user interaction', this.isIPhone ? '(iPhone)' : '');
-                this.resumeAudio();
-            }
-        }
-    }
-    
-    removeInteractionListeners() {
-        if (this.interactionHandler && this.interactionEvents) {
-            this.interactionEvents.forEach(event => {
-                document.removeEventListener(event, this.interactionHandler, { capture: false });
-            });
-            this.interactionHandler = null;
-            this.interactionEvents = null;
-            this.interactionListenersActive = false;
-            console.log('User interaction listeners removed - audio system ready');
-        }
-    }
-    
-    setupAudioEventListeners() {
-        if (!this.audio) return;
-        
-        this.audio.addEventListener('timeupdate', () => {
-            if (this.isPlaying && !this.isNavigating) {
-                const now = Date.now();
-                if (now - this.lastUpdateTime > this.updateInterval) {
-                    this.storeCurrentTime();
-                    this.lastUpdateTime = now;
-                }
-            }
-        });
-        
-        this.audio.addEventListener('play', () => {
-            if (!this.isNavigating) {
-                this.isPlaying = true;
-                localStorage.setItem(this.storageKey, 'playing');
-                this.updateButtons();
-                console.log('Audio playing - Current time:', this.audio.currentTime);
-            }
-        });
-        
-        this.audio.addEventListener('pause', () => {
-            if (!this.isNavigating) {
-                this.isPlaying = false;
-                this.storeCurrentTime();
-                this.updateButtons();
-                console.log('Audio paused - Current time:', this.audio.currentTime);
-            }
-        });
-        
-        this.audio.addEventListener('canplay', () => {
-            console.log('Audio can play - Duration:', this.audio.duration, this.isIPhone ? '(iPhone)' : '');
-        });
-        
-        this.audio.addEventListener('error', (e) => {
-            console.error('Audio error:', e, 'Error code:', this.audio.error?.code, this.isIPhone ? '(iPhone)' : '');
-            this.isPlaying = false;
-            this.updateButtons();
-        });
-        
-        this.audio.addEventListener('ended', () => {
-            console.log('Audio ended - restarting...', this.isIPhone ? '(iPhone)' : '');
-            if (this.isPlaying && !this.isNavigating) {
-                this.audio.currentTime = 0;
-                localStorage.setItem(this.timeKey, '0');
-                this.audio.play().catch(console.log);
-            }
-        });
-        
-        // iPhone-specific audio event handling
-        if (this.isIPhone) {
-            this.audio.addEventListener('loadstart', () => {
-                console.log('iPhone: Audio loading started');
-            });
-            
-            this.audio.addEventListener('loadeddata', () => {
-                console.log('iPhone: Audio data loaded');
-            });
-            
-            this.audio.addEventListener('stalled', () => {
-                console.log('iPhone: Audio stalled - attempting recovery');
-                if (this.audio.readyState < 3) {
-                    this.audio.load();
-                }
-            });
-        }
-    }
-    
-    prepareForNavigation() {
-        console.log('Preparing for navigation - preserving audio state');
-        this.isNavigating = true;
-        this.storeCurrentTime();
-        
-        if (this.isPlaying && this.audio && !this.audio.paused) {
-            localStorage.setItem(this.storageKey, 'playing');
-        }
-        
-        if (this.navigationTimeout) {
-            clearTimeout(this.navigationTimeout);
-        }
-        
-        this.navigationTimeout = setTimeout(() => {
-            this.isNavigating = false;
-            console.log('Navigation state reset');
-        }, 2000);
-    }
-    
-    setAudioTime(time) {
-        if (!this.audio) return;
-        
-        const setTime = () => {
-            try {
-                if (this.audio.duration && time <= this.audio.duration) {
-                    this.audio.currentTime = time;
-                    console.log('Audio time set to:', time, this.isIPhone ? '(iPhone)' : '');
-                } else if (!this.audio.duration) {
-                    console.log('Audio metadata not ready, waiting...', this.isIPhone ? '(iPhone)' : '');
-                    setTimeout(() => setTime(), this.isIPhone ? 200 : 100); // Longer wait for iPhone
-                }
-            } catch (error) {
-                console.log('Failed to set audio time:', error.message, this.isIPhone ? '(iPhone)' : '');
-            }
-        };
-        
-        if (this.audio.readyState >= 1) {
-            setTime();
-        } else {
-            const onLoadedMetadata = () => {
-                setTime();
-                this.audio.removeEventListener('loadedmetadata', onLoadedMetadata);
-            };
-            this.audio.addEventListener('loadedmetadata', onLoadedMetadata);
-        }
-    }
-    
-    storeCurrentTime() {
-        if (this.audio && this.audio.currentTime > 0 && !this.isNavigating) {
-            localStorage.setItem(this.timeKey, this.audio.currentTime.toString());
-        }
-    }
-    
-    setupPageUnloadHandler() {
-        const storeState = () => {
-            if (this.audio && !this.isNavigating) {
-                this.storeCurrentTime();
-                if (this.isPlaying) {
-                    localStorage.setItem(this.storageKey, 'playing');
-                }
-                console.log('Audio state saved - Time:', this.audio.currentTime, 'State:', this.isPlaying ? 'playing' : 'paused');
-            }
-        };
-        
-        // iPhone-specific event handling
-        if (this.isIPhone) {
-            window.addEventListener('pagehide', storeState, { passive: true });
-            window.addEventListener('beforeunload', storeState, { passive: true });
-        } else {
-            window.addEventListener('beforeunload', storeState);
-            window.addEventListener('pagehide', storeState);
-        }
-        
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                this.storeCurrentTime();
-            } else if (!document.hidden && this.audio) {
-                const storedState = localStorage.getItem(this.storageKey);
-                if (storedState === 'playing' && this.audio.paused && !this.isNavigating) {
-                    console.log('Page visible - resuming audio at stored time', this.isIPhone ? '(iPhone)' : '');
-                    
-                    const storedTime = localStorage.getItem(this.timeKey);
-                    if (storedTime && parseFloat(storedTime) > 0) {
-                        this.setAudioTime(parseFloat(storedTime));
-                    }
-                    
-                    // iPhone needs slight delay after visibility change
-                    if (this.isIPhone) {
-                        setTimeout(() => this.resumeAudio(), 300);
-                    } else {
-                        this.resumeAudio();
-                    }
-                }
-            }
-        }, { passive: true });
-    }
-    
-    pauseAudio() {
-        if (!this.audio) return;
-        
-        console.log('User requested audio pause', this.isIPhone ? '(iPhone)' : '');
-        this.storeCurrentTime();
-        this.audio.pause();
-        this.isPlaying = false;
-        localStorage.setItem(this.storageKey, 'paused');
-        this.updateButtons();
-        console.log('Audio paused by user at time:', this.audio.currentTime);
-    }
-    
-    resumeAudio() {
-        if (!this.audio || this.audioStartPromise || this.isNavigating) return;
-        
-        console.log('User requested audio resume (or auto-resume)', this.isIPhone ? '(iPhone)' : '');
-        
-        const storedTime = localStorage.getItem(this.timeKey);
-        if (storedTime && parseFloat(storedTime) > 0 && 
-            Math.abs(this.audio.currentTime - parseFloat(storedTime)) > 1) {
-            this.setAudioTime(parseFloat(storedTime));
-        }
-        
-        if (this.audio.muted && (this.hasUserInteracted || localStorage.getItem('door_user_interacted') === 'true')) {
-            this.audio.muted = false;
-            console.log('Audio unmuted for resume', this.isIPhone ? '(iPhone)' : '');
-        }
-        
-        this.audioStartPromise = this.audio.play()
-            .then(() => {
-                this.isPlaying = true;
-                localStorage.setItem(this.storageKey, 'playing');
-                this.updateButtons();
-                this.audioStartPromise = null;
-                console.log('Audio resumed at time:', this.audio.currentTime, this.isIPhone ? '(iPhone)' : '');
-            })
-            .catch(error => {
-                console.error('Failed to resume audio:', error, this.isIPhone ? '(iPhone)' : '');
-                this.audioStartPromise = null;
-                if (!this.hasUserInteracted && !this.interactionListenersActive) {
-                    this.setupUserInteractionListeners();
-                }
-                this.updateButtons();
-            });
-            
-        return this.audioStartPromise;
-    }
-    
-    toggle() {
-        console.log('Audio toggle button clicked - Current state:', this.isPlaying, 'Paused:', this.audio?.paused, this.isIPhone ? '(iPhone)' : '');
-        
-        if (this.isPlaying && this.audio && !this.audio.paused) {
-            this.pauseAudio();
-        } else {
-            this.resumeAudio();
-        }
-    }
-    
-    updateButtons() {
-        const buttons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
-        
-        buttons.forEach(button => {
-            const isActuallyPlaying = this.isPlaying && this.audio && !this.audio.paused;
-            
-            if (isActuallyPlaying) {
-                button.innerHTML = '⏸';
-                button.classList.add('playing');
-                button.title = 'Pause Background Music';
-                button.setAttribute('aria-label', 'Pause background music');
-            } else {
-                button.innerHTML = '♪';
-                button.classList.remove('playing');
-                button.title = 'Play Background Music';
-                button.setAttribute('aria-label', 'Play background music');
-                
-                if (this.isIPhone && !this.hasUserInteracted) {
-                    button.title = 'Tap anywhere to start music';
-                }
-            }
-        });
-        
-        console.log('Audio buttons updated - Playing:', this.isPlaying, 'Actually playing:', this.audio && !this.audio.paused);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+/* CSS Custom Properties for dynamic height calculations */
+:root {
+    --vh: 1vh;
+    --nav-height: 80px;
+    --mobile-nav-height: 64px;
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-left: env(safe-area-inset-left, 0px);
+    --safe-area-right: env(safe-area-inset-right, 0px);
+    --tuscan-orange: #C65102;
+    --tuscan-orange-light: rgba(198, 81, 2, 0.8);
+    --tuscan-orange-glow: rgba(198, 81, 2, 0.7);
+}
+
+body {
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    color: #2c2c2c;
+    background-color: #0a0a0a;
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+    scroll-behavior: smooth;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove ALL link styling completely */
+a, a:link, a:visited, a:hover, a:active, a:focus {
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+    text-decoration-line: none !important;
+    text-decoration-color: transparent !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    text-underline-offset: 0 !important;
+}
+
+/* Prevent body scroll when mobile menu is open */
+body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+/* iPhone specific styles */
+@supports (-webkit-touch-callout: none) {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 }
 
-// =============== ENHANCED ROTATING DOOR ENTRY SYSTEM FOR ALL MOBILE DEVICES ===============
-class RotatingDoorEntry {
-    constructor() {
-        this.letters = ['D', 'O1', 'O2', 'R'];
-        this.currentActiveIndex = -1;
-        this.rotationInterval = null;
-        this.rotationDelay = 3000;
-        this.doorLinks = [];
-        this.isInitialized = false;
-        this.attemptCount = 0;
-        this.isIPhone = this.detectIPhone();
-        this.isMobile = this.detectMobile(); // Add mobile detection for all devices
-        this.quoteTimeout = null; // Add quote timeout tracking
-        
-        // Enhanced quotes for all mobile users
-        this.doorLockQuotes = [
-            "I'm not locked out, I'm just testing the security system... unsuccessfully.",
-            "The door is locked, but my Wi-Fi password is still 'password123' - priorities, people!",
-            "Door is locked, but so is my motivation to find the right key.",
-            "I have a key to every door... except the one I'm standing in front of right now.",
-            "My door is very security-conscious. It doesn't even trust me, and I pay the rent!",
-            "Door is locked, but my ability to make poor decisions remains wide open.",
-            "Like a locksmith, except instead of opening doors, I just stand outside them looking confused.",
-            "The definition of optimism: carrying only one key and hoping it's the right one.",
-            "Door thinks it's Fort Knox, but really it's just keeping out someone who can't remember where they put their keys five minutes ago.",
-            "Even my phone unlocks faster than this door... and that's saying something!"
-        ];
-        
-        this.init();
-    }
-    
-    detectIPhone() {
-        return /iPhone|iPod/.test(navigator.userAgent) || 
-               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    }
-    
-    // Add comprehensive mobile detection for all devices
-    detectMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-               ('ontouchstart' in window) ||
-               (navigator.maxTouchPoints > 0) ||
-               window.matchMedia('(pointer: coarse)').matches;
-    }
-    
-    // Enhanced initialization with mobile checks
-    init() {
-        if (this.isInitialized) return;
-        
-        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
-        console.log(`[${deviceType}] Initializing Rotating Door Entry System...`);
-        
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) {
-            console.error(`[${deviceType}] No splash page found`);
-            return;
-        }
-        
-        // Get all door links
-        this.doorLinks = Array.from(document.querySelectorAll('.door-gallery a'));
-        
-        if (this.doorLinks.length === 0) {
-            console.warn(`[${deviceType}] No door links found`);
-            return;
-        }
-        
-        console.log(`[${deviceType}] Found ${this.doorLinks.length} door links`);
-        
-        // Check for required DOM elements
-        const quoteSection = document.getElementById('quoteResponses');
-        const quoteText = document.getElementById('quoteText');
-        
-        console.log(`[${deviceType}] DOM Check:`, {
-            splashPage: !!splashPage,
-            doorLinks: this.doorLinks.length,
-            quoteSection: !!quoteSection,
-            quoteText: !!quoteText,
-            viewport: `${window.innerWidth}x${window.innerHeight}`,
-            devicePixelRatio: window.devicePixelRatio,
-            touchSupport: 'ontouchstart' in window,
-            userAgent: navigator.userAgent.substring(0, 50) + '...'
-        });
-        
-        // Setup door click handlers
-        this.setupDoorClickHandlers();
-        
-        // Start the rotation
-        this.startRotation();
-        
-        // Set initial active letter
-        this.rotateActiveLetter();
-        
-        this.isInitialized = true;
-        console.log(`[${deviceType}] Rotating Door Entry System initialized successfully`);
-    }
-    
-    // Updated setupDoorClickHandlers for all mobile devices
-    setupDoorClickHandlers() {
-        this.doorLinks.forEach((link, index) => {
-            const newLink = link.cloneNode(true);
-            link.parentNode.replaceChild(newLink, link);
-            this.doorLinks[index] = newLink;
-            
-            if (this.isMobile) {
-                // Enhanced mobile touch handling for ALL mobile devices
-                let touchStartTime = 0;
-                let touchStartY = 0;
-                let touchMoved = false;
-                
-                newLink.addEventListener('touchstart', (e) => {
-                    touchStartTime = Date.now();
-                    touchStartY = e.touches[0].clientY;
-                    touchMoved = false;
-                    e.stopPropagation();
-                }, { passive: true });
-                
-                newLink.addEventListener('touchmove', (e) => {
-                    const touchEndY = e.touches[0].clientY;
-                    const verticalMovement = Math.abs(touchEndY - touchStartY);
-                    if (verticalMovement > 10) {
-                        touchMoved = true;
-                    }
-                }, { passive: true });
-                
-                newLink.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const touchDuration = Date.now() - touchStartTime;
-                    
-                    // Only trigger if it's a quick tap without movement
-                    if (touchDuration < 500 && !touchMoved) {
-                        console.log(`Mobile: Door ${this.letters[index]} tapped (index: ${index})`);
-                        this.handleDoorClick(index);
-                    }
-                }, { passive: false });
-                
-                // Also add click as fallback for mobile browsers that need it
-                newLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log(`Mobile fallback: Door ${this.letters[index]} clicked`);
-                    this.handleDoorClick(index);
-                });
-                
-            } else {
-                // Desktop click handler
-                newLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log(`Desktop: Door clicked: ${this.letters[index]} (index: ${index})`);
-                    this.handleDoorClick(index);
-                });
-            }
-        });
-        
-        console.log('Door click handlers set up for', this.doorLinks.length, 'doors', 
-                    this.isMobile ? '(Mobile optimized)' : '(Desktop)');
-    }
-    
-    // Enhanced handleDoorClick with mobile debugging
-    handleDoorClick(clickedIndex) {
-        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
-        
-        console.log(`[${deviceType}] Door ${this.letters[clickedIndex]} clicked (index: ${clickedIndex})`);
-        console.log(`[${deviceType}] Active door index: ${this.currentActiveIndex}`);
-        console.log(`[${deviceType}] Attempt count: ${this.attemptCount}`);
-        console.log(`[${deviceType}] Viewport: ${window.innerWidth}x${window.innerHeight}`);
-        
-        // Log DOM elements for mobile debugging
-        if (this.isMobile) {
-            const quoteSection = document.getElementById('quoteResponses');
-            const quoteText = document.getElementById('quoteText');
-            console.log('[Mobile] Quote elements found:', {
-                quoteSection: !!quoteSection,
-                quoteText: !!quoteText,
-                quoteSectionVisible: quoteSection ? window.getComputedStyle(quoteSection).display : 'N/A',
-                quoteSectionPosition: quoteSection ? quoteSection.getBoundingClientRect() : 'N/A'
-            });
-        }
-        
-        if (clickedIndex === this.currentActiveIndex) {
-            console.log(`[${deviceType}] Correct door clicked! Access granted!`);
-            this.stopRotation();
-            this.showAccessGranted();
-        } else {
-            console.log(`[${deviceType}] Wrong door clicked! Showing random quote...`);
-            this.attemptCount++;
-            
-            if (this.attemptCount >= 3) {
-                console.log(`[${deviceType}] Third attempt reached - granting automatic access!`);
-                this.stopRotation();
-                this.showAutoAccess();
-            } else {
-                console.log(`[${deviceType}] Calling showRandomQuote()...`);
-                this.showRandomQuote();
-            }
-        }
-    }
-    
-    getRandomQuote() {
-        const randomIndex = Math.floor(Math.random() * this.doorLockQuotes.length);
-        return this.doorLockQuotes[randomIndex];
-    }
-    
-    // Use statusMessage element for quotes (same as ACCESS GRANTED)
-    showRandomQuote() {
-        console.log('showRandomQuote() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
-        
-        if (this.isMobile) {
-            // Mobile-specific implementation
-            this.showMobileMessage(this.getRandomQuote());
-        } else {
-            // Desktop implementation
-            let statusMessage = document.getElementById('statusMessage');
-            
-            if (!statusMessage) {
-                statusMessage = this.createStatusMessageElement();
-            }
-            
-            if (statusMessage) {
-                const randomQuote = this.getRandomQuote();
-                
-                if (this.quoteTimeout) {
-                    clearTimeout(this.quoteTimeout);
-                }
-                
-                statusMessage.textContent = randomQuote;
-                statusMessage.className = 'status-message granted';
-                statusMessage.style.display = 'block';
-                
-                this.quoteTimeout = setTimeout(() => {
-                    statusMessage.style.display = 'none';
-                }, 2000);
-            }
-        }
-    }
-    
-    // Mobile-specific message display system
-    showMobileMessage(message) {
-        console.log('showMobileMessage called with:', message);
-        
-        // Remove any existing mobile message
-        const existingMessage = document.getElementById('mobileStatusMessage');
-        if (existingMessage) {
-            existingMessage.remove();
-        }
-        
-        // Clear any existing timeout
-        if (this.quoteTimeout) {
-            clearTimeout(this.quoteTimeout);
-        }
-        
-        // Create mobile message element
-        const mobileMessage = document.createElement('div');
-        mobileMessage.id = 'mobileStatusMessage';
-        mobileMessage.textContent = message;
-        
-        // Apply mobile-specific styling (bypass all CSS classes)
-        mobileMessage.style.cssText = `
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            z-index: 99999 !important;
-            background: rgba(0, 0, 0, 0.95) !important;
-            color: white !important;
-            padding: 20px 25px !important;
-            border-radius: 12px !important;
-            font-size: 18px !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-            font-weight: 500 !important;
-            line-height: 1.4 !important;
-            text-align: center !important;
-            max-width: 85% !important;
-            min-width: 200px !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
-            border: 2px solid rgba(255, 255, 255, 0.1) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            animation: mobileMessageFadeIn 0.3s ease-out !important;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        `;
-        
-        // Add to DOM
-        document.body.appendChild(mobileMessage);
-        
-        console.log('Mobile message added to DOM');
-        
-        // Auto-hide after timeout
-        this.quoteTimeout = setTimeout(() => {
-            console.log('Hiding mobile message');
-            mobileMessage.style.opacity = '0';
-            mobileMessage.style.transform = 'translate(-50%, -50%) scale(0.9)';
-            mobileMessage.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
-            
-            setTimeout(() => {
-                if (mobileMessage.parentNode) {
-                    mobileMessage.remove();
-                }
-            }, 300);
-        }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
-    }
-    
-    // Create statusMessage element if missing
-    createStatusMessageElement() {
-        console.log('Creating statusMessage element...');
-        
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) {
-            console.error('No splash page found - cannot create statusMessage');
-            return null;
-        }
-        
-        const statusMessage = document.createElement('div');
-        statusMessage.id = 'statusMessage';
-        statusMessage.className = 'status-message';
-        statusMessage.style.display = 'none';
-        
-        splashPage.appendChild(statusMessage);
-        console.log('statusMessage element created and added to splash page');
-        
-        return statusMessage;
-    }
-    
-    // Ensure proper mobile positioning for statusMessage
-    ensureMobileStatusMessagePositioning(statusMessage) {
-        if (this.isMobile) {
-            // Mobile-specific positioning to center the message properly
-            statusMessage.style.position = 'fixed';
-            statusMessage.style.top = '50%';
-            statusMessage.style.left = '50%';
-            statusMessage.style.transform = 'translate(-50%, -50%)';
-            statusMessage.style.zIndex = '10000';
-            statusMessage.style.maxWidth = '90%';
-            statusMessage.style.textAlign = 'center';
-            statusMessage.style.padding = '20px';
-            statusMessage.style.margin = '0';
-            statusMessage.style.fontSize = '18px';
-            statusMessage.style.lineHeight = '1.4';
-            statusMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-            statusMessage.style.color = 'white';
-            statusMessage.style.borderRadius = '10px';
-            statusMessage.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.5)';
-            
-            console.log('Applied mobile positioning to statusMessage');
-        }
-    }
-    
-    // Add method to create quote elements if missing
-    createQuoteElements() {
-        console.log('Creating missing quote elements...');
-        
-        const splashPage = document.getElementById('splashPage');
-        if (!splashPage) return;
-        
-        // Create quote section
-        const quoteSection = document.createElement('div');
-        quoteSection.id = 'quoteResponses';
-        quoteSection.className = 'quote-responses';
-        
-        // Create quote text
-        const quoteText = document.createElement('p');
-        quoteText.id = 'quoteText';
-        quoteText.className = 'quote-text';
-        
-        quoteSection.appendChild(quoteText);
-        
-        // Add mobile-friendly styles - position under door letters
-        if (this.isMobile) {
-            quoteSection.style.cssText = `
-                position: relative !important;
-                margin: 30px auto 10px auto !important;
-                max-width: 90% !important;
-                background: rgba(0, 0, 0, 0.9) !important;
-                color: white !important;
-                padding: 20px !important;
-                border-radius: 10px !important;
-                font-size: 18px !important;
-                line-height: 1.4 !important;
-                text-align: center !important;
-                z-index: 9999 !important;
-                display: none !important;
-                opacity: 0 !important;
-                transition: opacity 0.3s ease-in-out !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
-            `;
-        } else {
-            quoteSection.style.cssText = `
-                display: none;
-                opacity: 0;
-                text-align: center;
-                padding: 15px;
-                margin: 20px auto;
-                max-width: 80%;
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                border-radius: 8px;
-                z-index: 9999;
-                position: relative;
-            `;
-        }
-        
-        splashPage.appendChild(quoteSection);
-        
-        // Now try to show the quote again
-        setTimeout(() => {
-            this.showRandomQuote();
-        }, 50);
-    }
-    
-    showAccessGranted() {
-        console.log('showAccessGranted() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
-        
-        if (this.isMobile) {
-            // Mobile-specific implementation
-            this.showMobileMessage('ACCESS GRANTED');
-            
-            // Navigate to main site after mobile display time
-            setTimeout(() => {
-                this.navigateToMainSite();
-            }, this.isMobile ? 3000 : (this.isIPhone ? 2500 : 2000));
-        } else {
-            // Desktop implementation
-            let statusMessage = document.getElementById('statusMessage');
-            
-            if (!statusMessage) {
-                statusMessage = this.createStatusMessageElement();
-            }
-            
-            if (statusMessage) {
-                statusMessage.textContent = 'ACCESS GRANTED';
-                statusMessage.className = 'status-message granted';
-                statusMessage.style.display = 'block';
-                
-                setTimeout(() => {
-                    statusMessage.style.display = 'none';
-                    this.navigateToMainSite();
-                }, 2000);
-            }
-        }
-    }
-    
-    showAutoAccess() {
-        console.log('showAutoAccess() called - device type:', this.isMobile ? (this.isIPhone ? 'iPhone' : 'Mobile') : 'Desktop');
-        
-        const autoMessage = this.isMobile ? 
-            'Welcome! Your persistence is recognized.' : 
-            'Welcome! The door recognizes your persistence.';
-        
-        if (this.isMobile) {
-            // Mobile-specific implementation
-            this.showMobileMessage(autoMessage);
-            
-            // Navigate to main site after mobile display time
-            setTimeout(() => {
-                this.navigateToMainSite();
-            }, this.isMobile ? 3500 : (this.isIPhone ? 3000 : 2500));
-        } else {
-            // Desktop implementation
-            let statusMessage = document.getElementById('statusMessage');
-            
-            if (!statusMessage) {
-                statusMessage = this.createStatusMessageElement();
-            }
-            
-            if (statusMessage) {
-                statusMessage.textContent = autoMessage;
-                statusMessage.className = 'status-message granted';
-                statusMessage.style.display = 'block';
-                
-                setTimeout(() => {
-                    statusMessage.style.display = 'none';
-                    this.navigateToMainSite();
-                }, 2500);
-            }
-        }
-    }
-    
-    navigateToMainSite() {
-        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
-        console.log(`[${deviceType}] Navigating to main site...`);
-        
-        // Prepare audio for navigation
-        if (window.doorAudio) {
-            window.doorAudio.prepareForNavigation();
-        }
-        
-        // Mobile-optimized navigation timing
-        setTimeout(() => {
-            this.hideSplash();
-        }, this.isMobile ? 500 : (this.isIPhone ? 400 : 300));
-    }
-    
-    hideSplash() {
-        const splashPage = document.getElementById('splashPage');
-        const mainSite = document.getElementById('mainSite');
-        
-        if (splashPage && mainSite) {
-            splashPage.classList.add('hidden');
-            mainSite.classList.add('active');
-            
-            setTimeout(() => {
-                splashPage.style.display = 'none';
-            }, this.isMobile ? 1800 : (this.isIPhone ? 1500 : 1200));
-            
-            const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
-            console.log(`[${deviceType}] Splash hidden, main site active`);
-        }
-    }
-    
-    rotateActiveLetter() {
-        // Remove active class from current door
-        if (this.currentActiveIndex >= 0 && this.doorLinks[this.currentActiveIndex]) {
-            this.doorLinks[this.currentActiveIndex].classList.remove('door-active');
-        }
-        
-        // Select random new active door
-        const newActiveIndex = Math.floor(Math.random() * this.letters.length);
-        
-        // Ensure we don't pick the same door twice in a row
-        if (this.letters.length > 1 && newActiveIndex === this.currentActiveIndex) {
-            return this.rotateActiveLetter();
-        }
-        
-        this.currentActiveIndex = newActiveIndex;
-        
-        // Add active class to new door
-        if (this.doorLinks[this.currentActiveIndex]) {
-            this.doorLinks[this.currentActiveIndex].classList.add('door-active');
-        }
-        
-        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
-        console.log(`[${deviceType}] Active door rotated to: ${this.letters[this.currentActiveIndex]} (index: ${this.currentActiveIndex})`);
-    }
-    
-    startRotation() {
-        this.stopRotation();
-        
-        this.rotationInterval = setInterval(() => {
-            this.rotateActiveLetter();
-        }, this.rotationDelay);
-        
-        const deviceType = this.isIPhone ? 'iPhone' : (this.isMobile ? 'Mobile' : 'Desktop');
-        console.log(`[${deviceType}] Door rotation started (every ${this.rotationDelay}ms)`);
-    }
-    
-    stopRotation() {
-        if (this.rotationInterval) {
-            clearInterval(this.rotationInterval);
-            this.rotationInterval = null;
-            console.log('Door rotation stopped');
-        }
-    }
-    
-    setRotationSpeed(milliseconds) {
-        this.rotationDelay = milliseconds;
-        if (this.rotationInterval) {
-            this.startRotation();
-        }
-    }
-    
-    resetAttempts() {
-        this.attemptCount = 0;
-        console.log('Attempt count reset to 0');
-    }
-    
-    destroy() {
-        this.stopRotation();
-        
-        // Clear any quote timeouts
-        if (this.quoteTimeout) {
-            clearTimeout(this.quoteTimeout);
-            this.quoteTimeout = null;
-        }
-        
-        this.doorLinks.forEach(link => {
-            link.classList.remove('door-active');
-        });
-        this.attemptCount = 0;
-        this.isInitialized = false;
-        console.log('Rotating Door Entry System destroyed');
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* =============== GEOMETRIC DOOR SPLASH PAGE WITH EMBOSSED LETTERS =============== */
+.splash-page {
+    width: 100%;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 1.2s ease;
+    padding-top: var(--safe-area-top);
+    padding-bottom: var(--safe-area-bottom);
+    padding-left: var(--safe-area-left);
+    padding-right: var(--safe-area-right);
+}
+
+.splash-page::before {
+    display: none !important;
+}
+
+.splash-page:hover::before {
+    display: none !important;
+}
+
+.splash-page.hidden {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+}
+
+.splash-overlay {
+    display: none !important;
+}
+
+/* Door Gallery Design - ENLARGED */
+.door-gallery {
+    height: 75vh;
+    width: 30vh;
+    display: grid;
+    grid-template-rows: repeat(4, 1fr 2fr 1fr);
+    overflow: hidden;
+    list-style: none;
+    position: relative;
+    z-index: 1;
+}
+
+/* Door gallery moved up - NEW POSITIONING */
+.door-gallery-raised {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -65%) !important;
+}
+
+.door-gallery li {
+    width: 100%;
+    height: 100%;
+    grid-column: 1/span 1;
+    --offsetX: 50%;
+    transition: opacity 0.3s;
+}
+
+.door-gallery li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: all 0.15s;
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+    color: inherit !important;
+    background: transparent !important;
+}
+
+/* Door Clip Paths */
+.door-gallery li:first-of-type {
+    grid-row: 1/span 4;
+    clip-path: polygon(100% calc(20% * -1), 0 calc(20%), 0 100%, 100% calc(20% * 3));
+}
+
+.door-gallery li:nth-of-type(2) {
+    grid-row: 3/span 5;
+    clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
+}
+
+.door-gallery li:nth-of-type(3) {
+    grid-row: 6/span 5;
+    clip-path: polygon(100% 0, 0 calc(16.6% * 2), 0 100%, 100% calc(16.6% * 4));
+}
+
+.door-gallery li:last-of-type {
+    grid-row: -5/span 4;
+    clip-path: polygon(100% 0, 0 calc(20% * 2), 0 calc(20% * 6), 100% calc(20% * 4));
+}
+
+/* Letter containers */
+.door-gallery li .letter-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+/* Letters - EMBOSSED WHITE STYLE LIKE BOTTOM DOOR 64 LOGO */
+.door-gallery li .letter-container span {
+    color: #fff;
+    font-size: 4rem;
+    font-weight: bold;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    text-shadow: 
+        1px 1px 0px #e0e0e0,
+        2px 2px 0px #d0d0d0,
+        3px 3px 0px #c0c0c0,
+        4px 4px 0px #b0b0b0,
+        5px 5px 0px #a0a0a0,
+        6px 6px 10px rgba(0,0,0,0.3);
+}
+
+/* Desktop hover effects - PULSATE */
+@media (hover: hover) and (pointer: fine) {
+    .door-gallery li a:hover .letter-container span {
+        opacity: 1;
+        animation: pulsateEmbossed 1s ease-in-out infinite alternate;
     }
 }
 
-// =============== ENHANCED GALLERY SYSTEM FOR IPHONE ===============
-class DoorGallery {
-    constructor(galleryId) {
-        this.galleryId = galleryId;
-        this.currentSlide = 0;
-        this.slides = document.querySelectorAll(`#${galleryId} .gallery-slide`);
-        this.dots = document.querySelectorAll(`#${galleryId} .gallery-dot`);
-        this.track = document.querySelector(`#${galleryId} .gallery-track`);
-        this.progress = document.querySelector(`#${galleryId} .gallery-progress`);
-        this.totalSlides = this.slides.length;
-        this.autoPlayInterval = null;
-        this.isPlaying = false;
-        this.autoPlayDelay = 5000;
-        this.isPaused = false;
-        this.isIPhone = this.detectIPhone();
-        
-        if (this.totalSlides > 0) {
-            this.init();
-        }
-    }
-    
-    detectIPhone() {
-        return /iPhone|iPod/.test(navigator.userAgent) || 
-               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    }
-    
-    init() {
-        console.log(`Gallery ${this.galleryId} - Initializing with ${this.totalSlides} slides`, this.isIPhone ? '(iPhone)' : '');
-        
-        this.setupEventListeners();
-        this.updateGallery();
-        this.startAutoPlay();
-    }
-    
-    setupEventListeners() {
-        // Enhanced dot navigation for iPhone
-        this.dots.forEach((dot, index) => {
-            // Convert spans to buttons for better iPhone accessibility
-            if (dot.tagName !== 'BUTTON') {
-                const button = document.createElement('button');
-                button.className = dot.className;
-                button.setAttribute('role', 'tab');
-                button.setAttribute('aria-label', `Go to slide ${index + 1}`);
-                button.setAttribute('type', 'button');
-                if (dot.classList.contains('active')) {
-                    button.setAttribute('aria-selected', 'true');
-                    button.setAttribute('tabindex', '0');
-                } else {
-                    button.setAttribute('aria-selected', 'false');
-                    button.setAttribute('tabindex', '-1');
-                }
-                
-                button.addEventListener('click', () => this.goToSlide(index));
-                dot.parentNode.replaceChild(button, dot);
-                this.dots[index] = button;
-            } else {
-                dot.addEventListener('click', () => this.goToSlide(index));
-            }
-            
-            this.dots[index].addEventListener('keydown', (e) => {
-                switch (e.key) {
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        this.goToSlide(Math.max(0, index - 1));
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        this.goToSlide(Math.min(this.totalSlides - 1, index + 1));
-                        break;
-                    case 'Home':
-                        e.preventDefault();
-                        this.goToSlide(0);
-                        break;
-                    case 'End':
-                        e.preventDefault();
-                        this.goToSlide(this.totalSlides - 1);
-                        break;
-                }
-            });
-        });
-        
-        const prevButton = document.querySelector(`#${this.galleryId} .gallery-nav.prev`);
-        const nextButton = document.querySelector(`#${this.galleryId} .gallery-nav.next`);
-        
-        if (prevButton) prevButton.addEventListener('click', () => this.previousSlide());
-        if (nextButton) nextButton.addEventListener('click', () => this.nextSlide());
-        
-        const container = document.querySelector(`#${this.galleryId}`);
-        if (container) {
-            // iPhone-optimized hover/focus handling
-            if (!this.isIPhone) {
-                container.addEventListener('mouseenter', this.throttle(() => {
-                    this.pauseAutoPlay();
-                }, 100));
-                
-                container.addEventListener('mouseleave', this.throttle(() => {
-                    this.resumeAutoPlay();
-                }, 100));
-            }
-            
-            container.addEventListener('focusin', () => this.pauseAutoPlay());
-            container.addEventListener('focusout', () => {
-                setTimeout(() => this.resumeAutoPlay(), 100);
-            });
-        }
-        
-        this.setupTouchEvents();
-    }
-    
-    setupTouchEvents() {
-        const container = document.querySelector(`#${this.galleryId}`);
-        if (!container) return;
-        
-        let startX = 0;
-        let startY = 0;
-        let startTime = 0;
-        let isDragging = false;
-        let isHorizontalSwipe = false;
-        
-        // iPhone-optimized touch events
-        container.addEventListener('touchstart', (e) => {
-            if (e.touches.length !== 1) return;
-            
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            startTime = Date.now();
-            isDragging = true;
-            isHorizontalSwipe = false;
-            
-            container.classList.add('swiping');
-            this.pauseAutoPlay();
-        }, { passive: true });
-        
-        container.addEventListener('touchmove', (e) => {
-            if (!isDragging || e.touches.length !== 1) return;
-            
-            const currentX = e.touches[0].clientX;
-            const currentY = e.touches[0].clientY;
-            const deltaX = currentX - startX;
-            const deltaY = currentY - startY;
-            
-            if (!isHorizontalSwipe) {
-                const absX = Math.abs(deltaX);
-                const absY = Math.abs(deltaY);
-                
-                // iPhone-optimized swipe detection
-                if (absX > 20 || absY > 20) {
-                    isHorizontalSwipe = absX > absY && absX > (this.isIPhone ? 40 : 30);
-                }
-            }
-            
-            if (isHorizontalSwipe && Math.abs(deltaX) > 15) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        container.addEventListener('touchend', (e) => {
-            if (!isDragging) return;
-            
-            const endX = e.changedTouches[0].clientX;
-            const deltaX = endX - startX;
-            const touchDuration = Date.now() - startTime;
-            
-            container.classList.remove('swiping');
-            isDragging = false;
-            
-            // iPhone-optimized swipe thresholds
-            const swipeThreshold = this.isIPhone ? 60 : 50;
-            const maxSwipeTime = this.isIPhone ? 600 : 500;
-            
-            if (isHorizontalSwipe && 
-                Math.abs(deltaX) > swipeThreshold && 
-                touchDuration < maxSwipeTime) {
-                if (deltaX > 0) {
-                    this.previousSlide();
-                } else {
-                    this.nextSlide();
-                }
-            }
-            
-            isHorizontalSwipe = false;
-            this.resumeAutoPlay();
-        }, { passive: true });
-    }
-    
-    throttle(func, limit) {
-        let inThrottle;
-        return function() {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
-        };
-    }
-    
-    updateGallery() {
-        if (!this.track) return;
-        
-        this.track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
-        
-        this.dots.forEach((dot, index) => {
-            const isActive = index === this.currentSlide;
-            dot.classList.toggle('active', isActive);
-            dot.setAttribute('aria-selected', isActive.toString());
-            dot.setAttribute('tabindex', isActive ? '0' : '-1');
-        });
-        
-        this.updateProgress();
-        
-        this.slides.forEach((slide, index) => {
-            slide.setAttribute('aria-hidden', (index !== this.currentSlide).toString());
-            if (index === this.currentSlide) {
-                slide.classList.add('fade-in');
-                setTimeout(() => slide.classList.remove('fade-in'), 600);
-            }
-        });
-    }
-    
-    updateProgress() {
-        if (!this.progress) return;
-        
-        const progressWidth = ((this.currentSlide + 1) / this.totalSlides) * 100;
-        this.progress.style.width = `${progressWidth}%`;
-    }
-    
-    nextSlide() {
-        this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-        this.updateGallery();
-        console.log(`Gallery ${this.galleryId} - Next slide: ${this.currentSlide + 1}/${this.totalSlides}`);
-    }
-    
-    previousSlide() {
-        this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-        this.updateGallery();
-        console.log(`Gallery ${this.galleryId} - Previous slide: ${this.currentSlide + 1}/${this.totalSlides}`);
-    }
-    
-    goToSlide(slideIndex) {
-        if (slideIndex >= 0 && slideIndex < this.totalSlides) {
-            this.currentSlide = slideIndex;
-            this.updateGallery();
-            this.restartAutoPlay();
-            console.log(`Gallery ${this.galleryId} - Go to slide: ${slideIndex + 1}/${this.totalSlides}`);
-        }
-    }
-    
-    startAutoPlay() {
-        this.pauseAutoPlay();
-        if (this.totalSlides > 1) {
-            // iPhone gets slightly longer autoplay delay
-            const delay = this.isIPhone ? this.autoPlayDelay + 1000 : this.autoPlayDelay;
-            this.autoPlayInterval = setInterval(() => {
-                this.nextSlide();
-            }, delay);
-            this.isPlaying = true;
-            this.isPaused = false;
-            console.log(`Gallery ${this.galleryId} - Auto-play started`, this.isIPhone ? '(iPhone - extended delay)' : '');
-        }
-    }
-    
-    pauseAutoPlay() {
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-            this.autoPlayInterval = null;
-        }
-        this.isPlaying = false;
-        this.isPaused = true;
-    }
-    
-    resumeAutoPlay() {
-        if (this.isPaused && this.totalSlides > 1) {
-            this.startAutoPlay();
-        }
-    }
-    
-    restartAutoPlay() {
-        this.startAutoPlay();
+/* Mobile touch effects - PULSATE */
+@media (hover: none) and (pointer: coarse) {
+    .door-gallery li a:active .letter-container span {
+        opacity: 1;
+        animation: pulsateEmbossed 1s ease-in-out infinite alternate;
     }
 }
 
-// =============== IPHONE-OPTIMIZED MOBILE MENU CLASS ===============
-class MobileMenu {
-    constructor() {
-        this.isOpen = false;
-        this.isIPhone = this.detectIPhone();
-        this.menuButton = null;
-        this.navLinks = null;
-        this.lastFocusedElement = null;
-        
-        this.init();
+/* Active door - enhanced embossed with stronger pulsation */
+.door-gallery li a.door-active .letter-container span {
+    opacity: 1 !important;
+    animation: pulsateEmbossedActive 2s ease-in-out infinite alternate !important;
+}
+
+/* Pulsate animation for hover/touch */
+@keyframes pulsateEmbossed {
+    0% { 
+        transform: scale(1);
+        text-shadow: 
+            1px 1px 0px #e0e0e0,
+            2px 2px 0px #d0d0d0,
+            3px 3px 0px #c0c0c0,
+            4px 4px 0px #b0b0b0,
+            5px 5px 0px #a0a0a0,
+            6px 6px 10px rgba(0,0,0,0.3);
+    }
+    100% { 
+        transform: scale(1.05);
+        text-shadow: 
+            1px 1px 0px #f0f0f0,
+            2px 2px 0px #e0e0e0,
+            3px 3px 0px #d0d0d0,
+            4px 4px 0px #c0c0c0,
+            5px 5px 0px #b0b0b0,
+            6px 6px 15px rgba(255,255,255,0.4);
+    }
+}
+
+/* Enhanced pulsate for active door */
+@keyframes pulsateEmbossedActive {
+    0% { 
+        transform: scale(1.1);
+        text-shadow: 
+            1px 1px 0px #f0f0f0,
+            2px 2px 0px #e0e0e0,
+            3px 3px 0px #d0d0d0,
+            4px 4px 0px #c0c0c0,
+            5px 5px 0px #b0b0b0,
+            6px 6px 15px rgba(255,255,255,0.5);
+    }
+    100% { 
+        transform: scale(1.15);
+        text-shadow: 
+            1px 1px 0px #f5f5f5,
+            2px 2px 0px #e8e8e8,
+            3px 3px 0px #d8d8d8,
+            4px 4px 0px #c8c8c8,
+            5px 5px 0px #b8b8b8,
+            6px 6px 20px rgba(255,255,255,0.7);
+    }
+}
+
+/* Status Message - BLACK TEXT ON WHITE BACKGROUND */
+.status-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,255,255,0.95);
+    color: #000 !important;
+    padding: 30px;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 40;
+    display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    font-family: 'Georgia', serif;
+    border: 2px solid #000;
+}
+
+/* Door Hover Effects - NO GREY WASH */
+.door-gallery li:hover a {
+    transition: transform 0.3s !important;
+    transform: translate(0) scale(1.05) !important;
+    animation-play-state: paused;
+}
+
+.door-gallery:hover li {
+    opacity: 1 !important;
+}
+
+.door-gallery:hover li:hover {
+    opacity: 1 !important;
+    transition: clip-path 0.4s 0.3s;
+    clip-path: polygon(100% 0, 0 0, 0 100%, 100% 100%);
+    z-index: 10;
+}
+
+.door-gallery li:hover img {
+    filter: blur(0) brightness(1) !important;
+    animation-play-state: paused;
+    transform: scale(1.02);
+    transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.splash-content {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #333;
+    z-index: 20;
+}
+
+/* Logo content moved below and styled white embossed */
+.splash-content-below {
+    position: absolute !important;
+    bottom: 15% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    text-align: center !important;
+    z-index: 20 !important;
+}
+
+.splash-content h1,
+.splash-content-below h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #333;
+    animation: pulse 2s infinite;
+}
+
+/* WHITE EMBOSSED STYLE for below content */
+.splash-content-below h1 {
+    color: #fff !important;
+    text-shadow: 
+        1px 1px 0px #e0e0e0,
+        2px 2px 0px #d0d0d0,
+        3px 3px 0px #c0c0c0,
+        4px 4px 0px #b0b0b0,
+        5px 5px 0px #a0a0a0,
+        6px 6px 10px rgba(0,0,0,0.3) !important;
+}
+
+.splash-content p,
+.splash-content-below p {
+    font-size: 1rem;
+    opacity: 0.7;
+    color: #666;
+}
+
+.splash-content-below p {
+    opacity: 0.8 !important;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ========== IPHONE SPLASH PAGE ENHANCEMENTS ========== */
+@supports (-webkit-touch-callout: none) {
+    .splash-page {
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        -webkit-font-smoothing: antialiased;
+        -webkit-backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+}
+
+/* Enhanced Mobile Support */
+@media (max-width: 768px) {
+    .door-gallery {
+        height: 60vh;
+        width: 40vw;
+        grid-template-rows: repeat(4, 1fr 1.5fr 1fr);
     }
     
-    detectIPhone() {
-        return /iPhone|iPod/.test(navigator.userAgent) || 
-               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    .door-gallery-raised {
+        transform: translate(-50%, -60%) !important;
+    }
+
+    .door-gallery li .letter-container span {
+        font-size: 3rem;
+    }
+
+    .splash-content h1,
+    .splash-content-below h1 {
+        font-size: 2rem;
     }
     
-    init() {
-        this.menuButton = document.querySelector('.mobile-menu');
-        this.navLinks = document.getElementById('navLinks');
-        
-        if (!this.menuButton || !this.navLinks) return;
-        
-        console.log('Initializing iPhone-optimized mobile menu...');
-        
-        // Enhanced event listeners
-        this.setupEventListeners();
-        this.setupKeyboardNavigation();
-        this.setupClickOutsideHandler();
+    .splash-content-below {
+        bottom: 18% !important;
     }
     
-    setupEventListeners() {
-        // iPhone-optimized touch handling
-        if (this.isIPhone) {
-            let touchStartTime = 0;
-            
-            this.menuButton.addEventListener('touchstart', () => {
-                touchStartTime = Date.now();
-            }, { passive: true });
-            
-            this.menuButton.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                const touchDuration = Date.now() - touchStartTime;
-                
-                if (touchDuration < 300) { // Quick tap
-                    this.toggle();
-                }
-            }, { passive: false });
-        } else {
-            this.menuButton.addEventListener('click', () => this.toggle());
+    .splash-content-below h1 {
+        text-shadow: 
+            1px 1px 0px #e0e0e0,
+            2px 2px 0px #d0d0d0,
+            3px 3px 0px #c0c0c0,
+            4px 4px 5px rgba(0,0,0,0.3) !important;
+    }
+}
+
+/* Performance Optimizations */
+.door-gallery li a.door-active {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .door-gallery li a.door-active .letter-container span,
+    .door-gallery li a:hover .letter-container span {
+        animation: none !important;
+        transform: none !important;
+    }
+    
+    .door-gallery li a.door-active {
+        outline: 3px solid #00ffff;
+        outline-offset: 5px;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .door-gallery li a.door-active {
+        outline: 4px solid currentColor !important;
+        outline-offset: 4px;
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .door-gallery li a:hover .letter-container span {
+        opacity: 1 !important;
+        transform: none !important;
+        animation-play-state: running !important;
+    }
+    
+    .door-gallery li a:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+    
+    .door-gallery li a.door-active:active {
+        transform: scale(1.02);
+    }
+}
+
+/* Skip link for accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #000;
+    color: #fff;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 1002;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* =============== MAIN SITE STYLES =============== */
+.main-site {
+    opacity: 0;
+    transition: opacity 1s ease 0.5s;
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.main-site.active {
+    opacity: 1;
+}
+
+/* Navigation - Fixed sizing with MOBILE NAVIGATION */
+.nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 20px 0;
+    border-bottom: 1px solid #333;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    padding-top: max(20px, calc(var(--safe-area-top) + 10px));
+    padding-left: var(--safe-area-left);
+    padding-right: var(--safe-area-right);
+}
+
+/* Desktop hover behavior */
+@media (min-width: 769px) {
+    .nav {
+        opacity: 0;
+        transform: translateY(-100%);
+        transition: all 0.3s ease;
+    }
+
+    .nav:hover,
+    .nav.show-nav,
+    body:hover .nav,
+    .main-site:hover .nav {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .main-site.active:hover .nav {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nav-logo {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 300;
+    color: #fff;
+    text-decoration: none !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    font-family: 'Georgia', serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-logo:hover {
+    opacity: 0.8;
+}
+
+.nav-left-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-left: auto;
+}
+
+.nav-center {
+    display: flex;
+    justify-content: flex-start;
+    flex: 0 0 auto;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: clamp(15px, 3vw, 35px);
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    flex: 1;
+    justify-content: space-evenly;
+    max-width: 1000px;
+    margin-left: auto;
+}
+
+/* Nav links - Clean styling without artifacts */
+.nav-links a {
+    color: #ccc;
+    text-decoration: none !important;
+    text-transform: lowercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: transparent;
+    border: none !important;
+    outline: none !important;
+}
+
+.nav-links a::before {
+    display: none;
+}
+
+.nav-links a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* =============== MOBILE MENU BUTTON =============== */
+.mobile-menu {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.mobile-menu span {
+    width: 25px;
+    height: 2px;
+    background: #fff;
+    margin: 3px 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    transform-origin: center;
+}
+
+/* Mobile menu animation improvements */
+.mobile-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.mobile-menu.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.mobile-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+.mobile-menu:active {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(0.95);
+    transition: all 0.1s ease;
+}
+
+/* =============== ENHANCED AUDIO BUTTON STYLES =============== */
+
+/* Audio Toggle Button */
+.audio-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    color: #fff !important;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    contain: layout style;
+}
+
+.audio-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+    color: #fff !important;
+    transition: transform 0.2s ease;
+}
+
+.audio-toggle:active {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+}
+
+.audio-toggle:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+/* Playing state with enhanced pulsing animation */
+.audio-toggle.playing {
+    background: var(--tuscan-orange-light) !important;
+    border-color: var(--tuscan-orange) !important;
+    color: #fff !important;
+    animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
+    box-shadow: 0 0 15px rgba(198, 81, 2, 0.4);
+}
+
+@keyframes audioPlaying {
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.05);
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    }
+}
+
+.audio-toggle.playing:hover {
+    animation-play-state: paused;
+    transform: scale(1.15);
+}
+
+@keyframes pulseTuscanOrange {
+    0% { box-shadow: 0 0 0 0 var(--tuscan-orange-glow); }
+    70% { box-shadow: 0 0 0 10px rgba(198, 81, 2, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(198, 81, 2, 0); }
+}
+
+/* Splash Audio Button - Enhanced and Properly Positioned */
+.splash-audio-toggle {
+    position: fixed !important;
+    top: 20px !important;
+    top: max(20px, calc(var(--safe-area-top) + 15px)) !important;
+    right: 20px !important;
+    right: max(20px, calc(var(--safe-area-right) + 15px)) !important;
+    background: rgba(70, 130, 180, 0.9) !important;
+    border: 2px solid rgba(70, 130, 180, 1) !important;
+    border-radius: 50% !important;
+    width: 60px !important;
+    height: 60px !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    backdrop-filter: blur(15px) !important;
+    z-index: 99999 !important;
+    font-family: 'Georgia', serif !important;
+    -webkit-tap-highlight-color: transparent !important;
+    overflow: hidden !important;
+    user-select: none !important;
+    will-change: transform !important;
+    backface-visibility: hidden !important;
+    perspective: 1000px !important;
+    box-shadow: 0 4px 20px rgba(70, 130, 180, 0.3) !important;
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    contain: layout style;
+}
+
+.splash-audio-toggle:hover {
+    background: rgba(70, 130, 180, 1) !important;
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.splash-audio-toggle:active {
+    transform: scale(0.9);
+    transition: transform 0.1s ease;
+}
+
+.splash-audio-toggle:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+/* Playing state with enhanced animation for splash */
+.splash-audio-toggle.playing {
+    background: rgba(70, 130, 180, 1) !important;
+    animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
+    box-shadow: 0 6px 30px rgba(70, 130, 180, 0.5) !important;
+}
+
+.splash-audio-toggle.playing:hover {
+    animation-play-state: paused !important;
+    transform: scale(1.08) !important;
+}
+
+@keyframes pulseBlueSplash {
+    0% { box-shadow: 0 0 0 0 rgba(70, 130, 180, 0.8), 0 6px 30px rgba(70, 130, 180, 0.5); }
+    70% { box-shadow: 0 0 0 15px rgba(70, 130, 180, 0), 0 6px 30px rgba(70, 130, 180, 0.5); }
+    100% { box-shadow: 0 0 0 0 rgba(70, 130, 180, 0), 0 6px 30px rgba(70, 130, 180, 0.5); }
+}
+
+/* iPhone audio button improvements */
+@media (max-width: 768px) {
+    .splash-audio-toggle {
+        top: max(25px, calc(env(safe-area-inset-top) + 15px)) !important;
+        right: max(25px, calc(env(safe-area-inset-right) + 15px)) !important;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+}
+
+/* Audio loading indicator */
+.audio-toggle[data-loading="true"], 
+.splash-audio-toggle[data-loading="true"] {
+    animation: audioLoading 1.5s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes audioLoading {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Global Text Styling */
+h1, h2, h3, h4, h5, h6 {
+    text-transform: lowercase;
+    color: #000;
+}
+
+p, .sub-links a, .menu-item p {
+    color: #666;
+    text-transform: lowercase;
+}
+
+.section {
+    background: #fff;
+}
+
+/* =============== LANDING PAGE - ALIGNED WITH NAV =============== */
+.landing-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    top: 0;
+    left: 0;
+    padding-top: var(--nav-height);
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    overflow-y: auto;
+}
+
+/* Desktop specific */
+@media (min-width: 769px) {
+    .landing-page {
+        height: auto;
+        min-height: 100vh;
+        min-height: calc(var(--vh, 1vh) * 100);
+        overflow-y: auto;
+    }
+}
+
+/* Mobile landing page - force white background in ALL orientations */
+@media (max-width: 768px) {
+    .landing-page {
+        background: #fff !important;
+        background-image: none !important;
+        background-color: #fff !important;
+    }
+
+    .landing-page .gallery-slider {
+        background: #fff !important;
+        background-image: none !important;
+        background-color: #fff !important;
+    }
+
+    .landing-page *,
+    .landing-content *,
+    .landing-links * {
+        background-image: none !important;
+    }
+}
+
+.gallery-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Force white background on mobile for page 64 */
+@media (max-width: 768px) {
+    .gallery-slider {
+        background: #fff !important;
+        z-index: -2;
+    }
+
+    .landing-page .gallery-slider {
+        background: #fff !important;
+        background-image: none !important;
+        z-index: -2;
+    }
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    background-size: cover;
+    background-position: center;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide:nth-child(1) {
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+}
+
+.slide:nth-child(2) {
+    background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+    position: relative;
+}
+
+.slide:nth-child(3) {
+    background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
+    position: relative;
+}
+
+.slide:nth-child(1)::before,
+.slide:nth-child(2)::before,
+.slide:nth-child(3)::before {
+    display: none;
+}
+
+.landing-content {
+    z-index: 10;
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.landing-content h1 {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: clamp(2px, 2vw, 8px);
+    font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    color: #fff;
+    line-height: 1.2;
+}
+
+/* Mobile page 64 logo - white embossed like other pages */
+@media (max-width: 768px) {
+    .landing-content h1 {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+        letter-spacing: clamp(2px, 3vw, 6px);
+        margin-bottom: 30px;
+        line-height: 1.1;
+        color: #fff !important;
+        text-shadow: 
+            1px 1px 0px #ccc,
+            2px 2px 0px #bbb,
+            3px 3px 0px #aaa,
+            4px 4px 0px #999,
+            5px 5px 10px rgba(0,0,0,0.2) !important;
+    }
+}
+
+.landing-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: clamp(30px, 5vw, 80px);
+    margin: 40px auto;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.landing-link {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    margin-bottom: 30px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.landing-link:hover {
+    transform: translateY(-5px);
+}
+
+.landing-link h3 {
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    margin-bottom: 25px;
+    text-transform: lowercase;
+    letter-spacing: clamp(1px, 1vw, 3px);
+    color: #000;
+    font-weight: 300;
+}
+
+.sub-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.sub-links a {
+    color: #ccc;
+    text-decoration: none !important;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    text-transform: lowercase;
+    padding: 5px 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sub-links a:hover {
+    color: #fff;
+}
+
+/* =============== ENHANCED GALLERY STYLES =============== */
+.css-gallery {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    height: 400px;
+    margin: 40px auto 60px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    background: #f8f8f8;
+    will-change: auto;
+}
+
+.css-gallery .gallery-nav,
+.css-gallery .gallery-dots,
+.css-gallery .gallery-dot {
+    isolation: isolate;
+}
+
+.gallery-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.gallery-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.gallery-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.gallery-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05));
+    pointer-events: none;
+}
+
+.gallery-slide img {
+    transition: opacity 0.3s ease;
+}
+
+.gallery-slide img[data-loading="true"] {
+    opacity: 0.5;
+}
+
+.gallery-content {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+    color: white;
+    z-index: 2;
+}
+
+.gallery-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    text-transform: lowercase;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    color: #fff;
+}
+
+.gallery-content p {
+    font-size: 1rem;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    color: #fff;
+}
+
+/* Enhanced Gallery Controls */
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-size: 18px;
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.gallery-nav:hover {
+    background: rgba(0,0,0,0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-nav:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.gallery-nav.prev {
+    left: 20px;
+}
+
+.gallery-nav.next {
+    right: 20px;
+}
+
+/* Enhanced Gallery Dots */
+.gallery-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 3;
+}
+
+.gallery-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gallery-dot:hover {
+    transform: scale(1.3);
+    opacity: 0.8;
+}
+
+.gallery-dot.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.gallery-dot:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+.gallery-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(255, 255, 255, 0.4) 100%);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+}
+
+.gallery-container.swiping .gallery-track {
+    transition: none;
+}
+
+.gallery-slide.fade-in {
+    animation: fadeInSlide 0.6s ease-out;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============== COMING SOON PAGE STYLES =============== */
+.coming-soon-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    padding: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.coming-soon-title {
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+    color: #333;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: slideInFromTop 1s ease-out;
+}
+
+.coming-soon-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #666;
+    max-width: 600px;
+    line-height: 1.6;
+    text-transform: lowercase;
+    animation: slideInFromBottom 1s ease-out 0.3s both;
+}
+
+.coming-soon-message {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 3rem;
+    font-style: italic;
+    text-transform: lowercase;
+    animation: fadeIn 1s ease-out 0.6s both;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: transparent;
+    color: #333;
+    text-decoration: none !important;
+    border: 2px solid #333;
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    animation: slideInFromBottom 1s ease-out 0.9s both;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.back-button:hover {
+    background-color: #333;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.back-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Mobile Coming Soon Styles */
+@media (max-width: 768px) {
+    .coming-soon-content {
+        padding: 1.5rem;
+        min-height: 50vh;
+    }
+
+    .coming-soon-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: 1px;
+    }
+    
+    .coming-soon-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .coming-soon-message {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+    
+    .back-button {
+        padding: 15px 25px;
+        font-size: 0.9rem;
+        min-height: 48px;
+        min-width: 150px;
+    }
+}
+
+/* Section Styles */
+.section {
+    padding: 100px 0;
+    background: #fff;
+    display: none;
+    min-height: calc(100vh - var(--nav-height));
+}
+
+.section.active {
+    display: block;
+}
+
+/* Page Logo (above section titles) - White Embossed Style */
+.page-logo {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: clamp(2px, 2vw, 6px);
+    color: #fff;
+    font-family: 'Georgia', serif;
+    text-shadow: 
+        1px 1px 0px #ccc,
+        2px 2px 0px #bbb,
+        3px 3px 0px #aaa,
+        4px 4px 0px #999,
+        5px 5px 10px rgba(0,0,0,0.2);
+    position: relative;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    display: block;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.page-logo:hover {
+    opacity: 0.8;
+}
+
+.page-logo::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: rgba(255,255,255,0.1);
+    text-shadow: none;
+    z-index: -1;
+}
+
+.section-title {
+    font-size: 3em;
+    text-align: center;
+    margin-bottom: 60px;
+    font-weight: 300;
+    text-transform: lowercase;
+    letter-spacing: 3px;
+    color: #000;
+}
+
+/* Space Section */
+.space-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.space-item {
+    background: #f8f8f8;
+    padding: 40px;
+    border-radius: 10px;
+    border-left: 4px solid #000;
+    text-align: center;
+    transition: transform 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.space-item:hover {
+    transform: translateY(-5px);
+}
+
+.space-item h3 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    color: #000;
+}
+
+.space-item p {
+    color: #666;
+}
+
+/* Menu Items */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+}
+
+.menu-item {
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 10px;
+    border-left: 4px solid #000;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu-item:hover {
+    transform: translateY(-3px);
+}
+
+.menu-item h3 {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.menu-item p {
+    color: #666;
+}
+
+.menu-item .price {
+    color: #000;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+/* Sub Navigation Tabs */
+.sub-nav {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.sub-nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 20px;
+}
+
+.sub-nav-link {
+    color: #666;
+    text-decoration: none !important;
+    font-size: 1.1em;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sub-nav-link:hover {
+    color: #000;
+    background: rgba(0,0,0,0.05);
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.breadcrumb-link {
+    color: #666;
+    text-decoration: none !important;
+    font-size: 1.1em;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.breadcrumb-link:hover {
+    color: #000;
+}
+
+/* Tasting Menu Content */
+.tasting-menu-content {
+    margin-bottom: 60px;
+}
+
+.menu-description {
+    text-align: center;
+    margin-bottom: 50px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.menu-description h3 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    color: #000;
+}
+
+.menu-description p {
+    font-size: 1.2em;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.price-highlight {
+    font-size: 1.5em;
+    color: #000;
+    font-weight: bold;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+}
+
+/* Chef's Philosophy */
+.chef-philosophy {
+    margin-top: 60px;
+}
+
+.chef-philosophy h3 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 40px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    color: #000;
+}
+
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.philosophy-item {
+    background: #f8f8f8;
+    padding: 30px;
+    border-radius: 10px;
+    border-left: 4px solid #000;
+    text-align: center;
+}
+
+.philosophy-item h4 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.philosophy-item p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Spirits Categories */
+.spirits-categories {
+    margin-top: 50px;
+}
+
+.spirit-category {
+    margin-bottom: 50px;
+}
+
+.spirit-category h3 {
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    color: #000;
+}
+
+.spirit-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.spirit-item {
+    background: #f8f8f8;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 4px solid #000;
+}
+
+.spirit-item h4 {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.spirit-item p {
+    color: #666;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.spirit-item .price {
+    color: #000;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Cocktail and Zero-Proof Content */
+.cocktail-content,
+.zero-proof-content {
+    margin-bottom: 60px;
+}
+
+/* Events */
+.events-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.event-item {
+    background: #f8f8f8;
+    padding: 40px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    border-left: 4px solid #000;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.event-date {
+    color: #000;
+    font-weight: bold;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.event-item h3 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    text-transform: lowercase;
+    color: #000;
+}
+
+.event-item p {
+    color: #666;
+}
+
+/* Gallery Grid for Gallery Section */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.gallery-item {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    text-transform: lowercase;
+    -webkit-tap-highlight-color: transparent;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+}
+
+.gallery-item:hover::before {
+    opacity: 0;
+}
+
+.gallery-item span {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+/* Contact Info */
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+}
+
+.contact-card {
+    background: #f8f8f8;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.contact-card h3 {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    color: #000;
+}
+
+.contact-card p {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #666;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.social-links a {
+    color: #000;
+    font-size: 1.2em;
+    text-decoration: none !important;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.social-links a:hover {
+    color: #666;
+}
+
+/* Reservation Form */
+.reservation-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #f8f8f8;
+    padding: 40px;
+    border-radius: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Georgia', serif;
+    color: #000;
+    -webkit-appearance: none;
+    -webkit-border-radius: 5px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #000;
+    outline: none;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: 'Georgia', serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.submit-btn:hover {
+    background: #333;
+}
+
+/* Focus states for accessibility */
+a:focus, 
+button:focus, 
+input:focus, 
+textarea:focus, 
+select:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+.audio-toggle:focus-visible,
+.splash-audio-toggle:focus-visible,
+.mobile-menu:focus-visible,
+.nav-links a:focus-visible,
+.gallery-nav:focus-visible,
+.gallery-dot:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 3px;
+    z-index: 10;
+}
+
+/* =============== MOBILE RESPONSIVE - OPTIMIZED FOR IPHONE 14/15 SERIES =============== */
+@media (max-width: 768px) {
+    :root {
+        --nav-height: var(--mobile-nav-height);
+    }
+
+    /* Mobile body optimizations */
+    body {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: #fff !important;
+    }
+
+    /* Mobile Navigation Styles */
+    .nav {
+        padding: 15px 0;
+        height: var(--mobile-nav-height);
+        opacity: 1;
+        transform: translateY(0);
+        position: fixed;
+        top: 0;
+        padding-top: max(15px, calc(var(--safe-area-top) + 8px));
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid #ddd;
+    }
+
+    .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 20px;
+        padding-left: max(20px, calc(var(--safe-area-left) + 10px));
+        padding-right: max(20px, calc(var(--safe-area-right) + 10px));
+        max-width: 100%;
+    }
+
+    .nav-logo {
+        font-size: clamp(1rem, 4vw, 1.4rem);
+        color: #000;
+        text-shadow: none;
+        flex-shrink: 0;
+        order: 1;
+    }
+
+    .nav-left-section {
+        flex-direction: row;
+        gap: 15px;
+        align-items: center;
+        width: auto;
+        justify-content: flex-end;
+        order: 2;
+        margin-left: auto;
+        margin-right: 15px;
+    }
+
+    /* Show mobile menu button */
+    .mobile-menu {
+        display: flex;
+        order: 3;
+        margin-left: 10px;
+        width: 44px;
+        height: 44px;
+        padding: 10px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .mobile-menu:active {
+        background: rgba(0, 0, 0, 0.1);
+        transform: scale(0.95);
+        transition: all 0.1s ease;
+    }
+
+    .mobile-menu span {
+        background: #000;
+    }
+
+    /* Audio toggle - minimum 44×44px touch target */
+    .audio-toggle {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+        min-width: 44px;
+        min-height: 44px;
+        border-color: rgba(0, 0, 0, 0.3);
+        color: #000;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .audio-toggle:hover {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: rgba(0, 0, 0, 0.5);
+        transform: scale(1.1);
+    }
+
+    /* Mobile Navigation Links - Full Screen Overlay */
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: var(--mobile-nav-height);
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        flex-direction: column;
+        padding: 30px 20px;
+        gap: 0;
+        border-top: 1px solid #ddd;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        padding-bottom: max(30px, calc(var(--safe-area-bottom) + 20px));
+        justify-content: flex-start;
+        backdrop-filter: blur(15px);
+        z-index: 999;
+        height: calc(100vh - var(--mobile-nav-height));
+    }
+
+    .nav-links.active {
+        display: flex;
+        animation: slideInFromTop 0.3s ease-out;
+    }
+
+    @keyframes slideInFromTop {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .nav-links a {
+        font-size: 18px;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        text-align: center;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+        background: transparent;
+    }
+
+    .nav-links a:active {
+        background: rgba(0,0,0,0.1);
+        color: #000;
+    }
+
+    /* Enhanced mobile touch targets */
+    .nav-links a,
+    .sub-links a,
+    .sub-nav-link,
+    .breadcrumb-link,
+    .social-links a,
+    .gallery-nav,
+    .gallery-dot,
+    .mobile-menu,
+    .audio-toggle,
+    .splash-audio-toggle,
+    .landing-link,
+    .space-item,
+    .menu-item,
+    .submit-btn,
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .back-button {
+        min-width: 44px;
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+
+    .splash-hint {
+        bottom: max(40px, calc(var(--safe-area-bottom) + 30px));
+        font-size: 16px;
+        padding: 15px 25px;
+        max-width: 85%;
+        margin: 0 auto;
+        border-radius: 25px;
+    }
+
+    /* Gallery styles for mobile */
+    .css-gallery {
+        height: 300px;
+        margin: 30px auto 40px;
+        border-radius: 12px;
+    }
+
+    .gallery-content {
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .gallery-content h3 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+
+    .gallery-content p {
+        font-size: 0.9rem;
+    }
+
+    .gallery-nav {
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .gallery-nav.prev {
+        left: 15px;
+    }
+
+    .gallery-nav.next {
+        right: 15px;
+    }
+
+    .gallery-dots {
+        bottom: 15px;
+        gap: 10px;
+    }
+
+    .gallery-dot {
+        width: 10px;
+        height: 10px;
+        min-width: 16px;
+        min-height: 16px;
+        margin: 0 8px;
+    }
+
+    /* mobile landing page specific styles */
+    .landing-page {
+        padding: max(85px, calc(var(--mobile-nav-height) + 25px)) 20px max(50px, calc(var(--safe-area-bottom) + 30px));
+        justify-content: flex-start;
+        box-sizing: border-box;
+        color: #000;
+        background: #fff !important;
+    }
+
+    .gallery-slider {
+        background: #fff !important;
+    }
+
+    .landing-content {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        gap: 25px;
+        margin-bottom: 40px;
+        flex-shrink: 0;
+    }
+
+    .landing-content h1 {
+        font-size: clamp(2.5rem, 12vw, 4rem);
+        letter-spacing: clamp(2px, 3vw, 6px);
+        margin-bottom: 30px;
+        line-height: 1.1;
+        color: #fff !important;
+        text-shadow: 
+            1px 1px 0px #ccc,
+            2px 2px 0px #bbb,
+            3px 3px 0px #aaa,
+            4px 4px 0px #999,
+            5px 5px 10px rgba(0,0,0,0.2) !important;
+    }
+
+    .landing-links {
+        flex-direction: column;
+        gap: 35px;
+        margin: 30px 0;
+        width: 100%;
+        padding: 0;
+    }
+
+    .landing-link {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+        min-height: 44px;
+        padding: 10px;
+    }
+
+    .landing-link h3 {
+        font-size: clamp(1.4rem, 6vw, 1.8rem);
+        letter-spacing: clamp(1px, 3vw, 4px);
+        margin-bottom: 20px;
+        color: #000;
+    }
+
+    .sub-links a {
+        font-size: 18px;
+        padding: 12px 0;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+    }
+
+    .sub-links a:hover,
+    .sub-links a:active {
+        color: #000;
+    }
+
+    .landing-page.section {
+        background: #fff;
+    }
+
+    .page-logo {
+        font-size: clamp(1.8rem, 8vw, 2.5rem);
+        margin-bottom: 20px;
+        letter-spacing: clamp(2px, 3vw, 4px);
+        color: #fff;
+        text-shadow: 
+            1px 1px 0px #ddd,
+            2px 2px 0px #ccc,
+            3px 3px 0px #bbb,
+            4px 4px 5px rgba(0,0,0,0.3);
+    }
+
+    .section-title {
+        font-size: clamp(2rem, 10vw, 2.8rem);
+        margin-bottom: 50px;
+    }
+
+    .menu-grid,
+    .space-grid,
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .space-item,
+    .menu-item {
+        padding: 30px 25px;
+        margin: 0 15px;
+    }
+
+    .space-item h3,
+    .menu-item h3 {
+        font-size: 18px;
+    }
+
+    .space-item p,
+    .menu-item p {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .section {
+        padding: max(90px, calc(var(--mobile-nav-height) + 30px)) 0 max(70px, calc(var(--safe-area-bottom) + 40px));
+        min-height: calc(100vh - var(--mobile-nav-height));
+    }
+
+    .reservation-form,
+    .contact-card {
+        margin: 0 20px;
+        padding: 30px 25px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px;
+        padding: 18px;
+        border-radius: 10px;
+        min-height: 44px;
+    }
+
+    .submit-btn {
+        padding: 20px;
+        font-size: 18px;
+        border-radius: 10px;
+        min-height: 44px;
+    }
+
+    .space-item:active,
+    .menu-item:active,
+    .landing-link:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+
+    .social-links {
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .social-links a {
+        font-size: 18px;
+        padding: 12px 15px;
+        min-height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .social-links a:active {
+        background: rgba(0,0,0,0.1);
+    }
+
+    .sub-nav-links {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .sub-nav-link {
+        font-size: 16px;
+        padding: 15px 20px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    .sub-nav-link:active {
+        background: rgba(0,0,0,0.1);
+        transform: scale(0.98);
+    }
+
+    .breadcrumb {
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-link {
+        font-size: 16px;
+        padding: 12px 20px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .menu-description h3 {
+        font-size: clamp(1.5rem, 8vw, 2rem);
+    }
+
+    .menu-description p {
+        font-size: 16px;
+        padding: 0 15px;
+    }
+
+    .price-highlight {
+        font-size: 1.3em;
+    }
+
+    .philosophy-grid,
+    .spirit-list {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .philosophy-item,
+    .spirit-item {
+        margin: 0 15px;
+        padding: 25px 20px;
+    }
+
+    .spirit-category h3 {
+        font-size: clamp(1.4rem, 6vw, 1.8rem);
+    }
+
+    .audio-toggle:focus-visible,
+    .splash-audio-toggle:focus-visible,
+    .mobile-menu:focus-visible {
+        outline: 2px solid rgba(0, 0, 0, 0.8);
+        outline-offset: 2px;
+    }
+}
+
+/* Prevent hover effects on mobile devices */
+@media (hover: none) and (pointer: coarse) {
+    .gallery-nav:hover,
+    .audio-toggle:hover,
+    .splash-audio-toggle:hover,
+    .nav-links a:hover,
+    .landing-link:hover,
+    .space-item:hover,
+    .menu-item:hover,
+    .door-gallery li:hover a,
+    .door-gallery li:hover img {
+        background-color: initial !important;
+        transform: initial !important;
+        filter: initial !important;
+        opacity: initial !important;
+        animation-play-state: running !important;
+        box-shadow: initial !important;
+    }
+    
+    .audio-toggle.playing {
+        animation: audioPlaying 3s ease-in-out infinite alternate, pulseTuscanOrange 2s infinite;
+    }
+    
+    .splash-audio-toggle.playing {
+        animation: audioPlaying 3s ease-in-out infinite alternate, pulseBlueSplash 2s infinite !important;
+    }
+    
+    .door-gallery:hover li {
+        opacity: 1 !important;
+    }
+    
+    .door-gallery:hover li:hover {
+        clip-path: initial !important;
+        z-index: initial !important;
+    }
+}
+
+/* Throttled hover effects for desktop only */
+@media (min-width: 769px) and (hover: hover) {
+    .css-gallery:hover {
+        --gallery-paused: true;
+    }
+    
+    .gallery-nav,
+    .audio-toggle,
+    .nav-links a,
+    .landing-link,
+    .space-item,
+    .menu-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* Performance Optimizations */
+.audio-toggle,
+.splash-audio-toggle,
+.gallery-nav,
+.mobile-menu,
+.door-gallery li a,
+.door-gallery li img {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+.audio-toggle:not(.playing),
+.splash-audio-toggle:not(.playing) {
+    will-change: auto;
+}
+
+/* Accessibility Improvements */
+@media (prefers-contrast: high) {
+    .audio-toggle, 
+    .splash-audio-toggle {
+        border: 3px solid currentColor !important;
+        background: transparent !important;
+    }
+    
+    .gallery-nav {
+        border: 2px solid rgba(255, 255, 255, 1) !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .audio-toggle.playing, 
+    .splash-audio-toggle.playing,
+    .door-gallery li a,
+    .door-gallery li img {
+        animation: none !important;
+    }
+    
+    .audio-toggle.playing {
+        background: var(--tuscan-orange-light) !important;
+        border-color: var(--tuscan-orange) !important;
+    }
+    
+    .splash-audio-toggle.playing {
+        background: rgba(70, 130, 180, 1) !important;
+    }
+}
+
+/* Safe area improvements for notched devices */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .splash-audio-toggle {
+        top: max(20px, calc(env(safe-area-inset-top) + 15px)) !important;
+        right: max(20px, calc(env(safe-area-inset-right) + 15px)) !important;
+    }
+    
+    .nav {
+        padding-top: max(15px, calc(env(safe-area-inset-top) + 10px));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+    
+    @media (max-width: 768px) {
+        .nav-links.active {
+            padding-bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px));
         }
         
-        // Close menu when clicking nav links
-        const navLinkElements = this.navLinks.querySelectorAll('a');
-        navLinkElements.forEach(link => {
-            link.addEventListener('click', () => {
-                this.close();
-            });
-        });
-    }
-    
-    setupKeyboardNavigation() {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isOpen) {
-                this.close();
-                this.menuButton.focus();
-            }
-            
-            // iPhone-specific keyboard handling
-            if (this.isIPhone && e.key === 'Enter' && e.target === this.menuButton) {
-                e.preventDefault();
-                this.toggle();
-            }
-        });
-    }
-    
-    setupClickOutsideHandler() {
-        document.addEventListener('click', (e) => {
-            if (!this.isOpen) return;
-            
-            if (e.target.closest('.nav-container, .mobile-menu')) {
-                return;
-            }
-            
-            if (e.target.closest('input, textarea, select, button[type="button"], button[type="submit"]')) {
-                return;
-            }
-            
-            this.close();
-        });
-        
-        // iPhone-specific touch outside handler
-        if (this.isIPhone) {
-            document.addEventListener('touchend', (e) => {
-                if (!this.isOpen) return;
-                
-                if (e.target.closest('.nav-container, .mobile-menu, .nav-links')) {
-                    return;
-                }
-                
-                this.close();
-            }, { passive: true });
-        }
-    }
-    
-    toggle() {
-        if (this.isOpen) {
-            this.close();
-        } else {
-            this.open();
-        }
-    }
-    
-    open() {
-        if (this.isOpen) return;
-        
-        this.lastFocusedElement = document.activeElement;
-        
-        this.navLinks.classList.add('active');
-        this.menuButton.classList.add('active');
-        this.menuButton.setAttribute('aria-expanded', 'true');
-        
-        document.body.classList.add('menu-open');
-        
-        // iPhone-optimized focus management
-        const firstLink = this.navLinks.querySelector('a');
-        if (firstLink) {
-            setTimeout(() => firstLink.focus(), this.isIPhone ? 200 : 100);
-        }
-        
-        this.isOpen = true;
-        console.log('Mobile menu opened', this.isIPhone ? '(iPhone)' : '');
-    }
-    
-    close() {
-        if (!this.isOpen) return;
-        
-        this.navLinks.classList.remove('active');
-        this.menuButton.classList.remove('active');
-        this.menuButton.setAttribute('aria-expanded', 'false');
-        
-        document.body.classList.remove('menu-open');
-        
-        // Restore focus
-        if (this.lastFocusedElement && this.lastFocusedElement.focus) {
-            this.lastFocusedElement.focus();
-        }
-        
-        this.isOpen = false;
-        console.log('Mobile menu closed', this.isIPhone ? '(iPhone)' : '');
-    }
-}
-
-// =============== IPHONE-OPTIMIZED VIEWPORT HANDLER ===============
-class ViewportHandler {
-    constructor() {
-        this.isIPhone = this.detectIPhone();
-        this.lastHeight = window.innerHeight;
-        this.resizeTimeout = null;
-        
-        this.init();
-    }
-    
-    detectIPhone() {
-        return /iPhone|iPod/.test(navigator.userAgent) || 
-               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    }
-    
-    init() {
-        console.log('Initializing iPhone-optimized viewport handler...');
-        this.setViewportHeight();
-        this.setupEventListeners();
-    }
-    
-    setViewportHeight() {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        if (this.isIPhone) {
-            // Additional iPhone-specific viewport handling
-            const safeAreaTop = getComputedStyle(document.documentElement).getPropertyValue('--safe-area-top');
-            const safeAreaBottom = getComputedStyle(document.documentElement).getPropertyValue('--safe-area-bottom');
-            
-            console.log('iPhone viewport updated:', {
-                vh: vh + 'px',
-                height: window.innerHeight + 'px',
-                safeAreaTop,
-                safeAreaBottom
-            });
-        }
-    }
-    
-    setupEventListeners() {
-        const debouncedSetViewportHeight = this.debounce(() => {
-            if (!window.doorAudio?.isNavigating) {
-                this.setViewportHeight();
-            }
-        }, this.isIPhone ? 200 : 150);
-        
-        window.addEventListener('resize', debouncedSetViewportHeight);
-        
-        // iPhone-specific orientation change handling
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
-                if (!window.doorAudio?.isNavigating) {
-                    this.setViewportHeight();
-                }
-            }, this.isIPhone ? 300 : 200);
-        });
-        
-        // iPhone-specific viewport handling for keyboard
-        if (this.isIPhone) {
-            window.addEventListener('resize', () => {
-                const currentHeight = window.innerHeight;
-                const heightDifference = this.lastHeight - currentHeight;
-                
-                // Detect iPhone keyboard
-                if (heightDifference > 150) {
-                    document.body.classList.add('keyboard-open');
-                } else if (heightDifference < -150) {
-                    document.body.classList.remove('keyboard-open');
-                }
-                
-                this.lastHeight = currentHeight;
-            });
-        }
-    }
-    
-    debounce(func, wait, immediate) {
-        return (...args) => {
-            const context = this;
-            const later = () => {
-                this.resizeTimeout = null;
-                if (!immediate) func.apply(context, args);
-            };
-            const callNow = immediate && !this.resizeTimeout;
-            clearTimeout(this.resizeTimeout);
-            this.resizeTimeout = setTimeout(later, wait);
-            if (callNow) func.apply(context, args);
-        };
-    }
-}
-
-// =============== GLOBAL VARIABLES ===============
-let currentSlide = 0;
-let slideInterval = null;
-let isAudioPlaying = false;
-
-// Global instances
-window.doorAudio = null;
-window.doorGalleries = {};
-window.rotatingDoorEntry = null;
-window.mobileMenu = null;
-window.viewportHandler = null;
-
-// =============== DOCUMENT READY & INITIALIZATION ===============
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Door - Initializing mobile-optimized systems...');
-    
-    // Initialize audio system FIRST for quietstorm at launch
-    window.doorAudio = new DoorAudio();
-    
-    // Initialize rotating door entry system
-    window.rotatingDoorEntry = new RotatingDoorEntry();
-    
-    // Initialize mobile menu
-    window.mobileMenu = new MobileMenu();
-    
-    // Initialize viewport handler
-    window.viewportHandler = new ViewportHandler();
-    
-    // Initialize other functionality
-    initGalleries();
-    initSplashPage();
-    initKeyboardNavigation();
-    initAccessibilityFeatures();
-    initMobileOptimizations();
-    
-    if ('IntersectionObserver' in window) {
-        initLazyLoading();
-    }
-    
-    console.log('Door - All mobile-optimized systems initialized!');
-});
-
-// =============== MOBILE-SPECIFIC OPTIMIZATIONS ===============
-function initMobileOptimizations() {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                     ('ontouchstart' in window) ||
-                     (navigator.maxTouchPoints > 0);
-    const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
-                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
-    if (!isMobile) return;
-    
-    console.log('Applying mobile-specific optimizations...', isIPhone ? '(iPhone)' : '');
-    
-    // Prevent zoom on form focus
-    const inputs = document.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-        if (input.type !== 'submit' && input.type !== 'button') {
-            // Ensure font-size is at least 16px to prevent zoom
-            const computedStyle = window.getComputedStyle(input);
-            const fontSize = parseInt(computedStyle.fontSize);
-            if (fontSize < 16) {
-                input.style.fontSize = '18px';
-            }
-        }
-    });
-    
-    // Mobile-specific scroll optimization
-    document.body.style.webkitOverflowScrolling = 'touch';
-    
-    // Prevent mobile bounce scroll on body
-    document.body.addEventListener('touchmove', (e) => {
-        if (e.target === document.body || e.target === document.documentElement) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-    
-    // Mobile-specific audio button enhancement
-    const audioButtons = document.querySelectorAll('.audio-toggle, .splash-audio-toggle');
-    audioButtons.forEach(button => {
-        button.addEventListener('touchstart', (e) => {
-            e.stopPropagation();
-        }, { passive: true });
-        
-        button.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleAudio(e);
-        }, { passive: false });
-    });
-    
-    // Enhanced mobile door interaction
-    const doorLinks = document.querySelectorAll('.door-gallery a');
-    doorLinks.forEach(link => {
-        // Add visual feedback for mobile
-        link.addEventListener('touchstart', () => {
-            link.style.transform = 'scale(0.95)';
-        }, { passive: true });
-        
-        link.addEventListener('touchend', () => {
-            setTimeout(() => {
-                link.style.transform = '';
-            }, 150);
-        }, { passive: true });
-    });
-    
-    console.log('Mobile optimizations applied', isIPhone ? '(iPhone)' : '');
-}
-
-// =============== GALLERY INITIALIZATION ===============
-function initGalleries() {
-    const galleries = document.querySelectorAll('.css-gallery');
-    
-    galleries.forEach(gallery => {
-        const galleryId = gallery.id;
-        if (galleryId) {
-            window.doorGalleries[galleryId] = new DoorGallery(galleryId);
-        }
-    });
-    
-    const landingTrack = document.getElementById('landing-track');
-    if (landingTrack && !window.doorGalleries['landing-gallery']) {
-        const landingGallery = landingTrack.closest('.css-gallery');
-        if (landingGallery) {
-            landingGallery.id = 'landing-gallery';
-            window.doorGalleries['landing-gallery'] = new DoorGallery('landing-gallery');
+        .section {
+            padding-bottom: max(70px, calc(env(safe-area-inset-bottom) + 40px));
         }
     }
 }
 
-// =============== GLOBAL FUNCTIONS ===============
-function toggleAudio(event) {
-    if (event) {
-        event.stopPropagation();
-        event.preventDefault();
+/* iPhone 14/15 Standard optimizations */
+@media only screen and (max-width: 393px) and (-webkit-min-device-pixel-ratio: 2) {
+    .splash-hint {
+        bottom: max(45px, calc(var(--safe-area-bottom) + 35px));
+        font-size: 16px;
+        padding: 15px 20px;
+    }
+
+    .landing-content h1 {
+        font-size: clamp(2.5rem, 15vw, 4rem);
+        letter-spacing: clamp(3px, 4vw, 8px);
+        color: #fff !important;
+        text-shadow: 
+            1px 1px 0px #ddd,
+            2px 2px 0px #ccc,
+            3px 3px 5px rgba(0,0,0,0.2) !important;
+    }
+
+    .page-logo {
+        font-size: clamp(1.6rem, 10vw, 2.2rem);
+        margin-bottom: 15px;
+        letter-spacing: clamp(2px, 4vw, 3px);
+        color: #fff;
+        text-shadow: 
+            1px 1px 0px #ddd,
+            2px 2px 0px #ccc,
+            3px 3px 5px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+        font-size: clamp(1.8rem, 12vw, 2.5rem);
+    }
+
+    .nav {
+        padding: 12px 0;
+        padding-top: max(12px, calc(var(--safe-area-top) + 6px));
+    }
+
+    .space-item,
+    .menu-item,
+    .event-item {
+        padding: 25px 20px;
+        margin: 0 10px;
+    }
+
+    .reservation-form,
+    .contact-card {
+        margin: 0 15px;
+        padding: 25px 20px;
+    }
+
+    .splash-audio-toggle {
+        top: max(20px, calc(var(--safe-area-top) + 8px));
+        right: max(20px, calc(var(--safe-area-right) + 8px));
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+    }
+}
+
+/* iPhone 14/15 Plus/Pro Max optimizations */
+@media (min-width: 394px) and (max-width: 430px) {
+    .landing-content h1 {
+        font-size: clamp(2.8rem, 10vw, 4.2rem);
+        letter-spacing: clamp(3px, 3vw, 7px);
+        color: #fff !important;
+        text-shadow: 
+            1px 1px 0px #ccc,
+            2px 2px 0px #bbb,
+            3px 3px 0px #aaa,
+            4px 4px 8px rgba(0,0,0,0.3) !important;
+    }
+
+    .page-logo {
+        font-size: clamp(2rem, 6vw, 2.8rem);
+        margin-bottom: 25px;
+        letter-spacing: clamp(3px, 3vw, 5px);
+        color: #fff;
+        text-shadow: 
+            1px 1px 0px #ccc,
+            2px 2px 0px #bbb,
+            3px 3px 0px #aaa,
+            4px 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .section-title {
+        font-size: clamp(2.2rem, 8vw, 3.2rem);
+    }
+
+    .space-item,
+    .menu-item {
+        padding: 35px 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: #fff !important;
     }
     
-    console.log('Audio toggle function called');
+    .landing-page,
+    .section {
+        overscroll-behavior: none;
+        background: #fff !important;
+    }
+
+    .landing-page,
+    .landing-page *,
+    #landing,
+    #landing * {
+        background-color: #fff !important;
+        background-image: none !important;
+        background: #fff !important;
+    }
+
+    .landing-page::before,
+    .section::before,
+    .main-site::before,
+    body::before {
+        display: none !important;
+    }
+
+    .main-site,
+    .container,
+    .landing-content,
+    .space-grid,
+    .menu-grid,
+    .events-list,
+    .contact-info {
+        background: #fff !important;
+    }
+}
+
+/* Mobile landscape orientation fixes */
+@media (max-width: 768px) and (orientation: landscape) {
+    body,
+    .main-site,
+    .section,
+    .landing-page {
+        background: #fff !important;
+    }
+
+    .landing-page,
+    .landing-page .gallery-slider {
+        background: #fff !important;
+    }
+
+    *::before,
+    *::after {
+        background: transparent !important;
+    }
+
+    .nav-logo {
+        font-size: 1rem;
+    }
+
+    .nav {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-logo {
+        color: #000 !important;
+    }
+
+    .landing-content,
+    .landing-links,
+    .landing-link {
+        background: #fff !important;
+    }
+
+    .landing-content h1 {
+        color: #fff !important;
+        text-shadow: 
+            1px 1px 0px #ccc,
+            2px 2px 0px #bbb,
+            3px 3px 0px #aaa,
+            4px 4px 0px #999,
+            5px 5px 10px rgba(0,0,0,0.2) !important;
+    }
+
+    .landing-link h3 {
+        color: #000 !important;
+    }
+
+    .sub-links a {
+        color: #666 !important;
+    }
+
+    * {
+        background-image: none !important;
+    }
+
+    .gallery-slider,
+    .slide,
+    .landing-page,
+    #landing {
+        background: #fff !important;
+        background-image: none !important;
+        background-color: #fff !important;
+        z-index: auto;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .audio-toggle:not(.playing) {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
     
-    if (window.doorAudio) {
-        window.doorAudio.toggle();
-    } else {
-        console.warn('Audio system not initialized');
-    }
-}
-
-function nextSlide(galleryId) {
-    if (galleryId && window.doorGalleries && window.doorGalleries[galleryId]) {
-        window.doorGalleries[galleryId].nextSlide();
-    } else if (!galleryId && window.doorGalleries['landing-gallery']) {
-        window.doorGalleries['landing-gallery'].nextSlide();
-    } else {
-        console.warn(`Gallery ${galleryId || 'landing-gallery'} not found`);
-    }
-}
-
-function previousSlide(galleryId) {
-    if (galleryId && window.doorGalleries && window.doorGalleries[galleryId]) {
-        window.doorGalleries[galleryId].previousSlide();
-    } else if (!galleryId && window.doorGalleries['landing-gallery']) {
-        window.doorGalleries['landing-gallery'].previousSlide();
-    } else {
-        console.warn(`Gallery ${galleryId || 'landing-gallery'} not found`);
-    }
-}
-
-function goToSlide(galleryIdOrIndex, slideIndex) {
-    if (typeof galleryIdOrIndex === 'string') {
-        if (window.doorGalleries && window.doorGalleries[galleryIdOrIndex]) {
-            window.doorGalleries[galleryIdOrIndex].goToSlide(slideIndex);
+    @media (max-width: 768px) {
+        .audio-toggle:not(.playing)::after {
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
         }
-    } else {
-        const slideIdx = galleryIdOrIndex;
-        if (window.doorGalleries && window.doorGalleries['landing-gallery']) {
-            window.doorGalleries['landing-gallery'].goToSlide(slideIdx);
-        }
     }
 }
 
-// =============== MOBILE MENU FUNCTIONS ===============
-function toggleMobileMenu() {
-    if (window.mobileMenu) {
-        window.mobileMenu.toggle();
-    } else {
-        console.warn('Mobile menu system not initialized');
+/* Disable hover effects on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .space-item:hover,
+    .menu-item:hover,
+    .landing-link:hover,
+    .gallery-item:hover,
+    .door-gallery li:hover a,
+    .door-gallery li:hover img {
+        transform: none;
+        filter: none;
+        animation-play-state: running;
+    }
+    
+    .audio-toggle.playing:hover,
+    .splash-audio-toggle.playing:hover {
+        animation-play-state: running;
+        transform: scale(1.05);
     }
 }
 
-function openMobileMenu() {
-    if (window.mobileMenu) {
-        window.mobileMenu.open();
-    }
-}
-
-function closeMobileMenu() {
-    if (window.mobileMenu) {
-        window.mobileMenu.close();
-    }
-}
-
-// =============== UPDATED SPLASH PAGE - Mobile Optimized ===============
-function initSplashPage() {
-    const splashPage = document.getElementById('splashPage');
-    const mainSite = document.getElementById('mainSite');
-    
-    if (!splashPage) return;
-    
-    console.log('Initializing mobile-optimized splash page with rotating door entry...');
-    
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                     ('ontouchstart' in window) ||
-                     (navigator.maxTouchPoints > 0);
-    const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
-                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
-    // Mobile-specific splash optimizations
-    if (isMobile) {
-        // Prevent default touch behaviors on splash
-        splashPage.addEventListener('touchmove', (e) => {
-            // Allow scrolling only within specific elements
-            if (!e.target.closest('.nav-links, .quote-responses')) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        // Enhanced mobile gesture handling
-        splashPage.addEventListener('touchstart', (e) => {
-            if (!e.target.closest('.door-gallery a, .splash-audio-toggle')) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-    }
-    
-    // Keyboard navigation for accessibility (Enter key on active door)
-    document.addEventListener('keydown', function(event) {
-        if (splashPage.style.display === 'none') return;
-        
-        if (event.key === 'Enter' && event.target === document.body) {
-            // Simulate clicking the currently active door
-            if (window.rotatingDoorEntry && window.rotatingDoorEntry.currentActiveIndex >= 0) {
-                const activeIndex = window.rotatingDoorEntry.currentActiveIndex;
-                window.rotatingDoorEntry.handleDoorClick(activeIndex);
-            }
-        }
-    });
-    
-    console.log('Mobile-optimized splash page initialized', isMobile ? '(Mobile)' : '');
-}
-
-function hideSplash() {
-    const splashPage = document.getElementById('splashPage');
-    const mainSite = document.getElementById('mainSite');
-    
-    if (splashPage && mainSite) {
-        splashPage.classList.add('hidden');
-        mainSite.classList.add('active');
-        
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                         ('ontouchstart' in window) ||
-                         (navigator.maxTouchPoints > 0);
-        const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
-                         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        
-        setTimeout(() => {
-            splashPage.style.display = 'none';
-        }, isMobile ? 1800 : (isIPhone ? 1500 : 1200));
-        
-        console.log('Splash hidden, main site active', isMobile ? '(Mobile)' : '');
-    }
-}
-
-// =============== ENHANCED KEYBOARD NAVIGATION FOR MOBILE ===============
-function initKeyboardNavigation() {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                     ('ontouchstart' in window) ||
-                     (navigator.maxTouchPoints > 0);
-    const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
-                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
-    document.addEventListener('keydown', (e) => {
-        // Mobile-specific spacebar handling
-        if (e.key === ' ' && e.target === document.body) {
-            if (!isMobile || !document.activeElement || document.activeElement === document.body) {
-                e.preventDefault();
-                toggleAudio();
-            }
-        }
-        
-        // Enhanced mobile menu keyboard support
-        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mobile-menu')) {
-            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                e.preventDefault();
-                toggleMobileMenu();
-            }
-        }
-        
-        // Gallery keyboard navigation
-        const activeElement = document.activeElement;
-        if (activeElement && activeElement.closest('.css-gallery')) {
-            const gallery = activeElement.closest('.css-gallery');
-            const galleryId = gallery.id;
-            
-            if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
-                switch (e.key) {
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        previousSlide(galleryId);
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        nextSlide(galleryId);
-                        break;
-                    case 'Home':
-                        e.preventDefault();
-                        goToSlide(galleryId, 0);
-                        break;
-                    case 'End':
-                        e.preventDefault();
-                        if (window.doorGalleries[galleryId]) {
-                            const lastSlide = window.doorGalleries[galleryId].totalSlides - 1;
-                            goToSlide(galleryId, lastSlide);
-                        }
-                        break;
-                }
-            }
-        }
-    });
-    
-    console.log('Mobile-optimized keyboard navigation initialized');
-}
-
-// =============== ENHANCED ACCESSIBILITY FOR MOBILE ===============
-function initAccessibilityFeatures() {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                     ('ontouchstart' in window) ||
-                     (navigator.maxTouchPoints > 0);
-    const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
-                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
-    // Enhanced anchor link behavior for mobile
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            if (href === '#' || href === '') return;
-            
-            e.preventDefault();
-            const target = document.querySelector(href);
-            
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-                
-                if (target.tabIndex === -1) {
-                    target.tabIndex = -1;
-                }
-                
-                // Mobile-specific focus handling
-                if (isMobile) {
-                    setTimeout(() => target.focus(), 100);
-                } else {
-                    target.focus();
-                }
-            }
-        });
-    });
-    
-    // Enhanced skip link for mobile
-    const skipLink = document.querySelector('.skip-link');
-    if (skipLink) {
-        skipLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = document.querySelector('#main-content') || document.querySelector('main');
-            if (target) {
-                target.focus();
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    }
-    
-    // Mobile-specific accessibility enhancements
-    if (isMobile) {
-        // Enhance button accessibility
-        const buttons = document.querySelectorAll('button:not([aria-label]):not([title])');
-        buttons.forEach(button => {
-            if (button.textContent.trim()) {
-                button.setAttribute('aria-label', button.textContent.trim());
-            }
-        });
-        
-        // Enhanced focus management for mobile
-        document.addEventListener('focusin', (e) => {
-            if (e.target.closest('.nav-links') && window.mobileMenu?.isOpen) {
-                e.target.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            }
-        });
-    }
-    
-    console.log('Mobile-enhanced accessibility features initialized');
-}
-
-// =============== ENHANCED LAZY LOADING FOR MOBILE ===============
-function initLazyLoading() {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                     ('ontouchstart' in window) ||
-                     (navigator.maxTouchPoints > 0);
-    const isIPhone = /iPhone|iPod/.test(navigator.userAgent) || 
-                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.removeAttribute('data-src');
-                    img.setAttribute('data-loading', 'false');
-                    observer.unobserve(img);
-                    console.log('Lazy loaded:', img.alt || img.src, isMobile ? '(Mobile)' : '');
-                }
-            }
-        });
-    }, {
-        rootMargin: isMobile ? '100px' : '50px' // Larger margin for mobile
-    });
-    
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        img.setAttribute('data-loading', 'true');
-        imageObserver.observe(img);
-    });
-    
-    console.log('Mobile-optimized lazy loading initialized');
-}
-
-// =============== UTILITY FUNCTIONS ===============
-function debounce(func, wait, immediate) {
-    let timeout;
-    return function executedFunction(...args) {
-        const context = this;
-        const later = () => {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        const callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-}
-
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
-
-function isMobileMultiTouch(e) {
-    return e.touches && e.touches.length > 1;
-}
-
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-           ('ontouchstart' in window) ||
-           (navigator.maxTouchPoints > 0);
-}
-
-function isIPhoneDevice() {
-    return /iPhone|iPod/.test(navigator.userAgent) || 
-           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
-
-// =============== ERROR HANDLING ===============
-window.addEventListener('error', (e) => {
-    const isMobile = isMobileDevice();
-    const isIPhone = isIPhoneDevice();
-    console.error('Door - JavaScript error:', e.error, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-    
-    if (e.error.message.includes('audio') && window.doorAudio) {
-        console.log('Attempting audio system recovery...', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-        setTimeout(() => {
-            try {
-                window.doorAudio.updateButtons();
-            } catch (recoveryError) {
-                console.error('Audio recovery failed:', recoveryError, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-            }
-        }, isMobile ? 1500 : 1000);
-    }
-});
-
-window.addEventListener('unhandledrejection', (e) => {
-    const isMobile = isMobileDevice();
-    const isIPhone = isIPhoneDevice();
-    console.error('Door - Unhandled promise rejection:', e.reason, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-});
-
-// =============== PERFORMANCE MONITORING ===============
-if ('performance' in window) {
-    window.addEventListener('load', () => {
-        const isMobile = isMobileDevice();
-        const isIPhone = isIPhoneDevice();
-        const loadTime = Math.round(performance.now());
-        console.log(`Door - Page loaded in ${loadTime}ms`, isMobile ? (isIPhone ? '(iPhone optimized)' : '(Mobile optimized)') : '');
-        
-        if (performance.navigation) {
-            const navType = performance.navigation.type;
-            const navTypes = ['navigate', 'reload', 'back_forward', 'reserved'];
-            console.log(`Navigation type: ${navTypes[navType] || 'unknown'}`, isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-        }
-        
-        // Mobile-specific performance metrics
-        if (isMobile && 'memory' in performance) {
-            console.log('Mobile memory usage:', {
-                used: Math.round(performance.memory.usedJSHeapSize / 1048576) + 'MB',
-                total: Math.round(performance.memory.totalJSHeapSize / 1048576) + 'MB',
-                limit: Math.round(performance.memory.jsHeapSizeLimit / 1048576) + 'MB'
-            });
-        }
-    });
-}
-
-// =============== MOBILE-ENHANCED DEVELOPMENT HELPERS ===============
-if (window.location.hostname === 'localhost' || 
-    window.location.hostname === '127.0.0.1' || 
-    window.location.hostname.includes('dev')) {
-    
-    const isMobile = isMobileDevice();
-    const isIPhone = isIPhoneDevice();
-    console.log('Door - Development mode active', 
-                isMobile ? (isIPhone ? '(iPhone detected)' : '(Mobile detected)') : '');
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.shiftKey) {
-            switch (e.key.toLowerCase()) {
-                case 'a':
-                    e.preventDefault();
-                    toggleAudio();
-                    console.log('Dev: Audio toggled', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-                    break;
-                case 's':
-                    e.preventDefault();
-                    hideSplash();
-                    console.log('Dev: Splash hidden', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-                    break;
-                case 'r':
-                    e.preventDefault();
-                    localStorage.removeItem('door_audio_state');
-                    localStorage.removeItem('door_audio_time');
-                    localStorage.removeItem('door_user_interacted');
-                    console.log('Dev: Audio state reset', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-                    break;
-                case 'd':
-                    e.preventDefault();
-                    if (window.rotatingDoorEntry) {
-                        if (window.rotatingDoorEntry.rotationInterval) {
-                            window.rotatingDoorEntry.stopRotation();
-                            console.log('Dev: Door rotation stopped');
-                        } else {
-                            window.rotatingDoorEntry.startRotation();
-                            console.log('Dev: Door rotation started');
-                        }
-                    }
-                    break;
-                case 'f':
-                    e.preventDefault();
-                    if (window.rotatingDoorEntry) {
-                        window.rotatingDoorEntry.setRotationSpeed(1000);
-                        console.log('Dev: Fast door rotation (1 second)');
-                    }
-                    break;
-                case 't':
-                    e.preventDefault();
-                    if (window.rotatingDoorEntry) {
-                        window.rotatingDoorEntry.resetAttempts();
-                        console.log('Dev: Attempt count reset');
-                    }
-                    break;
-                case 'q':
-                    e.preventDefault();
-                    if (window.rotatingDoorEntry) {
-                        window.rotatingDoorEntry.showRandomQuote();
-                        console.log('Dev: Random quote shown');
-                    }
-                    break;
-                case 'i':
-                    e.preventDefault();
-                    console.log('Dev: Mobile-optimized system info:', {
-                        isMobile: isMobile,
-                        isIPhone: isIPhone,
-                        deviceInfo: {
-                            userAgent: navigator.userAgent,
-                            platform: navigator.platform,
-                            maxTouchPoints: navigator.maxTouchPoints,
-                            viewport: {
-                                width: window.innerWidth,
-                                height: window.innerHeight
-                            }
-                        },
-                        audioState: localStorage.getItem('door_audio_state'),
-                        audioTime: localStorage.getItem('door_audio_time'),
-                        userInteracted: localStorage.getItem('door_user_interacted'),
-                        galleries: Object.keys(window.doorGalleries),
-                        isAudioPlaying: window.doorAudio?.isPlaying,
-                        currentAudioTime: window.doorAudio?.audio?.currentTime,
-                        audioMuted: window.doorAudio?.audio?.muted,
-                        hasUserInteracted: window.doorAudio?.hasUserInteracted,
-                        isNavigating: window.doorAudio?.isNavigating,
-                        activeDoorIndex: window.rotatingDoorEntry?.currentActiveIndex,
-                        doorRotationActive: window.rotatingDoorEntry?.rotationInterval !== null,
-                        attemptCount: window.rotatingDoorEntry?.attemptCount,
-                        mobileMenuOpen: window.mobileMenu?.isOpen
-                    });
-                    break;
-                case 'm':
-                    e.preventDefault();
-                    toggleMobileMenu();
-                    console.log('Dev: Mobile menu toggled', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-                    break;
-                case 'v':
-                    e.preventDefault();
-                    if (window.viewportHandler) {
-                        window.viewportHandler.setViewportHeight();
-                        console.log('Dev: Viewport height refreshed', isMobile ? (isIPhone ? '(iPhone)' : '(Mobile)') : '');
-                    }
-                    break;
-            }
-        }
-    });
-    
-    // Mobile-enhanced debug tools
-    window.doorDebug = {
-        audio: () => window.doorAudio,
-        galleries: () => window.doorGalleries,
-        doorEntry: () => window.rotatingDoorEntry,
-        mobileMenu: () => window.mobileMenu,
-        viewport: () => window.viewportHandler,
-        isMobile: () => isMobile,
-        isIPhone: () => isIPhone,
-        deviceInfo: () => ({
-            isMobile: isMobile,
-            isIPhone: isIPhone,
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-            maxTouchPoints: navigator.maxTouchPoints,
-            screen: {
-                width: screen.width,
-                height: screen.height,
-                orientation: screen.orientation?.angle || 'unknown'
-            },
-            viewport: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                vh: getComputedStyle(document.documentElement).getPropertyValue('--vh')
-            },
-            safeAreas: {
-                top: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-top'),
-                bottom: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-bottom'),
-                left: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-left'),
-                right: getComputedStyle(document.documentElement).getPropertyValue('--safe-area-right')
-            }
-        }),
-        resetAudio: () => {
-            localStorage.removeItem('door_audio_state');
-            localStorage.removeItem('door_audio_time');
-            localStorage.removeItem('door_user_interacted');
-            location.reload();
-        },
-        forceAudioStart: () => {
-            if (window.doorAudio) {
-                window.doorAudio.audio.muted = false;
-                window.doorAudio.resumeAudio();
-            }
-        },
-        testAutoResume: () => {
-            localStorage.setItem('door_audio_state', 'playing');
-            localStorage.setItem('door_user_interacted', 'true');
-            location.reload();
-        },
-        simulateNavigation: () => {
-            if (window.doorAudio) {
-                window.doorAudio.prepareForNavigation();
-            }
-        },
-        toggleMobileMenu: () => toggleMobileMenu(),
-        mobileMenuState: () => window.mobileMenu?.isOpen || false,
-        setDoorSpeed: (ms) => {
-            if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.setRotationSpeed(ms);
-                console.log(`Door rotation speed set to ${ms}ms`);
-            }
-        },
-        showAccessGranted: () => {
-            if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.showAccessGranted();
-            }
-        },
-        showRandomQuote: () => {
-            if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.showRandomQuote();
-            }
-        },
-        testAutoAccess: () => {
-            if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.attemptCount = 2;
-                console.log('Dev: Set to trigger auto-access on next wrong click');
-            }
-        },
-        refreshViewport: () => {
-            if (window.viewportHandler) {
-                window.viewportHandler.setViewportHeight();
-            }
-        },
-        testMobileQuote: () => {
-            // Force create quote elements and test mobile display
-            if (window.rotatingDoorEntry) {
-                window.rotatingDoorEntry.createQuoteElements();
-                setTimeout(() => {
-                    window.rotatingDoorEntry.showRandomQuote();
-                }, 100);
-            }
-        }
-    };
-    
-    console.log('Mobile-enhanced dev tools available: window.doorDebug');
-}
-
-// =============== CONSOLE BRANDING ===============
-console.log(`
-📱 Door Restaurant - ALL MOBILE DEVICES OPTIMIZED 📱
-✅ MOBILE SUPPORT: Android, iPhone, iPad, and all touch devices
-🎯 TOUCH TARGETS: 44-48px minimum for all interactive elements  
-🔤 TYPOGRAPHY: 18px body text, proper font hierarchy
-🎵 AUDIO SYSTEM: Mobile autoplay policy compliant
-🍔 MOBILE MENU: Enhanced touch targets with smooth overlay
-🎯 DOOR SYSTEM: Universal mobile touch detection
-🖼️ GALLERY: Enhanced swipe gestures for all mobile devices
-⌨️ KEYBOARD: Mobile-compatible navigation
-🎲 RANDOM QUOTES: Mobile-specific timing and positioning
-🔄 VIEWPORT: Dynamic height handling for mobile keyboards
-📏 RESPONSIVE: Optimized for all mobile screen sizes
-🎨 PERFORMANCE: Hardware acceleration for smooth mobile experience
-
-Mobile Features:
-• Universal mobile device detection (Android, iPhone, iPad, etc.)
-• Enhanced touch event handling with fallback click events
-• Improved quote display with mobile-specific styling
-• Better touch target sizing and visual feedback
-• Optimized timing for mobile interactions
-• Enhanced swipe gesture recognition across all devices
-• Improved form input handling (prevents zoom)
-• Mobile-specific debugging and logging
-
-Dev Tools: Ctrl+Shift+V (viewport refresh), window.doorDebug.deviceInfo()
-Philosophy: "Every mobile device deserves a beautiful experience" 📱✨
-`);
-
-// Export for testing
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        DoorAudio,
-        DoorGallery,
-        RotatingDoorEntry,
-        MobileMenu,
-        ViewportHandler,
-        toggleAudio,
-        nextSlide,
-        previousSlide,
-        goToSlide,
-        toggleMobileMenu,
-        openMobileMenu,
-        closeMobileMenu,
-        isMobileDevice,
-        isIPhoneDevice
-    };
-}
+/* End Door 64 Restaurant Stylesheet - Complete with Rotating Door Entry System */
