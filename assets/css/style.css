@@ -409,7 +409,7 @@ body.menu-open {
 .nav-links {
     display: flex;
     list-style: none;
-    gap: clamp(15px, 3vw, 35px);
+    gap: clamp(8px, 1.5vw, 20px); /* Reduced from 15px-35px to 8px-20px */
     margin: 0;
     padding: 0;
     align-items: center;
@@ -417,30 +417,32 @@ body.menu-open {
     justify-content: space-evenly;
     max-width: 1000px;
     margin-left: auto;
+    flex-wrap: nowrap; /* Prevent wrapping to ensure single row */
 }
 
-/* iPhone-optimized navigation links */
+/* iPhone-optimized navigation links - tighter spacing for single row */
 .nav-links a {
     color: #ccc;
     text-decoration: none !important;
     text-transform: lowercase;
-    font-size: var(--nav-text-size); /* 17px */
-    letter-spacing: 1px;
+    font-size: clamp(14px, 2vw, 17px); /* Slightly smaller font for better fit */
+    letter-spacing: 0.5px; /* Reduced letter spacing */
     transition: all 0.3s ease;
     position: relative;
     -webkit-tap-highlight-color: transparent;
-    /* Enhanced iPhone touch targets */
-    padding: 12px 16px;
+    /* Enhanced iPhone touch targets - reduced padding */
+    padding: 8px 12px; /* Reduced from 12px 16px */
     border-radius: 8px;
     background: transparent;
     border: none !important;
     outline: none !important;
     min-height: var(--touch-target-min);
-    min-width: var(--touch-target-min);
+    min-width: auto; /* Allow flexible width */
     display: flex;
     align-items: center;
     justify-content: center;
     touch-action: manipulation;
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
 .nav-links a::before {
