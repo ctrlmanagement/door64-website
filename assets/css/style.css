@@ -1596,8 +1596,9 @@ p, .sub-links a, .menu-item p {
 
 /* Enhanced Page Logo (above section titles) - White Embossed Style - CENTERED */
 /* Enhanced Page Logo (above section titles) - White Embossed Style - CENTERED */
+/* Enhanced Page Logo (above section titles) - White Embossed Style - CENTERED */
 .page-logo {
-    font-size: clamp(2.5rem, 8vw, 5rem); /* Changed from clamp(2rem, 6vw, 3.5rem) */
+    font-size: clamp(2.5rem, 8vw, 5rem); /* Matches landing page size */
     text-align: center !important;
     margin: 0 auto 30px auto !important;
     font-weight: 300;
@@ -1611,7 +1612,22 @@ p, .sub-links a, .menu-item p {
         3px 3px 0px #aaa,
         4px 4px 0px #999,
         5px 5px 10px rgba(0,0,0,0.2);
-    /* ... rest of your existing properties ... */
+    position: relative;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    /* Remove positioning conflicts for perfect centering */
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+    float: none !important;
+    -webkit-tap-highlight-color: transparent;
+    min-height: var(--touch-target-min);
+    padding: 10px;
+    touch-action: manipulation;
 }
 
 .page-logo:hover {
