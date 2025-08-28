@@ -148,7 +148,7 @@ body.menu-open {
     top: 0;
     left: 0;
     z-index: 9999;
-    background: #000000;
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
