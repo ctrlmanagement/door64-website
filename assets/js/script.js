@@ -9,6 +9,7 @@ class DoorAudio {
         this.volume = 0.3;
         this.storageKey = 'door_audio_state';
         this.timeKey = 'door_audio_time';
+        this.muteKey = 'door_audio_muted'; // New: Track mute state
         this.lastUpdateTime = 0;
         this.updateInterval = 500;
         this.hasUserInteracted = false;
@@ -58,12 +59,17 @@ class DoorAudio {
     restoreAudioState() {
         const storedState = localStorage.getItem(this.storageKey);
         const storedTime = localStorage.getItem(this.timeKey);
+        const storedMute = localStorage.getItem(this.muteKey) === 'true';
         const isFirstTimeVisitor = !storedState;
-        const isSplashPage = document.getElementById('splashPage') !== null;
         
-        console.log('Restoring audio state:', { storedState, storedTime, isFirstTimeVisitor, isSplashPage });
+        console.log('Restoring audio state:', { storedState, storedTime, storedMute, isFirstTimeVisitor });
         
-        // Auto-start audio for quietstorm experience
+        // Set mute state immediately
+        if (this.audio) {
+            this.audio.muted = storedMute;
+        }
+        
+        // Auto-start audio for quietstorm experience (unless user explicitly paused)
         if (storedState === 'playing' || isFirstTimeVisitor) {
             console.log('Auto-starting quietstorm audio...');
             
@@ -71,12 +77,7 @@ class DoorAudio {
                 this.setAudioTime(parseFloat(storedTime));
             }
             
-            if (this.isMobile) {
-                this.setupUserInteractionListeners();
-                this.attemptAudioStart();
-            } else {
-                this.attemptAudioStart();
-            }
+            this.attemptAudioStart();
         } else if (storedState === 'paused') {
             console.log('Audio was paused by user, respecting choice');
             if (storedTime && parseFloat(storedTime) > 0) {
@@ -84,11 +85,7 @@ class DoorAudio {
             }
             this.updateButtons();
         } else {
-            if (this.isMobile) {
-                this.setupUserInteractionListeners();
-            } else {
-                this.attemptAudioStart();
-            }
+            this.attemptAudioStart();
             this.updateButtons();
         }
     }
@@ -106,22 +103,25 @@ class DoorAudio {
         
         console.log('Attempting to start quietstorm audio...');
         
-        this.audio.muted = true;
+        // Respect stored mute state
+        const storedMute = localStorage.getItem(this.muteKey) === 'true';
+        this.audio.muted = storedMute;
         
         this.audioStartPromise = this.audio.play()
             .then(() => {
-                console.log('Audio started successfully (muted for autoplay compliance)');
+                console.log('Audio started successfully', storedMute ? '(muted)' : '(unmuted)');
                 this.isPlaying = true;
                 localStorage.setItem(this.storageKey, 'playing');
                 this.updateButtons();
                 this.audioStartPromise = null;
                 
+                // Only unmute if user has interacted and audio wasn't explicitly muted
                 const hasInteracted = localStorage.getItem('door_user_interacted') === 'true';
-                if (hasInteracted) {
+                if (hasInteracted && !storedMute) {
                     this.audio.muted = false;
-                    console.log('User has interacted before - unmuting audio');
+                    console.log('User has interacted before and audio not muted - unmuting audio');
                     this.hasUserInteracted = true;
-                } else if (!this.isMobile) {
+                } else if (!hasInteracted && !storedMute) {
                     this.setupUserInteractionListeners();
                 }
             })
@@ -129,7 +129,7 @@ class DoorAudio {
                 console.log('Audio autoplay prevented:', error.message);
                 this.audioStartPromise = null;
                 
-                if (!this.interactionListenersActive) {
+                if (!this.interactionListenersActive && !storedMute) {
                     this.setupUserInteractionListeners();
                 }
                 this.updateButtons();
@@ -383,6 +383,26 @@ class DoorAudio {
         console.log('Audio paused by user at time:', this.audio.currentTime);
     }
     
+    muteAudio() {
+        if (!this.audio) return;
+        
+        console.log('User requested audio mute');
+        this.audio.muted = true;
+        localStorage.setItem(this.muteKey, 'true');
+        this.updateButtons();
+        console.log('Audio muted and saved to localStorage');
+    }
+    
+    unmuteAudio() {
+        if (!this.audio) return;
+        
+        console.log('User requested audio unmute');
+        this.audio.muted = false;
+        localStorage.setItem(this.muteKey, 'false');
+        this.updateButtons();
+        console.log('Audio unmuted and saved to localStorage');
+    }
+    
     resumeAudio() {
         if (!this.audio || this.audioStartPromise || this.isNavigating) return;
         
@@ -394,10 +414,9 @@ class DoorAudio {
             this.setAudioTime(parseFloat(storedTime));
         }
         
-        if (this.audio.muted && (this.hasUserInteracted || localStorage.getItem('door_user_interacted') === 'true')) {
-            this.audio.muted = false;
-            console.log('Audio unmuted for resume');
-        }
+        // Respect stored mute state
+        const storedMute = localStorage.getItem(this.muteKey) === 'true';
+        this.audio.muted = storedMute;
         
         this.audioStartPromise = this.audio.play()
             .then(() => {
@@ -405,7 +424,7 @@ class DoorAudio {
                 localStorage.setItem(this.storageKey, 'playing');
                 this.updateButtons();
                 this.audioStartPromise = null;
-                console.log('Audio resumed at time:', this.audio.currentTime);
+                console.log('Audio resumed at time:', this.audio.currentTime, storedMute ? '(muted)' : '(unmuted)');
             })
             .catch(error => {
                 console.error('Failed to resume audio:', error);
@@ -420,11 +439,19 @@ class DoorAudio {
     }
     
     toggle() {
-        console.log('Audio toggle button clicked - Current state:', this.isPlaying, 'Paused:', this.audio?.paused);
+        console.log('Audio toggle button clicked - Current state:', this.isPlaying, 'Muted:', this.audio?.muted);
         
+        // If audio is playing, check if it's muted
         if (this.isPlaying && this.audio && !this.audio.paused) {
-            this.pauseAudio();
+            if (this.audio.muted) {
+                // Unmute the audio
+                this.unmuteAudio();
+            } else {
+                // Mute the audio (don't pause, just mute)
+                this.muteAudio();
+            }
         } else {
+            // Resume audio (with preserved mute state)
             this.resumeAudio();
         }
     }
@@ -434,12 +461,20 @@ class DoorAudio {
         
         buttons.forEach(button => {
             const isActuallyPlaying = this.isPlaying && this.audio && !this.audio.paused;
+            const isMuted = this.audio && this.audio.muted;
             
             if (isActuallyPlaying) {
-                button.innerHTML = '⏸';
-                button.classList.add('playing');
-                button.title = 'Pause Background Music';
-                button.setAttribute('aria-label', 'Pause background music');
+                if (isMuted) {
+                    button.innerHTML = '🔇'; // Muted speaker icon
+                    button.classList.remove('playing');
+                    button.title = 'Unmute Background Music';
+                    button.setAttribute('aria-label', 'Unmute background music');
+                } else {
+                    button.innerHTML = '♪'; // Playing music note
+                    button.classList.add('playing');
+                    button.title = 'Mute Background Music';
+                    button.setAttribute('aria-label', 'Mute background music');
+                }
             } else {
                 button.innerHTML = '♪';
                 button.classList.remove('playing');
@@ -447,12 +482,12 @@ class DoorAudio {
                 button.setAttribute('aria-label', 'Play background music');
                 
                 if (this.isMobile && !this.hasUserInteracted) {
-                    button.title = 'Tap anywhere to start music';
+                    button.title = 'Tap to start music';
                 }
             }
         });
         
-        console.log('Audio buttons updated - Playing:', this.isPlaying, 'Actually playing:', this.audio && !this.audio.paused);
+        console.log('Audio buttons updated - Playing:', this.isPlaying, 'Actually playing:', this.audio && !this.audio.paused, 'Muted:', this.audio && this.audio.muted);
     }
 }
 
