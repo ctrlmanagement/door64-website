@@ -120,9 +120,15 @@
     <div class="splash-page" id="splashPage" role="banner" aria-label="Welcome to Door">
         <div class="splash-image-container" onclick="enterSite()" role="button" tabindex="0" 
              aria-label="Click to enter Door restaurant" onkeydown="handleSplashKeydown(event)">
-            <img src="assets/splash.png" alt="Door Restaurant" class="splash-image" />
+            <img src="assets/images/splash/splash.png" alt="Door Restaurant" class="splash-image" id="splashImage" 
+                 onerror="handleImageError(this)" onload="handleImageLoad(this)" />
             <div class="splash-overlay">
                 <div class="click-to-enter">Click to Enter</div>
+            </div>
+            <!-- Debug fallback -->
+            <div class="image-debug" id="imageDebug" style="display:none; color:#fff; text-align:center; font-size:18px;">
+                Image not found at: assets/splash.png<br>
+                <small>Check file path and format</small>
             </div>
         </div>
         
