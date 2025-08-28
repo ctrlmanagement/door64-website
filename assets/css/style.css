@@ -2341,7 +2341,7 @@ p, .sub-links a, .menu-item p {
     }
 
     /* iPhone Navigation Links - Enhanced Overlay */
-    .nav-links {
+  .nav-links {
         display: none;
         position: fixed;
         top: var(--mobile-nav-height);
@@ -2365,6 +2365,11 @@ p, .sub-links a, .menu-item p {
         height: calc(100vh - max(var(--mobile-nav-height), calc(env(safe-area-inset-top) + var(--mobile-nav-height))));
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-links.active {
+        display: flex !important; /* Added !important - this is the key fix */
+        animation: slideInFromTop 0.3s ease-out;
     }
 
     .nav-links.active {
