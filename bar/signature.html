@@ -37,6 +37,85 @@
             text-rendering: optimizeLegibility;
         }
 
+        /* Navigation Styles */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #333;
+            letter-spacing: 2px;
+        }
+
+        .nav-left-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .audio-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            padding: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 400;
+            transition: color 0.3s ease;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover {
+            color: #BE5103;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            transition: all 0.3s ease;
+        }
+
         .menu-container {
             max-width: 900px;
             margin: 0 auto;
@@ -47,7 +126,7 @@
         }
 
         .menu-header {
-            background: rgb(95, 179, 211);
+            background: #BE5103;
             color: white;
             padding: 60px 50px 40px;
             text-align: center;
@@ -100,7 +179,7 @@
             padding: 40px;
             background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
             border-radius: 6px;
-            border-left: 2px solid #333;
+            border-left: 2px solid #BE5103;
         }
 
         .experience-intro h2 {
@@ -142,7 +221,7 @@
             left: 0;
             width: 60px;
             height: 1px;
-            background: #000;
+            background: #BE5103;
         }
 
         .section-description {
@@ -158,7 +237,7 @@
             padding: 30px;
             border-radius: 6px;
             margin-bottom: 25px;
-            border-left: 3px solid #000;
+            border-left: 3px solid #BE5103;
             transition: all 0.3s ease;
         }
 
@@ -210,7 +289,7 @@
             background: #f8f8f8;
             padding: 25px;
             border-radius: 6px;
-            border-left: 2px solid #333;
+            border-left: 2px solid #BE5103;
         }
 
         .cocktail-name {
@@ -292,9 +371,28 @@
             text-align: center;
             margin-top: 60px;
             padding: 40px;
-            background: rgb(95, 179, 211);
+            background: #BE5103;
             color: white;
             border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-left {
+            flex: 1;
+            text-align: left;
+        }
+
+        .footer-center {
+            flex: 2;
+            text-align: center;
+        }
+
+        .footer-right {
+            flex: 1;
+            text-align: right;
         }
 
         .footer-text {
@@ -305,12 +403,35 @@
             color: white;
         }
 
+        .footer-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.75rem;
+        }
+
+        .footer-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
         .allergen-note {
             background: #f9f9f9;
             padding: 20px;
             border-radius: 6px;
             margin: 30px 0;
-            border-left: 3px solid #ccc;
+            border-left: 3px solid #BE5103;
         }
 
         .section-title, .cocktail-name, .wine-name, .experience-name {
@@ -332,91 +453,44 @@
             letter-spacing: 0.5px;
         }
 
-        /* Back to Bar Button */
-        .back-to-bar-btn {
-            position: fixed;
-            top: 120px;
-            right: 20px;
-            background: rgb(95, 179, 211);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Georgia', serif;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            box-shadow: 0 4px 15px rgba(95, 179, 211, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 44px;
-            min-height: 44px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
-
-        .back-to-bar-btn:hover {
-            background: rgb(75, 159, 191);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(95, 179, 211, 0.4);
-        }
-
-        /* PDF Download Button - positioned below back to bar button */
-        .pdf-download-btn {
-            position: fixed;
-            top: 170px;
-            right: 20px;
-            background: rgb(95, 179, 211);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Georgia', serif;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            box-shadow: 0 4px 15px rgba(95, 179, 211, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
-
-        .pdf-download-btn:hover {
-            background: rgb(75, 159, 191);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(95, 179, 211, 0.4);
-        }
-
         /* Mobile Responsive */
         @media (max-width: 768px) {
-            .back-to-bar-btn {
-                top: 80px;
-                right: 10px;
-                padding: 8px 16px;
-                font-size: 0.8rem;
-                min-height: 44px;
-                min-width: 44px;
-            }
-
-            .pdf-download-btn {
-                top: 130px;
-                right: 10px;
-                padding: 8px 16px;
-                font-size: 0.8rem;
-            }
-
             body {
                 padding: 20px 10px;
                 padding-top: 100px;
+            }
+
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s ease;
+                pointer-events: none;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .nav-left-section {
+                gap: 1rem;
             }
 
             .menu-container {
@@ -474,6 +548,17 @@
             .wine-price {
                 margin-left: 0;
             }
+
+            .menu-footer {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .footer-left, .footer-center, .footer-right {
+                flex: none;
+                text-align: center;
+            }
         }
 
         /* Print Styles - Optimized for 2-page PDF (Override mobile styles) */
@@ -493,7 +578,7 @@
                 -moz-osx-font-smoothing: grayscale !important;
             }
 
-            .nav, .pdf-download-btn, .back-to-bar-btn {
+            .nav {
                 display: none !important;
             }
 
@@ -506,7 +591,7 @@
             }
 
             .menu-header {
-                background: rgb(95, 179, 211) !important;
+                background: #BE5103 !important;
                 color: white !important;
                 padding: 20px 15px 12px !important;
                 page-break-after: avoid !important;
@@ -662,7 +747,7 @@
             }
 
             .menu-footer {
-                background: rgb(95, 179, 211) !important;
+                background: #BE5103 !important;
                 color: white !important;
                 padding: 10px !important;
                 margin-top: 10px !important;
@@ -671,6 +756,10 @@
             .footer-text {
                 color: white !important;
                 font-size: 0.7rem !important;
+            }
+
+            .footer-btn {
+                display: none !important;
             }
 
             /* Ensure proper page sizing for all devices */
@@ -697,12 +786,6 @@
 
     <!-- MAIN SITE -->
     <div class="main-site active" id="mainSite">
-        <!-- Back to Bar Button -->
-        <a href="../at.the.bar.html" class="back-to-bar-btn">back to at the bar</a>
-        
-        <!-- PDF Download Button -->
-        <button class="pdf-download-btn" onclick="downloadPDF()">download pdf menu</button>
-        
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
@@ -883,7 +966,15 @@
                 </div>
 
                 <div class="menu-footer">
-                    <p class="footer-text">64 third st nw, atlanta, ga 30308 • (404) 404-4004 • DOOR64ATL.com</p>
+                    <div class="footer-left">
+                        <a href="../at.the.bar.html" class="footer-btn">back to bar</a>
+                    </div>
+                    <div class="footer-center">
+                        <p class="footer-text">64 third st nw, atlanta, ga 30308 • (404) 404-4004 • DOOR64ATL.com</p>
+                    </div>
+                    <div class="footer-right">
+                        <button class="footer-btn" onclick="downloadPDF()">download pdf menu</button>
+                    </div>
                 </div>
             </div>
         </div>
