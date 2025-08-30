@@ -176,7 +176,7 @@
             padding: 40px;
             background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%);
             border-radius: 6px;
-            border-left: 2px solid #333;
+            border-left: 2px solid #BE5103;
         }
 
         .experience-intro h2 {
@@ -218,7 +218,7 @@
             left: 0;
             width: 60px;
             height: 1px;
-            background: #000;
+            background: #BE5103;
         }
 
         .section-description {
@@ -234,7 +234,7 @@
             padding: 30px;
             border-radius: 6px;
             margin-bottom: 25px;
-            border-left: 3px solid #000;
+            border-left: 3px solid #BE5103;
             transition: all 0.3s ease;
         }
 
@@ -286,7 +286,7 @@
             background: #f8f8f8;
             padding: 25px;
             border-radius: 6px;
-            border-left: 2px solid #333;
+            border-left: 2px solid #BE5103;
         }
 
         .appetizer-name {
@@ -357,6 +357,25 @@
             background: #BE5103;
             color: white;
             border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-left {
+            flex: 1;
+            text-align: left;
+        }
+
+        .footer-center {
+            flex: 2;
+            text-align: center;
+        }
+
+        .footer-right {
+            flex: 1;
+            text-align: right;
         }
 
         .footer-text {
@@ -367,12 +386,35 @@
             color: white;
         }
 
+        .footer-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.75rem;
+        }
+
+        .footer-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
         .allergen-note {
             background: #f9f9f9;
             padding: 20px;
             border-radius: 6px;
             margin: 30px 0;
-            border-left: 3px solid #ccc;
+            border-left: 3px solid #BE5103;
         }
 
         .allergen-note p {
@@ -380,64 +422,6 @@
             font-size: 0.85rem;
             text-transform: lowercase;
             letter-spacing: 0.5px;
-        }
-
-        /* Back to Kitchen Button */
-        .back-to-kitchen-btn {
-            position: fixed;
-            top: 120px;
-            right: 20px;
-            background: #BE5103;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Georgia', serif;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            box-shadow: 0 4px 15px rgba(190, 81, 3, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 44px;
-            min-height: 44px;
-        }
-
-        .back-to-kitchen-btn:hover {
-            background: #A04402;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(190, 81, 3, 0.4);
-        }
-
-        /* PDF Download Button - positioned below back to kitchen button */
-        .pdf-download-btn {
-            position: fixed;
-            top: 170px;
-            right: 20px;
-            background: #BE5103;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: 'Georgia', serif;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: lowercase;
-            box-shadow: 0 4px 15px rgba(190, 81, 3, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .pdf-download-btn:hover {
-            background: #A04402;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(190, 81, 3, 0.4);
         }
 
         /* Mobile Responsive */
@@ -526,20 +510,15 @@
                 grid-template-columns: 1fr;
             }
 
-            .back-to-kitchen-btn {
-                top: 80px;
-                right: 10px;
-                padding: 8px 16px;
-                font-size: 0.8rem;
-                min-height: 44px;
-                min-width: 44px;
+            .menu-footer {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
             }
 
-            .pdf-download-btn {
-                top: 130px;
-                right: 10px;
-                padding: 8px 16px;
-                font-size: 0.8rem;
+            .footer-left, .footer-center, .footer-right {
+                flex: none;
+                text-align: center;
             }
         }
 
@@ -558,7 +537,7 @@
                 line-height: 1.2 !important;
             }
 
-            .nav, .pdf-download-btn, .back-to-kitchen-btn {
+            .nav {
                 display: none !important;
             }
 
@@ -591,6 +570,10 @@
                 font-size: 0.6rem !important;
             }
 
+            .footer-btn {
+                display: none !important;
+            }
+
             @page {
                 size: A4 !important;
                 margin: 0.3in !important;
@@ -601,12 +584,6 @@
 <body>
     <!-- MAIN SITE -->
     <div class="main-site active" id="mainSite">
-        <!-- Back to Kitchen Button -->
-        <a href="../in.the.kitchen.html" class="back-to-kitchen-btn">back to kitchen</a>
-        
-        <!-- PDF Download Button -->
-        <button class="pdf-download-btn" onclick="downloadPDF()">download pdf menu</button>
-        
         <!-- Navigation -->
         <nav class="nav">
             <div class="nav-container">
@@ -826,7 +803,15 @@
             </div>
 
             <div class="menu-footer">
-                <p class="footer-text">64 third st nw, atlanta, ga 30308 • (404) 404-4004 • DOOR64ATL.com</p>
+                <div class="footer-left">
+                    <a href="../in.the.kitchen.html" class="footer-btn">back to kitchen</a>
+                </div>
+                <div class="footer-center">
+                    <p class="footer-text">64 third st nw, atlanta, ga 30308 • (404) 404-4004 • DOOR64ATL.com</p>
+                </div>
+                <div class="footer-right">
+                    <button class="footer-btn" onclick="downloadPDF()">download pdf menu</button>
+                </div>
             </div>
         </div>
     </div>
